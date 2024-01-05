@@ -1,0 +1,26 @@
+﻿@model Sciffer.Erp.Domain.Model.REF_TDS_SECTION
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+   
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TDS_SECTION_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TDS_SECTION_NAME)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.TDS_SECTION_ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

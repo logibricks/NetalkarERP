@@ -1,0 +1,121 @@
+﻿
+@using Newtonsoft.Json
+<script src="@Url.Content(" ~/scripts/jquery.filedrop.js")" type="text/javascript"></script>
+@model Sciffer.Erp.Domain.ViewModel.ref_general_ledger_balance_VM
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+       
+        <hr />
+        <div class="modal-body">
+            <div class="row">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.category_id, "Category *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-4 col-sm-4 col-xs-12">
+                                    @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.category_list, new { @class = "form-control validinput", @required = true, @onchange = "GetDocumentNumber(this.value);" })
+                                    @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-4 col-sm-4 col-xs-12">
+                                    @Html.EditorFor(model => model.doc_number, new { htmlAttributes = new { @class = "form-control  num validinput removedisabled", @disabled = "disabled", @required = true } })
+                                    @Html.ValidationMessageFor(model => model.doc_number, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.offset_account_id, "Offset Account  *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("offset_account_id", (System.Web.Mvc.SelectList)ViewBag.GeneralLedger, htmlAttributes: new { @class = "form-control validinput removedisabled", @disabled = "disaabled" })
+                                    @Html.ValidationMessageFor(model => model.offset_account_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label class="control-label col-md-4">
+                                Header Remarks
+                            </label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.header_remark, new { htmlAttributes = new { @class = "form-control  num", @required = true } })
+                                @Html.ValidationMessageFor(model => model.header_remark, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="control-label col-md-4">
+                                Posting Date<span class="required"> *</span>
+                            </label>
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control  num validinput", @required = true } })
+                                @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+<style>
+    table.dataTable {
+        clear: both;
+        margin-bottom: -1px !important;
+    }
+</style>
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var y = $("#gl_ledger_name").val();
+            var z = $("#gl_ledger_code").val();
+            $("#offset_account").val(z + "-" + y);
+            var details = @Html.Raw(JsonConvert.SerializeObject(this.Model.general_ledger_balance_detail));
+            $('#ContactGrid').DataTable({
+                bFilter: false, bInfo: false,
+                "bPaginate": false,
+                "ordering": false,
+                "bfooter": false,
+                bSortable: false,
+                "info": false,
+                "sScrollY": "550px",
+                "aaData": details,
+                "bAutoWidth": false,
+                "columns": [
+                      { "data": "", sWidth: "5%", "title": "Sr No.", "defaultContent": "", "bSortable": false },
+                      { "data": "gl_code", "title": "GL Code", "bSortable": false },
+                      { "data": "ref1", "title": "Ref 1", "bSortable": false },
+                      { "data": "ref2", bVisible: true, "title": "Ref 2","bSortable": false },
+                      { "data": "ref3", "title": "Ref 3", "bSortable": false },
+                      { "data": "due_date", bVisible: true, "title": "Due Date" ,"type": "date ","bSortable": false},
+                      { "data": "amount_type", bVisible: true, "title": "Dr./Cr." },
+                      { "data": "line_remark", bVisible: true, "title": "Line Remarks", "bSortable": false },
+                ],
+
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    $("td:first", nRow).html(iDisplayIndex + 1);
+                    return nRow;
+                },
+
+            });
+        });
+    </script>
+}

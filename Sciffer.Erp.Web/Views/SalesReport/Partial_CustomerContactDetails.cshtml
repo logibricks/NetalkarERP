@@ -1,0 +1,41 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+@{(Html.EJ().Grid<sales_order_report_vm>("Editing")
+            .Datasource(ds => ds.URL(Url.Action("GetSalesOrderData", "SalesReport") + "?entity=" + ViewBag.entity ).Adaptor(AdaptorType.UrlAdaptor))     
+              .AllowPaging().PageSettings(a => a.PageSize(20))
+              .AllowFiltering()
+                  .FilterSettings(X => X.FilterType(FilterType.Excel))
+              .ShowColumnChooser()
+              .AllowSorting()
+              .AllowScrolling()
+              .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "SalesReport", new { ctrlname = "CustomerContact" })))
+                                                                          .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+          .ToolbarSettings(toolbar =>
+          {
+              toolbar.ShowToolbar().ToolbarItems(items =>
+              {
+                  items.AddTool(ToolBarItems.Search);
+                  items.AddTool(ToolBarItems.ExcelExport);
+                  items.AddTool(ToolBarItems.PrintGrid);
+              });
+          })
+
+  .Columns(col =>
+  {
+      col.Field("customer_code").Width("10%").HeaderText("Customer Code").Add();
+      col.Field("customer_name").Width("10%").HeaderText("Customer Name").Add();
+      col.Field("customer_category_name").Width("10%").HeaderText("Customer Category").Add();
+      col.Field("email_id_primary").Width("10%").HeaderText("Email").Visible(true).Add();
+      col.Field("telephone_primary").Width("10%").HeaderText("Phone").Visible(true).Add();
+      col.Field("contact_name").Width("10%").HeaderText("Name").Visible(false).Add();
+      col.Field("designation").Width("10%").HeaderText("Designation").Visible(false).Add();
+      col.Field("mobile_no").Width("10%").HeaderText("Mobile").Visible(false).Add();
+      col.Field("PHONE_NO").Width("10%").HeaderText("Phone Number").Visible(false).Add();
+      col.Field("EMAIL_ADDRESS").Width("10%").HeaderText("Email").Visible(false).Add();
+
+  })
+ .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick1"); })
+                                                                          ).Render();}
+@Html.EJ().ScriptManager()

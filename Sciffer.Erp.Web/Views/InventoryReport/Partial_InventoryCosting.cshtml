@@ -1,0 +1,36 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<report_inventory_vm>("Editing")
+          .Datasource(ds => ds.URL(Url.Action("GetInventoryReport", "InventoryReport") + "?entity=" + ViewBag.entity).Adaptor(AdaptorType.UrlAdaptor))
+                                    
+                                        .AllowFiltering().AllowPaging().PageSettings(a => a.PageSize(20))
+                                            .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                        .ShowColumnChooser()
+                                        .AllowSorting()
+                                        .AllowScrolling()
+                                       .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "InventoryReport", new { ctrlname = "InventoryCostingReport" })))
+                                                                                 .ScrollSettings(scroll => { scroll.Width("100%").Height("50%"); })
+
+                                    .ToolbarSettings(toolbar =>
+                                    {
+                                        toolbar.ShowToolbar().ToolbarItems(items =>
+                                        {
+                                            items.AddTool(ToolBarItems.Search);
+                                            items.AddTool(ToolBarItems.ExcelExport);
+                                            items.AddTool(ToolBarItems.PrintGrid);
+                                        });
+                                    })
+                            .Columns(col =>
+                            {
+                                col.Field("item_code").Width("10%").HeaderText("Item Code").Add();
+                                col.Field("item_name").Width("10%").HeaderText("Item Description").Add();
+                                col.Field("plant_code").Width("10%").HeaderText("Plant Code").Add();
+                                col.Field("plant_name").Width("10%").HeaderText("Plant Description").Add();
+                                col.Field("uom_name").Width("10%").HeaderText("UoM").Add();
+                                col.Field("item_valuation_name").Width("10%").HeaderText("Costing Method").Add();
+                                col.Field("value").Width("10%").HeaderText("Rate").Format("{0:n2}").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                            }).ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicki"); })).Render();}
+@Html.EJ().ScriptManager()
+
+
+
+

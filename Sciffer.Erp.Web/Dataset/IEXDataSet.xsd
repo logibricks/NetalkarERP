@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="IEXDataSet" targetNamespace="http://tempuri.org/IEXDataSet.xsd" xmlns:mstns="http://tempuri.org/IEXDataSet.xsd" xmlns="http://tempuri.org/IEXDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="IEXDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="IEXDataSet" msprop:Generator_UserDSName="IEXDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="IEX" msprop:Generator_TableClassName="IEXDataTable" msprop:Generator_TableVarName="tableIEX" msprop:Generator_RowChangedName="IEXRowChanged" msprop:Generator_TablePropName="IEX" msprop:Generator_RowDeletingName="IEXRowDeleting" msprop:Generator_RowChangingName="IEXRowChanging" msprop:Generator_RowEvHandlerName="IEXRowChangeEventHandler" msprop:Generator_RowDeletedName="IEXRowDeleted" msprop:Generator_RowClassName="IEXRow" msprop:Generator_UserTableName="IEX" msprop:Generator_RowEvArgName="IEXRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Doc_Category" msprop:Generator_ColumnVarNameInTable="columnDoc_Category" msprop:Generator_ColumnPropNameInRow="Doc_Category" msprop:Generator_ColumnPropNameInTable="Doc_CategoryColumn" msprop:Generator_UserColumnName="Doc_Category" type="xs:string" minOccurs="0" />
+              <xs:element name="Doc_No" msprop:Generator_ColumnVarNameInTable="columnDoc_No" msprop:Generator_ColumnPropNameInRow="Doc_No" msprop:Generator_ColumnPropNameInTable="Doc_NoColumn" msprop:Generator_UserColumnName="Doc_No" type="xs:string" minOccurs="0" />
+              <xs:element name="Doc_PostingDate" msprop:Generator_ColumnVarNameInTable="columnDoc_PostingDate" msprop:Generator_ColumnPropNameInRow="Doc_PostingDate" msprop:Generator_ColumnPropNameInTable="Doc_PostingDateColumn" msprop:Generator_UserColumnName="Doc_PostingDate" type="xs:string" minOccurs="0" />
+              <xs:element name="GRNDate" msprop:Generator_ColumnVarNameInTable="columnGRNDate" msprop:Generator_ColumnPropNameInRow="GRNDate" msprop:Generator_ColumnPropNameInTable="GRNDateColumn" msprop:Generator_UserColumnName="GRNDate" type="xs:string" minOccurs="0" />
+              <xs:element name="Vendor_Code" msprop:Generator_ColumnVarNameInTable="columnVendor_Code" msprop:Generator_ColumnPropNameInRow="Vendor_Code" msprop:Generator_ColumnPropNameInTable="Vendor_CodeColumn" msprop:Generator_UserColumnName="Vendor_Code" type="xs:string" minOccurs="0" />
+              <xs:element name="VendorName" msprop:Generator_ColumnVarNameInTable="columnVendorName" msprop:Generator_ColumnPropNameInRow="VendorName" msprop:Generator_ColumnPropNameInTable="VendorNameColumn" msprop:Generator_UserColumnName="VendorName" type="xs:string" minOccurs="0" />
+              <xs:element name="excise_refno" msprop:Generator_ColumnVarNameInTable="columnexcise_refno" msprop:Generator_ColumnPropNameInRow="excise_refno" msprop:Generator_ColumnPropNameInTable="excise_refnoColumn" msprop:Generator_UserColumnName="excise_refno" type="xs:string" minOccurs="0" />
+              <xs:element name="excise_date" msprop:Generator_ColumnVarNameInTable="columnexcise_date" msprop:Generator_ColumnPropNameInRow="excise_date" msprop:Generator_ColumnPropNameInTable="excise_dateColumn" msprop:Generator_UserColumnName="excise_date" type="xs:string" minOccurs="0" />
+              <xs:element name="Vendor_ECC" msprop:Generator_ColumnVarNameInTable="columnVendor_ECC" msprop:Generator_ColumnPropNameInRow="Vendor_ECC" msprop:Generator_ColumnPropNameInTable="Vendor_ECCColumn" msprop:Generator_UserColumnName="Vendor_ECC" type="xs:string" minOccurs="0" />
+              <xs:element name="iexid" msprop:Generator_ColumnVarNameInTable="columniexid" msprop:Generator_ColumnPropNameInRow="iexid" msprop:Generator_ColumnPropNameInTable="iexidColumn" msprop:Generator_UserColumnName="iexid" type="xs:string" minOccurs="0" />
+              <xs:element name="Purchase_Order" msprop:Generator_ColumnVarNameInTable="columnPurchase_Order" msprop:Generator_ColumnPropNameInRow="Purchase_Order" msprop:Generator_ColumnPropNameInTable="Purchase_OrderColumn" msprop:Generator_UserColumnName="Purchase_Order" type="xs:string" minOccurs="0" />
+              <xs:element name="Company_display_Name" msprop:Generator_ColumnVarNameInTable="columnCompany_display_Name" msprop:Generator_ColumnPropNameInRow="Company_display_Name" msprop:Generator_ColumnPropNameInTable="Company_display_NameColumn" msprop:Generator_UserColumnName="Company_display_Name" type="xs:string" minOccurs="0" />
+              <xs:element name="Regd_Address" msprop:Generator_ColumnVarNameInTable="columnRegd_Address" msprop:Generator_ColumnPropNameInRow="Regd_Address" msprop:Generator_ColumnPropNameInTable="Regd_AddressColumn" msprop:Generator_UserColumnName="Regd_Address" type="xs:string" minOccurs="0" />
+              <xs:element name="PlantName_Details" msprop:Generator_ColumnVarNameInTable="columnPlantName_Details" msprop:Generator_ColumnPropNameInRow="PlantName_Details" msprop:Generator_ColumnPropNameInTable="PlantName_DetailsColumn" msprop:Generator_UserColumnName="PlantName_Details" type="xs:string" minOccurs="0" />
+              <xs:element name="GRN_DocNo" msprop:Generator_ColumnVarNameInTable="columnGRN_DocNo" msprop:Generator_ColumnPropNameInRow="GRN_DocNo" msprop:Generator_ColumnPropNameInTable="GRN_DocNoColumn" msprop:Generator_UserColumnName="GRN_DocNo" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="IEXDetails" msprop:Generator_TableClassName="IEXDetailsDataTable" msprop:Generator_TableVarName="tableIEXDetails" msprop:Generator_RowChangedName="IEXDetailsRowChanged" msprop:Generator_TablePropName="IEXDetails" msprop:Generator_RowDeletingName="IEXDetailsRowDeleting" msprop:Generator_RowChangingName="IEXDetailsRowChanging" msprop:Generator_RowEvHandlerName="IEXDetailsRowChangeEventHandler" msprop:Generator_RowDeletedName="IEXDetailsRowDeleted" msprop:Generator_RowClassName="IEXDetailsRow" msprop:Generator_UserTableName="IEXDetails" msprop:Generator_RowEvArgName="IEXDetailsRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="iexid" msprop:Generator_ColumnVarNameInTable="columniexid" msprop:Generator_ColumnPropNameInRow="iexid" msprop:Generator_ColumnPropNameInTable="iexidColumn" msprop:Generator_UserColumnName="iexid" type="xs:string" minOccurs="0" />
+              <xs:element name="itemcode" msprop:Generator_ColumnVarNameInTable="columnitemcode" msprop:Generator_ColumnPropNameInRow="itemcode" msprop:Generator_ColumnPropNameInTable="itemcodeColumn" msprop:Generator_UserColumnName="itemcode" type="xs:string" minOccurs="0" />
+              <xs:element name="Itemdescription" msprop:Generator_ColumnVarNameInTable="columnItemdescription" msprop:Generator_ColumnPropNameInRow="Itemdescription" msprop:Generator_ColumnPropNameInTable="ItemdescriptionColumn" msprop:Generator_UserColumnName="Itemdescription" type="xs:string" minOccurs="0" />
+              <xs:element name="Qty" msprop:Generator_ColumnVarNameInTable="columnQty" msprop:Generator_ColumnPropNameInRow="Qty" msprop:Generator_ColumnPropNameInTable="QtyColumn" msprop:Generator_UserColumnName="Qty" type="xs:string" minOccurs="0" />
+              <xs:element name="UoM" msprop:Generator_ColumnVarNameInTable="columnUoM" msprop:Generator_ColumnPropNameInRow="UoM" msprop:Generator_ColumnPropNameInTable="UoMColumn" msprop:Generator_UserColumnName="UoM" type="xs:string" minOccurs="0" />
+              <xs:element name="Ass_rate" msprop:Generator_ColumnVarNameInTable="columnAss_rate" msprop:Generator_ColumnPropNameInRow="Ass_rate" msprop:Generator_ColumnPropNameInTable="Ass_rateColumn" msprop:Generator_UserColumnName="Ass_rate" type="xs:string" minOccurs="0" />
+              <xs:element name="Eff_rate" msprop:Generator_ColumnVarNameInTable="columnEff_rate" msprop:Generator_ColumnPropNameInRow="Eff_rate" msprop:Generator_ColumnPropNameInTable="Eff_rateColumn" msprop:Generator_UserColumnName="Eff_rate" type="xs:string" minOccurs="0" />
+              <xs:element name="Ass_value" msprop:Generator_ColumnVarNameInTable="columnAss_value" msprop:Generator_ColumnPropNameInRow="Ass_value" msprop:Generator_ColumnPropNameInTable="Ass_valueColumn" msprop:Generator_UserColumnName="Ass_value" type="xs:string" minOccurs="0" />
+              <xs:element name="Purchase_value" msprop:Generator_ColumnVarNameInTable="columnPurchase_value" msprop:Generator_ColumnPropNameInRow="Purchase_value" msprop:Generator_ColumnPropNameInTable="Purchase_valueColumn" msprop:Generator_UserColumnName="Purchase_value" type="xs:string" minOccurs="0" />
+              <xs:element name="Tax_Code" msprop:Generator_ColumnVarNameInTable="columnTax_Code" msprop:Generator_ColumnPropNameInRow="Tax_Code" msprop:Generator_ColumnPropNameInTable="Tax_CodeColumn" msprop:Generator_UserColumnName="Tax_Code" type="xs:string" minOccurs="0" />
+              <xs:element name="iexdetail" msprop:Generator_ColumnVarNameInTable="columniexdetail" msprop:Generator_ColumnPropNameInRow="iexdetail" msprop:Generator_ColumnPropNameInTable="iexdetailColumn" msprop:Generator_UserColumnName="iexdetail" type="xs:string" minOccurs="0" />
+              <xs:element name="TAX_ID" msprop:Generator_ColumnVarNameInTable="columnTAX_ID" msprop:Generator_ColumnPropNameInRow="TAX_ID" msprop:Generator_ColumnPropNameInTable="TAX_IDColumn" msprop:Generator_UserColumnName="TAX_ID" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="IEX_tax_detail" msprop:Generator_TableClassName="IEX_tax_detailDataTable" msprop:Generator_TableVarName="tableIEX_tax_detail" msprop:Generator_RowChangedName="IEX_tax_detailRowChanged" msprop:Generator_TablePropName="IEX_tax_detail" msprop:Generator_RowDeletingName="IEX_tax_detailRowDeleting" msprop:Generator_RowChangingName="IEX_tax_detailRowChanging" msprop:Generator_RowEvHandlerName="IEX_tax_detailRowChangeEventHandler" msprop:Generator_RowDeletedName="IEX_tax_detailRowDeleted" msprop:Generator_RowClassName="IEX_tax_detailRow" msprop:Generator_UserTableName="IEX_tax_detail" msprop:Generator_RowEvArgName="IEX_tax_detailRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="tax_name" msprop:Generator_ColumnVarNameInTable="columntax_name" msprop:Generator_ColumnPropNameInRow="tax_name" msprop:Generator_ColumnPropNameInTable="tax_nameColumn" msprop:Generator_UserColumnName="tax_name" type="xs:string" minOccurs="0" />
+              <xs:element name="tax_value" msprop:Generator_ColumnVarNameInTable="columntax_value" msprop:Generator_ColumnPropNameInRow="tax_value" msprop:Generator_ColumnPropNameInTable="tax_valueColumn" msprop:Generator_UserColumnName="tax_value" type="xs:string" minOccurs="0" />
+              <xs:element name="id" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:annotation>
+    <xs:appinfo>
+      <msdata:Relationship name="IEX_IEXDetails" msdata:parent="IEX" msdata:child="IEXDetails" msdata:parentkey="iexid" msdata:childkey="iexid" msprop:Generator_UserChildTable="IEXDetails" msprop:Generator_ChildPropName="GetIEXDetailsRows" msprop:Generator_UserRelationName="IEX_IEXDetails" msprop:Generator_ParentPropName="IEXRow" msprop:Generator_RelationVarName="relationIEX_IEXDetails" msprop:Generator_UserParentTable="IEX" />
+      <msdata:Relationship name="IEXDetails_IEX_tax_detail" msdata:parent="IEXDetails" msdata:child="IEX_tax_detail" msdata:parentkey="iexdetail" msdata:childkey="id" msprop:Generator_UserChildTable="IEX_tax_detail" msprop:Generator_ChildPropName="GetIEX_tax_detailRows" msprop:Generator_UserRelationName="IEXDetails_IEX_tax_detail" msprop:Generator_RelationVarName="relationIEXDetails_IEX_tax_detail" msprop:Generator_UserParentTable="IEXDetails" msprop:Generator_ParentPropName="IEXDetailsRow" />
+    </xs:appinfo>
+  </xs:annotation>
+</xs:schema>

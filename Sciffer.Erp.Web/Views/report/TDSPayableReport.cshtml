@@ -1,0 +1,139 @@
+﻿
+
+@using Sciffer.Erp.Domain.ViewModel
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.mickey').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            maxHeight: '200',
+            enableCaseInsensitiveFiltering: true,
+            allowClear: true,
+            maximumResultsForSearch: 1,
+            numberDisplayed: 0,
+        });
+    });
+</script>
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel panel">
+            <div class="x_title">
+                <h2 style="font-size:18px">
+                    Forex Sales Report
+                </h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="form-horizontal">
+                <div class="x_content">
+                    <div class=row>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">From Date</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <input type="date" id="fromDate" class="form-control radius" required="required">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">To Date</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <input type="date" id="toDate" class="form-control radius" required="required">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                                <label></label>
+                            </div>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <button class="searchbutton searchButton" id="search"> &nbsp; Run Report </button>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class=row>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">Label</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                @Html.DropDownList("tds_code", (SelectList)ViewBag.tds_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel panel">
+            <div class="x_title">
+                <h2 style="font-size:18px"></h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div id="searchresult">
+                    @Html.Partial("Partial_TDSPayable", (object)ViewBag)
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+<script type="text/javascript">
+    $("#search").click(function () {
+        AdvanceSearch();
+    });
+    document.getElementById('fromDate').valueAsDate = new Date();
+    document.getElementById('toDate').valueAsDate = new Date();
+    function AdvanceSearch() {
+        var fromDate = $("#fromDate").val();
+        var toDate = $("#toDate").val();
+        var number = $("#number").val();
+        if ($('#tds_code :selected').length > 0) {
+            var selectedTDSCode = [];
+            $('#tds_code :selected').each(function (i, selected) {
+                selectedTDSCode[i] = $(selected).val();
+            });
+            var TDSCode = selectedTDSCode + "";
+        }
+        $.ajax({
+            url: '/Report/GetTDSPayableReport',
+            method: "Post",
+            cache: false,
+            data: { start_date: fromDate, end_date: toDate, tdscode: TDSCode },
+            success: function (data) {
+                $(".loading").hide();
+                $('#searchresult').empty().append(data);
+                //console.log(data);
+            },
+            error: function (http) {
+                console.log(XMLHttpRequest);
+            }
+        });
+    }
+</script>
+<div class="modal"><!-- Place at bottom of page --></div>

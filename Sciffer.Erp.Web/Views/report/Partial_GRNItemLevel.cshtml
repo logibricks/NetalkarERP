@@ -1,0 +1,78 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+
+
+
+@{(Html.EJ().Grid<Report_GRN_Item_Level_vm>("Editing")
+                                                    .Datasource((IEnumerable<object>)ViewBag.datasource)
+                                                      .AllowPaging().PageSettings(a=>a.PageSize(20))
+                                                      .AllowFiltering()
+                                                          .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                      .ShowColumnChooser()
+                                                      .AllowSorting()
+                                                      .AllowScrolling()
+                                                      .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelForReport", "Generic", new { ctrlname = "SalesSummaryReport" }))
+                                                      .ExportToPdfAction(Url.Action("ExportToPdfForReport", "Generic", new { ctrlname = "SalesSummaryReport" })))
+                                                      .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                                  .ToolbarSettings(toolbar =>
+                                                  {
+                                                      toolbar.ShowToolbar().ToolbarItems(items =>
+                                                      {
+                                                          items.AddTool(ToolBarItems.Search);
+                                                          items.AddTool(ToolBarItems.ExcelExport);
+                                                          items.AddTool(ToolBarItems.PrintGrid);
+                                                      });
+                                                  })
+                                          .Columns(col =>
+                                          {
+                                              col.Field("Doc_Number").Width("10%").HeaderText("Doc Number").Add();
+                                              col.Field("DOc_Date").Width("10%").HeaderText("DOc Date").Add();
+                                              col.Field("Vendor_COde").Width("10%").HeaderText("Vendor COde").Visible(false).Add();
+                                              col.Field("vendor_Description").Width("10%").HeaderText("vendor Description").Visible(false).Add();
+                                              col.Field("Plant").Width("10%").HeaderText("Plant").Visible(false).Add();
+                                              col.Field("Item_Code").Width("10%").HeaderText("Item Code").Visible(false).Add();
+                                              col.Field("Item_Description").Width("10%").HeaderText("Item Description").Visible(false).Add();
+                                              col.Field("User_Description").Width("10%").HeaderText("User Description").Visible(false).Add();
+                                              col.Field("SLOC").Width("10%").HeaderText("SLOC").Visible(false).Add();
+                                              col.Field("Batch").Width("10%").HeaderText("Batch").Visible(false).Add();
+                                              col.Field("Bucket").Width("10%").HeaderText("Bucket").Visible(false).Add();
+                                              col.Field("Qty").Width("10%").HeaderText("Qty").Visible(false).Add();
+                                              col.Field("UoM").Width("10%").HeaderText("UoM").Visible(false).Add();
+                                              col.Field("Unit_Price").Width("10%").HeaderText("Unit Price").Visible(false).Add();
+                                              col.Field("Discount").Width("10%").HeaderText("Discount").Visible(false).Add();
+                                              col.Field("Effective_Unit_Price").Width("10%").HeaderText("Effective Unit Price").Visible(false).Add();
+                                              col.Field("Purchase_Value").Width("10%").HeaderText("Purchase Value").Visible(false).Add();
+
+                                          })
+                                          .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+                                          ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    @*$(function () {
+        var obj = @Html.Raw(Json.Encode(ViewBag.datasource));
+        console.log(obj);
+        $("#Editing").ejGrid({
+            dataSource: obj,
+            allowPaging: true,
+            //columns: [
+
+            //],
+            //dataBound : function(args){
+            //	for (var fld =0; fld < list.length; fld++ ) {
+            //	var column = { field: list[fld].value, headerText: list[fld].header, column: "", textAlign: "left", type: "string", visible: true, width: 75 };
+            //	this.model.columns.push(column); //add dynamic columns
+            //	}
+            //	this.columns(this.model.columns);
+            //}
+        });
+    });*@
+
+
+</script>
+

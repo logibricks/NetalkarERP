@@ -1,0 +1,55 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+@{(Html.EJ().Grid<sales_order_report_vm>("Editing")
+                          .Datasource(ds => ds.URL(Url.Action("GetSalesOrderData", "SalesReport") + "?entity=" + ViewBag.entity + "&business_unit_id=" + ViewBag.business_unit_id + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&customer_category_id=" + ViewBag.customer_category_id + "&sales_rm=" + ViewBag.sales_rm + "&territory_id=" + ViewBag.territory_id + "&customer_priority_id=" + ViewBag.customer_priority_id + "&currency_id=" + ViewBag.currency_id + "&plant_id=" + ViewBag.plant_id).Adaptor(AdaptorType.UrlAdaptor))
+
+                          .AllowPaging().PageSettings(a => a.PageSize(20))
+                          .AllowFiltering()
+                              .FilterSettings(X => X.FilterType(FilterType.Excel))
+                          .ShowColumnChooser()
+                          .AllowSorting()
+                          .AllowScrolling()
+                                  .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "SalesReport", new { ctrlname = "SalesReturnSummary" })))
+                              .ScrollSettings(scroll => { scroll.Width("100%"); })
+                      .ToolbarSettings(toolbar =>
+                      {
+                          toolbar.ShowToolbar().ToolbarItems(items =>
+                          {
+                              items.AddTool(ToolBarItems.Search);
+                              items.AddTool(ToolBarItems.ExcelExport);
+                              items.AddTool(ToolBarItems.PrintGrid);
+                          });
+                      })
+
+                          .ShowSummary()
+
+                      .SummaryRow(row =>
+                      {
+                          row.Title("Total").SummaryColumns(col =>
+                          {
+                              col.SummaryType(SummaryType.Sum).DisplayColumn("tax_value").DataMember("tax_value").Format("{0:n2}").Add();
+                              col.SummaryType(SummaryType.Sum).DisplayColumn("gross_value").DataMember("gross_value").Format("{0:n2}").Add();
+                              col.SummaryType(SummaryType.Sum).DisplayColumn("round_off").DataMember("round_off").Format("{0:n2}").Add();
+                              col.SummaryType(SummaryType.Sum).DisplayColumn("tds_value").DataMember("tds_value").Format("{0:n2}").Add();
+                              col.SummaryType(SummaryType.Sum).DisplayColumn("net_value").DataMember("net_value").Format("{0:n2}").Add();
+
+                          }).Add();
+                      })
+                      .Columns(col =>
+                      {
+                          col.Field("customer_code").Width("15%").HeaderText("Customer Code").Add();
+                          col.Field("customer_name").Width("15%").HeaderText("Customer Description").Add();
+                          col.Field("net_value").Width("15%").HeaderText("Net Value").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                          col.Field("tax_value").Width("15%").HeaderText("Total Taxes").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                          col.Field("round_off").Width("15%").HeaderText("Round Off").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                          col.Field("tds_value").Width("15%").HeaderText("TDS").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                          col.Field("gross_value").Width("15%").HeaderText("Gross Value").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+
+                      })
+                      .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick1"); })
+                      ).Render();}
+@Html.EJ().ScriptManager()
+
+
+

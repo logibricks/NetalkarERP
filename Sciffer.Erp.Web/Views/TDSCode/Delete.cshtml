@@ -1,0 +1,72 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_tds_code
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>ref_tds_code</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.tds_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tds_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tds_code_description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tds_code_description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.creditor_gl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.creditor_gl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.debtor_gl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.debtor_gl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_blocked)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_blocked)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_active)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

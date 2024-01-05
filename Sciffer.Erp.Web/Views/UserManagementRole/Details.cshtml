@@ -1,0 +1,42 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_user_management_role
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ref_user_management_role</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.role_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.role_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.role_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.role_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_block)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_block)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.role_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

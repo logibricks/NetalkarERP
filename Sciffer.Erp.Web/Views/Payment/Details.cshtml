@@ -1,0 +1,106 @@
+﻿@model Sciffer.Erp.Domain.Model.fin_ledger_payment
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>fin_ledger_payment</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_CURRENCY.CURRENCY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_CURRENCY.CURRENCY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_ENTITY_TYPE.ENTITY_TYPE_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_ENTITY_TYPE.ENTITY_TYPE_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_PAYMENT_TYPE.PAYMENT_TYPE_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_PAYMENT_TYPE.PAYMENT_TYPE_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.in_out)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.in_out)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.category_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.category_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.cash_bank)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.cash_bank)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.bank_account_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.bank_account_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.payment_amount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.payment_amount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.remarks)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.remarks)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.document_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.document_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.payment_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.payment_date)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.fin_ledger_payment_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,402 @@
+﻿@model Sciffer.Erp.Domain.Model.price_list_customer_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm("Edit", "PriceListCustomer"))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.HiddenFor(model => model.price_list_id)
+
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Customer <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            @{
+                                Html.EJ()
+                                    .Autocomplete("customer_code")
+                                    .Width("100%")
+                                     .ClientSideEvents(e => e.Select("onSelect2"))
+                                     .WatermarkText("Select Item")
+                                    .Datasource((IEnumerable<object>)ViewBag.Customer)
+                                     .HighlightSearch(true)
+                                     .ShowPopupButton(true)
+                                     .Enabled(false)
+                                    .MultiColumnSettings(obj => obj.Enable(true).Columns(obj1 =>
+                                    {
+                                        obj1.Field("customer_name").HeaderText("Customer Name").Add();
+                                        obj1.Field("customer_code").HeaderText("Customer Code").Add();
+                                        obj1.Field("customer_id").HeaderText("ID").Add();
+                                    }).ShowHeader(true).StringFormat("{1}-{0}"))
+                                    .Value(ViewBag.customercodename)
+                                    .Render();
+                            }
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <br />
+            <input type="hidden" id="productdetail" name="productdetail" />
+
+
+            @Html.HiddenFor(model => model.deleteids)
+            @*@Html.HiddenFor(model => model.customer_name)
+                @Html.HiddenFor(model => model.customer_code, new { @class = "num"})*@
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                        <thead>
+                            <tr>
+                                <th hidden><label>ID</label></th>
+                                <th><label>Sr. No.</label></th>
+                                <th><label>Item Code</label></th>
+                                <th><label>Item Name</label></th>
+                                <th><label>Price</label></th>
+                                <th><label>Discount</label></th>
+                                <th><label>Price after Discount</label></th>
+                                <th hidden><label>UoM Id</label></th>
+                                <th><label>UoM name</label></th>
+                            </tr>
+                        </thead>
+
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+                                }
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Items Detail</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Item Code <span class="required">*</span>
+                        </label>
+
+                        <div class="col-md-7">
+                            @{
+                                Html.EJ()
+                                    .Autocomplete("item_id")
+                                    .Width("100%")
+                                     .ClientSideEvents(e => e.Select("onSelect2"))
+                                     .WatermarkText("Select Item")
+                                    .Datasource((IEnumerable<object>)ViewBag.Item)
+                                     .HighlightSearch(true)
+                                     .ShowPopupButton(true)
+                                    .MultiColumnSettings(obj => obj.Enable(true).Columns(obj1 =>
+                                    {
+                                        obj1.Field("ITEM_NAME").HeaderText("Item Name").Add();
+                                        obj1.Field("ITEM_CODE").HeaderText("Item Code").Add();
+                                        obj1.Field("ITEM_ID").HeaderText("ID").Add();
+                                    }).ShowHeader(true).StringFormat("{1}-{0}"))
+                                    .Render();
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Price <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            <input type="number" class="form-control" name="price" id="price" onclick="calculate()" />
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Discount
+                        </label>
+                        <div class="col-md-7">
+                            <input type="number" class="form-control" name="discount" id="discount" onclick="calculate()" />
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Price After Discount <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            <input type="number" class="form-control" name="price_after_discount" id="price_after_discount" onclick="calculate()" />
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            UoM Name <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            @Html.DropDownList("uom_id", (new System.Web.Mvc.SelectList(ViewBag.UOM, "UOM_ID", "UOM_NAME")), "--select--", htmlAttributes: new { @class = "form-control validator", required = "required" })
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <input type="hidden" id="srno" />
+                    <input type="hidden" id="price_detail_id" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                    <button type="button" class="add btn btn-primary">Add Item</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+    function codeAddress() {
+        var t = $('#ContactGrid').DataTable();
+        var sr_no = t.fnGetData().length+1;
+        var pl_detail = @Html.Raw(JsonConvert.SerializeObject(this.Model.ref_price_list_customer_details));
+        console.log(pl_detail);
+        var i=1;
+        $.each(pl_detail, function(key, value) {
+
+            t.fnAddData([value.price_list_detail_id,sr_no,value.REF_ITEM.ITEM_CODE,value.REF_ITEM.ITEM_NAME,value.price,value.discount,value.price_after_discount,value.uom_id,value.REF_UOM.UOM_NAME,''
+            ]);
+            i=i+1;
+            sr_no++;
+        });
+    }
+    window.onload = codeAddress;
+
+    var y = $("#customer_name").val();
+    var z = $("#customer_code").val();
+
+
+    $("#Id").val(z+"-"+y);
+        function onSelect2(args) {
+            var id = "";
+            var matches = args.value.split("-");
+            id = matches[0];
+            GetUnit(id);
+        }
+        function GetUnit(id) {
+
+            if (id != '') {
+                $.ajax({
+                    type: 'GET',
+                    url: "@Url.Action("GetUnitofItemCode", "Quotation")",
+                    data: { id: id },
+                    success: function (ITEM) {
+                        $('#uom_id').val(ITEM.item.UOM_ID);
+                    },
+                    error: function (emp) {
+                        $('#uom_id').val('');
+                    }
+                });
+            }
+            else {
+                $('#uom_id').val('');
+            }
+
+        }
+
+        $('#open_modal').click(function () {
+            clearmodel();
+        });
+
+        function calculate() {
+            var price = $("#price").val();
+            var discount = $("#discount").val();
+            var y = (price * discount) / 100;
+            var result = (price-y)
+            $("#price_after_discount").val(result);
+            console.log(result);
+        }
+        $(".add").on("click", function (event) {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+
+            var item = $("#item_id").val();
+            var matches = item.split("-");
+            var item_name = matches[1];
+            var item_code = matches[0];
+
+            var price = $("#price").val();
+            var discount = $("#discount").val();
+            var price_after_discount = $("#price_after_discount").val();
+            var uom_id = $("#uom_id").val();
+            var uom_name = $('#uom_id').find('option:selected').text();
+            var price_detail_id = $("#price_detail_id").val();
+            if (item_id == '') {
+                swal("", "Please Select Item Name.", "error");
+                return false;
+            }
+            if (uom_id == '') {
+                swal("", "Please Select UOM Name.", "error");
+                return false;
+            }
+            if (price == '') {
+                swal("", "Please Enter Price.", "error");
+                return false;
+            }
+            if (discount == 0) {
+                swal("", "Please Enter Discount.", "error");
+                return false;
+            }
+            if (price_after_discount == '') {
+                swal("", "Please select Price After Discount.", "error");
+                return false;
+            }
+
+            if ($("#srno").val() == "") {
+                t.fnAddData(['', rowCount + 1, item_code, item_name, price, discount, price_after_discount,uom_id,uom_name, ''
+                ]);
+            }
+            else {
+                var cc = $("#srno").val();
+                cc = parseInt(cc) - 1;
+                t.fnUpdate([price_detail_id, cc + 1, item_code, item_name, price, discount, price_after_discount,uom_id, uom_name, ''], cc)
+            }
+
+            clearmodel();
+            return true;
+        });
+        function clearmodel() {
+            $("#item_id").val('');
+            $("#uom_id").val('');
+            $("#price").val('');
+            $("#discount").val('');
+            $("#price_after_discount").val('');
+
+        }
+
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: false },
+                     { sname: "b"},
+                     { sname: "c"},
+                     { sname: "d"},
+                     { sname: "e"},
+                     { sname: "f" },
+                     { sname: "g" },
+                     { sname: "h", bVisible: false },
+                     { sname: "i" },
+
+
+            ]
+
+        });
+
+        function editRow() {
+            $('#myModal').modal('show');
+                var t = $('#ContactGrid').DataTable()
+                var cc = parseInt(arguments[0]) - 1;
+                console.log(cc);
+                $("#price_detail_id").val(t.fnGetData(cc)[0]);
+                $("#srno").val(t.fnGetData(cc)[1]);
+                $("#item_id").val(t.fnGetData(cc)[2]+"-"+t.fnGetData(cc)[3]);
+                $('#price').val(t.fnGetData(cc)[4]);
+                $('#discount').val(t.fnGetData(cc)[5]);
+                $('#price_after_discount').val(t.fnGetData(cc)[6]);
+                $("#uom_id").val(t.fnGetData(cc)[7]);
+        }
+        function TabletoJeson() {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var str;
+            var str1;
+            for (i = 0; i < rowCount; i++) {
+
+                str1 = t.fnGetData(i)[0] + ",";
+                str1 = str1 + t.fnGetData(i)[1] + ",";
+                str1 = str1 + t.fnGetData(i)[2] + ",";
+                str1 = str1+ t.fnGetData(i)[3] + ",";
+                str1 = str1 +  t.fnGetData(i)[4] + ",";
+                str1 = str1 + t.fnGetData(i)[5] + ",";
+                str1 = str1 + t.fnGetData(i)[6] + ",";
+                str1 = str1 + t.fnGetData(i)[7] + ",";
+                str1 = str1 + t.fnGetData(i)[8] + ",";
+                str1 = str1 + t.fnGetData(i)[9] + ",";
+
+                if (i == 0) {
+                    str = str1 + "~"
+                }
+                else {
+                    str = str + str1 + "~";
+                }
+            }
+
+
+            document.getElementsByName("productdetail")[0].value = str;
+        }
+        function deleteRow() {
+            var t = $('#ContactGrid').DataTable();
+            console.log(t);
+
+            var id = $(this).parent('td').parent('tr').index();
+            var deleteids = t.fnGetData(id)[0];
+            swal({
+                title: "Are you sure?",
+
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+             },
+             function (isConfirm) {
+                 if (isConfirm) {
+
+                     $("#deleteids").val(deleteids + "~");
+                     t.fnDeleteRow(id);
+                 }
+             });
+        }
+
+
+    </script>
+
+}
+
+
+
+

@@ -1,0 +1,88 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+
+
+
+@{(Html.EJ().Grid<Report_Sales_Order_Qty_Tracker_vm>("Editing")
+                                    .Datasource((IEnumerable<object>)ViewBag.datasource)
+                                      .AllowPaging().PageSettings(a=>a.PageSize(20))
+                                      .AllowFiltering()
+                                          .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                      .ShowColumnChooser()
+                                      .AllowSorting()
+                                      .AllowScrolling()
+                                      .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelForReport", "Generic", new { ctrlname = "SalesSummaryReport" }))
+                                      .ExportToPdfAction(Url.Action("ExportToPdfForReport", "Generic", new { ctrlname = "SalesSummaryReport" })))
+                                      .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                  .ToolbarSettings(toolbar =>
+                                  {
+                                      toolbar.ShowToolbar().ToolbarItems(items =>
+                                      {
+                                          items.AddTool(ToolBarItems.Search);
+                                          items.AddTool(ToolBarItems.ExcelExport);
+                                          items.AddTool(ToolBarItems.PrintGrid);
+                                      });
+                                  })
+
+                                      .ShowSummary()
+
+                                  .SummaryRow(row =>
+                                  {
+                                      row.Title("Total").SummaryColumns(col =>
+                                      {
+                                          col.SummaryType(SummaryType.Sum).DisplayColumn("SO_Qty").DataMember("SO_Qty").Format("{0:n2}").Add();
+                                          col.SummaryType(SummaryType.Sum).DisplayColumn("Sales_Quotation_QTy").DataMember("Sales_Quotation_QTy").Format("{0:n2}").Add();
+                                          col.SummaryType(SummaryType.Sum).DisplayColumn("Invoice_Qty").DataMember("Invoice_Qty").Format("{0:n2}").Add();
+                                      }).Add();
+                                  })
+                          .Columns(col =>
+                          {
+                              col.Field("SO_Document_Category").Width("10%").HeaderText("SO Document Category").Add();
+                              col.Field("SO_Document_Num_ber").Width("10%").HeaderText("SO Document Num ber").Add();
+                              col.Field("Bill_to_Party_Code").Width("10%").HeaderText("Bill to Party Code").Add();
+                              col.Field("Bill_to_Party").Width("10%").HeaderText("Bill to Party").Visible(false).Add();
+                              col.Field("Plant").Width("10%").HeaderText("Plant").Visible(false).Add();
+                              col.Field("Item_COde").Width("10%").HeaderText("Item COde").Visible(false).Add();
+                              col.Field("Item_Description").Width("10%").HeaderText("Item Description").Visible(false).Add();
+                              col.Field("SO_Qty").Width("10%").HeaderText("SO Qty").Visible(false).Add();
+                              col.Field("Sales_Quotation_QTy").Width("10%").HeaderText("Sales Quotation QTy").Visible(false).Add();
+                              col.Field("SQ_Category").Width("10%").HeaderText("SQ Category").Visible(false).Add();
+                              col.Field("SQ_Number").Width("10%").HeaderText("SQ Number").Visible(false).Add();
+                              col.Field("SQ_Posting_Date").Width("10%").HeaderText("SQ Posting Date").Visible(false).Add();
+                              col.Field("Invoice_Qty").Width("10%").HeaderText("Invoice Qty").Visible(false).Add();
+                              col.Field("Invoice_Document_Category").Width("10%").HeaderText("Invoice Document Category").Visible(false).Add();
+                              col.Field("Invoice_Number").Width("10%").HeaderText("Invoice Number").Visible(false).Add();
+                              col.Field("Invoice_Posting_Date").Width("10%").HeaderText("Invoice Posting Date").Visible(false).Add();
+
+                          })
+                          .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+                          ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    @*$(function () {
+        var obj = @Html.Raw(Json.Encode(ViewBag.datasource));
+        console.log(obj);
+        $("#Editing").ejGrid({
+            dataSource: obj,
+            allowPaging: true,
+            //columns: [
+
+            //],
+            //dataBound : function(args){
+            //	for (var fld =0; fld < list.length; fld++ ) {
+            //	var column = { field: list[fld].value, headerText: list[fld].header, column: "", textAlign: "left", type: "string", visible: true, width: 75 };
+            //	this.model.columns.push(column); //add dynamic columns
+            //	}
+            //	this.columns(this.model.columns);
+            //}
+        });
+    });*@
+
+
+</script>
+

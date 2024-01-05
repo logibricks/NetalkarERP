@@ -1,0 +1,111 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.mickey').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            maxHeight: '200',
+            enableCaseInsensitiveFiltering: true,
+            allowClear: true,
+            maximumResultsForSearch: 1,
+            numberDisplayed: 0,
+        });
+    });
+</script>
+<div class="loading">Loading &#8230;</div>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+
+        <div class=row>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">As Of Date</label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    <input type="date" id="fromDate" class="form-control radius" required="required">
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">Item</label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.item_list, "--Select--", htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                    <label></label>
+                </div>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    <button class="searchbutton searchButton" id="search"> &nbsp; Run Report </button>
+                </div>
+            </div>
+        </div>
+
+        <br />
+
+    </div>
+</div>
+
+
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+
+        <div id="searchresult">
+            @Html.Partial("Partial_TagNumberReadyForSale", (object)ViewBag)
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    $(function () {
+
+        $("#item_id").multiselect('selectAll', false);
+        $('#item_id').multiselect('updateButtonText');
+
+
+
+
+    });
+    $("#search").click(function () {
+        AdvanceSearch();
+    });
+    document.getElementById('fromDate').valueAsDate = new Date();
+
+    function AdvanceSearch() {
+        var fromDate = $("#fromDate").val();
+
+
+        if ($('#item_id :selected').length > 0) {
+            var selecteditemid = [];
+            $('#item_id :selected').each(function (i, selected) {
+                selecteditemid[i] = $(selected).val();
+            });
+            var itemid = selecteditemid + "";
+        }
+
+
+        $(".loading").show();
+        $.ajax({
+            url: "@Url.Action("Get_Partial", "ProductionReport")",
+            method: "Post",
+        cache: false,
+        data: {
+            entity: "get_tag_number_ready_for_sale", from_date: fromDate, item_id: itemid, is_qc_remark: "false"
+        },
+        success: function (data) {
+            $(".loading").hide();
+            $('#searchresult').empty().append(data);
+        },
+        error: function (http) {
+            console.log(XMLHttpRequest);
+        }
+        });
+
+    }
+</script>
+<div class="modal"><!-- Place at bottom of page --></div>

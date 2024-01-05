@@ -1,0 +1,90 @@
+﻿
+@using Sciffer.Erp.Domain.Model
+@{
+    ViewBag.Title = "Index";
+}
+<br/><br /><br />
+<div>
+    @(Html.EJ().Grid<VendorParentVM>("FlatGrid")
+        .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "VendorParent" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+            //  items.AddTool(ToolBarItems.Search);
+
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "VendorParent" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "VendorParent" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "CustomerMaster" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+         .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("VENDOR_PARENT_ID").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Width(55).Add();
+            col.Field("vendor_code").Width("15%").HeaderText("Vendor Code").Add();
+            col.Field("VENDOR_PARENT_NAME").Width("15%").HeaderText("Vendor Name").Add();
+            col.Field("REGD_OFFICE_ADDRESS").Width("15%").HeaderText("Vendor Address").Add();
+            col.Field("REGD_OFFICE_CITY").Width("15%").HeaderText("City").Add();
+            col.Field("REGD_OFFICE_PINCODE").Width("15%").HeaderText("Pincode").Add();
+            col.Field("REGD_OFFICE_STATE_ID").Width("15%").HeaderText("State ID").Visible(false).Add();
+            col.Field("REGD_OFFICE_STATE_NAME").Width("15%").HeaderText("State").Add();
+            col.Field("REGD_OFFICE_COUNTRY_ID").Width("15%").HeaderText("Country ID").Visible(false).Add();
+            col.Field("REGD_OFFICE_COUNTRY_NAME").Width("15%").HeaderText("Country").Add();
+            col.Field("WEBSITE_ADDRESS").Width("15%").HeaderText("Website Address").Add();
+            col.Field("blocked").Width("15%").HeaderText("Blocked").Visible(false).Add();
+
+        })
+        .ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = '@Url.Action("Edit", "VendorParent")?id='+args.rowData.VENDOR_PARENT_ID;
+        }
+        if(args.requestType=="add")
+        {
+            location.href = '@Url.Action("Create", "VendorParent")';
+        }
+    }
+
+    function rightClick(args) {
+        location.href = '@Url.Action("Details", "VendorParent")?id=' +args.data.VENDOR_PARENT_ID;
+    }
+
+
+</script>
+
+
+

@@ -1,0 +1,165 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.mickey').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            maxHeight: '200',
+            enableCaseInsensitiveFiltering: true,
+            allowClear: true,
+            maximumResultsForSearch: 1,
+            numberDisplayed: 0,
+        });
+    });
+</script>
+<div class="loading">Loading &#8230;</div>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+
+        <div class=row>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">From Date</label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    <input type="date" id="fromDate" class="form-control radius" required="required">
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">To Date</label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    <input type="date" id="toDate" class="form-control radius" required="required">
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                    <label></label>
+                </div>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    <button class="searchbutton searchButton" id="search"> &nbsp; Run Report </button>
+                </div>
+            </div>
+        </div>
+        <div class=row>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">Tag number* </label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    <input type="text" id="tag_number" class="form-control radius" />
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">Machine *</label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    @Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.mplist, "--Select--", htmlAttributes: new { @class = "form-control ", })
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">Item *</label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.item_list, "--Select--", htmlAttributes: new { @class = "form-control " })
+
+
+                    @*@Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.item_list, "--Select--", htmlAttributes: new { @class = "form-control ", })*@
+                </div>
+            </div>
+
+
+        </div>
+        <br />
+        <div class=row>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">Operation </label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    @Html.DropDownList("process_id", (System.Web.Mvc.SelectList)ViewBag.oprlist, "--Select--", htmlAttributes: new { @class = "form-control " })
+
+
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    </div>
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+
+        <div id="searchresult">
+            @Html.Partial("Partial_QCParamatersStatus", (object)ViewBag)
+        </div>
+    </div>
+</div>
+
+
+@Scripts.Render("~/bundles/jqueryval")
+<script src="~/Scripts/requirevalidation.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function(){
+
+        $("#machine_id").select2({
+            placeholder: "Select Machine",
+            allowClear: true
+        });
+        $("#item_id").select2({
+            placeholder: "Select Item",
+            allowClear: true
+        });
+        $("#process_id").select2({
+            placeholder: "Select Operation",
+            allowClear: true
+        });
+    })
+
+    $("#search").click(function(){
+        AdvanceSearch();
+    })
+
+    document.getElementById('fromDate').valueAsDate = new Date();
+    document.getElementById('toDate').valueAsDate = new Date();
+    function AdvanceSearch() {
+        var fromDate = $("#fromDate").val();
+        var toDate = $("#toDate").val();
+        var tag_number = $("#tag_number").val();
+        if ($('#machine_id :selected').length > 0) {
+            var selectedmachineid = [];
+            $('#machine_id :selected').each(function (i, selected) {
+                selectedmachineid[i] = $(selected).val();
+            });
+            var machineid = selectedmachineid + "";
+        }
+        if ($('#item_id :selected').length > 0) {
+            var selecteditemid = [];
+            $('#item_id :selected').each(function (i, selected) {
+                selecteditemid[i] = $(selected).val();
+            });
+            var itemid = selecteditemid + "";
+        }
+        if ($('#process_id :selected').length > 0) {
+            var selectedoperationid = [];
+            $('#process_id :selected').each(function (i, selected) {
+                selectedoperationid[i] = $(selected).val();
+            });
+            var operationid = selectedoperationid + "";
+        }
+        $(".loading").show();
+        $.ajax({
+            url: "@Url.Action("Get_Partial", "ProductionReport")",
+            method: "Post",
+        cache: false,
+            data: {
+                entity: "get_QC_Paramaters_Status", from_date: fromDate, to_date: toDate, machine_id: $("#machine_id").val(), item_id: itemid, process_id: $("#process_id").val(), tag_number: tag_number, is_qc_remark: "false"
+        },
+        success: function (data) {
+            $(".loading").hide();
+            $('#searchresult').empty().append(data);
+        },
+        error: function (http) {
+            console.log(XMLHttpRequest);
+        }
+        });
+
+    }
+</script>
+<div class="modal"><!-- Place at bottom of page --></div>

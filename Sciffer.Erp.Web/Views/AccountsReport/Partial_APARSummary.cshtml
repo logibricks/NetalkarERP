@@ -1,0 +1,50 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<accounts_report_vm>("Editing")
+                                        .Datasource(ds => ds.URL(Url.Action("GetAccountsData", "AccountsReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date).Adaptor(AdaptorType.UrlAdaptor))
+                                        .AllowPaging().PageSettings(a => a.PageSize(20))
+                                        .AllowFiltering()
+                                            .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                        .ShowColumnChooser()
+                                        .AllowSorting()
+                                        .AllowScrolling()
+                                            .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "AccountsReport", new { ctrlname = ViewBag.ctrlname })))
+
+                                    .ToolbarSettings(toolbar =>
+                                    {
+                                        toolbar.ShowToolbar().ToolbarItems(items =>
+                                        {
+                                            items.AddTool(ToolBarItems.Search);
+                                            items.AddTool(ToolBarItems.ExcelExport);
+                                            items.AddTool(ToolBarItems.PrintGrid);
+                                        });
+                                    })
+                            .Columns(co =>
+                            {
+                                co.Field("entity_code").Width("15%").HeaderText(ViewBag.entity_code).Add();
+                                co.Field("entity_name").Width("15%").HeaderText(ViewBag.entity_name).Add();
+                                co.Field("document_type_name").Width("15%").HeaderText("Document Type").Add();
+                                co.Field("source_document_no").Width("15%").HeaderText("Document No").Add();
+                                co.Field("posting_date").Width("15%").HeaderText("Posting Date").Format("{0:dd/MMM/yyyy}").Add();
+                                co.Field("day_diff").Width("15%").HeaderText("Days(Ageing)").TextAlign(TextAlign.Right).Add();
+                                co.Field("due_date").Width("15%").HeaderText("Due Date").Format("{0:dd/MMM/yyyy}").Add();
+                                co.Field("status_name").Width("15%").HeaderText("Payment Terms").Add();
+                                co.Field("ref3").Width("15%").HeaderText("Vendor doc no").Add();
+                                co.Field("total").Width("15%").HeaderText("Balance Total").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                co.Field("not_due").Width("15%").HeaderText("Not Due").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                co.Field("total_due").Width("15%").HeaderText("Total Overdue").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                co.Field("thirty_days").Width("15%").HeaderText("Overdue 0-30 Days").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                co.Field("sixty_days").Width("15%").HeaderText("Overdue 31-60 Days").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                co.Field("ninety_days").Width("15%").HeaderText("Overdue 61-90 Days").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                co.Field("one_twenty_days").Width("15%").HeaderText("Overdue 91-120 Days").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                co.Field("one_fifty_days").Width("15%").HeaderText("Overdue 121-150 Days").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                co.Field("one_eighty_days").Width("15%").HeaderText("Overdue 151-180 Days").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                co.Field("sixty_five_days").Width("15%").HeaderText("Overdue 181-365 Days").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                co.Field("three_sixty_five_days").Width("15%").HeaderText("Overdue >365 Days").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                            })
+                            .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicka"); })
+                                                                        ).Render();}
+@Html.EJ().ScriptManager()
+
+
+

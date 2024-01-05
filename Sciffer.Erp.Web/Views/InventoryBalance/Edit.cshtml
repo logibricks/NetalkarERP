@@ -1,0 +1,596 @@
+﻿
+@model Sciffer.Erp.Domain.ViewModel.ref_inventory_balance_VM
+@using Newtonsoft.Json
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+       
+        <hr />
+
+        <div class="modal-body">
+            <div class="row">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.offset_account_id, "Offset Account  *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("offset_account_id", (System.Web.Mvc.SelectList)ViewBag.GeneralLedger, htmlAttributes: new { @class = "form-control validinput" })
+                                    @Html.ValidationMessageFor(model => model.offset_account_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        @Html.HiddenFor(a => a.gl_ledger_code)
+
+                        <div class="col-sm-6">
+                            <label class="control-label col-md-4">
+                                Posting Date<span class="required">*</span>
+                            </label>
+                            <div class="col-md-8">
+                                <input type="date" class="form-control" name="posting_date" id="posting_date" value="@ViewBag.date" />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <label class="control-label col-md-4">
+                                Remarks
+                            </label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" name="remarks" id="remarks" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <br />
+            <input type="hidden" id="productdetail" name="productdetail" />
+            @*@Html.HiddenFor(model => model.inventory_balance_id)
+            @Html.HiddenFor(model => model.offset_account_id)
+            @Html.HiddenFor(model => model.posting_date)
+            @Html.HiddenFor(model => model.remarks)*@
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <button type="button" class="btn btn-primary" id="open_modal" style="float:right" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span>Add Item</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                        <thead>
+                            <tr>
+                                <th hidden><label>ID</label></th>
+                                <th><label>SR No.</label></th>
+                                <th hidden><label>Item Id</label></th>
+                                <th><label>Item Code</label></th>
+                                <th><label>Item Name</label></th>
+                                <th hidden><label>Plant_id</label></th>
+                                <th><label>Plant</label></th>
+                                <th hidden>Sloc id</th>
+                                <th><label>Sloc</label></th>
+                                <th hidden>Bucket id</th>
+                                <th><label>Bucket</label></th>
+                                <th><label>Batch</label></th>
+                                <th><label>Qty</label></th>
+                                <th hidden><label>UoM Id</label></th>
+                                <th><label>UoM</label></th>
+                                <th><label>Rate</label></th>
+                                <th><label>Value</label></th>
+                                <th><label>Line Remarks</label></th>
+                                <th><label>Action</label></th>
+
+                            </tr>
+                        </thead>
+
+                    </table>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <input type="submit" value="Create" class="btn btn-success" id="create" onclick="TabletoJeson();" style="float:right" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Inventory Detail</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Item <span class="required">*</span>
+                        </label>
+
+                        <div class="col-md-7">
+                            @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.Item, "---Select---", new
+                       {
+                           @class = "form-control col-md-7 col-xs-12",
+                           @onchange = "GetUnit(this.value)"
+                       })
+
+                        </div>
+                    </div>
+                </div>
+                <br />
+
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Plant *
+                        </label>
+                        <div class="col-md-7">
+                            @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.Plant, "---Select---", new
+                       {
+                           @class = "form-control col-md-7 col-xs-12"@*, @onchange = "GetUnit()", @style = "width: 100%;"*@ })
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            SLoc *
+                        </label>
+                        <div class="col-md-7">
+                            @Html.DropDownList("sloc_id", (System.Web.Mvc.SelectList)ViewBag.Sloc, "---Select---", new
+                       {
+                           @class = "form-control col-md-7 col-xs-12"@*, @onchange = "GetUnit()", @style = "width: 100%;"*@ })
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Bucket <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            @Html.DropDownList("bucket_id", (new System.Web.Mvc.SelectList(ViewBag.Bucket, "bucket_id", "bucket_name")), "--select--", htmlAttributes: new { @class = "form-control validator", required = "required" })
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Batch
+                        </label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control" name="batch" id="batch" />
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Quantity <span class="required">*</span>
+                        </label>
+                        <div class="col-md-4">
+                            <input type="number" class="form-control" name="qty" id="qty" onchange="calculate()" />
+                        </div>
+                        <div class="col-md-3">
+                            @Html.DropDownList("uom_id", (System.Web.Mvc.SelectList)ViewBag.Uom, "---Select---", new { @class = "form-control col-md-7 col-xs-12" })
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Rate <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            <input type="number" class="form-control" name="rate" id="rate" onchange="calculate()" />
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Value <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            <input type="number" class="form-control" disabled="disabled" name="value" id="value" onchange="calculate()" />
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Line Remarks
+                        </label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control" name="line_remarks" id="line_remarks" />
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+            <div class="modal-footer">
+                <input type="hidden" id="srno" />
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                <button type="button" class="add btn btn-primary">Add Item</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript" src="~/Scripts/jquery.dataTables1.10.9.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/1.9.4.jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript">
+        $("#offset_account_id").select2({
+            placeholder: "Select Offset accoount",
+            allowClear: true
+        });
+        $("#item_id").select2({
+            placeholder: "Select Item",
+            allowClear: true
+        });
+        $("#sloc_id").select2({
+            placeholder: "Select Storage Location",
+            allowClear: true
+        });
+        $("#plant_id").select2({
+            placeholder: "Select Storage Location",
+            allowClear: true
+        });
+        $("#bucket_id option[value=1]").remove();
+        function codeAddress() {
+            var t = $('#ContactGrid').DataTable();
+            var sr_no = t.fnGetData().length+1;
+            var pl_detail = @Html.Raw(JsonConvert.SerializeObject(this.Model.ref_inventory_balance_details));
+            console.log(pl_detail);
+            var i=1;
+            $.each(pl_detail, function(key, value) {
+
+                t.fnAddData([value.inventory_balance_detail_id,sr_no,'',value.REF_ITEM.ITEM_ID,
+                    value.REF_ITEM.ITEM_NAME+"-"+value.REF_ITEM.ITEM_CODE,value.plant_id, value.REF_PLANT.PLANT_NAME,value.sloc_id,
+                    value.REF_STORAGE_LOCATION.STORAGE_LOCATION_NAME,value.bucket_id,value.ref_bucket.bucket_name,
+                    value.batch,value.qty,value.uom_id,value.REF_ITEM.REF_UOM.UOM_NAME,value.rate,value.value,value.line_remarks,''
+                ]);
+                i=i+1;
+                sr_no++;
+            });
+        }
+        window.onload = codeAddress;
+        //$("#inventory_balance_id").val();
+        //$("#offset_account_id").val();
+        //$("#posting_date").val();
+        function onSelect2(args) {
+            var id = "";
+            var matches = args.value.split("-");
+            id = matches[0];
+            GetUnit(id);
+        }
+        $("#sloc_id").html("");
+        $("#sloc_id").append($('<option></option>').val("").html("---Select---"));
+        $('#plant_id').change(function () {
+            GetStorageLocation($('#plant_id').val());
+        });
+        function GetUnit(id) {
+            if (id != '') {
+                $.ajax({
+                    type: 'GET',
+                    url: '/Generic/GetUnitofItem',
+                    data: { id: id },
+                    success: function (ITEM) {
+                        $("#uom_id").val(ITEM.item);
+                    },
+                    error: function (emp) {
+                        $('#uom_id').val('');
+                    }
+                });
+            }
+            else {
+                $('#uom_id').val('');
+            }
+
+        }
+
+    $('#open_modal').click(function () {
+        clearmodel();
+    });
+
+    function calculate() {
+        var qty = $("#qty").val();
+        var rate = $("#rate").val();
+        var y = (qty * rate);
+        $("#value").val(y);
+    }
+    $(".add").on("click", function (event) {
+        var t = $('#ContactGrid').DataTable()
+        var rowCount = t.fnGetData().length;
+        var item_id = $("#item_id").val();
+        var item_name = $('#item_id option:selected').text();
+        var plant_id = $("#plant_id").val();
+        var plant = $('#plant_id').find('option:selected').text();
+        var sloc_id = $("#sloc_id").val();
+        var sloc = $('#sloc_id').find('option:selected').text();
+        var bucket_id = $("#bucket_id").val();
+        var bucket = $('#bucket_id').find('option:selected').text();
+        var batch = $("#batch").val();
+        var qty = $("#qty").val();
+        var uom_id = $("#uom_id").val();
+        var uom_name = $('#uom_id').find('option:selected').text();
+        var rate = $("#rate").val();
+        var value = $("#value").val();
+        var line_remarks = $("#line_remarks").val();
+        var ibd=$("#inventory_balance_detail_id").val();
+
+        if (item_id == '') {
+            swal("", "Please Select Item Name.", "error");
+            return false;
+        }
+        if (plant_id == '') {
+            swal("", "Please Enter Plant.", "error");
+            return false;
+        }
+        if (sloc_id == '') {
+            swal("", "Please Enter Sloc.", "error");
+            return false;
+        }
+        if (bucket_id == '') {
+            swal("", "Please Enter Bucket.", "error");
+            return false;
+        }
+        if (batch == '') {
+            swal("", "Please Enter Batch.", "error");
+            return false;
+        }
+        if (qty == '') {
+            swal("", "Please Enter Quantity.", "error");
+            return false;
+        }
+        if (uom_id == '') {
+            swal("", "Please Select UoM.", "error");
+            return false;
+        }
+        if (rate == '') {
+            swal("", "Please Enter Rate.", "error");
+            return false;
+        }
+        if (value == 0) {
+            swal("", "Please Enter Rate.", "error");
+            return false;
+        }
+        if (line_remarks == '') {
+            swal("", "Please select Line Remarks.", "error");
+            return false;
+        }
+        if ($("#srno").val() == "") {
+            t.fnAddData(['', rowCount + 1, '', item_id, item_name , plant_id , plant , sloc_id , sloc , bucket_id , bucket , batch , qty , uom_id , uom_name , rate , value , line_remarks , ''
+            ]);
+        }
+        else {
+            var cc = $("#srno").val();
+            cc = parseInt(cc) - 1;
+            alert(ibd);
+            t.fnUpdate(['', cc + 1, '', item_id, item_name, plant_id, plant, sloc_id , sloc , bucket_id, bucket, batch, qty, uom_id, uom_name, rate, value, line_remarks, ''], cc)
+        }
+
+        clearmodel();
+        return true;
+    });
+    function clearmodel() {
+        $("#item_id").val('');
+        $("#plant_id").val('');
+        $("#sloc_id").val('');
+        $("#bucket_id").val('');
+        $("#batch").val('');
+        $("#qty").val('');
+        $("#uom_id").val('');
+        $("#rate").val('');
+        $("#value").val('');
+        $("#line_remarks").val('');
+
+    }
+
+    $('#ContactGrid').DataTable({
+        "bPaginate": false,
+        "ordering": false,
+        "bfooter": false,
+        "info": false,
+        "bLengthChange": false,
+        "bAutoWidth": false,
+        "bFilter": false,
+        "bSort": false,
+        aoColumns: [
+                    { sname: "a", bVisible: false },
+                    { sname: "b" },
+                    { sname: "c", bVisible: false },
+                    { sname: "d" },
+                    { sname: "e" },
+                    { sname: "f", bVisible: false },
+                    { sname: "g" },
+                    { sname: "h", bVisible: false },
+                    { sname: "i" },
+                    { sname: "j", bVisible: false },
+                    { sname: "k" },
+                    { sname: "i" },
+                    { sname: "j" },
+                    { sname: "l", bVisible: false },
+                    { sname: "m" },
+                    { sname: "n" },
+                    { sname: "o" },
+                    { sname: "p" },
+                    {
+                        sname: "q", sWidth: "8%",
+                        bSortable: false,
+                        mRender: function (data, type, full) {
+                            return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" onclick="editRow(' + full[1] + ');" /><img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete" onclick="deleteRow(' + full[1] + ');" />';
+                        }
+                    }
+
+        ]
+
+    });
+
+
+    function editRow() {
+        $('#myModal').modal('show');
+        var t = $('#ContactGrid').DataTable()
+        var cc = parseInt(arguments[0]) - 1;
+        $("#srno").val(t.fnGetData(cc)[0]);
+        $("#item_id").val(t.fnGetData(cc)[2]).trigger('change');
+        $('#plant_id').val(t.fnGetData(cc)[4]);
+        $('#sloc_id').val(t.fnGetData(cc)[6]);
+        $('#bucket_id').val(t.fnGetData(cc)[8]);
+        $('#batch').val(t.fnGetData(cc)[10]);
+        $("#qty").val(t.fnGetData(cc)[11]);
+        $("#uom_id").val(t.fnGetData(cc)[12]);
+        $("#rate").val(t.fnGetData(cc)[14]);
+        $("#value").val(t.fnGetData(cc)[15]);
+        $('#line_remarks').val(t.fnGetData(cc)[16]);
+    }
+
+    $('#ContactGrid').on('click', '.delete', function () {
+
+        var t = $('#ContactGrid').DataTable();
+        var id = $(this).parent('td').parent('tr').index();
+
+
+        var deleteids = t.fnGetData(id)[1];
+        swal({
+            title: "Are you sure?",
+
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Yes, delete it!",
+            closeOnConfirm: true
+        },
+    function (isConfirm) {
+        if (isConfirm) {
+
+            $("#deleteids").val(deleteids + "~");
+            t.fnDeleteRow(id);
+        }
+    });
+    });
+
+
+
+    function TabletoJeson() {
+        var t = $('#ContactGrid').DataTable()
+        var rowCount = t.fnGetData().length;
+        var str;
+        var str1;
+        for (i = 0; i < rowCount; i++) {
+
+            str1 = t.fnGetData(i)[0] + ",";
+            str1 = str1 + t.fnGetData(i)[1] + ",";
+            str1 = str1 + t.fnGetData(i)[2] + ",";
+            str1 = str1+ t.fnGetData(i)[3] + ",";
+            str1 = str1 +  t.fnGetData(i)[4] + ",";
+            str1 = str1 + t.fnGetData(i)[5] + ",";
+            str1 = str1 + t.fnGetData(i)[6] + ",";
+            str1 = str1 + t.fnGetData(i)[7] + ",";
+            str1 = str1 + t.fnGetData(i)[8] + ",";
+            str1 = str1 + t.fnGetData(i)[9] + ",";
+            str1 = str1 + t.fnGetData(i)[10] + ",";
+            str1 = str1 + t.fnGetData(i)[11] + ",";
+            str1 = str1 + t.fnGetData(i)[12] + ",";
+            str1 = str1 + t.fnGetData(i)[13] + ",";
+            str1 = str1 + t.fnGetData(i)[14] + ",";
+            str1 = str1 + t.fnGetData(i)[15] + ",";
+            str1 = str1 + t.fnGetData(i)[16] + ",";
+            str1 = str1 + t.fnGetData(i)[17] + ",";
+            str1 = str1 + t.fnGetData(i)[18] + ",";
+            if (i == 0) {
+                str = str1 + "~"
+            }
+            else {
+                str = str + str1 + "~";
+            }
+        }
+
+
+        document.getElementsByName("productdetail")[0].value = str;
+    }
+
+
+
+
+
+    //CHECK DUPLICATE NUMBER
+    $("#create").click(function (e) {
+        e.preventDefault();
+        var PlantTransferNumber = $('#pla_transfer_number').val();
+
+        if (PlantTransferNumber == "") {
+            sweetAlert("", "plant transfer number is required!", "error");
+        }
+        else {
+            $.ajax({
+                url: '/PlantTransfer/CheckDuplicate',
+                type: "GET",
+                dataType: "JSON",
+                asynch: true,
+                data: { st: PlantTransferNumber, id: 0 },
+                success: function (output) {
+                    if (output != 0) {
+                        sweetAlert("", PlantTransferNumber + " is already present in databse!", "error");
+                    }
+                    else {
+                        document.forms[0].submit();
+                    }
+                }
+            });
+        }
+    });
+
+    function GetStorageLocation(id) {
+        if (id == "") {
+            id = 0;
+        }
+        $.ajax({
+            url: '/Generic/GetStorageLocation',
+            type: "GET",
+            dataType: "JSON",
+            data: { id: id },
+            success: function (id) {
+                $("#sloc_id").html(""); // clear before appending new list
+                $("#sloc_id").append($('<option></option>').val("").html("---Select---"));
+                $.each(id, function (i, cycle) {
+                    $("#sloc_id").append(
+                        $('<option></option>').val(cycle.storage_location_id).html(cycle.storage_location_name));
+                });
+            }
+        });
+    }
+    </script>
+}

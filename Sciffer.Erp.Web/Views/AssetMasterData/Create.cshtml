@@ -1,0 +1,451 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.ref_asset_master_data_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+<div class="loading">Loading &#8230;</div>
+@using (Html.BeginForm("Create", "AssetMasterData", FormMethod.Post, new { enctype = "multipart/form-data" , @class = "form_main", @id = "form_main" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        <div>@Html.ValidationSummary(true, "", new { @class = "text-danger" })</div>
+        @Html.HiddenFor(a => a.asset_master_data_id, new { @class = "primary_id hidden" })
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.asset_master_data_code, htmlAttributes: new { Class = "control-label col-md-4 " })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.asset_master_data_code, new { htmlAttributes = new { @class = "form-control ", } })
+                            @Html.ValidationMessageFor(model => model.asset_master_data_code, "", new { Class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.machine_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.machineList, "--select--", htmlAttributes: new { @class = "form-control", @onchange = "GetMachineDetails(this.value)" })
+                            @Html.ValidationMessageFor(model => model.machine_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.asset_master_data_desc, htmlAttributes: new { Class = "control-label col-md-4 " })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.asset_master_data_desc, new { htmlAttributes = new { @class = "form-control ", } })
+                            @Html.ValidationMessageFor(model => model.asset_master_data_desc, "", new { Class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.asset_class_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("asset_class_id", (new System.Web.Mvc.SelectList(ViewBag.assetclassList, "asset_class_id", "asset_class_code")), "--select--", htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.asset_class_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.asset_group_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("asset_group_id", (new System.Web.Mvc.SelectList(ViewBag.assetgroupList, "asset_group_id", "asset_group_code")), "--select--", htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.asset_group_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.status_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("status_id", (new System.Web.Mvc.SelectList(ViewBag.statusList, "status_id", "status_name")), "--select--", htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.status_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">General</a></li>
+                <li><a data-toggle="tab" href="#sectionB">ASSET HISTORY </a></li>             
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.plant_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plantList, "--select--", htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.plant_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.purchase_order, htmlAttributes: new { Class = "control-label col-md-4 " })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.purchase_order, new { htmlAttributes = new { @class = "form-control ", } })
+                                    @Html.ValidationMessageFor(model => model.purchase_order, "", new { Class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.manufacturer, htmlAttributes: new { Class = "control-label col-md-4 " })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.manufacturer, new { htmlAttributes = new { @class = "form-control ", } })
+                                    @Html.ValidationMessageFor(model => model.manufacturer, "", new { Class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.manufacturer_part_no, htmlAttributes: new { Class = "control-label col-md-4 " })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.manufacturer_part_no, new { htmlAttributes = new { @class = "form-control ", } })
+                                    @Html.ValidationMessageFor(model => model.manufacturer_part_no, "", new { Class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.manufacturing_country_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("manufacturing_country_id", (new System.Web.Mvc.SelectList(ViewBag.countryList, "COUNTRY_ID", "COUNTRY_NAME")), "--select--", htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.manufacturing_country_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.priority_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("priority_id", (System.Web.Mvc.SelectList)ViewBag.priorityList, "--select--", htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.priority_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.business_unit_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("business_unit_id", (System.Web.Mvc.SelectList)ViewBag.businessunitList, "--select--", htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.business_unit_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.asset_tag_no, htmlAttributes: new { Class = "control-label col-md-4 " })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.asset_tag_no, new { htmlAttributes = new { @class = "form-control ", } })
+                                    @Html.ValidationMessageFor(model => model.asset_tag_no, "", new { Class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.purchasing_vendor_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("purchasing_vendor_id", (System.Web.Mvc.SelectList)ViewBag.vendorList, "--select--", htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.purchasing_vendor_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.model_no, htmlAttributes: new { Class = "control-label col-md-4 " })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.model_no, new { htmlAttributes = new { @class = "form-control ", } })
+                                    @Html.ValidationMessageFor(model => model.model_no, "", new { Class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.manufacturing_serial_number, htmlAttributes: new { Class = "control-label col-md-4 " })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.manufacturing_serial_number, new { htmlAttributes = new { @class = "form-control ", } })
+                                    @Html.ValidationMessageFor(model => model.manufacturing_serial_number, "", new { Class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.manufacturing_date, htmlAttributes: new { Class = "control-label col-md-4 " })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.manufacturing_date, new { htmlAttributes = new { @class = "form-control ", } })
+                                    @Html.ValidationMessageFor(model => model.manufacturing_date, "", new { Class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.cost_center_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("cost_center_id", (new System.Web.Mvc.SelectList(ViewBag.costcenterList, "cost_center_id", "cost_center_code")), "--select--", htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.cost_center_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sectionB" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.capitalization_date, htmlAttributes: new { Class = "control-label col-md-4 " })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.capitalization_date, new { htmlAttributes = new { @class = "form-control ", } })
+                                    @Html.ValidationMessageFor(model => model.capitalization_date, "", new { Class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+          </div>
+
+        <div class="row">
+            <div class="col-lg12 col-sm-12">
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <input type="button" value="Create" data-controller="AssetMasterData" class="btn btn-success pull-right" id="create" name="create" onclick="TabletoJeson();" />
+                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary pull-left" })
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+}
+
+    @section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+
+                        $("#machine_id").select2({
+                            placeholder: "Select Machine",
+                            allowClear: true
+                        });
+
+                        $("#asset_class_id").select2({
+                            placeholder: "Select Asset Class",
+                            allowClear: true
+                        });
+
+                        $("#asset_group_id").select2({
+                            placeholder: "Select Asset Group",
+                            allowClear: true
+                        });
+                        $("#status_id").select2({
+                            placeholder: "Select Status",
+                            allowClear: true
+                        });
+                        $("#plant_id").select2({
+                            placeholder: "Select Plant",
+                            allowClear: true
+                        });
+                        $("#manufacturing_country_id").select2({
+                            placeholder: "Select Country",
+                            allowClear: true
+                        });
+                        $("#priority_id").select2({
+                            placeholder: "Select Priority",
+                            allowClear: true
+                        });
+                        $("#business_unit_id").select2({
+                            placeholder: "Select Business Unit",
+                            allowClear: true
+                        });
+                        $("#purchasing_vendor_id").select2({
+                            placeholder: "Select Vendor",
+                            allowClear: true
+                        });
+
+                        $("#cost_center_id").select2({
+                            placeholder: "Select Cost Center",
+                            allowClear: true
+                        });
+
+
+//Machine Details************************************************************************************************************************************************************
+
+                        let _machine_list =   @Html.Raw(JsonConvert.SerializeObject(ViewBag.machineList1));
+                        function GetMachineDetails(id) {
+                            if (id != '') {
+                                let _row = _machine_list.filter(a=>a.machine_id == id);
+
+                                $('#asset_master_data_desc').val(_row[0].machine_name).trigger('change');
+                                $('#plant_id').val(_row[0].plant_id).trigger('change');
+                                $('#purchase_order').val(_row[0].purchase_order_id);
+                                $('#manufacturer').val(_row[0].manufacturer);
+                                $('#manufacturer_part_no').val(_row[0].manufacturer_part_no);
+                                $('#manufacturing_country_id').val(_row[0].manufacturing_country_id).trigger('change');
+                                $('#priority_id').val(_row[0].priority_id).trigger('change');
+                                $('#business_unit_id').val(_row[0].business_unit_id).trigger('change');
+                                $('#asset_tag_no').val(_row[0].asset_tag_no);
+                                $('#purchasing_vendor_id').val(_row[0].purchasing_vendor).trigger('change');
+                                $('#model_no').val(_row[0].model_no);
+                                $('#manufacturing_serial_number').val(_row[0].manufacturing_serial_number);
+                                $('#manufacturing_date').val(_row[0].manufacturing_date);
+                                $('#asset_master_data_desc').val(_row[0].machine_name);
+                                $('#cost_center_id').val(_row[0].cost_center_id).trigger('change');
+                                if(_row[0].manufacturing_date != null){
+                                    $("#manufacturing_date").val($.date(_row[0].manufacturing_date));
+                                }
+                                
+                                $('#plant_id').attr('disabled', 'disabled');
+                                $('#purchase_order').attr('disabled', 'disabled');
+                                $('#manufacturer').attr('disabled', 'disabled');
+                                $('#manufacturer_part_no').attr('disabled', 'disabled');
+                                $('#manufacturing_country_id').attr('disabled', 'disabled');
+                                $('#priority_id').attr('disabled', 'disabled');
+                                $('#business_unit_id').attr('disabled', 'disabled');
+                                $('#asset_tag_no').attr('disabled', 'disabled');
+                                $('#purchasing_vendor_id').attr('disabled', 'disabled');
+                                $('#model_no').attr('disabled', 'disabled');
+                                $('#manufacturing_serial_number').attr('disabled', 'disabled');
+                                $('#manufacturing_date').attr('disabled', 'disabled');
+                                $('#asset_master_data_desc').attr('disabled', 'disabled');
+                                $('#cost_center_id').attr('disabled', 'disabled');
+                            }
+
+                            else
+                            {
+                                $('#plant_id').val('').trigger('change');
+                                $('#purchase_order').val('');
+                                $('#manufacturer').val('');
+                                $('#manufacturer_part_no').val('');
+                                $('#manufacturing_country_id').val('').trigger('change');
+                                $('#priority_id').val('').trigger('change');
+                                $('#business_unit_id').val('').trigger('change');
+                                $('#asset_tag_no').val('');
+                                $('#purchasing_vendor_id').val('').trigger('change');
+                                $('#model_no').val('');
+                                $('#manufacturing_serial_number').val('');
+                                $('#manufacturing_date').val('');
+                                $('#asset_master_data_desc').val('');
+                                $('#cost_center_id').val('').trigger('change');
+
+                                $('#plant_id').attr('disabled', false);
+                                $('#purchase_order').attr('disabled', false);
+                                $('#manufacturer').attr('disabled', false);
+                                $('#manufacturer_part_no').attr('disabled', false);
+                                $('#manufacturing_country_id').attr('disabled', false);
+                                $('#priority_id').attr('disabled', false);
+                                $('#business_unit_id').attr('disabled', false);
+                                $('#asset_tag_no').attr('disabled', false);
+                                $('#purchasing_vendor_id').attr('disabled', false);
+                                $('#model_no').attr('disabled', false);
+                                $('#manufacturing_serial_number').attr('disabled', false);
+                                $('#manufacturing_date').attr('disabled', false);
+                                $('#asset_master_data_desc').attr('disabled', false);
+
+                                $('#cost_center_id').attr('disabled', false);
+                            }
+                        }
+
+        
+//Create*********************************************************************************************************************************************************
+
+                        function TabletoJeson() {
+                            var DepParaArr = [];
+                          ;
+                            var obj = {
+                            };
+
+                            var arForm = $("#form_main").serializeArray();
+                            jQuery.each(arForm, function( i, formData ) {
+                                obj[formData.name]=formData.value;
+                                   
+                            });                      
+
+                            obj.asset_master_data_code = $("#asset_master_data_code").val();
+                            obj.machine_id =   $("#machine_id").val();
+
+                            obj.machine_name_text  = $("#machine_id option:selected").text();
+
+                            obj.asset_master_data_desc =   $("#asset_master_data_desc").val();
+                            obj.asset_class_id =   $("#asset_class_id").val();
+                            obj.asset_group_id =  $("#asset_group_id").val();
+                            obj.status_id =  $("#status_id").val();
+                            obj.plant_id = $("#plant_id").val();
+                            obj.purchase_order =  $("#purchase_order").val();
+                            obj.Manufacturer =  $("#Manufacturer").val();
+                            obj.manufacturer_part_no =  $("#manufacturer_part_no").val();
+                            obj.manufacturing_country_id =  $("#manufacturing_country_id").val();
+                            obj.priority_id =  $("#priority_id").val();
+                            obj.business_unit_id = $("#business_unit_id").val();
+                            obj.asset_tag_no = $("#asset_tag_no").val();
+                            obj.purchasing_vendor_id = $("#purchasing_vendor_id").val();
+                            obj.model_no = $("#model_no").val();
+                            obj.manufacturing_serial_number = $("#manufacturing_serial_number").val();
+                            obj.manufacturing_date = $("#manufacturing_date").val();
+                            obj.cost_center_id = $("#cost_center_id").val();
+                            obj.capitalization_date = $("#capitalization_date").val();
+
+
+                            $.ajax({
+                                url: '@Url.Action("Save", "AssetMasterData")',
+                                method: "Post",
+                                cache: false,
+                                async: false,
+                                data: { Assetdata:obj, DepParaArr: DepParaArr },
+                                success: function(data) {
+
+                                    if(data.includes("already exists")){
+                                        swal("" , data ,"error");
+                                        return false;
+                                    }else{
+                                        swal({
+                                            title: "",
+                                            text: "Saved Successfully!",
+                                            type: "success"
+                                        }, function() {
+                                            location.href = '@Url.Action("Index", "AssetMasterData")';
+                                        });
+                                    }
+                                },
+                            });
+                           
+                        }
+
+
+
+                        $.date = function(dateObject) {
+                            var d = new Date(dateObject);
+                            var day = d.getDate();
+                            var month = d.getMonth() + 1;
+                            var year = d.getFullYear();
+                            if (day < 10) {
+                                day = "0" + day;
+                            }
+                            if (month < 10) {
+                                month = "0" + month;
+                            }
+                            var date =  year+ "-" + month + "-" +day ;
+                            return date;
+                        };
+
+
+    </script>
+                }
+

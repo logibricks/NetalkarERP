@@ -1,0 +1,80 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+<div class="form-horizontal">
+    <div class=row>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">As of Date</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <input type="date" id="fromDate" class="form-control radius" required="required">
+                <input type="hidden" id="entity" value="getinventorycascadereport" />
+                <input type="hidden" id="partial" value="Partial_InventoryCascade" />
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Bucket</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("bucket_id", (System.Web.Mvc.SelectList)ViewBag.bucket_list, htmlAttributes: new { @class = "form-control mickey bucket_id", multiple = "multiple" })
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                <label></label>
+            </div>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <button class="searchbutton searchButton" id="search" onclick="DateChecki()"> &nbsp; Run Report </button>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class=row>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Plant</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plant_list,  new { @class = "mickey form-control plant_id", multiple = "multiple", @onchange = "GetStorageLocation(this.value);" })
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Sloc</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("sloc_id", Enumerable.Empty<SelectListItem>(), htmlAttributes: new { @class = "form-control  mickey sloc_id", multiple = "multiple" })
+            </div>
+        </div>
+  
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Item Code</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.item_list, htmlAttributes: new { @class = "form-control mickey item_id", multiple = "multiple" })
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="searchresult">
+    @Html.Partial("Partial_InventoryCascade", (object)ViewBag)
+</div>
+
+<script>
+    function GetStorageLocation(id) {
+        if (id == "") {
+            id = 0;
+        }
+        var st;
+        st = "";
+        $("#sloc_id").empty();
+        $.ajax({
+            url: '@Url.Action("GetStorageLocation", "Generic")',
+            type: "GET",
+            dataType: "JSON",
+            data: { id: id },
+            success: function (id) {
+                $.each(id, function (i, cycle) {
+                    st += "<option value=" + cycle.storage_location_id + ">" + cycle.storage_location_name + "</option>";
+                });
+                $("#sloc_id").html(st).show();
+                $("#sloc_id").multiselect('rebuild');
+            }
+        });
+    }
+</script>

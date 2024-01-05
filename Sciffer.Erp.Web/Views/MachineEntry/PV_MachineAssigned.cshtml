@@ -1,0 +1,224 @@
+﻿<style>
+    /*.results1 tr[visible='false'],
+    .no-result {
+        display: none;
+    }
+
+    .results1 tr[visible='true'] {
+        display: table-row;
+    }*/
+
+    .oknotok {
+        width: 30% !important;
+        padding: 5px;
+    }
+
+    .tableheader {
+        font-size: 25px;
+        align-content: center;
+    }
+</style>
+<div class="scrollit">
+    <div class="table-responsive">
+        <br />
+
+        <table style="text-align:center;" class="table table-responsive table-bordered table-striped jambo_table results1 taskgrid" id="TaskGrid">
+            <thead>
+                <tr>
+                    <th hidden>Machine Task Id</th>
+                    <th hidden><label>Prod Order Id</label></th>
+                    <th>Production Order </th>
+                    <th hidden>Prod Order Detail Id</th>
+                    <th hidden>Item Id </th>
+                    <th hidden>Item</th>
+                    <th hidden><label>Batch Id</label></th>
+                    <th>Batch</th>
+                    <th hidden>Tag Id</th>
+                    <th hidden>Machine Id</th>
+                    <th>Machine</th>
+                    <th>Heat Code</th>
+                    <th>Run Code</th>
+                    <th>Select Status</th>
+                    <th>Tag </th>
+                    <th hidden>Status Id</th>
+                    <th hidden>Status</th>
+                </tr>
+            </thead>
+
+            <tbody class="scrollit e-textwrapper">
+                @{
+                    int count = 0;
+                    foreach (var item in ViewBag.datasource)
+                    {
+                        <tr>
+                            <td hidden>@item.machine_task_id</td>
+                            <td hidden>@item.prod_order_id</td>
+                            <td>@item.prod_order_no</td>
+                            <td hidden>@item.prod_order_detail_id</td>
+                            <td hidden>@item.in_item_id</td>
+                            <td hidden>@item.in_item_desc</td>
+                            <td hidden>@item.item_batch_id</td>
+                            <td>@item.item_batch_no</td>
+                            <td hidden id="tag_id">@item.tag_id</td>
+                            <td hidden>@item.machine_id</td>
+
+                            @if (item.machine_name == "" || item.machine_name == null)
+                            {
+                                <td></td>
+                            }
+                            else
+                            {
+                                <td>@item.machine_name</td>
+                            }
+
+                            @if (item.heat_code == "" || item.heat_code == null)
+                            {
+                                <td>
+                                    <input type="text" class="item_heat_code input_box_font form-control" id="heatcode-@count" />
+                                </td>
+                            }
+                            else
+                            {
+                                <td id="heatcode-@count">@item.heat_code</td>
+                            }
+
+                            @if (item.run_code == "" || item.run_code == null)
+                            {
+                                <td>
+                                    <input type="text" class="item_run_code input_box_font form-control" id="runcode-@count" />
+                                </td>
+                            }
+                            else
+                            {
+                                <td id="runcode-@count">@item.run_code</td>
+                            }
+                            @if (item.machine_name == "" || item.machine_name == null)
+                            {
+                                <td style="align-content:center;">
+                                    <button id="statusok-@count" class="oknotok btn btn-lg btn-success glyphicon glyphicon-ok-circle" onclick="UpdateStatus(this)" value="2:@item.machine_task_id:@item.in_item_id:@item.tag_id"></button>
+                                    <span>&nbsp;&nbsp;</span>
+                                    <button id="statusnok-@count" class="oknotok supervisorcheck btn btn-lg btn-danger glyphicon glyphicon-remove-circle" onclick="UpdateStatus(this)" value="3:@item.machine_task_id:@item.in_item_id:@item.tag_id"></button>
+                                </td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+
+                            <td class="tag_color_code">@item.tag_no</td>
+                            <td hidden>@item.status_id</td>
+                            <td hidden>@item.status_name</td>
+                        </tr>
+                        count++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+        if ('@ViewBag.Messege' == 'ACCESSDENIED') {
+            swal("Machine is blocked", "Wait till the item in QC is cleared", "error");
+        }
+        if ('@ViewBag.Messege' == 'ENTEREDINQC') {
+            swal("", "Item has sent to QC", "info");
+        }
+        if ('@ViewBag.Messege' == 'ENTEREDINQCAFTERREJECT') {
+            swal("", "Item has sent to QC", "info");
+        }
+        if ('@ViewBag.Messege' == 'IHCUTSAMPLE') {
+            swal("Send this Item for IH Cut Sample", "Item has sent to QC", "info");
+        }
+
+
+        //$(".task_status").children("option[value^=" + 1 + "]").hide();
+        //$(".task_status").children("option[value^=" + 4 + "]").hide();
+        //$(".task_status").children("option[value^=" + 5 + "]").hide();
+        //$(".task_status").children("option[value^=" + 6 + "]").hide();
+        //$(".task_status").children("option[value^=" + 7 + "]").hide();
+
+        //$("#search1").keyup(function () {
+        //    var searchTerm = $("#search1").val();
+        //    var listItem = $('.results1 tbody').children('tr');
+        //    var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
+
+        //    $.extend($.expr[':'], {
+        //        'containsi': function (elem, i, match, array) {
+        //            return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+        //        }
+        //    });
+
+        //    $(".results1 tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
+        //        $(this).attr('visible', 'false');
+        //    });
+
+        //    $(".results1 tbody tr:containsi('" + searchSplit + "')").each(function (e) {
+        //        $(this).attr('visible', 'true');
+        //    });
+
+        //    var jobCount = $('.results1 tbody tr[visible="true"]').length;
+        //    $('.counter').text(jobCount + ' item');
+
+        //    if (jobCount == '0') { $('.no-result').show(); }
+        //    else { $('.no-result').hide(); }
+        //});
+
+    });
+    // -----------FOCUS ON SELECT LIST-----------------------//
+    $("#search1").focus(function () {
+        $("#isPaused").val(1);
+    })
+    $("#search1").focusout(function () {
+        $("#isPaused").val(0);
+    })
+
+    $(".item_heat_code").focus(function () {
+        $("#isPaused").val(1);
+    })
+    $(".item_heat_code").focusout(function () {
+        $("#isPaused").val(0);
+    })
+
+    // -----------FOCUS ON SELECT LIST-----------------------//
+
+    //-------------------Tag color codes-----------------------//
+    var tag_color_array = ['#ff99cc', '#ffd966', '#a9d08e', '#bdd7ee', '#f8cbad', '#66ccff', '#cfc', '#ff9', '#a6a6a6', '#ff7c80', '#66ff66', '#99f'];
+    var tag_color = document.querySelectorAll(".tag_color_code");
+    TagColorCodeFunction();
+    function TagColorCodeFunction() {
+
+        for (var i = 0; i < tag_color.length; i++) {
+
+            var tag_number = tag_color[i].innerHTML;
+            if (tag_number.indexOf('A') > -1) {
+                tag_color[i].style.backgroundColor = tag_color_array[0];
+            } else if (tag_number.indexOf('B') > -1) {
+                tag_color[i].style.backgroundColor = tag_color_array[1];
+            } else if (tag_number.indexOf('C') > -1) {
+                tag_color[i].style.backgroundColor = tag_color_array[2];
+            } else if (tag_number.indexOf('D') > -1) {
+                tag_color[i].style.backgroundColor = tag_color_array[3];
+            } else if (tag_number.indexOf('E') > -1) {
+                tag_color[i].style.backgroundColor = tag_color_array[4];
+            } else if (tag_number.indexOf('F') > -1) {
+                tag_color[i].style.backgroundColor = tag_color_array[5];
+            } else if (tag_number.indexOf('G') > -1) {
+                tag_color[i].style.backgroundColor = tag_color_array[6];
+            } else if (tag_number.indexOf('H') > -1) {
+                tag_color[i].style.backgroundColor = tag_color_array[7];
+            } else if (tag_number.indexOf('J') > -1) {
+                tag_color[i].style.backgroundColor = tag_color_array[8];
+            } else if (tag_number.indexOf('K') > -1) {
+                tag_color[i].style.backgroundColor = tag_color_array[9];
+            } else if (tag_number.indexOf('L') > -1) {
+                tag_color[i].style.backgroundColor = tag_color_array[10];
+            } else if (tag_number.indexOf('M') > -1) {
+                tag_color[i].style.backgroundColor = tag_color_array[11];
+            }
+        }
+    }
+</script>

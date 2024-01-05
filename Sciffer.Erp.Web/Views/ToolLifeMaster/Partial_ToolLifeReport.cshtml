@@ -1,0 +1,93 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+@{
+    (Html.EJ().Grid<ref_mfg_tool_life_vm>("Editing")
+    .Datasource((IEnumerable<object>)ViewBag.datasource)
+    .AllowPaging().PageSettings(a => a.PageSize(20))
+    .AllowFiltering()
+    .FilterSettings(X => X.FilterType(FilterType.Excel))
+    .ShowColumnChooser()
+    .AllowSorting()
+    .AllowScrolling()
+    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "ToolLifeMaster", new { ctrlname = "ToolLifeMaster" })))
+    .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+    .ToolbarSettings(toolbar =>
+    {
+        toolbar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Search);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        });
+    })
+
+    .Columns(col =>
+    {
+        col.Field("tool_name").Width("10%").HeaderText("Tool Name").Add();
+        col.Field("tool_renew_type_name").Width("10%").HeaderText("Renew Type Name").Add();
+        col.Field("machine_name").Width("10%").HeaderText("Machine Name").Add();
+        col.Field("ITEM_NAME").Width("10%").HeaderText("Item Name").Add();
+        col.Field("life_percent_consumption").Width("10%").HeaderText("Total Life Consumption").Add();
+        col.Field("current_life").Width("10%").HeaderText("Current Life").Add();
+        col.Field("percentage_life_used").Width("10%").HeaderText("Life Consumption %").Add();
+        col.Field("in_use").Visible(false).ShowInColumnChooser(true).Width("10%").HeaderText("In Use").Add();
+    })
+    .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick"); })
+    )
+    .Render();
+}
+@Html.EJ().ScriptManager()
+
+
+<script type="text/javascript">
+
+    function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1) {
+
+            if ($('#ITEM_ID :selected').length > 0) {
+                var selectedItem = [];
+                $('#ITEM_ID :selected').each(function (i, selected) {
+                    selectedItem[i] = $(selected).val();
+                });
+                var ItemList = selectedItem + "";
+            }
+
+            if ($('#tool_id :selected').length > 0) {
+                var selectedTool = [];
+                $('#tool_id :selected').each(function (i, selected) {
+                    selectedTool[i] = $(selected).val();
+                });
+                var ToolList = selectedTool + "";
+            }
+
+            if ($('#tool_renew_type_id :selected').length > 0) {
+                var selectedToolRenewType = [];
+                $('#tool_renew_type_id :selected').each(function (i, selected) {
+                    selectedToolRenewType[i] = $(selected).val();
+                });
+                var ToolRenewTypeList = selectedToolRenewType + "";
+            }
+
+            if ($('#machine_id :selected').length > 0) {
+                var selectedMachine = [];
+                $('#machine_id :selected').each(function (i, selected) {
+                    selectedMachine[i] = $(selected).val();
+                });
+                var MachineList = selectedMachine + "";
+            }
+
+            this.model["fromDate"] = $("#fromDate").val();
+            this.model["toDate"] = $("#toDate").val();
+            this.model["tag_number"] = $("#tag_number").val();
+            this.model["ITEM_ID"] = ItemList;
+            this.model["prod_order_id"] = ProdOrderList;
+            this.model["machine_task_status_id"] = $("#machine_task_status_id").val();
+        }
+    }
+
+</script>
+
+
+

@@ -1,0 +1,157 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.Model.REF_COUNTRY>
+@using Sciffer.Erp.Domain.Model
+@{
+    ViewBag.Title = "Index";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<br /><br /><br />
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<REF_COUNTRY>("Grid")
+        .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.Datasource).RemoveURL(Url.Action("InlineDelete", "Country")).InsertURL(Url.Action("InlineInsert", "Country")).UpdateURL(Url.Action("InlineInsert", "Country"))
+                       .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(10); })
+        .EnableAltRow()
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Add);
+                items.AddTool(ToolBarItems.Edit);
+                //items.AddTool(ToolBarItems.Delete);
+                items.AddTool(ToolBarItems.Update);
+                items.AddTool(ToolBarItems.Cancel);
+                items.AddTool(ToolBarItems.ExcelExport);
+                items.AddTool(ToolBarItems.PrintGrid);
+            });
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "Country" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "Country" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "Country" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("COUNTRY_ID").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("COUNTRY_NAME").HeaderText("Country Name").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("COUNTRY_CODE").HeaderText("Country ISD Code").ValidationRules(val => val.AddRule("required", true).AddRule("customddlcheck", true)).Add();
+            col.Field("is_blocked").HeaderText("Blocked").Visible(false).Add();
+        })
+        .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+
+</div>
+
+<script id="template" type="text/template">
+    <form name="add_form">
+        <div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <input type="hidden" id="COUNTRY_ID" name="COUNTRY_ID" value="{{: COUNTRY_ID}}" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                    Country Name *
+                </div>
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <input type="text" id="COUNTRY_NAME" name="COUNTRY_NAME" value="{{: COUNTRY_NAME}}" class="form-control" />
+                </div>
+            </div>
+            <br />
+
+
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                    Country ISD Code *
+                </div>
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <input type="text" id="COUNTRY_CODE" required name="COUNTRY_CODE" value="{{: COUNTRY_CODE}}" class="form-control" />
+
+                </div>
+            </div>
+
+            <br />
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                    Blocked
+                </div>
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <input type="checkbox" name="is_blocked" id="is_blocked" />
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+
+
+    </form>
+</script>
+
+
+
+<script type="text/javascript">
+    $(function () {
+        var specialChars = "<>@@!#$%^&*()_+[]{}?:;|'\"\\,./~`-=";
+        var check = function (string) {
+            for (i = 0; i < specialChars.length; i++) {
+                if (string.indexOf(specialChars[i]) > -1) {
+                    return true
+                }
+            }
+            return false;
+        }
+
+        $.validator.addMethod("customddlcheck", function (value, element, params) {
+            return check(element.value);
+        }, "Prefix '+' is mandaory.");
+      });
+    var flag = true;
+    function complete(args) {
+        if (args.requestType == "beginedit")
+       {
+            document.getElementById('COUNTRY_NAME').setAttribute('disabled', 'disabled');
+
+            if (args.rowData.is_blocked == true) {
+                document.getElementById("is_blocked").setAttribute('checked', 'checked');
+            }
+            else{
+                 document.getElementById("is_blocked").removeAttribute('checked');
+            }
+            $("#is_blocked").checkboxpicker();
+        }
+        if (args.requestType == "save")
+        {
+            if (args.data.text == 'duplicate') {
+                sweetAlert("", "Country name already exists", "error");
+                if (args.model.dataSource.dataSource.json[0].COUNTRY_ID == null) {
+                    args.model.dataSource.dataSource.json = args.model.dataSource.dataSource.json.splice(1, args.model.dataSource.dataSource.json.length);
+                }
+            }
+            var gridObj = $("#Grid").ejGrid("instance");
+            gridObj.refreshContent();
+        }
+        if (args.requestType == "add") {
+            $("#is_blocked").checkboxpicker();
+        }
+    }
+
+    function EndProcess() {
+        var gridObj = $("#Grid").ejGrid("instance");
+        //console.log(gridObj);
+        gridObj.refreshContent();
+    }
+
+
+
+</script>

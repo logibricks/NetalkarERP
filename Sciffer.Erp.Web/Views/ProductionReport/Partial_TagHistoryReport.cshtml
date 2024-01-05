@@ -1,0 +1,78 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+@{
+    (Html.EJ().Grid<mfg_machine_task_VM>("Editing")
+     .Datasource(ds => ds.URL(Url.Action("Get_report_production", "ProductionReport") + "?entity=" + ViewBag.entity + "&tag_number=" + ViewBag.tag_number + "&item_id=" + ViewBag.item_id + "&is_qc_remark=" + ViewBag.is_qc_remark).Adaptor(AdaptorType.UrlAdaptor))
+    .AllowPaging().PageSettings(a => a.PageSize(20))
+    .AllowFiltering()
+    .FilterSettings(X => X.FilterType(FilterType.Excel))
+    .ShowColumnChooser()
+    .AllowSorting()
+    .AllowScrolling()
+    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "ProductionReport", new { ctrlname = "TagHistoryReport" })))
+    .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+    .ToolbarSettings(toolbar =>
+    {
+        toolbar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Search);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        });
+    })
+
+    .Columns(col =>
+    {
+        col.Field("tag_no").Width("10%").HeaderText("Tag Number").Add();
+        col.Field("item_batch_no").Width("10%").HeaderText("Batch").Add();
+        col.Field("prod_order_no").Width("10%").HeaderText("Production Order").Add();
+        col.Field("in_item_desc").Width("10%").HeaderText("Item Name").Add();
+        col.Field("machine_desc").Width("10%").HeaderText("Machine Name").Add();
+        col.Field("status_name").Width("10%").HeaderText("Status").Add();
+        col.Field("user_code").Width("10%").HeaderText("Operator Name").Add();
+        col.Field("DatePart").Width("15%").Format("{0:dd/MMM/yyyy}").Visible(true).HeaderText("Task Date").Add();
+
+        col.Field("task_time_report").Width("10%").HeaderText("Task Time").Add();
+        col.Field("operator_name").Width("20%").HeaderText("Customer Name").Add();
+
+    })
+    .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick"); })
+    )
+    .Render();
+}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1) {
+
+            if ($('#item_id :selected').length > 0) {
+                var selectedItem = [];
+                $('#item_id :selected').each(function (i, selected) {
+                    selectedItem[i] = $(selected).val();
+                });
+                var ItemList = selectedItem + "";
+            }
+
+            //if ($('#prod_order_id :selected').length > 0) {
+            //    var selectedProdOrder = [];
+            //    $('#prod_order_id :selected').each(function (i, selected) {
+            //        selectedProdOrder[i] = $(selected).val();
+            //    });
+            //    var ProdOrderList = selectedProdOrder + "";
+            //}
+
+            this.model["from_date"] = $("#fromDate").val();
+            this.model["to_date"] = $("#toDate").val();
+            this.model["tag_number"] = $("#tag_number").val();
+            this.model["item_id"] = ItemList;
+            //this.model["prod_order_id"] = ProdOrderList;
+            //this.model["item_status_id"] = $("#item_status_id").val();
+        }
+    }
+
+</script>

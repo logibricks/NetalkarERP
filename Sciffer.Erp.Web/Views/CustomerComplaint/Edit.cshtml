@@ -1,0 +1,437 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_customer_complaint
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+
+        @Html.HiddenFor(x => x.customer_complaint_id)
+
+        <div class="panel panel-default">
+            <div class="panel-heading">General</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.item_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.itemlist, "---Select---", htmlAttributes: new { @class = "form-control validinput" })
+                                @Html.ValidationMessageFor(model => model.item_id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.tag_no, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.tag_no, new { htmlAttributes = new { @class = "form-control validinput" } })
+                                @Html.ValidationMessageFor(model => model.tag_no, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.customer_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.DropDownList("customer_id", (System.Web.Mvc.SelectList)ViewBag.customerlist, "", htmlAttributes: new { @class = "form-control validinput" })
+                                @Html.ValidationMessageFor(model => model.customer_id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.complaint_received_from, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.complaint_received_from, new { htmlAttributes = new { @class = "form-control validinput" } })
+                                @Html.ValidationMessageFor(model => model.complaint_received_from, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.complaint_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.complaint_date, new { htmlAttributes = new { @class = "form-control validinput" } })
+                                @Html.ValidationMessageFor(model => model.complaint_date, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.complaint_receipt_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.complaint_receipt_date, new { htmlAttributes = new { @class = "form-control validinput" } })
+                                @Html.ValidationMessageFor(model => model.complaint_receipt_date, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.complaint_no, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.complaint_no, new { htmlAttributes = new { @class = "form-control validinput" } })
+                                @Html.ValidationMessageFor(model => model.complaint_no, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.complaint_type, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.complaint_type, new { htmlAttributes = new { @class = "form-control validinput" } })
+                                @Html.ValidationMessageFor(model => model.complaint_type, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.npt_customer_account_holder, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.npt_customer_account_holder, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.npt_customer_account_holder, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.complaint_details, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.complaint_details, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.complaint_details, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.reported_first_repeated, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.reported_first_repeated, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.reported_first_repeated, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.quantity_affected, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.quantity_affected, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.quantity_affected, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.reported_first_repeated, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.reported_first_repeated, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.reported_first_repeated, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.quantity_affected, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.quantity_affected, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.quantity_affected, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.containment_action, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.containment_action, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.containment_action, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.root_cause_at_occurrence, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.root_cause_at_occurrence, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.root_cause_at_occurrence, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.root_cause_for_detection, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.root_cause_for_detection, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.root_cause_for_detection, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.corrective_action, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.corrective_action, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.corrective_action, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.preventive_action, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.preventive_action, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.preventive_action, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.status, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.status, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.status, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Document Updation Date After Activity Completion</div>
+            <div class="panel-body">
+
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.pfc, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.pfc, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.pfc, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.cp, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.cp, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.cp, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.fmea, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.fmea, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.fmea, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.wi_sop, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.wi_sop, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.wi_sop, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.oir, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.oir, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.oir, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.lir, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.lir, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.lir, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.start_up_check_sheet, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.start_up_check_sheet, new { htmlAttributes = new { @class = "form-control num " } })
+                                @Html.ValidationMessageFor(model => model.start_up_check_sheet, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.others_pm_gauge_poka_yoke, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.others_pm_gauge_poka_yoke, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.others_pm_gauge_poka_yoke, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.ptdb, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.ptdb, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.ptdb, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.change_note, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.change_note, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.change_note, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.capa_no_submission_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.capa_no_submission_date, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.capa_no_submission_date, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Document Updation Date After Activity Completion</div>
+            <div class="panel-body">
+
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.month1, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.month1, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.month1, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.month2, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.month2, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.month2, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.month3, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.month3, new { htmlAttributes = new { @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.month3, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+
+            </div>
+            <div class="col-md-offset-2 col-md-10">
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                <input type="submit" value="Update" data-controller="Employee" class="btn btn-success" id="create" name="Create" style="float:right" />
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var doc_no = '@ViewBag.error';
+            if (doc_no != '') {
+                if (doc_no != 0) {
+                    sweetAlert("", doc_no, "error");
+                }
+            }
+        });
+        $("#item_id").select2({
+            maximumSelectionLength: 4,
+            placeholder: "Select Item Name",
+            allowClear: true
+        });
+        $("#tag_id").select2({
+            maximumSelectionLength: 4,
+            placeholder: "Select Tag No",
+            allowClear: true
+        });
+        $("#customer_id").select2({
+            maximumSelectionLength: 4,
+            placeholder: "Select Customer",
+            allowClear: true
+        });
+       
+    </script>
+}
+
+

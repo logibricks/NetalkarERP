@@ -1,0 +1,79 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+
+
+
+@{(Html.EJ().Grid<Report_TDSPayable_vm>("Editing")
+                                                            .Datasource((IEnumerable<object>)ViewBag.datasource)
+                                                                .AllowPaging().PageSettings(a=>a.PageSize(20))
+                                                                .AllowFiltering()
+                                                                    .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                                .ShowColumnChooser()
+                                                                .AllowSorting()
+                                                                .AllowScrolling()
+                                                                .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelForReport", "Generic", new { ctrlname = "SalesSummaryReport" }))
+                                                                .ExportToPdfAction(Url.Action("ExportToPdfForReport", "Generic", new { ctrlname = "SalesSummaryReport" })))
+                                                                .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                                            .ToolbarSettings(toolbar =>
+                                                            {
+                                                                toolbar.ShowToolbar().ToolbarItems(items =>
+                                                                {
+                                                                    items.AddTool(ToolBarItems.Search);
+                                                                    items.AddTool(ToolBarItems.ExcelExport);
+                                                                    items.AddTool(ToolBarItems.PrintGrid);
+                                                                });
+                                                            })
+                                                    .Columns(col =>
+                                                    {
+                                                        col.Field("TDS_Description").Width("10%").HeaderText("Tds Description").Add();
+                                                        col.Field("Posting_Date").Width("10%").HeaderText("Posting Date").Add();
+                                                        col.Field("Form").Width("10%").HeaderText("Form").Visible(false).Add();
+                                                        col.Field("Doc_Category").Width("10%").HeaderText("Doc Category").Visible(false).Add();
+                                                        col.Field("Doc_Number").Width("10%").HeaderText("Doc Number").Visible(false).Add();
+                                                        col.Field("Supplier_Name").Width("10%").HeaderText("Supplier Name").Visible(false).Add();
+                                                        col.Field("Supplier_PAN").Width("10%").HeaderText("Supplier Pan").Visible(false).Add();
+                                                        col.Field("Entity_Type").Width("10%").HeaderText("Entity Type").Visible(false).Add();
+                                                        col.Field("Base_AMount").Width("10%").HeaderText("Base Amount").Visible(false).Add();
+                                                        col.Field("TDS_AMount").Width("10%").HeaderText("Tds Amount").Visible(false).Add();
+
+                                                    })
+                                                        .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+                                                        ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    @*$(function () {
+        var obj = @Html.Raw(Json.Encode(ViewBag.datasource));
+        console.log(obj);
+        $("#Editing").ejGrid({
+            dataSource: obj,
+            allowPaging: true,
+            //columns: [
+
+            //],
+            //dataBound : function(args){
+            //	for (var fld =0; fld < list.length; fld++ ) {
+            //	var column = { field: list[fld].value, headerText: list[fld].header, column: "", textAlign: "left", type: "string", visible: true, width: 75 };
+            //	this.model.columns.push(column); //add dynamic columns
+            //	}
+            //	this.columns(this.model.columns);
+            //}
+        });
+    });*@
+
+
+</script>
+
+
+
+
+
+
+
+
+
+

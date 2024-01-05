@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.Model.REF_CUSTOMER_CONTACTS>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.REF_CUSTOMER.CUSTOMER_CODE)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CONTACT_NAME)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DESIGNATION)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MOBILE_NO)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PHONE_NO)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SEND_SMS_FLAG)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SEND_EMAIL_FLAG)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.REF_CUSTOMER.CUSTOMER_CODE)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CONTACT_NAME)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DESIGNATION)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.MOBILE_NO)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PHONE_NO)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SEND_SMS_FLAG)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SEND_EMAIL_FLAG)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.CUSTOMER_CONTACT_ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.CUSTOMER_CONTACT_ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.CUSTOMER_CONTACT_ID })
+        </td>
+    </tr>
+}
+
+</table>

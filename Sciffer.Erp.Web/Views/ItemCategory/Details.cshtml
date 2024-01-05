@@ -1,0 +1,340 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.REF_ITEM_CATEGORYVM
+
+@{
+    ViewBag.Title = "Create";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(a => a.ITEM_CATEGORY_ID)
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ITEM_CATEGORY_NAME, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.ITEM_CATEGORY_NAME, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ITEM_CATEGORY_NAME, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ITEM_CATEGORY_DESCRIPTION, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.ITEM_CATEGORY_DESCRIPTION, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ITEM_CATEGORY_DESCRIPTION, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.inventory_account_id, htmlAttributes: new { @class = "control-label col-md-4 autocompletes" })
+                    <div class="col-md-8">
+                        @{
+                            Html.EJ()
+                                .Autocomplete("inventory_account_name")
+                                .Width("100%")
+                                .ClientSideEvents(e => e.Select("onSelect1"))
+                                .WatermarkText("Select inventory account")
+                                .Datasource((IEnumerable<object>)ViewBag.inventory_list)
+                                .HighlightSearch(true)
+                                .ShowPopupButton(true)
+                                .Enabled(false)
+                                .MultiColumnSettings(obj => obj.Enable(true).Columns(obj1 =>
+                                {
+                                    obj1.Field("gl_ledger_name").HeaderText("GL Name").Add();
+                                    obj1.Field("gl_ledger_code").HeaderText("GL Code").Add();
+                                }).ShowHeader(true).StringFormat("{1}-{0}"))
+                                .Value(ViewBag.inventory_detail)
+                                .Render();
+                        }
+                        <label></label>
+                        @Html.ValidationMessageFor(model => model.inventory_account_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.consumption_account_id, htmlAttributes: new { @class = "control-label col-md-4 autocompletes" })
+                    <div class="col-md-8">
+                        @{
+                            Html.EJ()
+                                .Autocomplete("consumption_account_name")
+                                .Width("100%")
+                                .ClientSideEvents(e => e.Select("onSelect1"))
+                                .WatermarkText("Select consumption account")
+                                .Datasource((IEnumerable<object>)ViewBag.cunsumption_list)
+                                .HighlightSearch(true)
+                                .ShowPopupButton(true)
+                                .Enabled(false)
+                                .MultiColumnSettings(obj => obj.Enable(true).Columns(obj1 =>
+                                {
+                                    obj1.Field("gl_ledger_name").HeaderText("GL Name").Add();
+                                    obj1.Field("gl_ledger_code").HeaderText("GL Code").Add();
+                                }).ShowHeader(true).StringFormat("{1}-{0}"))
+                                .Value(ViewBag.cunsumption_detail)
+                                .Render();
+                        }
+                        <label></label>
+                        @Html.ValidationMessageFor(model => model.consumption_account_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.price_difference_account_id, htmlAttributes: new { @class = "control-label col-md-4 autocompletes" })
+                    <div class="col-md-8">
+                        @{
+                            Html.EJ()
+                                .Autocomplete("price_difference_account_name")
+                                .Width("100%")
+                                .ClientSideEvents(e => e.Select("onSelect1"))
+                                .WatermarkText("Select price dirrerence account")
+                                .Datasource((IEnumerable<object>)ViewBag.price_list)
+                                .HighlightSearch(true)
+                                .ShowPopupButton(true)
+                                .Enabled(false)
+                                .MultiColumnSettings(obj => obj.Enable(true).Columns(obj1 =>
+                                {
+                                    obj1.Field("gl_ledger_name").HeaderText("GL Name").Add();
+                                    obj1.Field("gl_ledger_code").HeaderText("GL Code").Add();
+                                }).ShowHeader(true).StringFormat("{1}-{0}"))
+                                .Value(ViewBag.price_detail)
+                                .Render();
+                        }
+                        <label></label>
+                        @Html.ValidationMessageFor(model => model.price_difference_account_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.revaluation_account_id, htmlAttributes: new { @class = "control-label col-md-4 autocompletes" })
+                    <div class="col-md-8">
+                        @{
+                            Html.EJ()
+                                .Autocomplete("revaluation_account_name")
+                                .Width("100%")
+                                .ClientSideEvents(e => e.Select("onSelect1"))
+                                .WatermarkText("Select revaluation account")
+                                .Datasource((IEnumerable<object>)ViewBag.revaluation_list)
+                                .HighlightSearch(true)
+                                .ShowPopupButton(true)
+                                .Enabled(false)
+                                .MultiColumnSettings(obj => obj.Enable(true).Columns(obj1 =>
+                                {
+                                    obj1.Field("gl_ledger_name").HeaderText("GL Name").Add();
+                                    obj1.Field("gl_ledger_code").HeaderText("GL Code").Add();
+                                }).ShowHeader(true).StringFormat("{1}-{0}"))
+                                .Value(ViewBag.revaluation_detail)
+                                .Render();
+                        }
+                        <label></label>
+                        @Html.ValidationMessageFor(model => model.revaluation_account_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.stock_difference_account_id, htmlAttributes: new { @class = "control-label col-md-4 autocompletes" })
+                    <div class="col-md-8">
+                        @{
+                            Html.EJ()
+                                .Autocomplete("stock_difference_account_name")
+                                .Width("100%")
+                                .ClientSideEvents(e => e.Select("onSelect1"))
+                                .WatermarkText("Select stock difference account")
+                                .Datasource((IEnumerable<object>)ViewBag.stock_list)
+                                .HighlightSearch(true)
+                                .ShowPopupButton(true)
+                                .Enabled(false)
+                                .MultiColumnSettings(obj => obj.Enable(true).Columns(obj1 =>
+                                {
+                                    obj1.Field("gl_ledger_name").HeaderText("GL Name").Add();
+                                    obj1.Field("gl_ledger_code").HeaderText("GL Code").Add();
+                                }).ShowHeader(true).StringFormat("{1}-{0}"))
+                                .Value(ViewBag.stock_detail)
+                                .Render();
+                        }
+                        <label></label>
+                        @Html.ValidationMessageFor(model => model.stock_difference_account_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.gogp_account_id, htmlAttributes: new { @class = "control-label col-md-4 autocompletes" })
+                    <div class="col-md-8">
+                        @{
+                            Html.EJ()
+                                .Autocomplete("gogp_account_name")
+                                .Width("100%")
+                                .ClientSideEvents(e => e.Select("onSelect1"))
+                                .WatermarkText("Select GOGP account")
+                                .Datasource((IEnumerable<object>)ViewBag.gogp_list)
+                                .HighlightSearch(true)
+                                .ShowPopupButton(true)
+                                .Enabled(false)
+                                .MultiColumnSettings(obj => obj.Enable(true).Columns(obj1 =>
+                                {
+                                    obj1.Field("gl_ledger_name").HeaderText("GL Name").Add();
+                                    obj1.Field("gl_ledger_code").HeaderText("GL Code").Add();
+                                }).ShowHeader(true).StringFormat("{1}-{0}"))
+                                .Value(ViewBag.gogp_detail)
+                                .Render();
+                        }
+                        <label></label>
+                        @Html.ValidationMessageFor(model => model.gogp_account_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.cogs_account_id, htmlAttributes: new { @class = "control-label col-md-4 autocompletes" })
+                    <div class="col-md-8">
+                        @{
+                            Html.EJ()
+                                .Autocomplete("cogs_account_name")
+                                .Width("100%")
+                                .ClientSideEvents(e => e.Select("onSelect1"))
+                                .WatermarkText("Select COGS account")
+                                .Datasource((IEnumerable<object>)ViewBag.cogs_list)
+                                .HighlightSearch(true)
+                                .ShowPopupButton(true)
+                                .Enabled(false)
+                                .MultiColumnSettings(obj => obj.Enable(true).Columns(obj1 =>
+                                {
+                                    obj1.Field("gl_ledger_name").HeaderText("GL Name").Add();
+                                    obj1.Field("gl_ledger_code").HeaderText("GL Code").Add();
+                                }).ShowHeader(true).StringFormat("{1}-{0}"))
+                                .Value(ViewBag.cogs_detail)
+                                .Render();
+                        }
+                        <label></label>
+                        @Html.ValidationMessageFor(model => model.cogs_account_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.by_product_la_account_id, htmlAttributes: new { @class = "control-label col-md-4 autocompletes" })
+                    <div class="col-md-8">
+                        @{
+                            Html.EJ()
+                                .Autocomplete("by_product_la_account_name")
+                                .Width("100%")
+                                .ClientSideEvents(e => e.Select("onSelect1"))
+                                .WatermarkText("Select by product account")
+                                .Datasource((IEnumerable<object>)ViewBag.product_list)
+                                .HighlightSearch(true)
+                                .ShowPopupButton(true)
+                                .Enabled(false)
+                                .MultiColumnSettings(obj => obj.Enable(true).Columns(obj1 =>
+                                {
+                                    obj1.Field("gl_ledger_name").HeaderText("GL Name").Add();
+                                    obj1.Field("gl_ledger_code").HeaderText("GL Code").Add();
+                                }).ShowHeader(true).StringFormat("{1}-{0}"))
+                                .Value(ViewBag.product_detail)
+                                .Render();
+                        }
+                        <label></label>
+                        @Html.ValidationMessageFor(model => model.by_product_la_account_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.scrap_account_id, htmlAttributes: new { @class = "control-label col-md-4 autocompletes" })
+                    <div class="col-md-8">
+                        @{
+                            Html.EJ()
+                                .Autocomplete("scrap_account_name")
+                                .Width("100%")
+                                .ClientSideEvents(e => e.Select("onSelect1"))
+                                .WatermarkText("Select scrap account")
+                                .Datasource((IEnumerable<object>)ViewBag.scrap_list)
+                                .HighlightSearch(true)
+                                .ShowPopupButton(true)
+                                .Enabled(false)
+                                .MultiColumnSettings(obj => obj.Enable(true).Columns(obj1 =>
+                                {
+                                    obj1.Field("gl_ledger_name").HeaderText("GL Name").Add();
+                                    obj1.Field("gl_ledger_code").HeaderText("GL Code").Add();
+                                }).ShowHeader(true).StringFormat("{1}-{0}"))
+                                .Value(ViewBag.scrap_detail)
+                                .Render();
+                        }
+                        <label></label>
+                        @Html.ValidationMessageFor(model => model.scrap_account_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.grir_clearing_account_id, htmlAttributes: new { @class = "control-label col-md-4 autocompletes" })
+                    <div class="col-md-8">
+                        @{
+                            Html.EJ()
+                                .Autocomplete("grir_clearing_account_name")
+                                .Width("100%")
+                                .ClientSideEvents(e => e.Select("onSelect1"))
+                                .WatermarkText("Select gril clearing account")
+                                .Datasource((IEnumerable<object>)ViewBag.clearing_list)
+                                .HighlightSearch(true)
+                                .ShowPopupButton(true)
+                                .Enabled(false)
+                                .MultiColumnSettings(obj => obj.Enable(true).Columns(obj1 =>
+                                {
+                                    obj1.Field("gl_ledger_name").HeaderText("GL Name").Add();
+                                    obj1.Field("gl_ledger_code").HeaderText("GL Code").Add();
+                                }).ShowHeader(true).StringFormat("{1}-{0}"))
+                                .Value(ViewBag.clearing_detail)
+                                .Render();
+                        }
+                        <label></label>
+                        @Html.ValidationMessageFor(model => model.grir_clearing_account_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.is_blocked, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.is_blocked, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.is_blocked, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                            }
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $('#is_blocked').checkboxpicker();
+        $("#form0 :input").prop("disabled", true);
+       
+    </script>
+}

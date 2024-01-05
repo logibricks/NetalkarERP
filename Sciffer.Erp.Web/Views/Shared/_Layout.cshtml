@@ -1,0 +1,1818 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title id="sitetitle">Loading...</title>
+
+    <!-- MultiSelect -->
+    <!-- Bootstrap -->
+    @* <link href="~/Content/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">*@
+
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet">
+    <link href="~/Content/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="~/Content/animate.min.css" rel="stylesheet">
+    <link href="~/Content/loading.css" rel="stylesheet" />
+    <!-- Custom styling plus plugins -->
+    <link href="~/Content/custom.css" rel="stylesheet">
+    <link href="~/Content/green.css" rel="stylesheet" />
+    <link href="~/Content/dataTables.tableTools.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/Content/bootstrap-switch.css" />
+    <link rel="stylesheet" href="~/Content/dataTables.responsive.css" />
+    <link rel="stylesheet" href="~/Content/bootstrap-datetimepicker.min.css" />
+    <link rel="stylesheet" href="~/Content/sweetalert.css" />
+    <link rel="stylesheet" href="~/Content/floatexamples.css" />
+    <link rel="stylesheet" href="~/Content/jquery-jvectormap-2.0.1.css" />
+    <link rel="stylesheet" href="~/Content/sumoselect.css" />
+    <link rel="stylesheet" href="~/Content/select2.min.css" />
+    <link href="~/Content/ej/web/responsive-css/ejgrid.responsive.css" rel="stylesheet" />
+    <!-- MultiSelect -->
+    <link href="~/Content/bootstrap-multiselect-master/dist/css/bootstrap-multiselect.css" rel="stylesheet">
+
+    <!--For graph-->
+
+    <link href="~/Content/floatexamples.css" rel="stylesheet" />
+    <!-- jQuery -->
+    <script src="~/Content/jquery/dist/jquery.min.js"></script>
+    <script src="~/Scripts/sweetalert.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="~/Content/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Jquery Ui -->
+    <link href="~/Content/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+    <script src="~/Content/jquery-ui/jquery-ui.min.js"></script>
+
+    <!-- Ion.RangeSlider -->
+    <script src="~/Content/ion.rangeSlider/js/ion.rangeSlider.min.js"></script>
+
+    <script src="~/Scripts/bootstrap-checkbox.min.js"></script>
+
+    <!-- jQuery Tags Input -->
+    <script src="~/Content/jquery.tagsinput/src/jquery.tagsinput.js"></script>
+
+    <!-- MultiSelect -->
+    <script src="~/Content/bootstrap-multiselect-master/dist/js/bootstrap-multiselect.js"></script>
+    <script src="~/script/reports.js"></script>
+    @Styles.Render("~/Content/ej/web/bootstrap-theme/ej.web.all.min.css")
+    @Scripts.Render("~/Scripts/jquery.easing.1.3.js")
+    @Scripts.Render("~/Scripts/jsrender.min.js")
+    @{
+        if (!this.ViewContext.RouteData.Values["controller"].ToString().ToLower().Contains("machineentry"))
+        {
+            @Scripts.Render("~/Scripts/ej/web/ej.web.all.min.js");
+        };
+    }
+    <!-- FONT -->
+    <link href="~/Content/BodyColor.css" rel="stylesheet" />
+
+</head>
+
+
+
+
+<body class="nav-md">
+
+    <div class="container body">
+        <div class="main_container">
+            <div class="col-md-3 left_col">
+                <div class="left_col scroll-view">
+
+                    <div class="navbar nav_title" style="border: 0;background-color:#eee">
+                        <a href="@Url.Action("Index", "Home")" class="site_title"><img src="~/images/Logibricks_Logo.png" width="70%" style="padding-left:0px;" /></a>
+                    </div>
+                    <div class="clearfix"></div>
+                    <!-- sidebar menu -->
+                    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+
+                        <div class="menu_section">
+                            <ul class="nav side-menu">
+                                <li>
+                                    <a href="@Url.Action("Index", "Home")"><i class="fa fa-home"></i> Home </a>
+                                </li>
+                                <li>
+                                    <a href="@Url.Action("Index", "Dashboard")"><i class="fa fa-home"></i> DashBoard </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:void()"><i class="fa">&#xf0cd;</i> User Management <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li>
+                                            <a href="@Url.Action("Index", "usermanagement")">User Profile</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "usermanagementrole")"> Role Profile</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "userrolerights")">Role Rights</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="@Url.Action("Index","userrolemapping")">User-Role Mapping</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index","roledashboard")">Role-Dashboard Mapping</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+
+                                <li>
+                                    <a href="javascript:void()"><i class="fa fa-compass"></i> Configuration <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li>
+                                            <a href="javascript:void()"><i class="fa fa-key"></i>Initial Setup <span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li>
+                                                    <a href="@Url.Action("Index", "companydetails")">Company Details </a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "financialyear")">Financial Year</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "documentnumbering")">Document Numbering</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "postingperiod")">Posting Period</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "validation")">Validation Master</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "Task")">Calendar Master</a>
+                                                </li>
+                                            </ul>
+                                            <a href="javascript:void()"><i class="fa fa-table"></i>General Masters<span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+
+                                                <li>
+                                                    <a href="@Url.Action("Index", "organizationtype")">Organization Type</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "country")">Country</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "state")">State</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "priority")">Priority</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "freightterms")">Freight Terms</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "currency")">Currency</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "businessunit")">Business Unit</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "modeoftransport")">Transport Mode</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "cancellationreason")">Cancellation Reason</a>
+                                                </li>
+                                            </ul>
+                                            <a href="javascript:void()"><i class="fa fa-book"></i>Opening Balance<span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li>
+                                                    <a href="@Url.Action("Index", "vendorbalance")">Vendor Balance</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "customerbalance")">Customer Balance</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "inventorybalance")">Inventory Balance</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "genLedgerbalance")">General Ledger Balance</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "employeebalance")">Employee Balance</a>
+                                                </li>
+                                            </ul>
+                                            <a href="javascript:void()"><i class="fa fa-shopping-cart"></i>Purchase<span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li>
+                                                    <a href="@Url.Action("Index", "vendorcategory")">Vendor Category</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "vendorparent")">Vendor Parent</a>
+                                                </li>
+                                            </ul>
+                                            <a href="javascript:void()"><i class="fa fa-line-chart"></i>Sales<span class="fa fa-chevron-down"></span></a>
+
+                                            <ul class="nav child_menu">
+                                                <li>
+                                                    <a href="@Url.Action("Index", "customercategory")">Customer Category</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "customerparent")">Customer Parent</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "territory")">Territory</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "salesrm")">Sales RM</a>
+                                                </li>
+                                            </ul>
+                                            <a href="javascript:void()"><i class="fa fa-link"></i>Inventory<span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li>
+                                                    <a href="@Url.Action("Index", "plant")">Plant</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "storagelocation")">Storage Location</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "itemcategory")">Item Category</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "itemgroup")">Item Group</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "uom")">Unit of Measurement</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "brand")">Brand</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "reasondetermination")">Reasons Determination</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "batchnumbering")">Batch Numbering</a>
+                                                </li>
+                                            </ul>
+                                            <a href="javascript:void()"><i class="fa fa-wrench"></i>Plant Maintenance<span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li>
+                                                    <a href="@Url.Action("Index", "machinecategory")">Machine Category</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "parameterlist")">Parameter List</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "notificationtype")">Notification Type</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "permittemplate")">Permit Template</a>
+                                                </li>
+                                            </ul>
+                                            <a href="javascript:void()"><i class="fa fa-cogs"></i>Production<span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li>
+                                                    <a href="@Url.Action("Index", "shift")">Shifts</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "tagnumbering")">Tag Numbering</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "processmaster")">Process Master</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "processmachinemapping")">Process Machine Mapping</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "operatorscreenupgradation")">Operator Screen Upgradation</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "machineentry")">Machine Entry</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "machineentryforqc")">Machine Entry In QC</a>
+                                                </li>
+                                                
+                                                <li>
+                                                    <a href="@Url.Action("Index", "qualityparameter")">Quality Control Parameters</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "operatorqualityparameter")">Operator Quality Parameters</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "maptooloperation")">Crankshaft Operation Tool Mapping</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "shiftwiseproduction")">Shift Wise Production</a>
+                                                </li>
+                                            </ul>
+                                            <a href="javascript:void()"><i class="fa fa-university"></i>Cash & Banking<span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li>
+                                                    <a href="@Url.Action("Index", "bank")">Banks</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "housebank")">House Bank</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "creditcard")">Credit Cards</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "paymenttype")">Payment Types</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "paymentterms")">Payment Terms</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "cashaccount")">Cash Account</a>
+                                                </li>
+                                            </ul>
+                                            <a href="javascript:void()"><i class="fa fa-inr"></i>Accounting<span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li>
+                                                    <a href="@Url.Action("Index", "budget")">Budget</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "costcenter")">Cost Center</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "exchangerate")">Exchange Rate</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "financialtemplate")">Financial Template</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "templategl")">Template GL Mapping</a>
+                                                </li>
+                                            </ul>
+                                            <a href="javascript:void()"><i class="fa fa-calculator"></i>Taxation<span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li>
+                                                    <a href="@Url.Action("Index", "taxtype")">Tax Type</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "taxelement")">Tax Element</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "taxcode")">Tax Code</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "forms")">Forms</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "tdscode")">TDS</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "gsttdscode")">GST TDS</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "sacmaster")">SAC Master</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "hsn")">HSN</a>
+                                                </li>
+                                            </ul>
+                                            <a href="javascript:void()"><i class="fa fa-user"></i> HR <span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li>
+                                                    <a href="@Url.Action("Index", "department")"> Department </a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "designation")"> Designation </a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "division")"> Division </a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("Index", "grade")"> Grade </a>
+                                                </li>
+                                                
+                                            </ul>
+                                            <a href="@Url.Action("Index", "uploadfiles")"><i class="fa fa-file-excel-o"></i>Upload Files</a>
+                                        </li>
+                                    </ul>
+
+
+                                    @*//modify riday 27-oct 6:44*@
+
+                                <li>
+                                    <a href="javascript:void()"><i class="fa fa-line-chart"></i> Sales <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li>
+                                            <a href="@Url.Action("Index", "customermaster")">Customer Master</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "pricelistcustomer")">Price List Customer</a>
+
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "salesquotation")">Sales Quotation</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index","salesorder")">Sales Order</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index","salesinvoice")">Sales Invoice</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="@Url.Action("Index","salesreturn")">Sales Return</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index","customercomplaint")">Customer Complaint</a>
+                                        </li>
+                                    </ul>
+
+                                </li>
+
+
+
+                                <li>
+                                    <a href="javascript:void()"><i class="fa fa-shopping-cart"></i> Purchases <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li>
+                                            <a href="@Url.Action("Index", "vendormaster")">Vendor Master</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "pricelist")">Price List Vendor</a>
+
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "purchaserequisition")">Purchase Requisition</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("ApprovedPurchaseReq", "purchaserequisition")">Purchase Requisition Approval</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "purchaseorder")">Purchase Order</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("approvedpurchaseorder", "purchaseorder")">Purchase Order Approval</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "grn")">GRN</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "srn")">SRN</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "incomingexcise")">Incoming Excise</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "purchaseinvoice")">Purchase Invoice</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "purchasereturn")">Purchase Return</a>
+                                        </li>
+                                    </ul>
+
+                                </li>
+                                <li>
+                                    <a href="javascript:void()"><i class="fa fa-check-square"></i> QA <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li>
+                                            <a href="@Url.Action("Index", "qa")">Inspection Lot Clearance</a>
+                                        </li>
+                                        @*<li>
+                                                <a href="#">Batch Revalidation</a>
+                                            </li>*@
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javascript:void()"><i class="fa fa-link"></i> Inventory <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li>
+                                            <a href="@Url.Action("Index", "itemmaster")">Item Master</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "goodsreceipt")">Goods Receipt</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "goodsissue")">Goods Issue</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "withinplanttransfer")">Within Plant Transfer</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "interplanttransfer")">Inter Plant Transfer</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "inventoryrevaluation")">Inventory Revaluation</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "materialrequisitionnote")">Material Requisition Note</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "materialrequisitionindent")">Material Requisition Indent</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("ApprovedMRN", "materialrequisitionnote")">Approved Material Requisition Note</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "jobwork")">Job Work In</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "inventorystock")">Inventory Stock</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "materialout")">Material Out</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "materialin")">Material In</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "createstocksheet")">Create Stock Sheet</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "updatestocksheet")">Update Stock Count</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "postvariance")">Post variance</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a href="javascript:void()"><i class="fa fa-cogs"></i> Production <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li>
+                                            <a href="@Url.Action("Index", "bom")">Bill of Materials</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "productionorder")">Production Order</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "productionorderissue")">Production Issue</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "productionreceipt")">Production Receipt</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "rejectionreceipt")">Rejection Receipt</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "jobworkrejection")">Jobwork Rejection</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "productionplan")">Production Plan</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "productiondowntime")">Production DownTime</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "ShiftwiseProductionMaster")">Shiftwise Production Master</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "CycleTime")">Cycle Time</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "TemporaryskillmatrixAccess")">Temporary Skill Access</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a href="javascript:void()"><i class="fa fa-inr"></i> Accounting <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li>
+                                            <a href="@Url.Action("Index", "generalledger")">Chart of Accounts</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "debitnotetransaction")">Debit Note Transaction</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "creditnotetransaction")">Credit Note Transaction</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "internalreconcile")">Internal Reconcillation</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "journalentry")">Journal Entry</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javascript:void()"><i class="fa fa-inr"></i> Fixed Assets <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li>
+                                            <a href="@Url.Action("Index", "depreciationarea")">Depreciation Area</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index","depreciationtype")"> Depreciation Type</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index","assetgroup")"> Asset Group</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="@Url.Action("Index","assetclass")">Asset Class</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index","assetmasterdata")">Asset Master Data</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index","capitalization")">Capitalization</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javascript:void()"><i class="fa fa-wrench"></i> Plant Maintenance <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li>
+                                            <a href="@Url.Action("Index", "machine")">Machine Master</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "planmaintenance")">Maintenance Plan</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "planmaintenanceOrder")">Plan Maintenance Order</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "breakdownorder")">Breakdown Order</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "notification")">Malfunction Notification</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("CloseOpenItem", "notification")">Close Open Item</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "plantnotification")">Planned Notification</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "issuepermit")">Issue Permit</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a href="javascript:void()"><i class="fa fa-university"></i> Cash & Banking <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li>
+                                            <a href="@Url.Action("Index", "receipt")">Receipt</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "payment")">Payment</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "brs")">BRS</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "contraentry")">Contra Entries</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a href="javascript:void()"><i class="fa fa-user"></i> HR <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li>
+                                            <a href="@Url.Action("Index", "employee")"> Employee Master </a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "incentivebenchmark")"> Incentive Benchmark </a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "incentiveapplicability")">Incentive Applicability </a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Create", "multimachining")">Multi Machining </a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "incentiveholiday")">Incentive Holiday</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "operatorincentivedetail")">Operator Incentive Detail Report</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "operatorincentivesummary")">Operator Incentive Summary Report</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "shiftwisedata")">Shift Wise Data</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "skillmatrix")">Skill Matrix</a>
+                                        </li>
+                                        
+                                        <li>
+                                            <a href="@Url.Action("Index", "operatoroperationmapping")">Operator Operation Mapping</a>
+                                        </li>
+
+                                        @*<li>
+                                            <a href="@Url.Action("Index", "operatorchangerequest")">Operator Change Request</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("OperatorChangeRequestApproval", "operatorchangerequest")">Operator Change Request Approval</a>
+                                        </li>*@
+
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a href="javascript:void()"><i class="fa fa-wrench"></i> Tool Life Monitoring <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li>
+                                            <a href="@Url.Action("Index", "toolrenewtype")"> Tool Renew Type</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("Index", "toollifemaster")">Tool Life Master</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="@Url.Action("Index","toolmachineusage")">Create New Tool</a>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li>
+                                    <a href="javascript:void()"><i class="fa fa-wrench"></i> Report <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li>
+                                            <a href="@Url.Action("index", "salesReport")"><i class="fa fa-wrench"></i> Sales</a>
+
+                                            @*<a href="javascript:void()"><i class="fa fa-wrench"></i> Sales <span class="fa fa-chevron-down"></span></a>*@
+                                            @*<ul class="nav child_menu">
+                                                    <li>
+                                                        <a href="@Url.Action("salessummaryreport", "SalesReport")">Sales Summary Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("salesheaderlevelreport", "SalesReport")">Sales Header Level Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("salesdetaillevelreport", "SalesReport")">Sales Detail Level Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("CustomerContactDetailsReport", "SalesReport")">Customer Contact Details Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("CustomerPaymentMasterListReport", "SalesReport")">Customer Payment Master List Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("CustomerLedgerReport", "SalesReport")">Client Ledger Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("forexsalesreport", "SalesReport")">Forex Sales Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("salesquotationsummaryreport", "SalesReport")">Sales Quotation Summary Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("salesquotationheaderlevelreport", "SalesReport")">Sales Quotation Header Level Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("salesquotationdetaillevelreport", "SalesReport")">Sales Quotation Detail Level Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("salesordersummaryreport", "SalesReport")">Sales OrderSummary Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("salesorderheaderlevelreport", "SalesReport")">Sales Order Header Level Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("salesorderdetaillevelreport", "SalesReport")">Sales Order Detail Level Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("salesorderitemwiseplanreport", "SalesReport")">Sales Order Item Wise Plan Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("ItemWiseSalesSummaryReport", "SalesReport")">Item Wise Sales Summary Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("ItemWiseSalesDetailReport", "SalesReport")">Item Wise Sales Detail Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("salesorderqtytrackerreport", "SalesReport")">Sales Order Qty Tracker Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("collectionsreceivedreport", "SalesReport")">Collections Received Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("collectionsexpectedreport", "SalesReport")">Collections Expected Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("customermasterdiscountdetailsreport", "SalesReport")">Customer Master Discount Details Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("SalesPriceListReport", "SalesReport")">Sales Price List Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("opensalesorderreport", "SalesReport")">Open Sales Order Report</a>
+                                                    </li>
+                                                </ul>*@
+                                        </li>
+
+
+                                        <li>
+                                            <a href="@Url.Action("Index", "PurchaseReport")"><i class="fa fa-wrench"></i>Purchase</a>
+                                            @*<a href="javascript:void()"><i class="fa fa-wrench"></i> Purchase <span class="fa fa-chevron-down"></span></a>*@
+                                            @*<ul class="nav child_menu">
+                                                    <li>
+                                                        <a href="@Url.Action("VendorContactDetailsReport", "purchasereport")">Vendor Contact Details Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("VendorPaymentMasterListReport", "purchasereport")">Vendor Payment Master List Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("vendorledgerreport", "purchasereport")">Vendor Ledger Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("VendorMasterDiscountDetailsReport", "purchasereport")">Vendor Master Discount Details Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("PurchasePriceListReport", "purchasereport")">Purchase Price List Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("PurchaseRequisitionSummaryReport", "purchasereport")">Purchase Requisition Summary Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("PurchaseRequisitionDetailedReport", "purchasereport")">Purchase Requisition Detailed Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("OpenPRReport", "purchasereport")">Open PR Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("purchaseordersummaryreport", "purchasereport")">Purchase Order Summary Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("purchaseorderheaderreport", "purchasereport")">Purchase Order Header Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("PurchaseOrderItemLevelReport", "purchasereport")">Purchase Order Item Level Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("openporeport", "purchasereport")">Open PO Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("grnsummaryreport", "purchasereport")">GRN Summary Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("grnheaderreport", "purchasereport")">GRN Header Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("grnitemlevelreport", "purchasereport")">GRN Item Level Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("grnpendingforexcisereport", "purchasereport")">GRN Pending for Excise Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("grnpendingforpurchaseinvoicereport", "report")">GRN Pending for Purchase Invoice Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("purchaseinvoicesummaryreport", "purchasereport")">Purchase Invoice Summary Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("purchaseinvoiceheaderreport", "purchasereport")">Purchase Invoice Header Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("purchaseinvoiceitemlevelreport", "purchasereport")">Purchase Invoice Item Level Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("ldreport", "report")">LD Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("purchasereturnsummaryreport", "purchasereport")">Purchase Return Summary Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("purchasereturnheaderreport", "purchasereport")">Purchase Return Header Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("purchasereturnitemlevelreport", "purchasereport")">Purchase Return Item Level Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("potopaymenttrackerreport", "report")">PO to Payment Tracker Report</a>
+                                                    </li>
+                                                </ul>*@
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("index", "PlantMaintenanceReport")"><i class="fa fa-wrench"></i> Plant Maintenance</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("index", "BankingReport")"><i class="fa fa-wrench"></i> Banking</a>
+                                            @*<a href="javascript:void()"><i class="fa fa-wrench"></i> Banking <span class="fa fa-chevron-down"></span></a>
+                                                <ul class="nav child_menu">
+                                                    <li>
+                                                        <a href="@Url.Action("paymentsummary", "bankingreport")">Payment Summary</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("receiptsummary", "bankingreport")">Receipt Summary</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("PaymentDetail", "bankingreport")">Payment Detail</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("ReceiptDetail", "bankingreport")">Receipt Detail</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("ContraEntriesDetail", "bankingreport")">Contra Entries Detail</a>
+                                                    </li>
+                                                </ul>*@
+                                        </li>
+
+
+
+                                        <li>
+                                            <a href="@Url.Action("index", "AccountsReport")"><i class="fa fa-wrench"></i>Accounts</a>
+                                            @*<a href="javascript:void()"><i class="fa fa-wrench"></i> Accounts <span class="fa fa-chevron-down"></span></a>
+                                                <ul class="nav child_menu">
+                                                    <li>
+                                                        <a href="@Url.Action("salescontributionreport", "report")">Sales Contribution Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("ARAgeingReport", "AccountsReport")">AR Ageing Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("APAgeingReport", "AccountsReport")">AP Ageing Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("trialbalancereport", "report")">Trial Balance Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("generalledgerreport", "report")">General Ledger Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("generalledgerdetailsreport", "report")">General Ledger Details Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("CustomerLedgerReport", "AccountsReport")">Customer Ledger Details Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("VendorLedgerReport", "AccountsReport")">Vendor Ledger Details Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("EmployeeLedgerReport", "AccountsReport")">Employee Ledger Details Report</a>
+                                                    </li>
+
+                                                </ul>*@
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("index", "GSTRReport")"><i class="fa fa-wrench"></i>Taxation</a>
+                                            @*<a href="javascript:void()"><i class="fa fa-wrench"></i> Taxation <span class="fa fa-chevron-down"></span></a>
+                                                <ul class="nav child_menu">
+                                                    <li>
+                                                        <a href="@Url.Action("GSTR1Report", "GSTRReport")">GSTR1 Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("GSTR2Report", "GSTRReport")">GSTR2 Report</a>
+                                                    </li>
+                                                </ul>*@
+                                        </li>
+
+
+
+
+                                        <li>
+                                            <a href="@Url.Action("index", "InventoryReport")"><i class="fa fa-wrench"></i>Inventory</a>
+                                            @*<a href="javascript:void()"><i class="fa fa-wrench"></i> Inventory <span class="fa fa-chevron-down"></span></a>
+                                                <ul class="nav child_menu">
+                                                    <li>
+                                                        <a href="@Url.Action("inventoryledgerdetailedreport", "report")">Inventory ledger Detailed Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("inventoryledgersummaryreport", "report")">Inventory Ledger Summary Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("inventorycostingreport", "inventoryreport")">Inventory Costing Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("inventoryvaluationreport", "inventoryreport")">Inventory Valuation Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("goodsreceiptreport", "inventoryreport")">Goods Receipt Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("goodsissuereport", "inventoryreport")">Goods Issue Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("withinplantrasferreport", "inventoryreport")">Within PlantTrasfer Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("inventoryrevalautionreport", "inventoryreport")">Inventory Revalaution Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("inventoryratehistoryreport", "report")">Inventory Rate History Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("materialrequisitionreportstatusdetailedreport", "inventoryreport")">Material Requisition Report Status Detailed Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("materialrequisitionreportstatussummaryreport", "inventoryreport")">Material Requisition Report Status Summary Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("openmaterialrequisitionreport", "inventoryreport")">Open Material Requisition Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("itemaccountingreport", "report")">Item Accounting Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("inventorycascadereport", "inventoryreport")">Inventory Cascade Report</a>
+                                                    </li>
+                                                </ul>*@
+                                        </li>
+                                        @*<li>
+                                                <a href="@Url.Action("index", "ProductionReport")"><i class="fa fa-wrench"></i>Production</a>
+                                            </li>*@
+                                        @*<li>
+                                                <a href="javascript:void()"><i class="fa fa-wrench"></i> Production <span class="fa fa-chevron-down"></span></a>
+                                                <ul class="nav child_menu">
+                                                    <li>
+                                                        <a href="@Url.Action("WIPReportSummary", "ProductionReport")">WIP Report Summary</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("WIPReportDetailed", "ProductionReport")">WIP Report Detailed</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("WIPReportAgeingReportSummary", "ProductionReport")">WIP Report Ageing Report Summary</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("Userwiseproductionreport", "ProductionReport")">User Wise Production Report</a>
+                                                    </li>
+                                                    <li>
+                                                                <a href="@Url.Action("TagHistoryReport", "ProductionReport")">Tag History Report</a>
+                                                            </li>
+                                                    <li>
+                                                        <a href="@Url.Action("ProductionreportSummary", "ProductionReport")">Production Report Summary</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("QCParamatersStatus", "ProductionReport")">QC Paramaters Status</a>
+                                                    </li>
+                                                </ul>
+                                            </li>*@
+                                        <li>
+                                            <a href="@Url.Action("index", "QualityReport")"><i class="fa fa-wrench"></i>Quality</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("index", "CustomizedReport")"><i class="fa fa-wrench"></i>Customized Report</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("index", "FixedAssetReport")"><i class="fa fa-wrench"></i>Fixed Asset Report</a>
+                                        </li>
+                                        @*<li>
+                                                <a href="javascript:void()"><i class="fa fa-wrench"></i> Quality <span class="fa fa-chevron-down"></span></a>
+                                                <ul class="nav child_menu">
+                                                    <li>
+                                                        <a href="@Url.Action("qclotsummaryreport", "report")">QC Lot Summary Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("qcparametersreport", "report")">QC Parameters Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("qcusagedecisionreport", "report")">QC Usage Decision Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("qclotshelflifereport", "report")">QC LOT Shelf Life Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("shelflifeexpiredreport", "report")">Shelf Life Expired Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("shelflifeabouttoexpirereport", "report")">Shelf Life About to Expire Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("batchrevalidatedreport", "report")">Batch Revalidated Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("material_consumed_post_expiryreport", "report")">Material Consumed Post Expiry Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("item_masterqcparametersreport", "report")">Item Master QC parameters Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="@Url.Action("batchrevalidationcountreport", "report")">Batch Revalidation Count Report</a>
+                                                    </li>
+                                                </ul>
+                                            </li>*@
+                                    </ul>
+                                </li>
+                                <li class="hidden">
+                                    <a href="@Url.Action("index", "salesreport")"><i class="fa fa-wrench"></i>Sales Report</a>
+                                    <a href="@Url.Action("index", "salesheaderlevelreport")"><i class="fa fa-wrench"></i>Sales Header Level Report</a>
+                                    <a href="@Url.Action("index", "salessummaryreport")">Sales Summary Report</a>
+                                    <a href="@Url.Action("index", "salesdetaillevelreport")">Sales Detail Level Report</a>
+                                    <a href="@Url.Action("index", "CustomerContactDetailsReport")">Customer Contact Details Report</a>
+                                    <a href="@Url.Action("index", "CustomerPaymentMasterListReport")">Customer Payment Master List Report</a>
+                                    <a href="@Url.Action("index", "CustomerLedgerReport")">Client Ledger Report</a>
+                                    <a href="@Url.Action("index", "forexsalesreport")">Forex Sales Report</a>
+                                    <a href="@Url.Action("index", "salesquotationsummaryreport")">Sales Quotation Summary Report</a>>
+                                    <a href="@Url.Action("index", "salesquotationheaderlevelreport")">Sales Quotation Header Level Report</a>
+                                    <a href="@Url.Action("index", "salesquotationdetaillevelreport")">Sales Quotation Detail Level Report</a>
+                                    <a href="@Url.Action("index", "salesordersummaryreport")">Sales OrderSummary Report</a>
+                                    <a href="@Url.Action("index", "salesorderheaderlevelreport")">Sales Order Header Level Report</a>
+                                    <a href="@Url.Action("index", "salesorderdetaillevelreport")">Sales Order Detail Level Report</a>
+                                    <a href="@Url.Action("index", "salesorderitemwiseplanreport")">Sales Order Item Wise Plan Report</a>
+                                    <a href="@Url.Action("index", "itemwisesalessummaryreport")">Item Wise Sales Summary Report</a>
+                                    <a href="@Url.Action("index", "itemwisesalesdetailreport")">Item Wise Sales Detail Report</a>
+                                    <a href="@Url.Action("index", "salesorderqtytrackerreport")">Sales Order Qty Tracker Report</a>
+                                    <a href="@Url.Action("index", "collectionsreceivedreport")">Collections Received Report</a>
+                                    <a href="@Url.Action("index", "collectionsexpectedreport")">Collections Expected Report</a>
+                                    <a href="@Url.Action("index", "customermasterdiscountdetailsreport")">Customer Master Discount Details Report</a>
+                                    <a href="@Url.Action("index", "SalesPriceListReport")">Sales Price List Report</a>
+                                    <a href="@Url.Action("index", "opensalesorderreport")">Open Sales Order Report</a>
+                                    <a href="@Url.Action("index", "customercontactdetailsreport")">Customer Contact Details Report</a>
+                                    <a href="@Url.Action("index", "customerpaymentmasterlistreport")">Customer Payment Master List Report</a>
+                                    <a href="@Url.Action("index", "salespricelistreport")">Sales Price List Report</a>
+                                    <a href="@Url.Action("index", "forexsales")">Forex Sales</a>
+
+
+
+                                    <a href="@Url.Action("Index", "purchasereport")"><i class="fa fa-wrench"></i>Purchase Report</a>
+                                    <a href="@Url.Action("Index", "vendorcontactdetailsreport")">Vendor Contact Details Report</a>
+                                    <a href="@Url.Action("Index", "vendorpaymentmasterlistreport")">Vendor Payment Master List Report</a>
+                                    <a href="@Url.Action("Index", "vendorledgerreport")">Vendor Ledger Report</a>
+                                    <a href="@Url.Action("Index", "vendormasterdiscountdetailsreport")">Vendor Master Discount Details Report</a>
+                                    <a href="@Url.Action("Index", "purchasepricelistreport")">Purchase Price List Report</a>
+                                    <a href="@Url.Action("Index", "purchaserequisitionsummaryreport")">Purchase Requisition Summary Report</a>
+                                    <a href="@Url.Action("Index", "purchaserequisitiondetailedreport")">Purchase Requisition Detailed Report</a>
+                                    <a href="@Url.Action("Index", "openprreport")">Open PR Report</a>
+                                    <a href="@Url.Action("Index", "purchaseordersummaryreport")">Purchase Order Summary Report</a>
+                                    <a href="@Url.Action("Index", "purchaseorderheaderreport")">Purchase Order Header Report</a>
+                                    <a href="@Url.Action("Index", "purchaseorderitemlevelreport")">Purchase Order Item Level Report</a>
+                                    <a href="@Url.Action("Index", "openporeport")">Open PO Report</a>
+                                    <a href="@Url.Action("Index", "grnsummaryreport")">GRN Summary Report</a>
+                                    <a href="@Url.Action("Index", "grnheaderreport")">GRN Header Report</a>
+                                    <a href="@Url.Action("Index", "grnitemlevelreport")">GRN Item Level Report</a>
+                                    <a href="@Url.Action("Index", "grnpendingforexcisereport")">GRN Pending for Excise Report</a>
+                                    <a href="@Url.Action("Index", "grnpendingforpurchaseinvoicereport")">GRN Pending for Purchase Invoice Report</a>
+                                    <a href="@Url.Action("Index", "purchaseinvoicesummaryreport")">Purchase Invoice Summary Report</a>
+                                    <a href="@Url.Action("Index", "purchaseinvoiceheaderreport")">Purchase Invoice Header Report</a>
+                                    <a href="@Url.Action("Index", "purchaseinvoiceitemlevelreport")">Purchase Invoice Item Level Report</a>
+                                    <a href="@Url.Action("Index", "ldreport")">LD Report</a>
+                                    <a href="@Url.Action("Index", "purchasereturnsummaryreport")">Purchase Return Summary Report</a>
+                                    <a href="@Url.Action("Index", "purchasereturnheaderreport")">Purchase Return Header Report</a>
+                                    <a href="@Url.Action("Index", "purchasereturnitemlevelreport")">Purchase Return Item Level Report</a>
+                                    <a href="@Url.Action("Index", "potopaymenttrackerreport")">PO to Payment Tracker Report</a>
+                                    <a href="@Url.Action("Index", "potopitrackerreport")"> PO to PI Tracker Report</a>
+                                    <a href="@Url.Action("Index", "paymentsexpectedtovendors")"> Payments Expected to Vendors</a>
+
+
+
+
+                                    <a href="@Url.Action("Index", "qualityreport")"><i class="fa fa-wrench"></i>Quality Report</a>
+                                    <a href="@Url.Action("Index", "qclotsummaryreport")">QC Lot Summary Report</a>
+                                    <a href="@Url.Action("Index", "qcparametersreport")">QC Parameters Report</a>
+                                    <a href="@Url.Action("Index", "qcusagedecisionreport")">QC Usage Decision Report</a>
+                                    <a href="@Url.Action("Index", "qclotshelflifereport")">QC LOT Shelf Life Report</a>
+                                    <a href="@Url.Action("Index", "shelflifeexpiredreport")">Shelf Life Expired Report</a>
+                                    <a href="@Url.Action("Index", "shelflifeabouttoexpirereport")">Shelf Life About to Expire Report</a>
+                                    <a href="@Url.Action("Index", "batchrevalidatedreport")">Batch Revalidated Report</a>
+                                    <a href="@Url.Action("Index", "material_consumed_post_expiryreport")">Material Consumed Post Expiry Report</a>
+                                    <a href="@Url.Action("Index", "item_masterqcparametersreport")">Item Master QC parameters Report</a>
+                                    <a href="@Url.Action("Index", "batchrevalidationcountreport")">Batch Revalidation Count Report</a>
+
+
+
+
+
+
+
+
+                                    <a href="@Url.Action("index", "productionreport")"><i class="fa fa-wrench"></i>Production Report</a>
+                                    <a href="@Url.Action("index", "wipreportsummary")">WIP Report Summary</a>
+                                    <a href="@Url.Action("index", "wipreportdetailed")">WIP Report Detailed</a>
+                                    <a href="@Url.Action("index", "wipreportageingreportsummary")">WIP Report Ageing Report Summary</a>
+                                    <a href="@Url.Action("index", "userwiseproductionreport")">User Wise Production Report</a>
+                                    <a href="@Url.Action("index", "taghistoryreport")">Tag History Report</a>
+                                    <a href="@Url.Action("index", "productionreportsummary")">Production Summary Report</a>
+                                    <a href="@Url.Action("index", "qcparamatersstatus")">QC Paramaters Status</a>
+                                    <a href="@Url.Action("index", "dailyproductionreport_shiftwiseandmachinewise")">Daily Production Shift Wise And Machine Wise Report</a>
+                                    <a href="@Url.Action("index", "dailyproductionreport_shiftwiseanditemwise")">Daily Production Shift Wise And Item Wise Report</a>
+                                    <a href="@Url.Action("index", "finalfgoutputreport")">Final FG Output Report</a>
+                                    <a href="@Url.Action("index", "incentivereport")">Incentive Report</a>
+
+
+
+
+                                    <a href="@Url.Action("index", "plantmaintenancereport")"><i class="fa fa-wrench"></i> Plant Maintenance Report</a>
+                                    <a href="@Url.Action("index", "get_maintenance_plan_cycle_and_frequencyreport")"><i class="fa fa-wrench"></i> Maintenance Plan Cycle & Frequency Report</a>
+                                    <a href="@Url.Action("index", "maintenance_plan_schedule_report")"><i class="fa fa-wrench"></i>  Maintenance Plan Schedule Report</a>
+                                    <a href="@Url.Action("index", "maintenance_plan_parameter_report")"><i class="fa fa-wrench"></i> Maintenance Plan Parameter Report</a>
+                                    <a href="@Url.Action("index", "maintenance_plan_components_report")"><i class="fa fa-wrench"></i> Maintenance Plan Components Report</a>
+                                    <a href="@Url.Action("index", "maintenance_order_header_level_report")"><i class="fa fa-wrench"></i>Maintenance order Header Level Report</a>
+                                    <a href="@Url.Action("index", "open_maintenance_order_report")"><i class="fa fa-wrench"></i>Open Maintenance Order Report</a>
+                                    <a href="@Url.Action("index", "maintenance_order_parameter_report")"><i class="fa fa-wrench"></i> Maintenance order - Parameter Report</a>
+                                    <a href="@Url.Action("index", "maintenance_order_cost")"><i class="fa fa-wrench"></i> Maintenance order - Cost</a>
+                                    <a href="@Url.Action("index", "malfunctionnotificationreport")"><i class="fa fa-wrench"></i>Malfunction Notification Report</a>
+                                    <a href="@Url.Action("index", "malfunctiontimesummaryreport")"><i class="fa fa-wrench"></i>Malfunction Time Summary Report</a>
+                                    <a href="@Url.Action("index", "breakdowntimesummaryreport")"><i class="fa fa-wrench"></i> Breakdown Time Summary Report</a>
+                                    <a href="@Url.Action("index", "opennotificationreport")"><i class="fa fa-wrench"></i> Open Notification Report</a>
+
+
+
+
+                                    <a href="@Url.Action("index", "inventoryreport")"><i class="fa fa-wrench"></i>Inventory Report</a>
+                                    <a href="@Url.Action("index", "inventoryledgerdetailedreport")">Inventory ledger Detailed Report</a>
+                                    <a href="@Url.Action("index", "inventoryledgersummaryreport")">Inventory Ledger Summary Report</a>
+                                    <a href="@Url.Action("index", "inventorycostingreport")">Inventory Costing Report</a>
+                                    <a href="@Url.Action("index", "inventoryvaluationreport")">Inventory Valuation Report</a>
+                                    <a href="@Url.Action("index", "goodsreceiptreport")">Goods Receipt Report</a>
+                                    <a href="@Url.Action("index", "goodsissuereport")">Goods Issue Report</a>
+                                    <a href="@Url.Action("index", "withinplantrasferreport")">Within PlantTrasfer Report</a>
+                                    <a href="@Url.Action("index", "inventoryrevalautionreport")">Inventory Revalaution Report</a>
+                                    <a href="@Url.Action("index", "inventoryratehistoryreport")">Inventory Rate History Report</a>
+                                    <a href="@Url.Action("index", "materialrequisitionreportstatusdetailedreport")">Material Requisition Report Status Detailed Report</a>
+                                    <a href="@Url.Action("index", "materialrequisitionreportstatussummaryreport")">Material Requisition Report Status Summary Report</a>
+                                    <a href="@Url.Action("index", "openmaterialrequisitionreport")">Open Material Requisition Report</a>
+                                    <a href="@Url.Action("index", "itemaccountingreport")">Item Accounting Report</a>
+                                    <a href="@Url.Action("index", "inventorycascadereport")">Inventory Cascade Report</a>
+
+
+
+
+
+
+
+
+                                    <a href="@Url.Action("index", "gstrreport")"><i class="fa fa-wrench"></i>Taxation Report</a>
+                                    <a href="@Url.Action("index", "gstr1report")">GSTR1 Report</a>
+                                    <a href="@Url.Action("index", "gstr2report")">GSTR2 Report</a>
+
+
+
+
+                                    <a href="@Url.Action("index", "accountsreport")"><i class="fa fa-wrench"></i>Accounts Report</a>
+                                    <a href="@Url.Action("index", "salescontributionreport")">Sales Contribution Report</a>
+                                    <a href="@Url.Action("index", "arageingreport")">AR Ageing Report</a>
+                                    <a href="@Url.Action("index", "apageingreport")">AP Ageing Report</a>
+                                    <a href="@Url.Action("index", "trialbalancereport")">Trial Balance Report</a>
+                                    <a href="@Url.Action("index", "generalledgerreport")">General Ledger Report</a>
+                                    <a href="@Url.Action("index", "generalledgerdetailsreport")">General Ledger Details Report</a>
+                                    <a href="@Url.Action("index", "customerledgerreport")">Customer Ledger Details Report</a>
+                                    <a href="@Url.Action("index", "Vendorledgerreport")">Vendor Ledger Details Report</a>
+                                    <a href="@Url.Action("index", "employeeledgerreport")">Employee Ledger Details Report</a>
+                                    <a href="@Url.Action("index", "tdsreceivablereport")">TDS Receivable Report</a>
+                                    <a href="@Url.Action("index", "employeetrialbalancereport")">Employee Trial Balance Report</a>
+                                    <a href="@Url.Action("index", "balancesheet")">Balance Sheet</a>
+                                    <a href="@Url.Action("index", "customertrialbalancereport")">Customer Trial Balance Report</a>
+                                    <a href="@Url.Action("index", "pnlreport")">Profit and Loss Report</a>
+                                    <a href="@Url.Action("index", "tdspayablereport")">TDS Payable Report</a>
+                                    <a href="@Url.Action("index", "vendortrialbalancereport")">Vendor Trial Balance Report</a>
+
+
+
+
+
+
+
+
+
+                                    <a href="@Url.Action("index", "bankingreport")"><i class="fa fa-wrench"></i> Banking Report</a>
+                                    <a href="@Url.Action("index", "paymentsummary")">Payment Summary</a>
+                                    <a href="@Url.Action("index", "receiptsummary")">Receipt Summary</a>
+                                    <a href="@Url.Action("index", "paymentdetail")">Payment Detail</a>
+                                    <a href="@Url.Action("index", "receiptdetail")">Receipt Detail</a>
+                                    <a href="@Url.Action("index", "contraentriesdetail")">Contra Entries Detail</a>
+
+                                </li>
+
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- top navigation -->
+            <div class="top_nav">
+
+                <div class="nav_menu">
+                    <nav class="" role="navigation">
+                        @*<span style="position:absolute;top:20px;left:50%;font-size:medium" a id="header_content"></span>*@
+                        <div class="nav toggle">
+                            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                        </div>
+                        <ul class="nav navbar-nav navbar-left">
+                            <li>
+                                <a style="font-size:medium;" id="header_content"></a>
+                                @*<a style="font-size:medium;" id="header_report"></a>*@
+                            </li>
+
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="">
+                                <a href="javascript:void()" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                    @{
+                                        if (Session["User_Id"] == null)
+                                        {
+                                            HttpContext ctx = HttpContext.Current;
+                                            string s = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority);
+
+                                            Response.Write("<script type='text/javascript'>");
+                                            Response.Write("window.location = '" + s + "/Login?msg=expired" + "'</script>");
+                                            Response.Flush();
+
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw(Session["User_Name"].ToString())
+                                        }
+                                    }
+                                    <span class="fa fa-angle-down"></span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-usermenu animated fadeInDown pull-right">
+                                    <li>
+                                        <a href="javascript:void()">  Profile</a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void()">
+                                            <span class="badge bg-red pull-right">50%</span>
+                                            <span>Settings</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void()">Help</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Change_Password", "Home")"><i class="fa fa-sign-out pull-right"></i>Reset Password</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Log_Out", "Home")"><i class="fa fa-sign-out pull-right"></i>Log Out</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            @*<li id="open_ul">
+                                <a href="javascript:void(0)" data-target="#" class="dropdown-toggle waves-effect waves-light alerts" data-toggle="dropdown" aria-expanded="true">
+                                <i class="fa fa-exclamation-triangle"></i> <span class="badge badge-xs badge-danger"></span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-lg" id="alerts">
+                                <li class="md-notifications-on" style="overflow:auto"><span id="global_msg" style="color:darkgreen"></span></li>
+                                </ul>
+                                </li>*@
+                            <li class="dropdown hidden-xs">
+                                <a href="#" data-target="#" class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" aria-expanded="true">
+                                    <i class="icon-bar "></i> <span class="badge badge-xs badge-danger">
+                                        @{
+                                            if (Session["open_count_final"] != null)
+                                            {
+                                                @Html.Raw(Session["open_count_final"].ToString())
+                                            }
+
+                                        }
+                                    </span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-lg">
+                                    @*<li class="notifi-title">
+                                            <span class="label label-default pull-right">
+                                                @{
+                                                if (Session["open_count"] != null)
+                                                {
+                                                @Html.Raw(Session["open_count"].ToString())
+                                                }
+
+                                                }
+                                            </span>
+                                        </li>
+                                          <li class="notifi-title">
+                                            <span class="label label-default pull-right">
+                                                @{
+                                                if (Session["open_count2"] != null)
+                                                {
+                                                @Html.Raw(Session["open_count2"].ToString())
+                                                }
+
+                                                }
+                                            </span>
+                                        </li>*@
+
+
+                                    <li class="list-group nicescroll notification-list">
+                                        <!-- list item-->
+                                        <a href="@Url.Action("index", "Task")" class="list-group-item">
+                                            <div class="media">
+                                                <div class="pull-left p-r-10">
+                                                    <em class="fa fa-line-chart fa-2x text-primary"></em>
+                                                </div>
+                                                <div class="media-body">
+                                                    <h5 class="media-heading">Task Open</h5>
+                                                    <p class="m-0">
+                                                        <small>
+                                                            There are <span class="text-primary font-600">
+                                                                @{
+                                                                    if (Session["open_count"] != null)
+                                                                    {
+                                                                        @Html.Raw(Session["open_count"].ToString())
+                                                                    }
+
+                                                                }
+                                                            </span>Task are open
+                                                        </small>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+
+                                        <!-- list item-->
+                                        <a href="@Url.Action("index", "Task")" class="list-group-item">
+                                            <div class="media">
+                                                <div class="pull-left p-r-10">
+                                                    <em class="fa fa-link fa-2x text-danger"></em>
+                                                </div>
+                                                <div class="media-body">
+                                                    <h5 class="media-heading">Task Overdue</h5>
+                                                    <p class="m-0">
+                                                        <small>
+                                                            There are <span class="text-primary font-600">
+                                                                @{
+                                                                    if (Session["overdue_count"] != null)
+                                                                    {
+                                                                        @Html.Raw(Session["overdue_count"].ToString())
+                                                                    }
+
+                                                                }
+                                                            </span>Taks are already overdue
+                                                        </small>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a> 
+                                        
+                                        <!-- Reorder Level-->
+                                        <a href="@Url.Action("index", "Dashboard")" class="list-group-item">
+                                            <div class="media">
+                                                <div class="pull-left p-r-10">
+                                                    <em class="fa fa-angle-double-down fa-2x text-danger"></em>
+                                                </div>
+                                                <div class="media-body">
+                                                    <h5 class="media-heading">ReOrder Level</h5>
+                                                    <p class="m-2">
+                                                        <small>
+                                                            There are <span class="text-primary font-600">
+                                                                @{
+                                                                    if (Session["reorderCount"] != null)
+                                                                    {
+                                                                        @Html.Raw(Session["reorderCount"].ToString())
+                                                                    }
+                                                                }
+                                                            </span>Total Item Reorder Level
+                                                        </small>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+
+
+                                        @*////////////////////////////////////ApprovedPurchaseRequisition//////////////////////////////////*@
+                                        @{
+                                            if (Session["preq_count1"] != null)
+                                            {
+                                                <div class="media">
+                                                    <div class="pull-left p-r-10">
+                                                        <em class="fa fa-align-center fa-2x text-danger"></em>
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <h5 class="media-heading">Purchase Requisition</h5>
+                                                        <a href="@Url.Action("ApprovedPurchaseReq", "purchaserequisition")" class="list-group-item">
+
+                                                            <p class="m-0">
+                                                                <small>
+                                                                    There are <span class="text-primary font-600">
+                                                                        @{
+                                                                            if (Session["preq_count1"] != null)
+                                                                            {
+                                                                                @Html.Raw(Session["preq_count1"].ToString())
+                                                                            }
+
+                                                                        }
+                                                                    </span>Purchase Requisition Pending for approval
+                                                                </small>
+                                                            </p>
+                                                        </a>
+
+                                                        @*<a href="@Url.Action("index", "purchaserequisition")" class="list-group-item">
+
+                                                                <p class="m-0">
+                                                                    <small>
+                                                                        There are <span class="text-primary font-600">
+                                                                            @{
+                                                                                if (Session["open_count12"] != null)
+                                                                                {
+                                                                                    @Html.Raw(Session["open_count12"].ToString())
+                                                                                }
+
+                                                                            }
+                                                                        </span>Purchase Requisition Approved count
+                                                                    </small>
+                                                                </p>
+                                                            </a>*@
+                                                    </div>
+                                                </div>
+                                            }
+
+                                        }
+                                        @*</a>*@
+                                        @*////////////////////////////////////////////////*@
+
+
+
+                                        @*////////////////////////////////////Reject and Approval count//////////////////////////////////*@
+
+
+                                        @{
+                                            if (Session["open_count12"] != null || Session["open_cnt123"] != null)
+                                            {
+                                                <a href="@Url.Action("index", "purchaserequisition")" class="list-group-item" onclick="functionget()">
+                                                    <div class="media">
+                                                        <div class="pull-left p-r-10">
+                                                            <em class="fa fa-align-center fa-2x text-danger"></em>
+                                                        </div>
+                                                        <div class="media-body">
+                                                            <h5 class="media-heading">Purchase Requisition  </h5>
+                                                            <p class="m-0">
+                                                                <small>
+                                                                    Purchase Requisition Approved : <span class="text-primary font-600">
+                                                                        @{
+                                                                            if (Session["open_count12"] != null)
+                                                                            {
+                                                                                @Html.Raw(Session["open_count12"].ToString())
+                                                                            }
+
+                                                                        }
+                                                                    </span>
+                                                                </small>
+                                                            </p>
+                                                            <p class="m-0">
+                                                                <small>
+                                                                    Purchase Requisition Rejected : <span class="text-primary font-600">
+                                                                        @{
+                                                                            if (Session["open_cnt123"] != null)
+                                                                            {
+                                                                                @Html.Raw(Session["open_cnt123"].ToString())
+                                                                            }
+
+                                                                        }
+                                                                    </span>
+                                                                </small>
+                                                            </p>
+
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            }
+
+                                        }
+                                        @*////////////////////////////////////////////////*@
+
+
+
+
+                                        @*/////////////////////////////// ApprovedPurchaseOrder///////////////////////////////////////*@
+                                        @{
+                                            if (Session["open_count2"] != null)
+                                            {
+                                                <div class="media">
+                                                    <div class="pull-left p-r-10">
+                                                        <em class="fa fa-anchor fa-2x text-primary"></em>
+                                                    </div>
+                                                    <div class="media-body">
+                                                        <h5 class="media-heading">Purchase Order</h5>
+                                                        <a href="@Url.Action("approvedpurchaseorder", "purchaseorder")" class="list-group-item">
+
+                                                            <p class="m-0">
+                                                                <small>
+                                                                    There are <span class="text-primary font-600">
+                                                                        @{
+                                                                            if (Session["open_count2"] != null)
+                                                                            {
+                                                                                @Html.Raw(Session["open_count2"].ToString())
+                                                                            }
+
+                                                                        }
+                                                                    </span>Purchase Order pending for approval
+                                                                </small>
+                                                            </p>
+                                                        </a>
+
+                                                        @*<a href="@Url.Action("index", "purchaseorder")" class="list-group-item">
+
+                                                                <p class="m-0">
+                                                                    <small>
+                                                                        There are <span class="text-primary font-600">
+                                                                            @{
+                                                                                if (Session["open_count21"] != null)
+                                                                                {
+                                                                                    @Html.Raw(Session["open_count21"].ToString())
+                                                                                }
+
+                                                                            }
+                                                                        </span>Purchase Order Rejected and Approved
+                                                                    </small>
+                                                                </p>
+                                                            </a>*@
+                                                    </div>
+                                                </div>
+                                            }
+
+                                        }
+                                        @*</a>*@
+
+                                        @*////////////////////////////////////Reject and Approval count//////////////////////////////////*@
+                                        @{
+                                            if (Session["open_count21"] != null)
+                                            {
+                                                <a href="@Url.Action("index", "purchaseorder")" class="list-group-item" onclick="functiongetPurchaseOrder()">
+                                                    <div class="media">
+                                                        <div class="pull-left p-r-10">
+                                                            <em class="fa fa-align-center fa-2x text-danger"></em>
+                                                        </div>
+                                                        <div class="media-body">
+                                                            <h5 class="media-heading">Purchase Order</h5>
+                                                            <p class="m-0">
+                                                                <small>
+                                                                    Purchase Order Approved : <span class="text-primary font-600">
+                                                                        @{
+                                                                            if (Session["open_count21"] != null)
+                                                                            {
+                                                                                @Html.Raw(Session["open_count21"].ToString())
+                                                                            }
+
+                                                                        }
+                                                                    </span>
+                                                                </small>
+                                                            </p>
+
+                                                            <p class="m-0">
+                                                                <small>
+                                                                    Purchase Order Rejected : <span class="text-primary font-600">
+                                                                        @{
+                                                                            if (Session["open_count213"] != null)
+                                                                            {
+                                                                                @Html.Raw(Session["open_count213"].ToString())
+                                                                            }
+
+                                                                        }
+                                                                    </span>
+                                                                </small>
+                                                            </p>
+
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            }
+
+                                        }
+                                        @*////////////////////////////////////////////////*@
+
+                                        @*////////////////////////////////////Approved MRN//////////////////////////////////*@
+                                        @{
+                                            if (Session["open_count3"] != null)
+                                            {
+                                                <a href="@Url.Action("index", "MaterialRequisitionIndent")" class="list-group-item" onclick="functiongetMRN()">
+                                                    <div class="media">
+                                                        <div class="pull-left p-r-10">
+                                                            <em class="fa fa-angle-double-down fa-2x text-danger"></em>
+                                                        </div>
+                                                        <div class="media-body">
+                                                            <h5 class="media-heading">MRI</h5>
+                                                            <p class="m-0">
+                                                                <small>
+                                                                    There are <span class="text-primary font-600">
+                                                                        @{
+                                                                            if (Session["open_count3"] != null)
+                                                                            {
+                                                                                @Html.Raw(Session["open_count3"].ToString())
+                                                                            }
+
+                                                                        }
+                                                                    </span>MRI created
+                                                                </small>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            }
+
+                                        }
+                                        @*////////////////////////////////////////////////*@
+                                       
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="">
+                                @{
+                                    if (Session["OperatorPhoto"] == null || Session["OperatorPhoto"].ToString() == "")
+                                    {
+                                        @*<span class="operator_photo1">*@<img src="@Url.Content("~/FILES/EMPLOYEEIMAGE/noemployee.png")" width="70" class="image">@*</span>*@
+                                    }
+                                    else
+                                    {
+                                        @*<span class="operator_photo1">*@<img src="@Url.Content(Session["OperatorPhoto"].ToString())" width="70" height="60" style="margin-top:6%" class="image">@*</span>*@
+                                    }
+
+                                }
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+            <!-- /top navigation -->
+            <!-- page content -->
+            <div class="right_col" role="main">
+                @RenderBody()
+                <!-- footer content -->
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Scripts/bootstrap-switch.js"></script>
+    <script src="~/Scripts/bootstrap-select.js"></script>
+    <!-- bootstrap progress js -->
+    <script src="~/Scripts/custom.js"></script>
+    <script type="text/javascript" src="~/Scripts/select2.full.js"></script>
+    <script src="~/Scripts/bootstrap-checkbox.min.js"></script>
+    <script src="~/Scripts/jquery.a-tools-1.4.1.js"></script>
+    <script src="~/Scripts/jquery.dataTables.js"></script>
+    <script src="~/Scripts/fnFilterClear.js"></script>
+    <script src="~/Scripts/jquery.asuggest.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
+    <script src="~/Scripts/bootstrap-multiselect.js"></script>
+    @*<script src="~/Scripts/sum().js"></script>*@
+    @RenderSection("scripts", required: false)
+    @Html.EJ().ScriptManager();
+
+    <script>
+        var keepSessionAlive = false;
+        var keepSessionAliveUrl = null;
+
+        function SetupSessionUpdater() {
+            keepSessionAliveUrl = '@Url.Action("KeepSessionAlive", "Home")';
+            var container = $("#body");
+            container.mousemove(function () { keepSessionAlive = true; });
+            container.keydown(function () { keepSessionAlive = true; });
+            CheckToKeepSessionAlive();
+        }
+
+
+        function CheckToKeepSessionAlive() {
+            setTimeout("KeepSessionAlive()", 3000000);
+        }
+
+        function KeepSessionAlive() {
+            if (keepSessionAlive && keepSessionAliveUrl != null) {
+                $.ajax({
+                    type: "POST",
+                    url: keepSessionAliveUrl,
+                    success: function () { keepSessionAlive = false; }
+                });
+            }
+            CheckToKeepSessionAlive();
+        }
+
+      function  functionget()
+        {
+        //var open_count12 = Session["open_count12"]
+            $.ajax({
+                url: '@Url.Action("PurchaseRequisitionupdatestatusseen", "purchaserequisition")',
+                type: "Post",
+                dataType: "JSON",
+                async: false,
+               // data: { open_count12 },
+                success: function (data) {
+                    open_count12  = data
+                }
+            });
+        return open_count12;
+    }
+
+    function functiongetMRN()
+    {
+         $.ajax({
+                url: '@Url.Action("materialRequisionIndentupdatestatusseen", "MaterialRequisitionIndent")',
+                type: "Post",
+                dataType: "JSON",
+                async: false,
+               // data: { open_count12 },
+                success: function (data) {
+                    open_count12  = data
+                }
+            });
+        return open_count12;
+    }
+
+
+
+
+
+    function functiongetPurchaseOrder()
+    {
+         $.ajax({
+                url: '@Url.Action("PurchaseOrderupdatestatusseen", "PurchaseOrder")',
+                type: "Post",
+                dataType: "JSON",
+                async: false,
+               // data: { open_count12 },
+                success: function (data) {
+                    open_count12  = data
+                }
+            });
+        return open_count12;
+    }
+
+        $(document).ready(function () {
+            SetupSessionUpdater();
+        })
+    </script>
+</body>
+
+
+
+</html>
+<style>
+    .operator_photo {
+        width: 7%;
+        /*color: #000;*/
+        top: -10px;
+        float: right;
+        /*position: absolute;*/
+        left: 40%;
+    }
+</style>

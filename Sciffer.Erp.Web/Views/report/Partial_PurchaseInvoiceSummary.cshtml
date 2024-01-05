@@ -1,0 +1,85 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+
+
+
+@{(Html.EJ().Grid<Report_Purchase_Invoice_Summary__vm>("Editing")
+                                                      .Datasource((IEnumerable<object>)ViewBag.datasource)
+                                                        .AllowPaging().PageSettings(a=>a.PageSize(20))
+                                                        .AllowFiltering()
+                                                            .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                        .ShowColumnChooser()
+                                                        .AllowSorting()
+                                                        .AllowScrolling()
+                                                        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelForReport", "Generic", new { ctrlname = "SalesSummaryReport" }))
+                                                        .ExportToPdfAction(Url.Action("ExportToPdfForReport", "Generic", new { ctrlname = "SalesSummaryReport" })))
+                                                        .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                                    .ToolbarSettings(toolbar =>
+                                                    {
+                                                        toolbar.ShowToolbar().ToolbarItems(items =>
+                                                        {
+                                                            items.AddTool(ToolBarItems.Search);
+                                                            items.AddTool(ToolBarItems.ExcelExport);
+                                                            items.AddTool(ToolBarItems.PrintGrid);
+                                                        });
+                                                    })
+
+                                                        .ShowSummary()
+
+                                                    .SummaryRow(row =>
+                                                    {
+                                                        row.Title("Total").SummaryColumns(col =>
+                                                        {
+                                                            col.SummaryType(SummaryType.Sum).DisplayColumn("total_value").DataMember("total_value").Format("{0:n2}").Add();
+                                                            col.SummaryType(SummaryType.Sum).DisplayColumn("total_taxes").DataMember("total_taxes").Format("{0:n2}").Add();
+                                                            col.SummaryType(SummaryType.Sum).DisplayColumn("gross_value").DataMember("gross_value").Format("{0:n2}").Add();
+                                                            col.SummaryType(SummaryType.Sum).DisplayColumn("TDS").DataMember("TDS").Format("{0:n2}").Add();
+                                                            col.SummaryType(SummaryType.Sum).DisplayColumn("Nett_Value").DataMember("Nett_Value").Format("{0:n2}").Add();
+
+                                                        }).Add();
+                                                    })
+                                            .Columns(col =>
+                                            {
+                                                col.Field("Vendor_Description").Width("10%").HeaderText("Vendor Description").Add();
+                                                col.Field("Parent_code").Width("10%").HeaderText("Parent code").Add();
+                                                col.Field("parent_description").Width("10%").HeaderText("parent description").Visible(false).Add();
+                                                col.Field("Item_Service").Width("10%").HeaderText("Item / Service").Visible(false).Add();
+                                                col.Field("total_value").Width("10%").HeaderText("total value").Visible(false).Add();
+                                                col.Field("total_taxes").Width("10%").HeaderText("total taxes").Visible(false).Add();
+                                                col.Field("gross_value").Width("10%").HeaderText("gross value").Visible(false).Add();
+                                                col.Field("TDS").Width("10%").HeaderText("TDS").Visible(false).Add();
+                                                col.Field("Nett_Value").Width("10%").HeaderText("Nett Value").Visible(false).Add();
+
+                                            })
+                                            .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+                                            ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    @*$(function () {
+        var obj = @Html.Raw(Json.Encode(ViewBag.datasource));
+        console.log(obj);
+        $("#Editing").ejGrid({
+            dataSource: obj,
+            allowPaging: true,
+            //columns: [
+
+            //],
+            //dataBound : function(args){
+            //	for (var fld =0; fld < list.length; fld++ ) {
+            //	var column = { field: list[fld].value, headerText: list[fld].header, column: "", textAlign: "left", type: "string", visible: true, width: 75 };
+            //	this.model.columns.push(column); //add dynamic columns
+            //	}
+            //	this.columns(this.model.columns);
+            //}
+        });
+    });*@
+
+
+</script>
+
+

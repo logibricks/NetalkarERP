@@ -1,0 +1,78 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<sales_order_report_vm>("Editing")
+                                                      .Datasource(ds => ds.URL(Url.Action("GetSalesOrderData", "SalesReport") + "?entity=" + ViewBag.entity + "&business_unit_id=" + ViewBag.business_unit_id + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&customer_category_id=" + ViewBag.customer_category_id + "&sales_rm=" + ViewBag.sales_rm + "&territory_id=" + ViewBag.territory_id + "&customer_priority_id=" + ViewBag.customer_priority_id + "&currency_id=" + ViewBag.currency_id + "&plant_id=" + ViewBag.plant_id + "&customer_category_id=" + ViewBag.customer_category_id).Adaptor(AdaptorType.UrlAdaptor))
+                                                    
+                                                      .AllowPaging().PageSettings(a => a.PageSize(20))
+                                                      .AllowFiltering()
+                                                          .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                      .ShowColumnChooser()
+                                                      .AllowSorting()
+                                                      .AllowScrolling()
+                                                                              .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "SalesReport", new { ctrlname = "ForexSales" })))
+                                                                                                                                                                                                                          .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+
+                                                  .ToolbarSettings(toolbar =>
+                                                  {
+                                                      toolbar.ShowToolbar().ToolbarItems(items =>
+                                                      {
+                                                          items.AddTool(ToolBarItems.Search);
+                                                          items.AddTool(ToolBarItems.ExcelExport);
+                                                          items.AddTool(ToolBarItems.PrintGrid);
+                                                      });
+                                                  })
+
+                                                      .ShowSummary()
+
+                                                  .SummaryRow(row =>
+                                                  {
+                                                      row.Title("Total").SummaryColumns(col =>
+                                                      {
+                                                          col.SummaryType(SummaryType.Sum).DisplayColumn("tax_value").DataMember("tax_value").Format("{0:n2}").Add();
+                                                          col.SummaryType(SummaryType.Sum).DisplayColumn("gross_value").DataMember("gross_value").Format("{0:n2}").Add();
+                                                          col.SummaryType(SummaryType.Sum).DisplayColumn("round_off").DataMember("round_off").Format("{0:n2}").Add();
+                                                          col.SummaryType(SummaryType.Sum).DisplayColumn("tds_value").DataMember("tds_value").Format("{0:n2}").Add();
+                                                          col.SummaryType(SummaryType.Sum).DisplayColumn("net_value").DataMember("net_value").Format("{0:n2}").Add();
+
+                                                      }).Add();
+                                                  })
+                                          .Columns(col =>
+                                          {
+                                              col.Field("customer_code").Width("15%").HeaderText("Bill To Party Code").Add();
+                                              col.Field("customer_name").Width("15%").HeaderText("Bill To Party Description").Add();
+                                              col.Field("billing_city").Width("15%").HeaderText("Billing City").Visible(false).Add();
+                                              col.Field("billing_Country").Width("15%").HeaderText("Billing Country ").Add();
+                                              col.Field("priority_name").Width("15%").HeaderText("Priority").Visible(false).Add();
+                                              col.Field("control_account").Width("15%").HeaderText("Control Account").Visible(false).Add();
+
+                                              col.Field("parent_code").Width("15%").HeaderText("Ship To Party").Add();
+                                              col.Field("parent_name").Width("15%").HeaderText("Ship To Party Description").Add();
+                                              col.Field("parent_billing_city").Width("15%").HeaderText("Shipping City").Visible(false).Add();
+                                              col.Field("COUNTRY_NAME").Width("15%").HeaderText("Shipping Country ").Add();
+                                              col.Field("business_unit_name").Width("15%").HeaderText("Business Unit").Visible(false).Add();
+                                              col.Field("plant_name").Width("15%").HeaderText("Plant").Visible(false).Add();
+                                              col.Field("so_no").Width("15%").HeaderText("SO Number").Add();
+                                              col.Field("so_date").Width("15%").HeaderText("SO Date").Format("{0:dd/MMM/yyyy}").Add();
+
+                                              col.Field("category").Width("15%").HeaderText("Document Category").Add();
+                                              col.Field("si_no").Width("15%").HeaderText("Document No").Add();
+                                              col.Field("si_date").Width("15%").HeaderText("Posting Date").Format("{0:dd/MMM/yyyy}").Add();
+                                              col.Field("customer_po_no").Width("15%").HeaderText("Customer PO Number").Visible(false).Add();
+                                              col.Field("customer_po_date").Width("15%").HeaderText("Customer PO Date").Format("{0:dd/MMM/yyyy}").Visible(false).Add();
+                                              col.Field("employee_name").Width("15%").HeaderText("Sales RM").Visible(false).Add();
+                                              col.Field("freight_terms_name").Width("15%").HeaderText("Freight Terms").Add();
+                                              col.Field("form_name").Width("15%").HeaderText("Sales Against Form").Visible(false).Add();
+                                              col.Field("territory_name").Width("15%").HeaderText("Territory").Visible(false).Add();
+                                              col.Field("payment_terms_description").Width("15%").HeaderText("Payment Terms").Visible(false).Add();
+                                              col.Field("currency").Width("15%").HeaderText("Currency").Add();
+                                              col.Field("exchange_rate").Width("15%").HeaderText("Forex rate ").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                              col.Field("sal_gross_value").Width("15%").HeaderText("Amount in Doc Currency").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                              col.Field("gross_value_local").Width("15%").HeaderText("Amount in Local Currency ").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+
+
+                                          })
+                                              .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick1"); })
+                                                                      ).Render();}
+@Html.EJ().ScriptManager()

@@ -1,0 +1,94 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class=row>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-4 col-lg-4 col-xs-12">From Date</label>
+                <div class="col-md-8 col-lg-8 col-xs-12">
+                    <input type="date" id="fromDate" class="form-control radius" required="required">
+                    <input type="hidden" id="entity" value="getreceiptdetail" />
+                    <input type="hidden" id="partial_v" value="Partial_PaymentDetail" />
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-4 col-lg-4 col-xs-12">To Date</label>
+                <div class="col-md-8 col-lg-8 col-xs-12">
+                    <input type="date" id="toDate" class="form-control radius" required="required">
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <div class="control-label col-md-4 col-lg-4 col-xs-12">
+                    <label></label>
+                </div>
+                <div class="col-md-8 col-lg-8 col-xs-12">
+                    <input type="hidden" id="in_out" name="in_out" value="2" />
+                    <button class="searchbutton searchButton" id="search" onclick="DateCheckb()"> &nbsp; Run Report </button>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class=row>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-4 col-lg-4 col-xs-12">Cash/Bank</label>
+                <div class="col-md-8 col-lg-8 col-xs-12">
+                    @Html.DropDownList("cash_bank", new List<SelectListItem>
+                             {
+                                new SelectListItem{ Text="Cash", Value = "1" },
+                                new SelectListItem{ Text="Bank", Value = "2" }
+                             }, new { @class = "form-control cash_bank", @onchange = "GetBankAccountByBank(this.value)" })
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-4 col-lg-4 col-xs-12">Cash/Bank Account</label>
+                <div class="col-md-8 col-lg-8 col-xs-12">
+                    @Html.DropDownList("bank_account_id", Enumerable.Empty<SelectListItem>(), htmlAttributes: new { @class = "form-control multiselect mickey bank_cash_account_id", @multiple = "multiple" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div id="searchresult">
+            @Html.Partial("Partial_PaymentDetail", (object)ViewBag)
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<script type="text/javascript">
+    function GetBankAccountByBank(id) {
+        $("#bank_account_id").empty();
+        var st;
+        st = "";
+        $.ajax({
+            url: '@Url.Action("GetGLOrBankAccount", "Generic")',
+            type: "GET",
+            dataType: "JSON",
+            data: { id: id },
+            success: function (result) {
+                if (id == 2) {
+                    $.each(result, function (i, cycle) {
+                        st+="<option value=" + cycle.bank_account_id + ">" + cycle.bank_account_code + "</option>";
+                    });
+                }
+                else if(id==1) {
+
+                    $.each(result, function (i, cycle) {
+                        st+="<option value=" + cycle.cash_account_id + ">" + cycle.cash_account_desc + "</option>";
+                    });
+                }
+                $("#bank_account_id").html(st).show();
+                $("#bank_account_id").multiselect('rebuild');
+            }
+        });
+    }
+    
+</script>
+

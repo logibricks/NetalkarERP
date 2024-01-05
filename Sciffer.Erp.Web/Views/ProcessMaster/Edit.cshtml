@@ -1,0 +1,109 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.ref_mfg_process_vm
+@using Newtonsoft.Json
+
+<h2>Edit</h2>
+<script type="text/javascript">
+
+    //$(function () {
+    //    $('[id*=machine_id]').multiselect({
+    //        includeSelectAllOption: false,
+    //        enableFiltering: true,
+    //        maxHeight: '200',
+    //        enableCaseInsensitiveFiltering: true,
+    //        allowClear: true,
+    //        maximumResultsForSearch: 1,
+    //        numberDisplayed: 0,
+    //    });
+    //});
+</script>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-xs-12">
+            <input type="hidden" id="process_id" name="process_id" class="form-control" />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+            Process Code *
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-12">
+            <input type="text" id="process_code" name="process_code" class="form-control" />
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+            Description *
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-12">
+            <input type="text" id="process_description" name="process_description" class="form-control" />
+        </div>
+    </div>
+    <br />
+
+    <br />
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+            Blocked
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="checkbox" id="is_blocked" name="is_blocked">
+        </div>
+    </div>
+
+</div>
+
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        @* <input type="submit" value="Update" class="btn btn-success" style="float:right" id="create" name="Edit" onclick="DataTableToForm()" />*@
+        <input type="submit" value="Update" class="btn btn-success" data-controller="ProcessMasterController" style="float:right" id="create" name="Update" />
+    </div>
+</div>
+
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script src="~/Scripts/requirevalidation.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#is_blocked').checkboxpicker();
+        var tool = @Html.Raw(JsonConvert.SerializeObject(this.Model));
+        $("#process_id").val(tool.process_id);
+        $("#process_code").val(tool.process_code);
+        $("#process_description").val(tool.process_description);
+        $("#is_blocked").val(tool.is_blocked);
+        if ($("#is_blocked").val() == 'true') {
+            $("#is_blocked").prop('checked', true);
+        }
+        else {
+            $("#is_blocked").prop('checked', false);
+        }
+
+        //$("#tool_operation_map_id").val(tool.tool_operation_map_id);
+        ////$("#is_blocked").checkboxpicker();
+        ////console.log($("#is_blocked").val());
+
+        $('#is_blocked').change(function () {
+            if (this.checked) {
+                $(this).prop("checked", true);
+                $('#is_blocked').val(true);
+            }
+            else {
+                $(this).prop("checked", false);
+                $('#is_blocked').val(false);
+            }
+        });
+
+    })
+</script>
+}

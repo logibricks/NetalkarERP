@@ -1,0 +1,123 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<br /><br /><br /><br /><br />
+<div>
+    @(Html.EJ().Grid<ref_machine_master_VM>("Searching")
+        .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "Machine" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "Machine" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("machine_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Width(80).Add();
+            col.Field("machine_code").Width("15%").HeaderText("Machine Code").Add();
+            col.Field("machine_name").Width("15%").HeaderText("Machine Description").Add();
+            col.Field("machine_category_code").Width("15%").HeaderText("Machine Category Code").Visible(false).Add();
+            col.Field("machine_category_name").Width("15%").HeaderText("Machine Category Description").Visible(false).Add();
+            col.Field("status_name").Width("15%").HeaderText("Status Name").Visible(true).Add();
+            col.Field("plant_name").Width("15%").HeaderText("Plant Name").Visible(false).Add();
+            col.Field("location").Width("15%").HeaderText("Location").Visible(false).Add();
+            col.Field("length").Width("15%").HeaderText("Length").Visible(false).Add();
+            col.Field("length_uom_name").Width("15%").HeaderText("Lenght UOM").Visible(false).Add();
+            col.Field("breadth").Width("15%").HeaderText("Breadth").Visible(false).Add();
+            col.Field("breadth_uom_name").Width("15%").HeaderText("Breadth UOM").Visible(false).Add();
+            col.Field("height").Width("15%").HeaderText("Height").Visible(false).Add();
+            col.Field("height_uom_name").Width("15%").HeaderText("Height UOM").Visible(false).Add();
+            col.Field("weight_uom_name").Width("15%").HeaderText("Weight UOM").Visible(false).Add();
+            col.Field("weight").Width("15%").HeaderText("Weight").Visible(false).Add();
+            col.Field("acquisition_value").Width("15%").HeaderText("Acquisition Value").Visible(false).Add();
+            col.Field("currency_name").Width("15%").HeaderText("Currency").Visible(false).Add();
+            col.Field("acquisition_date").Width("15%").HeaderText("Acquisition Date").Format("{0:dd/MM/yyyy}").Visible(false).Add();
+            col.Field("purchase_order_id").Width("15%").HeaderText("Purchase Order").Visible(false).Add();
+            col.Field("purchasing_vendor_name").Width("15%").HeaderText("Purchasing Vandor").Visible(false).Add();
+            col.Field("manufacturer").Width("15%").HeaderText("Manufacturer").Visible(false).Add();
+            col.Field("model_no").Width("15%").HeaderText("Model No.").Visible(false).Add();
+            col.Field("manufacturer_part_no").Width("15%").HeaderText("Manufacturer Part No.").Visible(false).Add();
+            col.Field("manufacturing_serial_number").Width("15%").HeaderText("Manufacturing Serial No.").Visible(false).Add();
+            col.Field("manufacturing_country_name").Width("15%").HeaderText("Manufacturing Country Name").Visible(false).Add();
+            col.Field("manufacturing_date").Width("15%").HeaderText("Manufacturing Date").Visible(false).Add();
+            col.Field("priority_name").Width("15%").HeaderText("Priority").Visible(false).Add();
+            col.Field("is_blocked").Width("15%").HeaderText("Blocked").Visible(false).Add();
+            col.Field("business_area_code").Width("15%").HeaderText("Business Unit Code").Visible(false).Add();
+            col.Field("business_area_name").Width("15%").HeaderText("Business Unit Description").Visible(false).Add();
+            col.Field("cost_center_code").Width("15%").HeaderText("Cost Center Code").Visible(false).Add();
+            col.Field("cost_center_name").Width("15%").HeaderText("Cost Center Description").Visible(false).Add();
+            col.Field("asset_code_id").Width("15%").HeaderText("Asset Code").Visible(false).Add();
+            col.Field("asset_tag_no").Width("15%").HeaderText("Asset Tag No.").Visible(false).Add();
+            col.Field("warranty_applicable").Width("15%").HeaderText("Warranty Applicable").Format("{0:dd/MM/yyyy}").Visible(false).Add();
+            col.Field("warranty_start_date").Width("15%").HeaderText("Guarantee Start Date").Format("{0:dd/MM/yyyy}").Visible(false).Add();
+            col.Field("warranty_end_date").Width("15%").HeaderText("Guarantee End Date").Format("{0:dd/MM/yyyy}").Visible(false).Add();
+            col.Field("amc_vendor_code").Width("15%").HeaderText("AMC Vendor Code").Visible(false).Add();
+            col.Field("amc_vendor_name").Width("15%").HeaderText("AMC Vendor Name").Visible(false).Add();
+            col.Field("repairs_vendor_code").Width("15%").HeaderText("Repairs Vendor Code").Visible(false).Add();
+            col.Field("repairs_vendor_name").Width("15%").HeaderText("Repairs Vendor Name").Visible(false).Add();
+            col.Field("remarks").Width("15%").HeaderText("Remarks").Visible(false).Add();
+            col.Field("attachement").Width("15%").HeaderText("Attachment").Width(150).Visible(true).Template("<a id='files' target='_blank' href='/Generic/Result?id={{:machine_id}}&controllername=Machine'>File</a>").Visible(false).Add();
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = "@Url.Action("Edit", "Machine")?id=" + args.rowData.machine_id;
+        }
+        if (args.requestType == "add") {
+            location.href = "@Url.Action("Create", "Machine")"
+        }
+    }
+    function rightClick(args) {
+        location.href = "@Url.Action("Details", "Machine")?id=" + args.data.machine_id;
+    }
+    function Click(args) {
+        $('a').css('color','red');
+    }
+
+</script>
+
+
+
+
+
+
+
+

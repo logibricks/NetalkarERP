@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="PurchaseInvoicedataset" targetNamespace="http://tempuri.org/PurchaseInvoicedataset.xsd" xmlns:mstns="http://tempuri.org/PurchaseInvoicedataset.xsd" xmlns="http://tempuri.org/PurchaseInvoicedataset.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="PurchaseInvoicedataset" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="PurchaseInvoicedataset" msprop:Generator_UserDSName="PurchaseInvoicedataset">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="pur_pi" msprop:Generator_TableClassName="pur_piDataTable" msprop:Generator_TableVarName="tablepur_pi" msprop:Generator_RowChangedName="pur_piRowChanged" msprop:Generator_TablePropName="pur_pi" msprop:Generator_RowDeletingName="pur_piRowDeleting" msprop:Generator_RowChangingName="pur_piRowChanging" msprop:Generator_RowEvHandlerName="pur_piRowChangeEventHandler" msprop:Generator_RowDeletedName="pur_piRowDeleted" msprop:Generator_RowClassName="pur_piRow" msprop:Generator_UserTableName="pur_pi" msprop:Generator_RowEvArgName="pur_piRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="pi_id" msprop:Generator_ColumnVarNameInTable="columnpi_id" msprop:Generator_ColumnPropNameInRow="pi_id" msprop:Generator_ColumnPropNameInTable="pi_idColumn" msprop:Generator_UserColumnName="pi_id" type="xs:string" minOccurs="0" />
+              <xs:element name="vendor_name" msprop:Generator_ColumnVarNameInTable="columnvendor_name" msprop:Generator_ColumnPropNameInRow="vendor_name" msprop:Generator_ColumnPropNameInTable="vendor_nameColumn" msprop:Generator_UserColumnName="vendor_name" type="xs:string" minOccurs="0" />
+              <xs:element name="billing_address" msprop:Generator_ColumnVarNameInTable="columnbilling_address" msprop:Generator_ColumnPropNameInRow="billing_address" msprop:Generator_ColumnPropNameInTable="billing_addressColumn" msprop:Generator_UserColumnName="billing_address" type="xs:string" minOccurs="0" />
+              <xs:element name="state_name" msprop:Generator_ColumnVarNameInTable="columnstate_name" msprop:Generator_ColumnPropNameInRow="state_name" msprop:Generator_ColumnPropNameInTable="state_nameColumn" msprop:Generator_UserColumnName="state_name" type="xs:string" minOccurs="0" />
+              <xs:element name="state_ut_code" msprop:Generator_ColumnVarNameInTable="columnstate_ut_code" msprop:Generator_ColumnPropNameInRow="state_ut_code" msprop:Generator_ColumnPropNameInTable="state_ut_codeColumn" msprop:Generator_UserColumnName="state_ut_code" type="xs:string" minOccurs="0" />
+              <xs:element name="gst_no" msprop:Generator_ColumnVarNameInTable="columngst_no" msprop:Generator_ColumnPropNameInRow="gst_no" msprop:Generator_ColumnPropNameInTable="gst_noColumn" msprop:Generator_UserColumnName="gst_no" type="xs:string" minOccurs="0" />
+              <xs:element name="pan_no" msprop:Generator_ColumnVarNameInTable="columnpan_no" msprop:Generator_ColumnPropNameInRow="pan_no" msprop:Generator_ColumnPropNameInTable="pan_noColumn" msprop:Generator_UserColumnName="pan_no" type="xs:string" minOccurs="0" />
+              <xs:element name="rcm_document_no" msprop:Generator_ColumnVarNameInTable="columnrcm_document_no" msprop:Generator_ColumnPropNameInRow="rcm_document_no" msprop:Generator_ColumnPropNameInTable="rcm_document_noColumn" msprop:Generator_UserColumnName="rcm_document_no" type="xs:string" minOccurs="0" />
+              <xs:element name="posting_date" msprop:Generator_ColumnVarNameInTable="columnposting_date" msprop:Generator_ColumnPropNameInRow="posting_date" msprop:Generator_ColumnPropNameInTable="posting_dateColumn" msprop:Generator_UserColumnName="posting_date" type="xs:string" minOccurs="0" />
+              <xs:element name="document_no" msprop:Generator_ColumnVarNameInTable="columndocument_no" msprop:Generator_ColumnPropNameInRow="document_no" msprop:Generator_ColumnPropNameInTable="document_noColumn" msprop:Generator_UserColumnName="document_no" type="xs:string" minOccurs="0" />
+              <xs:element name="is_rcm" msprop:Generator_ColumnVarNameInTable="columnis_rcm" msprop:Generator_ColumnPropNameInRow="is_rcm" msprop:Generator_ColumnPropNameInTable="is_rcmColumn" msprop:Generator_UserColumnName="is_rcm" type="xs:string" minOccurs="0" />
+              <xs:element name="company_name" msprop:Generator_ColumnVarNameInTable="columncompany_name" msprop:Generator_ColumnPropNameInRow="company_name" msprop:Generator_ColumnPropNameInTable="company_nameColumn" msprop:Generator_UserColumnName="company_name" type="xs:string" minOccurs="0" />
+              <xs:element name="registered_address" msprop:Generator_ColumnVarNameInTable="columnregistered_address" msprop:Generator_ColumnPropNameInRow="registered_address" msprop:Generator_ColumnPropNameInTable="registered_addressColumn" msprop:Generator_UserColumnName="registered_address" type="xs:string" minOccurs="0" />
+              <xs:element name="gst_number" msprop:Generator_ColumnVarNameInTable="columngst_number" msprop:Generator_ColumnPropNameInRow="gst_number" msprop:Generator_ColumnPropNameInTable="gst_numberColumn" msprop:Generator_UserColumnName="gst_number" type="xs:string" minOccurs="0" />
+              <xs:element name="plant_gst_no" msprop:Generator_ColumnVarNameInTable="columnplant_gst_no" msprop:Generator_ColumnPropNameInRow="plant_gst_no" msprop:Generator_ColumnPropNameInTable="plant_gst_noColumn" msprop:Generator_UserColumnName="plant_gst_no" type="xs:string" minOccurs="0" />
+              <xs:element name="payment_terms_description" msprop:Generator_ColumnVarNameInTable="columnpayment_terms_description" msprop:Generator_ColumnPropNameInRow="payment_terms_description" msprop:Generator_ColumnPropNameInTable="payment_terms_descriptionColumn" msprop:Generator_UserColumnName="payment_terms_description" type="xs:string" minOccurs="0" />
+              <xs:element name="gross_value" msprop:Generator_ColumnVarNameInTable="columngross_value" msprop:Generator_ColumnPropNameInRow="gross_value" msprop:Generator_ColumnPropNameInTable="gross_valueColumn" msprop:Generator_UserColumnName="gross_value" type="xs:string" minOccurs="0" />
+              <xs:element name="sgst_value" msprop:Generator_ColumnVarNameInTable="columnsgst_value" msprop:Generator_ColumnPropNameInRow="sgst_value" msprop:Generator_ColumnPropNameInTable="sgst_valueColumn" msprop:Generator_UserColumnName="sgst_value" type="xs:string" minOccurs="0" />
+              <xs:element name="cgst_value" msprop:Generator_ColumnVarNameInTable="columncgst_value" msprop:Generator_ColumnPropNameInRow="cgst_value" msprop:Generator_ColumnPropNameInTable="cgst_valueColumn" msprop:Generator_UserColumnName="cgst_value" type="xs:string" minOccurs="0" />
+              <xs:element name="igst_value" msprop:Generator_ColumnVarNameInTable="columnigst_value" msprop:Generator_ColumnPropNameInRow="igst_value" msprop:Generator_ColumnPropNameInTable="igst_valueColumn" msprop:Generator_UserColumnName="igst_value" type="xs:string" minOccurs="0" />
+              <xs:element name="total_tax_value" msprop:Generator_ColumnVarNameInTable="columntotal_tax_value" msprop:Generator_ColumnPropNameInRow="total_tax_value" msprop:Generator_ColumnPropNameInTable="total_tax_valueColumn" msprop:Generator_UserColumnName="total_tax_value" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="pur_pi_detail" msprop:Generator_TableClassName="pur_pi_detailDataTable" msprop:Generator_TableVarName="tablepur_pi_detail" msprop:Generator_RowChangedName="pur_pi_detailRowChanged" msprop:Generator_TablePropName="pur_pi_detail" msprop:Generator_RowDeletingName="pur_pi_detailRowDeleting" msprop:Generator_RowChangingName="pur_pi_detailRowChanging" msprop:Generator_RowEvHandlerName="pur_pi_detailRowChangeEventHandler" msprop:Generator_RowDeletedName="pur_pi_detailRowDeleted" msprop:Generator_RowClassName="pur_pi_detailRow" msprop:Generator_UserTableName="pur_pi_detail" msprop:Generator_RowEvArgName="pur_pi_detailRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="pi_id" msprop:Generator_ColumnVarNameInTable="columnpi_id" msprop:Generator_ColumnPropNameInRow="pi_id" msprop:Generator_ColumnPropNameInTable="pi_idColumn" msprop:Generator_UserColumnName="pi_id" type="xs:string" minOccurs="0" />
+              <xs:element name="pi_detail_id" msprop:Generator_ColumnVarNameInTable="columnpi_detail_id" msprop:Generator_ColumnPropNameInRow="pi_detail_id" msprop:Generator_ColumnPropNameInTable="pi_detail_idColumn" msprop:Generator_UserColumnName="pi_detail_id" type="xs:string" minOccurs="0" />
+              <xs:element name="item_name" msprop:Generator_ColumnVarNameInTable="columnitem_name" msprop:Generator_ColumnPropNameInRow="item_name" msprop:Generator_ColumnPropNameInTable="item_nameColumn" msprop:Generator_UserColumnName="item_name" type="xs:string" minOccurs="0" />
+              <xs:element name="sac_hsn_code" msprop:Generator_ColumnVarNameInTable="columnsac_hsn_code" msprop:Generator_ColumnPropNameInRow="sac_hsn_code" msprop:Generator_ColumnPropNameInTable="sac_hsn_codeColumn" msprop:Generator_UserColumnName="sac_hsn_code" type="xs:string" minOccurs="0" />
+              <xs:element name="quantity" msprop:Generator_ColumnVarNameInTable="columnquantity" msprop:Generator_ColumnPropNameInRow="quantity" msprop:Generator_ColumnPropNameInTable="quantityColumn" msprop:Generator_UserColumnName="quantity" type="xs:string" minOccurs="0" />
+              <xs:element name="eff_unit_price" msprop:Generator_ColumnVarNameInTable="columneff_unit_price" msprop:Generator_ColumnPropNameInRow="eff_unit_price" msprop:Generator_ColumnPropNameInTable="eff_unit_priceColumn" msprop:Generator_UserColumnName="eff_unit_price" type="xs:string" minOccurs="0" />
+              <xs:element name="taxable_value" msprop:Generator_ColumnVarNameInTable="columntaxable_value" msprop:Generator_ColumnPropNameInRow="taxable_value" msprop:Generator_ColumnPropNameInTable="taxable_valueColumn" msprop:Generator_UserColumnName="taxable_value" type="xs:string" minOccurs="0" />
+              <xs:element name="assessable_value" msprop:Generator_ColumnVarNameInTable="columnassessable_value" msprop:Generator_ColumnPropNameInRow="assessable_value" msprop:Generator_ColumnPropNameInTable="assessable_valueColumn" msprop:Generator_UserColumnName="assessable_value" type="xs:string" minOccurs="0" />
+              <xs:element name="cgst_tax_rate" msprop:Generator_ColumnVarNameInTable="columncgst_tax_rate" msprop:Generator_ColumnPropNameInRow="cgst_tax_rate" msprop:Generator_ColumnPropNameInTable="cgst_tax_rateColumn" msprop:Generator_UserColumnName="cgst_tax_rate" type="xs:string" minOccurs="0" />
+              <xs:element name="cgst_tax_value" msprop:Generator_ColumnVarNameInTable="columncgst_tax_value" msprop:Generator_ColumnPropNameInRow="cgst_tax_value" msprop:Generator_ColumnPropNameInTable="cgst_tax_valueColumn" msprop:Generator_UserColumnName="cgst_tax_value" type="xs:string" minOccurs="0" />
+              <xs:element name="sgst_tax_rate" msprop:Generator_ColumnVarNameInTable="columnsgst_tax_rate" msprop:Generator_ColumnPropNameInRow="sgst_tax_rate" msprop:Generator_ColumnPropNameInTable="sgst_tax_rateColumn" msprop:Generator_UserColumnName="sgst_tax_rate" type="xs:string" minOccurs="0" />
+              <xs:element name="sgst_tax_value" msprop:Generator_ColumnVarNameInTable="columnsgst_tax_value" msprop:Generator_ColumnPropNameInRow="sgst_tax_value" msprop:Generator_ColumnPropNameInTable="sgst_tax_valueColumn" msprop:Generator_UserColumnName="sgst_tax_value" type="xs:string" minOccurs="0" />
+              <xs:element name="igst_tax_rate" msprop:Generator_ColumnVarNameInTable="columnigst_tax_rate" msprop:Generator_ColumnPropNameInRow="igst_tax_rate" msprop:Generator_ColumnPropNameInTable="igst_tax_rateColumn" msprop:Generator_UserColumnName="igst_tax_rate" type="xs:string" minOccurs="0" />
+              <xs:element name="igst_tax_value" msprop:Generator_ColumnVarNameInTable="columnigst_tax_value" msprop:Generator_ColumnPropNameInRow="igst_tax_value" msprop:Generator_ColumnPropNameInTable="igst_tax_valueColumn" msprop:Generator_UserColumnName="igst_tax_value" type="xs:string" minOccurs="0" />
+              <xs:element name="round_off" msprop:Generator_ColumnVarNameInTable="columnround_off" msprop:Generator_ColumnPropNameInRow="round_off" msprop:Generator_ColumnPropNameInTable="round_offColumn" msprop:Generator_UserColumnName="round_off" type="xs:string" minOccurs="0" />
+              <xs:element name="id" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="pur_pi_tax" msprop:Generator_TableClassName="pur_pi_taxDataTable" msprop:Generator_TableVarName="tablepur_pi_tax" msprop:Generator_RowChangedName="pur_pi_taxRowChanged" msprop:Generator_TablePropName="pur_pi_tax" msprop:Generator_RowDeletingName="pur_pi_taxRowDeleting" msprop:Generator_RowChangingName="pur_pi_taxRowChanging" msprop:Generator_RowEvHandlerName="pur_pi_taxRowChangeEventHandler" msprop:Generator_RowDeletedName="pur_pi_taxRowDeleted" msprop:Generator_RowClassName="pur_pi_taxRow" msprop:Generator_UserTableName="pur_pi_tax" msprop:Generator_RowEvArgName="pur_pi_taxRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="id" msprop:Generator_ColumnVarNameInTable="columnid" msprop:Generator_ColumnPropNameInRow="id" msprop:Generator_ColumnPropNameInTable="idColumn" msprop:Generator_UserColumnName="id" type="xs:string" minOccurs="0" />
+              <xs:element name="tax_name" msprop:Generator_ColumnVarNameInTable="columntax_name" msprop:Generator_ColumnPropNameInRow="tax_name" msprop:Generator_ColumnPropNameInTable="tax_nameColumn" msprop:Generator_UserColumnName="tax_name" type="xs:string" minOccurs="0" />
+              <xs:element name="tax_value" msprop:Generator_ColumnVarNameInTable="columntax_value" msprop:Generator_ColumnPropNameInRow="tax_value" msprop:Generator_ColumnPropNameInTable="tax_valueColumn" msprop:Generator_UserColumnName="tax_value" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:annotation>
+    <xs:appinfo>
+      <msdata:Relationship name="pur_pi_pur_pi_detail" msdata:parent="pur_pi" msdata:child="pur_pi_detail" msdata:parentkey="pi_id" msdata:childkey="pi_id" msprop:Generator_UserChildTable="pur_pi_detail" msprop:Generator_ChildPropName="Getpur_pi_detailRows" msprop:Generator_UserRelationName="pur_pi_pur_pi_detail" msprop:Generator_RelationVarName="relationpur_pi_pur_pi_detail" msprop:Generator_UserParentTable="pur_pi" msprop:Generator_ParentPropName="pur_piRow" />
+      <msdata:Relationship name="pur_pi_detail_pur_pi_tax" msdata:parent="pur_pi_detail" msdata:child="pur_pi_tax" msdata:parentkey="id" msdata:childkey="id" msprop:Generator_UserChildTable="pur_pi_tax" msprop:Generator_ChildPropName="Getpur_pi_taxRows" msprop:Generator_UserRelationName="pur_pi_detail_pur_pi_tax" msprop:Generator_ParentPropName="pur_pi_detailRow" msprop:Generator_RelationVarName="relationpur_pi_detail_pur_pi_tax" msprop:Generator_UserParentTable="pur_pi_detail" />
+    </xs:appinfo>
+  </xs:annotation>
+</xs:schema>

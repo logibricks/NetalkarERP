@@ -1,0 +1,43 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+@{(Html.EJ().Grid<fixed_asset_report_vm>("Editing1")
+                            .Datasource(ds => ds.URL(Url.Action("FixedAssetReport", "FixedAssetReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&depreciation_type=" + ViewBag.depreciation_type + "&asset_code_id=" + ViewBag.asset_code_id + "&depreciation_area_id=" + ViewBag.depreciation_area_id + "&asset_class_id=" + ViewBag.asset_class_id + "&asset_group_id=" + ViewBag.asset_group_id).Adaptor(AdaptorType.UrlAdaptor))
+                            .AllowPaging().PageSettings(a => a.PageSize(20))
+                                .AllowFiltering()
+                                .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                .ShowColumnChooser()
+                                .AllowSorting()
+                                .AllowScrolling()
+                                .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "InventoryReport", new { ctrlname = "InventoryledgerDetailedReport" })))
+                                .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                            .ToolbarSettings(toolbar =>
+                            {
+                                toolbar.ShowToolbar().ToolbarItems(items =>
+                                {
+                                    items.AddTool(ToolBarItems.Search);
+                                    items.AddTool(ToolBarItems.ExcelExport);
+                                    items.AddTool(ToolBarItems.PrintGrid);
+                                });
+                            })
+                    .Columns(col =>
+
+                    {
+                        col.Field("asset_class").Width("15%").HeaderText("Asset Class").Add();
+                        col.Field("asset_group").Width("15%").HeaderText("Asset Group").Add();
+                        col.Field("rate_of_depreciation").Width("15%").HeaderText("Rate Of Depreciation").Add();
+                        col.Field("group_of_opening").Width("15%").HeaderText(" Opening").Add();
+                        col.Field("group_of_addition").Width("15%").HeaderText("Addition").Add();
+                        col.Field("group_of_deletion").Width("15%").HeaderText("Deletion").Add();
+                        col.Field("group_of_closing").Width("15%").HeaderText("Closing").Add();
+                        col.Field("depreciation_opening").Width("15%").HeaderText("Opening").Add();
+                        col.Field("depreciation_for_the_year").Width("15%").HeaderText("Opening For Year").Add();
+                        col.Field("depreciation_disposal_adjustment").Width("15%").HeaderText("Disposal/Adjustment").Add();
+                        col.Field("depreciation_closing").Width("15%").HeaderText("Closing").Add();
+                        col.Field("net_wdv").Width("15%").HeaderText("Net WDV").Add();
+                    })
+                        .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickFixedAsset"); })
+                                                            ).Render();}
+@Html.EJ().ScriptManager()

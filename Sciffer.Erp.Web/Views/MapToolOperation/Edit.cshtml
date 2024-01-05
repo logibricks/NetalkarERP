@@ -1,0 +1,125 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.ref_tool_operation_map_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Edit";
+}
+<h2>Edit</h2>
+@using (Html.BeginForm("Create", "MapToolOperation", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+<div class="row form-horizontal">
+    <hr />
+    <div id="ParameterData"></div>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.tool_operation_map_id)
+
+    <div class="col-sm-6">
+        <div class="form-group">
+            @Html.LabelFor(model => model.process_id, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.DropDownList("process_id", (System.Web.Mvc.SelectList)ViewBag.process_id, "---Select---", htmlAttributes: new { @class = "form-control validinput removedisabled", @disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.process_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            @Html.LabelFor(model => model.crankshaft_id, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.DropDownList("crankshaft_id", (System.Web.Mvc.SelectList)ViewBag.crankshaft_id, "---Select---", htmlAttributes: new { @class = "form-control validinput removedisabled", @disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.crankshaft_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            @Html.LabelFor(model => model.tool_id, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.DropDownList("tool_id", (System.Web.Mvc.SelectList)ViewBag.tool_id, "---Select---", htmlAttributes: new { @class = "form-control validinput removedisabled", @disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.tool_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            @Html.LabelFor(model => model.tool_usage_type_id, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.DropDownList("tool_usage_type_id", (System.Web.Mvc.SelectList)ViewBag.tool_usage_type_id, "---Select---", htmlAttributes: new { @class = "form-control validinput removedisabled", @disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.tool_usage_type_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            @Html.LabelFor(model => model.tool_category_id, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.DropDownList("tool_category_id", (System.Web.Mvc.SelectList)ViewBag.tool_category_id, "---Select---", htmlAttributes: new { @class = "form-control validinput removedisabled", @disabled = "disabled" })
+                @Html.ValidationMessageFor(model => model.tool_category_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6" id="is_blocked">
+        <div class="form-group">
+            @Html.LabelFor(model => model.is_blocked, "Is Block", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+            <div class="col-md-8 col-sm-8 col-xs-12">
+                @Html.EditorFor(model => model.is_blocked, new { htmlAttributes = new { @class = "form-control", } })
+                @Html.ValidationMessageFor(model => model.is_blocked, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    @*<div class="col-sm-6">
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4 col-xs-12">Is Block</label>
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    @Html.CheckBoxFor(model => model.is_blocked)
+                </div>
+            </div>
+        </div>*@
+</div>
+
+    <br />
+    <hr />
+
+    <div class="row">
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10" >
+                <input type="submit" value="Update" class="btn btn-success" data-controller="MapToolOperationController" style="float:right" id="create" name="Update" />
+            </div>
+        </div>
+    </div>
+}
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+       var tool = @Html.Raw(JsonConvert.SerializeObject(this.Model));
+            $("#process_id").val(tool.process_id);
+            $("#crankshaft_id").val(tool.item_id);
+            $("#tool_id").val(tool.tool_id);
+            $("#tool_usage_type_id").val(tool.tool_usage_type_id);
+            $("#tool_category_id").val(tool.tool_category_id);
+            if ($("#is_blocked").val(tool.is_blocked) == true)
+            {
+                $("#is_blocked").prop('checked', true);
+            }
+            else {
+                $("#is_blocked").prop('checked', false);
+            } 
+            
+            $("#tool_operation_map_id").val(tool.tool_operation_map_id);
+            //$("#is_blocked").checkboxpicker();
+            //console.log($("#is_blocked").val());
+        })
+
+
+
+    </script>
+} 

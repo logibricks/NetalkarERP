@@ -1,0 +1,86 @@
+﻿
+@(Html.EJ().TreeGrid("TreeGridContainer")
+          .TreeColumnIndex(1)
+          .AllowColumnResize(true)
+          .IsResponsive(true)
+          .IdMapping("customer_id")
+          .ParentIdMapping("parent_id")
+          .ChildMapping("Children")
+          .AllowSorting(true)
+          .AllowMultiSorting(true)
+          .ShowColumnChooser(true)
+          .Mappers(map => map.ExportToExcelAction(Url.Action("ExportTreeGridModel", "SalesReport", new { ctrlname = "OpenSalesOrder" })))
+          .Columns(co =>
+          {
+              co.Field("customer_code").HeaderText("Customer Code").Add();
+              co.Field("customer_name").HeaderText("Customer Description").Add();
+              co.Field("category").HeaderText("Doc Category").Add();
+              co.Field("so_no").HeaderText("Doc Number").Add();
+              co.Field("so_date").HeaderText("Posting Date").Format("{0:dd/MMM/yyyy}").FilterEditType(TreeGridFilterEditType.Datepicker).Add();
+              co.Field("item_code").HeaderText("Item Code").Add();
+              co.Field("item_name").HeaderText("Item Description").Add();
+              co.Field("sal_net_value").HeaderText("Total Basic Value").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+              co.Field("invoice_net_value").HeaderText("Invoice Basic Value").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+              co.Field("open_value").HeaderText("Open Value").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+              co.Field("total_quantity").HeaderText("Total Qty").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+              co.Field("invoice_quantity").HeaderText("Invoice Qty").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+              co.Field("balance_qty").HeaderText("Open Qty").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+          }
+          )
+           .IsResponsive(true)
+              .ToolbarSettings(tool =>
+              {
+                  tool.ShowToolbar(true);
+                  tool.ToolbarItems(new List<TreeGridToolBarItems>()
+                 {
+                      TreeGridToolBarItems.ExcelExport,
+                 });
+              }).ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick"); })
+             .Datasource(ViewBag.datasource)
+
+)
+@Html.EJ().ScriptManager()
+<script type="text/javascript">
+    $(function () {
+        $("#TreeGridContainer").ejTreeGrid({
+            //...
+            //dataSource: projectData,
+            enableCollapseAll: true,
+        });
+    });
+    function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1) {
+            var fromDate = $("#fromDate").val();
+            var customer_category = $("#customer_category").val();
+            var plant = $("#plant").val();
+            var business_unit = $("#business_unit").val();
+            if ($('#customer_category :selected').length > 0) {
+                var selectedCustomeCategory = [];
+                $('#customer_category :selected').each(function (i, selected) {
+                    selectedCustomeCategory[i] = $(selected).val();
+                });
+                var cus_category = selectedCustomeCategory + "";
+            }
+            if ($('#plant :selected').length > 0) {
+                var selectedPlant = [];
+                $('#plant :selected').each(function (i, selected) {
+                    selectedPlant[i] = $(selected).val();
+                });
+                var Plants = selectedPlant + "";
+            }
+            if ($('#business_unit :selected').length > 0) {
+                var selectedBusinessUnit = [];
+                $('#business_unit :selected').each(function (i, selected) {
+                    selectedBusinessUnit[i] = $(selected).val();
+                });
+                var BusinessUnits = selectedBusinessUnit + "";
+            }
+            this.model["customer_category_id"] = cus_category;
+            this.model["entity"] = "get_open_sales_order_by_invoice";
+            this.model["posting_date"] = $("#fromDate").val();
+            this.model["business_unit_id"] = BusinessUnits;
+            this.model["plant_id"] = Plants;
+        }
+
+    }
+</script>

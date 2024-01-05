@@ -1,0 +1,82 @@
+﻿@model Sciffer.Erp.Domain.Model.mfg_op_qc_parameter
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>mfg_op_qc_parameter</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_ITEM.ITEM_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_ITEM.ITEM_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ref_machine.machine_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ref_machine.machine_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.parameter_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.parameter_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.parameter_uom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.parameter_uom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.std_range_start)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.std_range_start)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.std_range_end)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.std_range_end)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_numeric)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_numeric)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_list)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_list)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.mfg_op_qc_parameter_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

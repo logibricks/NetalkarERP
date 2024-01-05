@@ -1,0 +1,114 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<style>
+    .item_label {
+        font-size: 14px !important;
+    }
+
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".loading").hide();
+        $('.mickey').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            maxHeight: '200',
+            enableCaseInsensitiveFiltering: true,
+            allowClear: true,
+            maximumResultsForSearch: 1,
+            numberDisplayed: 0,
+        });
+    });
+</script>
+
+<div class="loading">Loading &#8230;</div>
+<div class="form-horizontal">
+    <div class=row>
+
+    </div>
+    <br />
+
+    <div class=row>
+
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">From Date</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <input type="date" id="fromDate" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">To Date</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <input type="date" id="toDate" class="form-control radius">
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Plant</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plant_list,"--Select plant--", htmlAttributes: new { @class = "form-control ", })
+
+            </div>
+        </div>
+    </div>
+    <br /><br />
+    <div class="row">
+        <div class="col-md-6 col-lg-6 col-xs-12"></div>
+            @*<div class="col-md-2 col-lg-2 col-xs-12">
+                <a href="#" class="btn btn-primary" id="export" style="float:right"> Download Report </a>
+            </div>*@
+            <div class="col-md-4 col-lg-4 col-xs-12" style="float:right">
+                <button class="searchbutton searchButton" id="search" style="float:right"> Run Report </button>
+            </div>
+        </div>
+    <br />
+    
+</div>
+<hr />
+
+<div class="row">
+    <div id="searchresult">
+        @Html.Partial("Partial_IncentiveReport", (object)ViewBag)
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    var baseurl = '@Url.Action("ExportData")';
+    $('#export').click(function() {
+        var url = baseurl + '?entity=get_incentive_report&from_date=' + $('#fromDate').val() + '&to_date=' + $('#toDate').val() + '&plant_id=' + $('#plant_id').val();
+        location.href=url;
+    });
+
+    $("#search").click(function () {
+        AdvanceSearch();
+    });
+
+    document.getElementById('fromDate').valueAsDate = new Date();
+    document.getElementById('toDate').valueAsDate = new Date();
+
+    function AdvanceSearch() {
+        var fromDate = $("#fromDate").val();
+        var toDate = $("#toDate").val();
+        var plant_id = $("#plant_id").val();
+        $(".loading").show();
+        $.ajax({
+            url: "@Url.Action("GetIncentiveReport_Partial", "ProductionReport")",
+            method: "Post",
+            cache: false,
+            data: { entity: "get_incentive_report", from_date: fromDate, to_date: toDate, plant_id: plant_id },
+            success: function (data) {
+                $(".loading").hide();
+                $('#searchresult').empty().append(data);
+            },
+            error: function (http) {
+                $(".loading").hide();
+                $("", "Something went wrong", "error");
+                console.log(XMLHttpRequest);
+            }
+        });
+    }
+</script>

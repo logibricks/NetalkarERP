@@ -1,0 +1,725 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.ProdIssueVM
+<style>
+    .modal-body {
+        max-height: calc(100vh - 200px);
+        overflow-y: auto;
+    }
+</style>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <div id="ProductionIssueDetail"></div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.prod_order_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.DropDownList("prod_order_id", Enumerable.Empty<SelectListItem>
+                    (), "---Select---", htmlAttributes: new { @class = "form-control removedisabled", @disabled = "disabled" })
+                        @Html.ValidationMessageFor(model => model.prod_order_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    <input type="button" value="Select Production Order" name="mrn" id="mrn" class="btn btn-primary" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.category_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.categorylist, htmlAttributes: new { @class = "form-control category setPlant" })
+                        @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.plant_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.PlantList, "--Select--", htmlAttributes: new { @class = "form-control removedisabled selectedbycategory", @disabled = "disabled" })
+                        @Html.ValidationMessageFor(model => model.plant_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.posting_date, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control postingdocumentdate" } })
+                        @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.document_date, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.document_date, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.document_date, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.remarks, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.remarks, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.remarks, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+        <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+            <li class="active"><a data-toggle="tab" href="#sectionA">Tag Items</a></li>
+            <li><a data-toggle="tab" href="#sectionB">Non Tag Items</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                <div class="row">
+                    <div class="table-responsive" style="max-height: calc(100vh - 200px); overflow-y: auto;">
+                        <table class="table table-responsive table-bordered table-striped" id="ContactGrid2">
+                            <thead>
+                                <tr>
+                                    <th hidden><label>ID</label></th>
+                                    <th><label>Sr. No.</label></th>
+                                    <th hidden><label>Item ID</label></th>
+                                    <th><label>Item</label></th>
+                                    <th hidden><label>Batch ID</label></th>
+                                    <th><label>Batch Number</label></th>
+                                    <th hidden><label>Batch Detail ID</label></th>
+                                    <th hidden><label>Tag ID</label></th>
+                                    <th><label>Tag No</label></th>
+                                    <th hidden><label>Prod Order Detail ID</label></th>
+                                    <th><label>Req Quantity</label></th>
+                                    <th><label>Rate</label></th>
+                                    <th><label>Value</label></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="sectionB" class="tab-pane fade" style="margin-top:10px;">
+                <div class="row">
+                    <div class="table-responsive" style="max-height: calc(100vh - 200px); overflow-y: auto;">
+                        <table class="table table-responsive table-bordered table-striped modal-body" id="ContactGrid1">
+                            <thead>
+                                <tr>
+                                    <th hidden><label>ID</label></th>
+                                    <th><label>Sr. No.</label></th>
+                                    <th hidden><label>Item ID</label></th>
+                                    <th><label>Item</label></th>
+                                    <th hidden><label>Batch ID</label></th>
+                                    <th><label>Batch Number</label></th>
+                                    <th hidden><label>Batch Detail ID</label></th>
+                                    <th hidden><label>Prod Order Detail ID</label></th>
+                                    <th><label>Req Quantity</label></th>
+                                    <th><label>Rate</label></th>
+                                    <th><label>Value</label></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-success" data-controller="ProductionOrderIssueController" style="float:right" id="create" name="create" />
+        </div>
+    </div>
+}
+<div class="modal fade" id="myModal1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" style="align-content:center;width:900px">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Production Order</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-4">
+                                Production Order
+                            </label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("prod_order_id1", (System.Web.Mvc.SelectList)ViewBag.ProdOrdList, "--Select--", htmlAttributes: new { @class = "form-control", @onchange = "GetProductionOrderIssue(this.value);" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-4">
+                                Plant
+                            </label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("plant_id1", (System.Web.Mvc.SelectList)ViewBag.PlantList, "--Select--", htmlAttributes: new { @class = "form-control", @disabled = "disabled" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-4">
+                                SLoc
+                            </label>
+                            <div class="col-md-8">
+                                @Html.DropDownList("sloc1", (System.Web.Mvc.SelectList)ViewBag.StorageLocationList, "--Select--", htmlAttributes: new { @class = "form-control", @disabled = "disabled" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="col-sm-4">
+                                Quantity
+                            </label>
+                            <div class="col-md-8">
+                                <input type="hidden" id="totalqty1" />
+                                <input type="number" id="item_quantity" class="form-control" readonly="readonly" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-4">
+                                From Number
+                            </label>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <input type="number" id="fromnumber" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-4">
+                                To Number
+                            </label>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <input type="number" id="tonumber" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+                    <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                        <li class="active"><a data-toggle="tab" href="#sectionC">Tag Items</a></li>
+                        <li><a data-toggle="tab" href="#sectionD">Non Tag Items</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="sectionC" class="tab-pane fade in active" style="margin-top:10px;">
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="table-responsive">
+                                        <table class="table table-responsive table-bordered table-striped" id="pogrid">
+                                            <thead>
+                                                <tr>
+                                                    <th hidden><label>ID</label></th>
+                                                    <th><label>Sr. No.</label></th>
+                                                    <th hidden><label>Item ID</label></th>
+                                                    <th><label>Item</label></th>
+                                                    <th hidden><label>Batch ID</label></th>
+                                                    <th><label>Batch No</label></th>
+                                                    <th hidden><label>Batch Detail ID</label></th>
+                                                    <th hidden><label>Tag ID</label></th>
+                                                    <th><label>Tag No</label></th>
+                                                    <th><label>Item Value</label></th>
+                                                    <th><label>Tag Quantity</label></th>
+                                                    <th><input type="checkbox" name="select_all" value="1" id="example-select-all"></th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="sectionD" class="tab-pane fade" style="margin-top:10px;">
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="table-responsive">
+                                        <table class="table table-responsive table-bordered table-striped" id="pogrid1">
+                                            <thead>
+                                                <tr>
+                                                    <th hidden><label>ID</label></th>
+                                                    <th><label>Sr. No.</label></th>
+                                                    <th hidden><label>Item ID</label></th>
+                                                    <th><label>Item</label></th>
+                                                    <th hidden><label>Batch ID</label></th>
+                                                    <th><label>Batch No</label></th>
+                                                    <th hidden><label>Batch Detail ID</label></th>
+                                                    <th><label>Prod Quantity</label></th>
+                                                    <th><label>Balance Qty</label></th>
+                                                    <th><label>Item Value</label></th>
+                                                    <th><label>Req Quantity</label></th>
+                                                    <th><input type="checkbox" name="select_all" value="1" id="example-select-all1"></th>
+                                                    <th hidden><label>txtValue</label></th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="addSALES btn btn-primary" disabled="disabled">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="loading">Loading&#8230;</div>
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        var checkedarray = [];
+        var checkedarray1 = [];
+        $(".loading").hide();
+        $("#mrn").on("click", function (event) {
+            var t = $('#pogrid').DataTable();
+            t.fnClearTable();
+            var t1 = $('#pogrid1').DataTable();
+            t1.fnClearTable();
+            $('#myModal1').modal('show');
+        })
+        var error=@Html.Raw(Json.Encode(ViewBag.error));
+        if(error !="")
+        {
+            sweetAlert("",error,"error");
+        }
+        $("#create").click(function(){
+            $("#create").hide();
+            $(".loading").show();
+        })
+        $(document).on('change', '#tonumber', function () {
+            var fromnumber = parseFloat($("#fromnumber").val());
+            var tonumber = parseFloat($("#tonumber").val());
+            var t = $('#pogrid').DataTable();
+            if (fromnumber <= tonumber) {
+                checkedarray.length = 0;
+                while (fromnumber <= tonumber) {
+                    var index = fromnumber;
+                    $("#batchselect" + index).prop('checked', true);
+                    checkedarray.push(index - 1);
+                    sum1 += parseInt(t.fnGetData(index, 10));
+                    $("#totalqty1").val(sum1);
+                    $('.addSALES ').removeAttr('disabled');
+                    fromnumber = fromnumber + 1;
+                }
+            }
+            else {
+                swal("", "Enter From number less then To number.", "error")
+            }
+        })
+
+        document.getElementById('posting_date').valueAsDate = new Date();
+        document.getElementById('document_date').valueAsDate = new Date();
+
+        //$('#example-select-all').on('click', function () {
+        //    if ($(this).hasClass('allChecked')) {
+        //        $('input[type="checkbox"]', '#pogrid').prop('checked', false);
+        //    } else {
+        //        $('input[type="checkbox"]', '#pogrid').prop('checked', true);
+        //    }
+        //    $(this).toggleClass('allChecked');
+
+        //    checkedarray.length = 0;
+        //    var t = $('#pogrid').DataTable();
+        //    var trlen = t.fnGetData().length;
+        //    if ($(this).is(':checked')) {
+        //        if (trlen > 0) {
+        //            for (var j = 0; j <= trlen - 1; j++) {
+        //                checkedarray.push(j);
+        //            }
+        //        }
+        //    }
+        //    else {
+        //        checkedarray.length = 0;
+        //    }
+        //});
+        //$('#example-select-all1').on('click', function () {
+        //    if ($(this).hasClass('allChecked')) {
+        //        $('input[type="checkbox"]', '#pogrid1').prop('checked', false);
+        //    } else {
+        //        $('input[type="checkbox"]', '#pogrid1').prop('checked', true);
+        //    }
+        //    $(this).toggleClass('allChecked');
+
+        //    checkedarray1.length = 0;
+        //    var t = $('#pogrid1').DataTable();
+        //    var trlen = t.fnGetData().length;
+        //    if ($(this).is(':checked')) {
+        //        if (trlen > 0) {
+        //            for (var j = 0; j <= trlen - 1; j++) {
+        //                checkedarray1.push(j);
+        //            }
+        //        }
+        //    }
+        //    else {
+        //        checkedarray1.length = 0;
+        //    }
+        //});
+        $(document).on('change', 'input[type="checkbox"]', function () {
+            if ($('.check').is(':checked') || $('.check1').is(':checked')) {
+                $('.addSALES ').removeAttr('disabled');
+            }
+            else {
+                $('.addSALES ').attr('disabled', true);
+            }
+        });
+        var sum1 = 0;
+        $(document).on('click', '.check1', function () {
+            var index = $(this).attr('data-index');
+            var t = $('#pogrid').DataTable();
+            if ($(this).is(':checked')) {
+                checkedarray.push(index);
+                sum1 += parseInt(t.fnGetData(index, 10));
+                $("#totalqty1").val(sum1);
+            }
+            else {
+                var checkedIndex = checkedarray.indexOf(parseInt(index));
+                checkedarray.splice(checkedIndex, 1);
+                sum1 -= parseInt(t.fnGetData(index, 10));
+                $("#totalqty1").val(sum1);
+            }
+        });
+        $(document).on('click', '.check', function () {
+            var index = $(this).attr('data-index');
+            var t = $('#pogrid1').DataTable();
+            if ($(this).is(':checked')) {
+                checkedarray1.push(index);
+            }
+            else {
+                var checkedIndex = checkedarray1.indexOf(parseInt(index));
+                checkedarray1.splice(checkedIndex, 1);
+            }
+        });
+        function GetProductionOrderIssue(id) {
+            var t = $('#pogrid').DataTable();
+            var t1 = $('#pogrid1').DataTable();
+            t.fnClearTable();
+            t1.fnClearTable();
+            if (id == "") {
+                id = 0;
+            }
+            var rowCount = t.fnGetData().length;
+            var rowCount = t1.fnGetData().length;
+            var i = 1;
+            var s = 1;
+            if (id != 0) {
+                $.ajax({
+                    url: '@Url.Action("GetProductionOrderDetail", "ProductionOrder")',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { id: id },
+                    success: function (po) {
+                        //console.log(po);
+                        $("#plant_id1").val(po.plant_id);
+                        $("#sloc1").val(po.child_sloc_id);
+                        $("#plant_id").val(po.plant_id);
+                        $("#item_quantity").val(po.mfg_prod_order_detail[0].quantity);
+                        //console.log(po.mfg_prod_order_detail[0].quantity);
+                    }
+                });
+
+                $.ajax({
+                    url: '@Url.Action("TagProductionOrderIssue", "ProductionOrderIssue")',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { id: id },
+                    success: function (po) {
+                        t.fnAddData(po);
+                        //$.each(po, function (key, cycle) {
+                        //    t.fnAddData([cycle.prod_order_detail_id, i, cycle.in_item_id, cycle.in_item_name,
+                        //            cycle.batch_id, cycle.batch_number, cycle.item_batch_detail_id, cycle.tag_id, cycle.tag_no,
+                        //            cycle.item_value, cycle.tag_qty, '']);
+                        //    i = i + 1;
+                        //});
+                    }
+                });
+
+                @*$.ajax({
+                    url: '@Url.Action("NonTagProductionOrderIssue", "ProductionOrderIssue")',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { id: id },
+                    success: function (po) {
+                        $.each(po, function (key, cycle) {
+                            t1.fnAddData([cycle.prod_order_detail_id, s, cycle.in_item_id, cycle.in_item_name,
+                                cycle.batch_id, cycle.batch_number, cycle.item_batch_detail_id, cycle.prod_bal_qty, cycle.batch_bal_qty, cycle.item_value,
+                                '<input type="number" id="txt' + s + '" class="form-control req_quantity" data-index=' + (s - 1) + ' />', '', '']);
+                            s = s + 1;
+                        })
+                    }
+                });*@
+            }
+        }
+        $(document).on('change', '.req_quantity', function () {
+            var t = $('#pogrid1').DataTable();
+            var index = $(this).attr('data-index');
+            var _requ_quantity = $(this).val();
+            if (_requ_quantity != '') {
+                _requ_quantity = parseFloat(_requ_quantity).toFixed(2);
+            }
+            var parsedIndex = parseInt(index);
+            t.fnUpdate(_requ_quantity, parsedIndex, 12);
+
+        })
+        $('#ContactGrid2').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: false },
+                     { sname: "b" },
+                     { sname: "c", bVisible: false },
+                     { sname: "d" },
+                     { sname: "e", bVisible: false },
+                     { sname: "f" },
+                     { sname: "g", bVisible: false },
+                     { sname: "h", bVisible: false },
+                     { sname: "i", bVisible: true },
+                     { sname: "j", bVisible: false },
+                     { sname: "k", bVisible: true },
+                     { sname: "l" },
+                     { sname: "l" },
+            ]
+
+        });
+        $('#ContactGrid1').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: false },
+                     { sname: "b" },
+                     { sname: "c", bVisible: false },
+                     { sname: "d" },
+                     { sname: "e", bVisible: false },
+                     { sname: "f" },
+                     { sname: "g", bVisible: false },
+                     { sname: "h", bVisible: false },
+                     { sname: "i", bVisible: true },
+                     { sname: "j" },
+                     { sname: "k", bVisible: true },
+            ]
+
+        });
+
+        $('#pogrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets: 15
+            }],
+            aoColumns: [
+                      { "data": "prod_order_detail_id", bVisible: false },
+                      { "data": "rowIndex", bVisible: true },
+                      { "data": "in_item_id", bVisible: false },
+                      { "data": "in_item_name", bVisible: true },
+                      { "data": "batch_id", bVisible: false },
+                      { "data": "batch_number", bVisible: true },
+                      { "data": "item_batch_detail_id", bVisible: false },
+                      { "data": "tag_id", bVisible: false },
+                      { "data": "tag_no", bVisible: true },
+                      { "data": "item_value", bVisible: true },
+                      { "data": "tag_qty", bVisible: true },
+                      { "data": "rowIndex", sWidth: "4%", 'render': function (data, type, full) { return '<input type="checkbox" id="batchselect' + full.rowIndex + '" data-index=' + (full.rowIndex - 1) + '  class="price check"/>' } },
+            ]
+        });
+
+        $('#pogrid1').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            columnDefs: [{
+                orderable: false,
+                className: 'select-checkbox',
+                targets: 15
+            }],
+            aoColumns: [
+                     { sname: "a", bVisible: false },
+                     { sname: "b", bVisible: true },
+                     { sname: "c", bVisible: false },
+                     { sname: "d" },
+                     { sname: "e", bVisible: false },
+                     { sname: "f" },
+                     { sname: "g", bVisible: false },
+                     { sname: "h" },
+                     { sname: "i", bVisible: true },
+                     { sname: "j", bVisible: true },
+                     { sname: "l" },
+                     {
+                         sname: "s", sWidth: "2%",
+                         mRender: function (data, type, row) {
+                             return '<input type="checkbox" data-index=' + ((row[1]) - 1) + ' class="check" name="id[]" value="' + $('<div/>').text(data).html() + '">';
+                         }
+                     },
+                    { sname: "l", bVisible: false }]
+        });
+
+        $(".addSALES").on("click", function (event) {
+            $("#prod_order_id").html(""); // clear before appending new list
+            $("#prod_order_id").append($('<option></option>').val(0).html("---Select---"));
+            $("#prod_order_id").append($('<option></option>').val($("#prod_order_id1").val()).html($("#prod_order_id1 option:selected").text()));
+            $("#prod_order_id").val($("#prod_order_id1").val());
+            var tt = $("#prod_order_id1").val();
+
+            var s = $('#pogrid').DataTable()
+            var t = $('#ContactGrid2').DataTable()
+
+            var s1 = $('#pogrid1').DataTable()
+            var t1 = $('#ContactGrid1').DataTable()
+
+            t.fnClearTable();
+            t1.fnClearTable();
+            var plant;
+            var i = 0;
+            var j = 0;
+            var isFalse = false;
+            //for (var k = 0; k <= checkedarray1.length - 1; k++) {
+            //    var i = checkedarray1[k];
+            //    var txt = s1.fnGetData(i, 12);
+            //    if (txt == '') {
+            //        swal("", "Req Quantity cannot be left blank!", "error");
+            //        return isFalse;
+            //    }
+            //    if (txt == '0') {
+            //        swal("", "Req Quantity cannot be zero!", "error");
+            //        return isFalse;
+            //    }
+            //    if (txt == '0.00') {
+            //        swal("", "Req Quantity cannot be zero!", "error");
+            //        return isFalse;
+            //    }
+            //    if ((txt.indexOf('-')) != -1) {
+            //        swal("", "Req Quantity cannot be negative!", "error");
+            //        return isFalse;
+            //    }
+            //    if (txt > s1.fnGetData(i,8)) {
+            //        swal("", "Req quantity should be less than Balance quantity!", "error");
+            //        return isFalse;
+            //    }
+            //    if (txt > s1.fnGetData(i,7)) {
+            //        swal("", "Req quantity should be less than Prod quantity!", "error");
+            //        return isFalse;
+            //    }
+            //}
+            var a = parseFloat($("#totalqty1").val());
+            var b = parseFloat($("#item_quantity").val())
+            if (a > b) {
+                swal("", "Sum of Tag Quantity should be less than Quantity", "error");
+                return isFalse;
+            }
+            else {
+                $("#ProductionIssueDetail").empty();
+                for (var l = 0; l <= checkedarray.length - 1; l++) {
+                    var j = checkedarray[l];
+                    try {
+
+                        t.fnAddData(['0', s.fnGetData(j, 1), s.fnGetData(j, 2), s.fnGetData(j, 3), s.fnGetData(j, 4), s.fnGetData(j, 5),
+                        s.fnGetData(j, 6), s.fnGetData(j, 7), s.fnGetData(j, 8), s.fnGetData(j, 0), s.fnGetData(j, 10), s.fnGetData(j, 9),
+                        (s.fnGetData(j, 10) * s.fnGetData(j, 9)).toFixed(2)]);
+
+                        $("#ProductionIssueDetail").append('<input type="hidden" id="tag_prod_issue_detail_tag_id' + j + '" name="tag_prod_issue_detail_tag_id" value="' + t.fnGetData(j)[0] + '">');
+                        $("#ProductionIssueDetail").append('<input type="hidden" id="tag_in_item_id' + j + '" name="tag_in_item_id" value="' + t.fnGetData(j)[2] + '">');
+                        $("#ProductionIssueDetail").append('<input type="hidden" id="tag_batch_id' + j + '" name="tag_batch_id" value="' + t.fnGetData(j)[4] + '">');
+                        $("#ProductionIssueDetail").append('<input type="hidden" id="tag_item_batch_detail_id' + i + '" name="tag_item_batch_detail_id" value="' + t.fnGetData(j)[6] + '">');
+                        $("#ProductionIssueDetail").append('<input type="hidden" id="tag_tag_id' + j + '" name="tag_tag_id" value="' + t.fnGetData(j)[7] + '">');
+                        $("#ProductionIssueDetail").append('<input type="hidden" id="tag_prod_order_detail_id' + i + '" name="tag_prod_order_detail_id"  value="' + t.fnGetData(j)[9] + '">');
+                        $("#ProductionIssueDetail").append('<input type="hidden" id="tag_quantity' + j + '" name="tag_quantity"  value="' + t.fnGetData(j)[10] + '">');
+                        $("#ProductionIssueDetail").append('<input type="hidden" id="tag_rate' + j + '" name="tag_rate"  value="' + t.fnGetData(j)[11] + '">');
+                        $("#ProductionIssueDetail").append('<input type="hidden" id="tag_value' + j + '" name="tag_value"  value="' + t.fnGetData(j)[12] + '">');
+
+                    }
+                    catch (exception) {
+                        checkedarray.length = 0;
+                        alert(exception.message);
+                    }
+                    isFalse = true;
+                }
+            }
+            for (var k = 0; k <= checkedarray1.length - 1; k++) {
+                var i = checkedarray1[k];
+                var txt = s1.fnGetData(i)[12];
+                try {
+                    t1.fnAddData(['0', k + 1, s1.fnGetData(i)[2], s1.fnGetData(i)[3], s1.fnGetData(i)[4], s1.fnGetData(i)[5],
+                         s1.fnGetData(i)[6], s1.fnGetData(i)[0], parseFloat(txt), s1.fnGetData(i)[9],
+                         (parseFloat(txt) * s1.fnGetData(i)[9]).toFixed(2)]);
+                    $("#ProductionIssueDetail").append('<input type="hidden" id="ntag_prod_issue_detail_id' + i + '" name="ntag_prod_issue_detail_id" value="' + t1.fnGetData(i)[0] + '">');
+                    $("#ProductionIssueDetail").append('<input type="hidden" id="ntag_in_item_id' + i + '" name="ntag_in_item_id" value="' + t1.fnGetData(i)[2] + '">');
+                    $("#ProductionIssueDetail").append('<input type="hidden" id="ntag_batch_id' + i + '" name="ntag_batch_id" value="' + t1.fnGetData(i)[4] + '">');
+                    $("#ProductionIssueDetail").append('<input type="hidden" id="ntag_item_batch_detail_id' + i + '" name="ntag_item_batch_detail_id" value="' + t1.fnGetData(i)[6] + '">');
+                    $("#ProductionIssueDetail").append('<input type="hidden" id="ntag_prod_order_detail_id' + i + '" name="ntag_prod_order_detail_id" value="' + t1.fnGetData(i)[7] + '">');
+                    $("#ProductionIssueDetail").append('<input type="hidden" id="ntag_quantity' + i + '" name="ntag_quantity"  value="' + t1.fnGetData(i)[8] + '">');
+                    $("#ProductionIssueDetail").append('<input type="hidden" id="ntag_rate' + i + '" name="ntag_rate"  value="' + t1.fnGetData(i)[9] + '">');
+                    $("#ProductionIssueDetail").append('<input type="hidden" id="ntag_value' + i + '" name="ntag_value"  value="' + t1.fnGetData(i)[10] + '">');
+
+                }
+                catch (exception) {
+                    checkedarray1.length = 0;
+                    alert(exception.message);
+                }
+                isFalse = true;
+
+            }
+            if (isFalse == true) {
+                $('#myModal1').modal('hide');
+                checkedarray.length = 0;
+                checkedarray1.length = 0;
+                $("#totalqty1").val('0');
+                $("#item_quantity").val('0');
+                sum1 = 0;
+            }
+
+        });
+    </script>
+}

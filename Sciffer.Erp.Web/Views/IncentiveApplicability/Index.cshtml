@@ -1,0 +1,183 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Incentive Applicability <small></small></h2>
+<hr />
+@using (Html.BeginForm("UpdateRecords", "IncentiveApplicability", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div id="applicability_id"></div>
+    <div class="row">
+        <div class="clearfix"></div>
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="form">
+                <div class="area">
+                    <div class="row">
+                        <div class="col-md-4">
+
+                            <div class="col-md-8">
+                                @Html.DropDownList("user_id", (new System.Web.Mvc.SelectList(ViewBag.userlist, "user_id", "user_name")),  htmlAttributes: new { @class = "form-control mickey user_id", multiple = "multiple" })
+                            </div>
+                            <div class="col-lg-4 col-sm-4">
+                                <button class="searchbutton" type="button" id="search" onclick="search1();" style="margin-top:10px;"> Search </button>
+                            </div>
+                        </div>
+                       
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-10 col-sm-10 pull-right">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <input type="submit" id="updateData" class="btn btn-success" value="Update" onclick="TableToJson()" data-controller="IncentiveApplicability" style="float:right;">                          
+                                </div>
+                            </div>
+                        </div>          
+                    </div>
+                </div>
+                <hr />
+                <div class="container">
+                    <div class="inputs">
+                        <input type="hidden" id="process">
+                        <div id="machine_append">
+                            <table id="OrderGrid" class="table table-striped table-bordered" style="font-size:14px;">
+                                <thead>
+                                    <tr>
+                                        <th><label>Sr No.</label></th>
+                                        <th><label>User Id</label></th>
+                                        <th><label>User Code</label></th>
+                                        <th><label>Employee Name</label></th>
+                                        <th><label>Incentive Applicable</label></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablegrid"></tbody>
+                            </table>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+
+          var doc_no= '@ViewBag.doc';
+                if (doc_no != '') {
+                    if (doc_no != 0) {
+                        sweetAlert("", doc_no + " Updated successfully!", "success");
+                    }
+                }
+            var user_id = '';
+            $("#user_id").val(user_id);
+            search1();
+        });
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        function TableToJson() {
+     
+
+            var t = $('#OrderGrid').dataTable();
+
+            var rowCount1 = t.fnGetData().length;
+
+            for (i = 0; i < rowCount1; i++) {
+
+                $("#applicability_id").append('<input type="hidden" id="user_id_name' + i + '" name="user_id_name">');
+                $("#applicability_id").append('<input type="hidden" id="create_rights_name' + i + '" name="create_rights_name">');
+
+
+                $("#user_id_name" + i).val(t.fnGetData(i)[1]);
+                if ($('#create' + i).is(':checked')) {
+                    // the checkbox is now checked
+                    $("#create_rights_name" + i).val(true);
+                } else {
+                    // the checkbox is now no longer checked
+                    $("#create_rights_name" + i).val(false);
+                }
+
+            }
+        }
+
+
+  //--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+               
+        function search1() {
+            var user_id1 = [];
+
+            if ($('#user_id :selected').length > 0 || $('#user_id :selected').length == 0) {
+
+                $('#user_id :selected').each(function (i, selected) {
+                    user_id1[i] = $(selected).val();
+                });
+                var user_id = user_id1 + "";
+                console.log(user_id);
+                //$("#user_id").val(user_id);
+
+                $.ajax({
+                    url: "@Url.Action("GetAllUserForIncApp", "IncentiveApplicability")",
+                    method: "POST",
+                cache: false,
+                data: { user_id: user_id },
+                success: function (data) {
+                    //var t = $('#OrderGrid').dataTable();
+                    //t.fnClearTable();
+                    $("#tablegrid").empty();
+                    var count = 0;
+                    for (var i = 0; i < data.length; i++) {
+                        count++;
+                        $("#tablegrid").append(
+                            '<tr>' +
+                                '<td>' +
+                                    count +
+                                '</td>' +
+                                '<td>' +
+                                    data[i].user_id +
+                                '</td>' +
+
+                                '<td>' +
+                                    '<label>' + data[i].user_code + '</label>' +
+                                '</td>' +
+
+
+                                 '<td>' +
+                                    '<label>' + data[i].employee_name + '</label>' +
+                                '</td>' +
+
+                                '<td>' +
+                                    '<input type="checkbox" id="create' + i + '">' +
+                                '</td>' +
+
+                            '</tr>')
+
+                        if (data[i].is_incentive_applicable == true) {
+                            document.getElementById("create" + i).setAttribute('checked', 'checked');
+                        }
+                        else {
+                            document.getElementById("create" + i).removeAttribute('checked');
+                        }
+
+                        if (data.length == count)
+                        {
+                            break;
+                        }
+
+                    }
+                }
+            })
+            }
+
+        };
+    </script>
+}

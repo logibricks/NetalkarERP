@@ -1,0 +1,835 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.shift_wise_data_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+
+<div class="row">
+    <div class="form-group">
+        <div class="col-lg-6 col-sm-6">
+            <label class="col-md-2 col-sm-2 col-xs-12">
+                Plant <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                @Html.DropDownList("plant_id", (new System.Web.Mvc.SelectList(ViewBag.plantlist, "plant_id", "plant_name")), "---Select---", htmlAttributes: new { @class = "form-control ", @style = "margin-bottom:10px;" })
+            </div>
+        </div>
+    </div>
+</div><br />
+<div class="row">
+    @*<div class="col-lg-4 col-sm-4">
+            <div class="form-group">
+                @Html.LabelFor(model => model.from_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12 label_start_date" })
+                <div class="col-md-8 col-sm-8 col-xs-12">
+
+                    @Html.ValidationMessageFor(model => model.from_date, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>*@
+    <div class="form-group">
+        <div class="col-lg-6 col-sm-6">
+            <label class="col-md-2 col-sm-2 col-xs-12">
+                Shift and Start Date <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <div id="shift_id_div">
+                    @Html.DropDownList("shift_id", Enumerable.Empty<SelectListItem>(), htmlAttributes: new { @class = "form-control  shift_id" })
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                @Html.EditorFor(model => model.from_date, new { htmlAttributes = new { @class = "form-control validation_start_date fromdate  validinput", @required = true } })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-lg-6 col-sm-6">
+            <label class="col-md-2 col-sm-2 col-xs-12">
+                Shift and End Date <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <div id="shift_id_div">
+                    @Html.DropDownList("shift_id1", Enumerable.Empty<SelectListItem>(), htmlAttributes: new { @class = "form-control  shift_id1" })
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                @Html.EditorFor(model => model.to_date, new { htmlAttributes = new { @class = "form-control validation_end_date todate validinput", @required = true } })
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row" style="float:right;">
+    <button type="button" class="add btn btn-success">View</button>
+</div>
+<br />
+
+<div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+    <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+        <li class="active"><a data-toggle="tab" href="#sectionA">Dashboard</a></li>
+        <li><a data-toggle="tab" href="#Summary">Summary</a></li>
+        <li><a data-toggle="tab" href="#Detail">Detail</a></li>
+    </ul>
+    <div class="tab-content">
+        <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                        <thead>
+                            <tr>
+                                <th><label>ID</label></th>
+                                <th><label>Date</label></th>
+                                <th><label>Shift ID</label></th>
+                                <th><label>Shift</label></th>
+                                <th hidden><label>Status Code</label></th>
+                                <th><label>Status</label></th>
+                                <th><label>Plant</label></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-6" style="float:right;">
+                <div class="row col-lg-4 col-sm-4" hidden>
+                    <button type="button" class="add btn btn-primary" onclick="savestatus()">Send Approval</button>
+                </div>
+                <div class="row col-lg-4 col-sm-4">
+                    <button type="button" id="easy_hr" class="add btn btn-primary" onclick="PullData();">Pull Easy HR Data</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="row col-lg-12 col-sm-12">
+                    <button type="button" class="add btn btn-primary pull-right" onclick="TableToJson()">Compute</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="Summary" class="tab-pane fade" style="margin-top:10px;">
+            <button class="btn btn-primary center-block" id="btnExport"><img src="http://icons.iconarchive.com/icons/ncrow/mega-pack-1/128/Excel-icon.png" style="width:10px; height:10px;"> Export to Excel</button>
+
+            <div class="table-responsive">
+                <table class="table table-responsive table-bordered table-striped jambo_table results3 taskgrid" id="SummaryGrid">
+                    <thead>
+                        <tr>
+                            <th>operator_id</th>
+                            <th>Operator Code</th>
+                            <th>Operator Name</th>
+                            <th>Date</th>
+                            <th>shift_id</th>
+                            <th>Shift</th>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Incetive Applicable</th>
+                            <th>Incetive Amount</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+        <div id="Detail" class="tab-pane fade" style="margin-top:10px;">
+            <div class="row">
+                <button class="btn btn-primary center-block" id="btnExportsum"><img src="http://icons.iconarchive.com/icons/ncrow/mega-pack-1/128/Excel-icon.png" style="width:10px; height:10px;"> Export to Excel</button>
+                <div class="row" id="loading_incentive_detail" style="display:none;"> Loading....</div>
+                <div class="table-responsive">
+                    <table class="table table-responsive table-bordered table-striped jambo_table results3 taskgrid" id="DetailGrid">
+                        <thead>
+                            <tr>
+                                <th>operator_id</th>
+                                <th>Operator Code</th>
+                                <th>Operator Name</th>
+                                <th>Date</th>
+                                <th>shift_id</th>
+                                <th>Shift</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>process_id</th>
+                                <th>Operation Name</th>
+                                <th>machine_id</th>
+                                <th>Machine Code</th>
+                                <th>Machine Name</th>
+                                <th>item_id</th>
+                                <th>Item</th>
+                                <th>Production Qty</th>
+                                <th>Benchmark Qty</th>
+                                <th>Excess Qty</th>
+                                <th>Incentive Rate</th>
+                                <th>Incentive Amount</th>
+                                <th>Incentive Applicability</th>
+                                @*<th>Multi-machining</th>*@
+                                <th>ID</th>
+                                <th>Sr. No.</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            @*<div class="row">
+                    <div id="searchresult">
+                        @Html.Partial("Partial_IncetiveDetail", (object)ViewBag)
+                    </div>
+                </div>*@
+        </div>
+        <div class="loading">Loading &#8230;</div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        var shift_names_array = [];
+        var shift_names_array1 =[];
+        $(document).ready(function () {
+            var doc_no= '@TempData["doc_num"]';
+            if (doc_no != '') {
+                if (doc_no != 0) {
+                    sweetAlert("", doc_no + " Saved successfully!", "success");
+                }
+            }
+        });
+
+        $("#plant_id").select2({
+            placeholder: "Select Plant",
+            allowClear: true
+        });
+
+        $("#shift_id1").select2({
+            placeholder: "Select Shift",
+            allowClear: true
+        });
+        $("#shift_id").select2({
+            placeholder: "Select Shift",
+            allowClear: true
+        });
+        function PullData() {
+            var tableArr = [];
+            var t = $('#ContactGrid').DataTable();
+            var rowCount = t.fnGetData().length;
+            if (rowCount != 0) {
+                for (i = 0; i < rowCount; i++) {
+                    tableArr.push({
+                        shift_id: shift1.filter(a => a.shift_code == t.fnGetData(i)[3])[0].shift_id,
+                        date: t.fnGetData(i)[1],
+                        shift_code: shift1.filter(a => a.shift_code == t.fnGetData(i)[3])[0].shift_id == "1"
+                            ? "A Shift"
+                            : shift1.filter(a => a.shift_code == t.fnGetData(i)[3])[0].shift_id == "2"
+                            ? "B Shft"
+                            : "C Shift",
+                    });
+                }
+
+                $.ajax({
+                    url: '@Url.Action("PullEasyHRData", "ShiftWiseData")',
+                    method: "Post",
+                    cache: false,
+                    async: false,
+                    data: { plant_id: $("#plant_id").val(), tableArr: tableArr },
+                    success: function(data) {
+                        if (data.includes("Saved")) {
+                            // var id= data.split("~")[2];
+                            // data = data.split("~")[1];
+                            swal({
+                                title: "",
+                                text: " Data Pulled Successfully!",
+                                type: "success",
+                                //timer: 2000
+                            },
+                                function() {
+                                    @*location.href = '@Url.Action("Create", "POS")';
+                                    var url = '@Url.Action("Pdf", "POS")?id=' + id;
+                                    var printWin =window.open(url, "_blank","height=800,left=100,top=100,width=800,toolbar=no,titlebar=0,status=0,menubar=yes,location=no,scrollbars=1");
+                                    printWin.print();*@
+
+                                    });
+                        } else {
+                            swal("Error !", data, "error");
+                        }
+
+                    },
+                });
+            } else {
+                swal("Error !", "Please select data for data pulling !", "error");
+            }
+
+        }
+       // $("#easy_hr").hide();
+        $("#plant_id").change(function() {
+            var id = $(this).val();
+            //if (id != 1) {
+            //    $("#easy_hr").hide();
+            //} else {
+            //    $("#easy_hr").show();
+            //}
+            $.ajax({
+                url: "@Url.Action("GetShiftWithPlantId", "Generic")",
+                method: "POST",
+            cache: false,
+                data: { id: id },
+            success: function(data) {
+                var s=0
+                $("#shift_id").empty();
+                for (var i = 0; i < data.length; i++) {
+                    $("#shift_id").append('<option value="' +
+                        data[i].shift_id +
+                        '">' +
+                        data[i].shift_code +
+                        '</option>');
+                                    
+                    shift_names_array.push(data[i].shift_code);
+
+                }
+
+
+                $("#shift_id1").empty();
+                for (var i = 0; i < data.length; i++) {
+                    $("#shift_id1").append('<option value="' +
+                        data[i].shift_id +
+                        '">' +
+                        data[i].shift_code +
+                        '</option>');
+                    s=data[i].shift_id;
+                   
+                    shift_names_array1.push(data[i].shift_code);
+                }
+
+
+                $("#shift_id").select2({
+                    placeholder: "Select Shift",
+                    allowClear: true
+                });
+
+                $("#shift_id1").select2({
+                    placeholder: "Select Shift",
+                    allowClear: true
+                });
+                $("#shift_id1").val(s).trigger("change");
+
+            }
+        });
+        });
+
+        $('#DetailGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+
+            aoColumns: [
+                    { sname: "h", bVisible: false },  // <th><label>operator_id</label></th>
+                    { sname: "i", bVisible: true },  // <th><label>Operator Code</label></th>
+                    { sname: "j", bVisible: true },  // <th><label>Operator Name</label></th>
+                    { sname: "c", bVisible: true, "sClass": "right", sWidth: "8%" }, //  <th><label>Date</label></th>
+                    { sname: "d", bVisible: false }, // <th><label>Shift_id</label></th>
+                    { sname: "e", bVisible: true, sWidth: "30%" }, // <th><label>Shift</label></th>
+                    { sname: "p", bVisible: true }, //   <th><label>Start Time</label></th>
+                    { sname: "q", bVisible: true }, //  <th><label>End Time</label></th>
+                    { sname: "k", bVisible: false },  // <th><label>process_id</label></th>
+                    { sname: "l", bVisible: true },  // <th><label>Operation Name</label></th>
+                    { sname: "m", bVisible: false }, //  <th><label>Machine_id</label></th>
+                    { sname: "n", bVisible: true }, //  <th><label>Machine Code</label></th>
+                    { sname: "o", bVisible: true }, //  <th><label>Machine Name</label></th>
+                    { sname: "aa", bVisible: false },  // <th><label>item_id</label></th>
+                    { sname: "ab", bVisible: true },  // <th><label>Item</label></th>
+                    { sname: "t", bVisible: true, "sClass": "right" }, //  <th><label>Production Qty</label></th>
+                    { sname: "u", bVisible: true, "sClass": "right" }, //  <th><label>Benchmark Qty</label></th>
+                    { sname: "v", bVisible: true, "sClass": "right" }, //  <th><label>Excess Qty</label></th>
+                    { sname: "w", bVisible: true, "sClass": "right" }, //  <th><label>Incentive Rate</label></th>
+                    { sname: "x", bVisible: true, sWidth: "4%", "sClass": "right" }, //  <th><label>Incentive Amount</label></th>
+                    { sname: "r", bVisible: true }, //  <th><label>Incentive Applicability</label></th>
+                    //{ sname: "s", bVisible: true }, //  <th><label>Multi-machining</label></th>
+                    { sname: "a", bVisible: false }, // <th><label>ID</label></th>
+                    { sname: "b", sWidth: "3%",bVisible: false },   // <th><label>Sr. No.</label></th>
+                    { sname: "ac", bVisible: true }, //  <th><label>Remarks</label></th>
+
+                    // { sname: "f", bVisible: false }, // <th><label>Plant_id</label></th>
+                    //{ sname: "g", bVisible: true, sWidth: "6%" }, // <th><label>Plant</label></th>
+                    //{
+                    //    sname: "z", sWidth: "8%",
+                    //    bSortable: false, bVisible: true,
+                    //    mRender: function (data, type, full) {
+
+                    //        var options = '<option value="1">Open</option><option value="2">Pending</option>';
+                    //        var x = '<select class="form-control" data-index=' + full[1] + ' id="start' + full[1] + '">' +
+                    //                options
+                    //                + '<select/>';
+                    //        return x;
+                    //    }
+
+                    //}
+
+            ]
+        });
+
+        $('#SummaryGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                    { sname: "h", bVisible: false },  // <th><label>Operator_id</label></th>
+                    { sname: "i", bVisible: true },  // <th><label>Operator Code</label></th>
+                    { sname: "j", bVisible: true },  // <th><label>Operator Name</label></th>
+                    { sname: "c", bVisible: true, }, //  <th><label>Date</label></th>
+                    { sname: "d", bVisible: false }, // <th><label>Shift_id</label></th>
+                    { sname: "e", bVisible: true, }, // <th><label>Shift</label></th>
+                    { sname: "p", bVisible: true }, //   <th><label>Start Time</label></th>
+                    { sname: "q", bVisible: true }, //  <th><label>End Time</label></th>
+                    { sname: "r", bVisible: true }, //  <th><label>Incetive Applicable</label></th>
+                    { sname: "s", bVisible: true, "sClass": "right" }, //  <th><label>Incetive Amount</label></th>
+                    { sname: "t", bVisible: true }, //  <th><label>Remarks</label></th>
+            ]
+        });
+
+
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: false }, // <th><label>ID</label></th>
+                    // { sname: "b", sWidth: "5%" },   // <th><label>Sr. No.</label></th>
+                     { sname: "c", bVisible: true }, // <th><label>Date</label></th>
+                     { sname: "d", bVisible: false }, // <th><label>Shift ID</label></th>
+                     { sname: "e", bVisible: true }, // <th><label>Shift</label></th>
+                         //{
+                         //    sname: "f", sWidth: "10%",
+                         //    bSortable: false, bVisible: true,
+                         //    mRender: function (data, type, full) {
+
+                         //        var options = '<option value="1">Approval</option><option value="2">Pending</option><option value="2">Calculated</option>';
+                         //        var x = '<select class="form-control" data-index=' + full[1] + ' id="start' + full[1] + '">' +
+                         //                options
+                         //                + '<select/>';
+                         //        return x;
+                         //    }
+
+                         //} ,  // <th><label>Status</label></th>
+                     { sname: "f", bVisible: false }, // <th><label>Status Code</label></th>
+                     { sname: "z", bVisible: true }, // <th><label>Status</label></th>
+                     { sname: "g", bVisible: true }, // <th><label>Plant</label></th>
+            ]
+
+
+        });
+
+        function uniqueArray0(array) {
+            var result = Array.from(new Set(array));
+            return result    
+        }
+// Add shiftss -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        var shift1 = @Html.Raw(JsonConvert.SerializeObject(ViewBag.shiftlist));
+        $(".add").on("click",
+            function(event) {
+
+                var t = $('#ContactGrid').DataTable();
+                t.fnClearTable();
+                var rowCount = t.fnGetData().length - 1;
+                // var sr_no = t.fnGetData().length + 1;
+                var cc = parseInt(arguments[0]) - 1;
+                var shift_id = $("#shift_id").val();
+                var shift_id1 = $("#shift_id1").val();
+                var shift_names = [];
+                var shiftss = '';
+                var selectedshifts = [];
+                var shift_names1 = [];
+                var shiftss1 = '';
+                var selectedshifts1 = [];
+                var plant = $("#plant_id").val();
+                if (plant == "") {
+                    swal("", "Select Plant", "error")
+                    return false;
+                }
+                var pl = @Html.Raw(JsonConvert.SerializeObject(ViewBag.plantlist));
+                var plant_id = pl.filter(a => a.PLANT_ID == plant);
+                var plant_name = plant_id.map(a => a.PLANT_NAME);
+
+                if ($('.fromdate').val() != undefined) {
+
+                    var fromdate = $('.fromdate').val();
+                    var todate = $('.todate').val();
+                    var fromDate_check = new Date(new Date(fromdate).setDate(new Date(fromdate).getDate()));
+                    fromDate_check = convert(fromDate_check);
+
+                    var toDate_check = new Date(new Date(todate).setDate(new Date(todate).getDate()));
+                    toDate_check = convert(toDate_check);
+
+                    var fromdate1 = new Date(new Date(fromdate).setDate(new Date(fromdate).getDate()));
+                    var todate1 = new Date(new Date(todate).setDate(new Date(todate).getDate()));
+                    var fromdate12 = [];
+                    if (fromDate_check == toDate_check) {
+                        var date = convert(fromdate1);
+                        fromdate12.push(date);
+                    }
+                    if (fromdate1 < todate1) {
+                        for (i = 0; fromdate1 < todate1; i++) {
+
+                            fromdate1 = new Date(new Date(fromdate).setDate(new Date(fromdate).getDate() + i));
+                            var date = convert(fromdate1);
+                            fromdate12.push(date);
+                        }
+                    }
+                    if (fromdate1 > todate1) {
+                        swal("", "End Date Should be greater than Start Date!", "error")
+                        return false;
+                    }
+                }
+
+                if ($('.shift_id').val() != undefined || $('.shift_id').val() != null) {
+
+                    if ($('.shift_id :selected').length > 0) {
+
+                        $('.shift_id :selected').each(function(i, selected) {
+                            var shift = @Html.Raw(JsonConvert.SerializeObject(ViewBag.shiftlist));
+                            selectedshifts[i] = $(selected).val();
+                            var shift_id = shift.filter(a => a.shift_id == $(selected).val());
+                            var shift_name = shift_id.map(a => a.shift_code);
+                            shift_names.push(shift_name);
+                        });
+                        shiftss = selectedshifts + "";
+                    }
+                }
+
+
+                if ($('.shift_id1').val() != undefined || $('.shift_id1').val() != null) {
+
+                    if ($('.shift_id1 :selected').length > 0) {
+
+                        $('.shift_id1 :selected').each(function(i, selected) {
+
+                            selectedshifts1[i] = $(selected).val();
+                            var shift_id1 = shift1.filter(a => a.shift_id == $(selected).val());
+                            var shift_name1 = shift_id1.map(a => a.shift_code);
+                            shift_names1.push(shift_name1);
+                        });
+                        shiftss = selectedshifts + "";
+                    }
+                } else {
+                    swal("", "Select Shift", "error")
+                    return false;
+                }
+                var array_date=[];
+                if ($("#srno").val() == undefined) {
+
+                    $.ajax({
+                        url: "@Url.Action("GetIncenticeStatus", "ShiftWiseData")",
+                        method: "POST",
+                        cache: false,
+                        async:false,
+                        data: { entity:'check_status',plant_id:$("#plant_id").val(),from_date :$('.fromdate').val(),to_date :$('.todate').val()},
+                        success: function(data) {
+                            array_date.push(data);                      
+
+                    }
+                });
+
+                    if (shift_names.length == 1) {
+                        var flag = false;
+                        var shift_id1 = shift_id[0];
+                        var shift_name1 = shift_names[0][0];
+                        var shift_id2 = shift_id1[0];
+                        var shift_name2 = shift_names1[0][0];
+                        shift_names_array=uniqueArray0(shift_names_array);
+                        for (i = 0; i < fromdate12.length; i++) {
+                            for (j = 0; j < shift_names_array.length; j++) {
+                                var valofText = $("#shift_id" + " option").filter(function() {
+                                    return this.text == shift_names_array[j];
+                                }).val();
+
+                                if (shift_name1 == shift_names_array[j] && fromdate12[i] == fromDate_check) {
+                                    flag = true;
+                                    var check_data=array_date[0].filter(x=>x.plant_id==$("#plant_id").val() && x.shift_id==valofText && x.date==fromdate12[i]);
+                                    if(check_data==undefined || check_data.length==0)
+                                    {
+                                        t.fnAddData([
+                                       0, fromdate12[i], valofText, shift_names_array[j], 'PNDCOMPT',
+                                       'Pending Computation', plant_name
+                                        ]);
+                                    }
+                                    else
+                                    {                                        
+                                        t.fnAddData([
+                                            0, fromdate12[i], valofText, shift_names_array[j], check_data[0].incentive_status_code,
+                                             check_data[0].incentive_status_name, plant_name
+                                        ]);
+                                    }
+                                   
+                                } else if (shift_name2 == shift_names_array[j] && toDate_check == fromdate12[i]) {
+                                    var check_data=array_date[0].filter(x=>x.plant_id==$("#plant_id").val() && x.shift_id==valofText && x.date==fromdate12[i]);
+                                    if(check_data==undefined || check_data.length==0)
+                                    {
+                                        t.fnAddData([
+                                            0, fromdate12[i], valofText, shift_names_array[j], 'PNDCOMPT',
+                                            'Pending Computation', plant_name
+                                        ]);
+                                    }
+                                    else
+                                    {
+                                        t.fnAddData([
+                                           0, fromdate12[i], valofText, shift_names_array[j], check_data[0].incentive_status_code,
+                                           check_data[0].incentive_status_name, plant_name
+                                        ]);
+                                    }
+                                    flag = false;
+                                } else if (flag == true) {
+                                    var check_data=array_date[0].filter(x=>x.plant_id==$("#plant_id").val() && x.shift_id==valofText && x.date==fromdate12[i]);
+                                    if(check_data==undefined || check_data.length==0)
+                                    {
+                                        t.fnAddData([
+                                            0, fromdate12[i], valofText, shift_names_array[j], 'PNDCOMPT',
+                                            'Pending Computation', plant_name
+                                        ]);
+                                    }
+                                    else
+                                    {
+                                        t.fnAddData([
+                                            0, fromdate12[i], valofText, shift_names_array[j], check_data[0].incentive_status_code,
+                                            check_data[0].incentive_status_name, plant_name
+                                        ]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    rowCount + 1;
+                }
+
+            });
+
+
+        //Create Grid---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+        function savestatus() {
+
+            var t = $('#ContactGrid').DataTable();
+            var status = t.fnGetData(0)[5];
+
+
+            $.ajax({
+                url: '@Url.Action("SaveStatus", "ShiftWiseData")',
+                method: "Post",
+                cache: false,
+
+                data: {  status: status,start_date_shift_id: $("#shift_id").val(), end_date_shift_id: $("#shift_id1").val(),from_date: $("#from_date").val(), to_date: $("#to_date").val(), plant_id: $("#plant_id").val() },
+                success: function (data) {
+                    if(data=="Saved")
+                    {
+                        swal("","Approved !","success");
+                    }
+                },
+
+            });
+
+        }
+        function TableToJson() {
+
+            @*$(".loading").show();
+            var plant_id1 = [];
+            if ($('#plant_id :selected').length > 0) {
+                $('#plant_id :selected').each(function (i, selected) {
+                    plant_id1[i] = $(selected).val();
+                });
+                var plant_id = plant_id1 + "";
+
+
+                $.ajax({
+                    url: '@Url.Action("GetIncentiveReport_Partial", "ShiftWiseData")',
+                    method: "Post",
+                    cache: false,
+                    async : false,
+                    data: {  start_date_shift_id: $("#shift_id").val(), end_date_shift_id: $("#shift_id1").val(),from_date: $("#from_date").val(), to_date: $("#to_date").val(), plant_id: plant_id },
+                    success: function (data) {
+
+
+                        $('#searchresult').empty().append(data);
+
+                        $(".loading").hide();
+
+                    },
+                });
+
+            }*@
+
+
+            if($("#shift_id").val() != null || $("#shift_id1").val()  != null ||$("#from_date").val() != "" || $("#to_date").val() != "" || $("#plant_id").val() != "")
+            {
+                $(".loading").show();
+                $.ajax({
+                    url: '@Url.Action("ComputeIncentive", "ShiftWiseData")',
+                    method: "Post",
+                    cache: false,
+
+                    data: {  start_date_shift_id: $("#shift_id").val(), end_date_shift_id: $("#shift_id1").val(),from_date: $("#from_date").val(), to_date: $("#to_date").val(), plant_id: $("#plant_id").val() },
+                    success: function (data) {
+                        $(".loading").hide();
+
+                        var t = $('#DetailGrid').DataTable();
+                        var i = 0;
+                        t.fnClearTable();
+
+                        $.each(data, function (i, cycle) {
+
+                            var date = cycle.date;
+                            var nowDate = new Date(parseInt(date.substr(6)));
+
+                            t.fnAddData([cycle.operator_id, cycle.user_name, cycle.operator_name,convert(nowDate),cycle.shift_id, cycle.shift_code,cycle.login_time1, cycle.logout_time1, cycle.process_id,cycle.process_description,cycle.machine_id,cycle.machine_code,cycle.machine_name,cycle.item_id,cycle.item_name,parseFloat(cycle.prod_qty1).toFixed(2),parseFloat(cycle.reporting_quantity).toFixed(2),parseFloat(cycle.diff_qty).toFixed(2),parseFloat(cycle.incentive).toFixed(2),parseFloat(cycle.amount).toFixed(2),cycle.incentive_applicability,'','',cycle.remarks]);
+                        });
+
+                        Summary();
+                    },
+
+                });
+
+
+
+
+            }
+            else
+            {
+                swal('', 'Please Select Header Details and Compute!', 'error')
+            }
+
+        }
+
+
+
+
+        $("#btnExport").click(function(e) {
+
+            var table = $('#SummaryGrid').dataTable();
+            e.preventDefault();
+            window.open('data:application/vnd.ms-excel,' +
+            encodeURIComponent(table[0].outerHTML));
+
+        });
+
+
+        $("#btnExportsum").click(function(e) {
+
+            var table = $('#DetailGrid').dataTable();
+            e.preventDefault();
+            window.open('data:application/vnd.ms-excel,' +
+                encodeURIComponent(table[0].outerHTML));
+
+        });
+
+
+
+        //$("a[href='#Summary']").on('show.bs.tab', function(e) {
+
+        function Summary()
+
+           {
+
+            if($("#shift_id").val() != null || $("#shift_id1").val()  != null ||$("#from_date").val() != "" || $("#to_date").val() != "" || $("#plant_id").val() != "")
+            {
+                $(".loading").show();
+            $.ajax({
+                url: '@Url.Action("ComputeIncentiveSummary", "ShiftWiseData")',
+                method: "Post",
+                cache: false,
+
+                data: {  start_date_shift_id: $("#shift_id").val(), end_date_shift_id: $("#shift_id1").val(),from_date: $("#from_date").val(), to_date: $("#to_date").val(), plant_id: $("#plant_id").val() },
+                success: function (data) {
+                    $(".loading").hide();
+
+                    var t = $('#SummaryGrid').DataTable();
+                    var i = 0;
+                    t.fnClearTable();
+
+                    $.each(data, function (i, cycle) {
+
+                        var date = cycle.date;
+                        var nowDate = new Date(parseInt(date.substr(6)));
+
+
+
+                        t.fnAddData([cycle.operator_id, cycle.user_name, cycle.operator_name,convert(nowDate),cycle.shift_id, cycle.shift_code,cycle.login_time1, cycle.logout_time1, cycle.incentive_applicability, parseFloat(cycle.amount).toFixed(2),cycle.remarks]);
+
+
+                    });
+                },
+
+            });
+
+            }
+            else
+            {
+                swal('', 'Please Select Header Details and Compute!', 'error')
+            }
+
+        }
+
+
+
+
+        function convert(str) {
+            var date = new Date(str),
+                mnth = ("0" + (date.getMonth()+1)).slice(-2),
+                day  = ("0" + date.getDate()).slice(-2);
+            return [ date.getFullYear(), mnth, day ].join("-");
+        }
+
+
+        @*$("#plant_id").change(function () {
+            $.ajax({
+                url: "@Url.Action("GetShiftfromPlant", "Generic")",
+                method: "POST",
+                cache: false,
+                data: { id: $(this).val() },
+                success: function (data) {
+                    console.log(data);
+
+
+                    $("#shift_id").empty();
+                    for (var i = 0; i < data.length; i++) {
+                        $("#shift_id").append('<option value="' + data[i].shift_id + '">' + data[i].shift_code + '</option>');
+                        shift_names_array.push(data[i].shift_code);
+
+                    }
+
+
+
+                    $("#shift_id1").empty();
+                    for (var i = 0; i < data.length; i++) {
+                        $("#shift_id1").append('<option value="' + data[i].shift_id + '">' + data[i].shift_code + '</option>');
+                        shift_names_array1.push(data[i].shift_code);
+                    }
+
+
+
+                    $("#shift_id").select2({
+                        placeholder: "Select Shift",
+                        allowClear: true
+                    });
+
+                    $("#shift_id1").select2({
+                        placeholder: "Select Shift",
+                        allowClear: true
+                    });
+
+
+                }
+            })
+        })*@
+
+    </script>
+}
+
+

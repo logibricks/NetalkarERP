@@ -1,0 +1,39 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<accounts_report_vm>("Editing")
+                                             
+                                                  .Datasource(ds => ds.URL(Url.Action("GetAccountsData", "AccountsReport") + "?entity=" + ViewBag.entity + "&tds_code_id=" + ViewBag.tds_code_id + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date).Adaptor(AdaptorType.UrlAdaptor))
+                                                  .AllowPaging()
+                                                  .AllowFiltering()
+                                                  .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                  .ShowColumnChooser()
+                                                  .AllowSorting()
+                                                  .AllowScrolling()
+
+                                                          .ToolbarSettings(toolbar =>
+                                                          {
+                                                              toolbar.ShowToolbar().ToolbarItems(items =>
+                                                              {
+                                                                  items.AddTool(ToolBarItems.Search);
+                                                                  items.AddTool(ToolBarItems.ExcelExport);
+                                                                  items.AddTool(ToolBarItems.PrintGrid);
+                                                              });
+                                                          })
+                                                  .Columns(col =>
+                                                  {
+                                                      col.Field("tds_code").Width("15%").HeaderText("TDS Code").Add();
+                                                      col.Field("tds_code_description").Width("15%").HeaderText("TDS Description").Add();
+                                                      col.Field("ledger_date").Width("15%").HeaderText("Posting Date").Format("{0:dd/MMM/yyyy}").Add();
+                                                      col.Field("document_type_name").Width("15%").HeaderText("Form").Visible(true).Add();
+                                                      col.Field("source_document_no").Width("15%").HeaderText("Doc Number").Visible(true).Add();
+                                                      col.Field("entity_code").Width("15%").HeaderText("Supplier Name").Visible(true).Add();
+                                                      col.Field("pan_no").Width("15%").HeaderText("Supplier PAN").Visible(true).Add();
+                                                      col.Field("org_type_name").Width("15%").HeaderText("Entity Type").Visible(true).Add();
+                                                      col.Field("total").Width("15%").HeaderText("Base Amount").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                                                      col.Field("tds_amount").Width("15%").HeaderText("TDS Amount").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+
+                                                  })
+                                                   .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicka"); })
+                                                                                                        ).Render();}
+@Html.EJ().ScriptManager()
+

@@ -1,0 +1,73 @@
+﻿@model Sciffer.Erp.Domain.Model.REF_NOTIFICATION_TYPE
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+<div class="loading">Loading &#8230;</div>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.NOTIFICATION_ID)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NOTIFICATION_TYPE, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NOTIFICATION_TYPE, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.NOTIFICATION_TYPE, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" id="create" name="create" class="btn btn-success" style="float:right" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+    $("#create").click(function (e) {
+        //TabletoJeson();
+        e.preventDefault();
+        var country = $('#NOTIFICATION_TYPE').val();
+        var id = $('#NOTIFICATION_ID').val();
+        if (country == "")
+        {
+            sweetAlert("", "Notification Type is required!", "error");
+        }
+        else {
+            $.ajax({
+                url: '/Country/CheckDuplicate',
+                type: "GET",
+                dataType: "JSON",
+                asynch: true,
+                data: { st: country, id: id },
+                success: function (output) {
+                    if (output != 0) {
+                        sweetAlert("", country + " is already present in databse!", "error");
+                    }
+                    else {
+                        document.forms[0].submit();
+                    }
+                }
+            });
+        }
+    });
+    </script>
+}
+
+

@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.ViewModel.ref_posting_periods_vm>
+@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<ref_posting_periods_vm>("FlatGrid")
+        .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "PostingPeriod" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+            .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "PostingPeriod" })))       
+        .AllowSorting()
+      .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("posting_periods_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Width(55).Add();
+            col.Field("financial_year").Width("15%").HeaderText("Financial Year").Add();
+            col.Field("financial_year_id").Width("15%").HeaderText("Financial Year ID").Visible(false).Add();
+            col.Field("frequency").Width("15%").HeaderText("Frequency").Add();
+            col.Field("frequency_id").Width("15%").HeaderText("Frequency ID").Visible(false).Add();
+            col.Field("no_of_periods").Width("15%").HeaderText("No. of Periods").Add();
+        })
+        .ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+        })
+    )
+</div>
+
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = "@Url.Action("Edit", "PostingPeriod")?id=" + args.rowData.posting_periods_id;
+        }
+        if(args.requestType=="add")
+        {
+            location.href = "@Url.Action("Create", "PostingPeriod")";
+        }
+    }
+</script>
+
+
+
+
+
+
+

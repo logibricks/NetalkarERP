@@ -1,0 +1,71 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_exchange_rate
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_CURRENCY1.CURRENCY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_CURRENCY1.CURRENCY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_CURRENCY2.CURRENCY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_CURRENCY2.CURRENCY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.unit1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.unit1)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.unit2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.unit2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.from_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.from_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.to_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.to_date)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" /> 
+            @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+        </div>
+    }
+</div>

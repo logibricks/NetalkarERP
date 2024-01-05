@@ -1,0 +1,97 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<fin_payment_receipt_vm>("Searching")
+        .Datasource(ds => ds.URL(Url.Action("GetLang", "Payment")).Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        })).ContextMenuSettings(contextMenu =>
+        {
+            contextMenu.EnableContextMenu();
+            contextMenu.DisableDefaultItems();
+            contextMenu.CustomContextMenuItems(new List<Syncfusion.JavaScript.Models.CustomContexMenuItems>() { new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu", Text = "Print" } });
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "Payment" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+         .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("fin_ledger_payment_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Width(80).Add();
+            col.Field("document_no").Width("15%").HeaderText("Document Number").Visible(true).Add();
+            col.Field("payment_date").Width("15%").HeaderText("Date").Format("{0:dd/MM/yyyy}").Visible(true).Add();
+            col.Field("entity_type_name").Width("15%").HeaderText("Entity Type").Visible(true).Add();
+            col.Field("bank_account").Width("15%").HeaderText("Bank Account/GL").Visible(true).Add();
+            col.Field("amount").Width("15%").HeaderText("Amount").TextAlign(TextAlign.Right).Visible(true).Add();
+            col.Field("currency_name").Width("15%").HeaderText("Currency").Visible(true).Add();
+            col.Field("cash_bank").Width("15%").HeaderText("Cash/Bank").Visible(false).Add();
+            col.Field("payment_type_name").Width("15%").HeaderText("Payment Method").Visible(false);
+            col.Field("remarks").Width("15%").HeaderText("Remarks").Visible(false).Add();
+            col.Field("cancellation_remarks").Width("15%").HeaderText("Cancellation Remarks").Visible(false).Add();
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.ContextClick("contextclick");
+
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = '@Url.Action("Edit", "Payment")?id=' + args.rowData.fin_ledger_payment_id;
+        }
+        if(args.requestType=="add")
+        {
+            location.href = '@Url.Action("Create", "Payment")';
+        }
+    }
+
+    $(document).ready(function () {
+        var num = '@Html.ViewBag.num';
+        if (num != '') {
+            if (num != undefined) {
+                sweetAlert("", num, "success");
+            }
+        }
+    });
+    function contextclick(args) {
+        if (args.text == "Print") {
+            if (this.getSelectedRecords()[0].entity_type_name == 'Vendor')
+            {
+                var url = '@Url.Action("Pdf", "Payment")?id=' + this.getSelectedRecords()[0].fin_ledger_payment_id;
+                window.open(url);
+            }
+        }
+
+    };
+</script>
+

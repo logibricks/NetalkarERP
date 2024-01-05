@@ -1,0 +1,251 @@
+﻿
+
+@using Sciffer.Erp.Domain.ViewModel
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.mickey').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            maxHeight: '200',
+            enableCaseInsensitiveFiltering: true,
+            allowClear: true,
+            maximumResultsForSearch: 1,
+            numberDisplayed: 0,
+        });
+    });
+</script>
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel panel">
+            <div class="x_title">
+                <h2 style="font-size:18px">
+                    Purchase Invoice Summary Report
+                </h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="form-horizontal">
+                <div class="x_content">
+                    <div class=row>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">From Date</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <input type="date" id="fromDate" class="form-control radius" required="required">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">To Date</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <input type="date" id="toDate" class="form-control radius" required="required">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                                <label></label>
+                            </div>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <button class="searchbutton searchButton" id="search"> &nbsp; Run Report </button>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class=row>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">Vendor Category</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                @Html.DropDownList("vendor_category", (System.Web.Mvc.SelectList)ViewBag.vendor_category_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">Priority</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                @Html.DropDownList("priority", (System.Web.Mvc.SelectList)ViewBag.priority_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            @Html.Label("Currency", htmlAttributes: new { @class = "control-label col-md-5 col-sm-5 col-xs-12" })
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                @Html.DropDownList("currency", (System.Web.Mvc.SelectList)ViewBag.currency_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class=row>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">Plant</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                @Html.DropDownList("plant", (System.Web.Mvc.SelectList)ViewBag.plant_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">Business Unit</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                @Html.DropDownList("business_unit", (System.Web.Mvc.SelectList)ViewBag.business_list, htmlAttributes: new { @class = "form-control mickey ", multiple = "multiple" })
+
+                            </div>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel panel">
+            <div class="x_title">
+                <h2 style="font-size:18px"></h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div id="searchresult">
+                    @Html.Partial("Partial_PurchaseInvoiceSummary", (object)ViewBag)
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+<script type="text/javascript">
+    $("#search").click(function () {
+        AdvanceSearch();
+    });
+    document.getElementById('fromDate').valueAsDate = new Date();
+    document.getElementById('toDate').valueAsDate = new Date();
+    function AdvanceSearch() {
+        var fromDate = $("#fromDate").val();
+        var toDate = $("#toDate").val();
+        var customer_category = $("#customer_category").val();
+        var sales_rm = $("#sales_rm").val();
+        var territory = $("#territory").val();
+        var priority = $("#priority").val();
+        var control_account = $("#control_account").val();
+        var currency = $("#currency").val();
+        var plant = $("#plant").val();
+        var business_unit = $("#business_unit").val();
+        if ($('#customer_category :selected').length > 0) {
+            var selectedCustomeCategory = [];
+            $('#customer_category :selected').each(function (i, selected) {
+                selectedCustomeCategory[i] = $(selected).val();
+            });
+            var cus_category = selectedCustomeCategory + "";
+        }
+
+        if ($('#sales_rm :selected').length > 0) {
+            var selectedSalesRM = [];
+            $('#sales_rm :selected').each(function (i, selected) {
+                selectedSalesRM[i] = $(selected).val();
+            });
+            var SalesRM = selectedSalesRM + "";
+        }
+
+        if ($('#territory :selected').length > 0) {
+            var selectedTerritory = [];
+            $('#territory :selected').each(function (i, selected) {
+                selectedTerritory[i] = $(selected).val();
+            });
+            var territories = selectedTerritory + "";
+        }
+
+        if ($('#priority :selected').length > 0) {
+            var selectedPriority = [];
+            $('#priority :selected').each(function (i, selected) {
+                selectedPriority[i] = $(selected).val();
+            });
+            var Priorities = selectedPriority + "";
+        }
+
+        if ($('#control_account :selected').length > 0) {
+            var selectedControlAccount = [];
+            $('#control_account :selected').each(function (i, selected) {
+                selectedControlAccount[i] = $(selected).val();
+            });
+            var ControlAccount = selectedControlAccount + "";
+        }
+
+        if ($('#currency :selected').length > 0) {
+            var selectedCurrency = [];
+            $('#currency :selected').each(function (i, selected) {
+                selectedCurrency[i] = $(selected).val();
+            });
+            var Currencies = selectedCurrency + "";
+        }
+        if ($('#plant :selected').length > 0) {
+            var selectedPlant = [];
+            $('#plant :selected').each(function (i, selected) {
+                selectedPlant[i] = $(selected).val();
+            });
+            var Plants = selectedPlant + "";
+        }
+        if ($('#business_unit :selected').length > 0) {
+            var selectedBusinessUnit = [];
+            $('#business_unit :selected').each(function (i, selected) {
+                selectedBusinessUnit[i] = $(selected).val();
+            });
+            var BusinessUnits = selectedBusinessUnit + "";
+        }
+        if ($('#vendor_category :selected').length > 0) {
+            var selectedVendorCategory = [];
+            $('#vendor_category :selected').each(function (i, selected) {
+                selectedVendorCategory[i] = $(selected).val();
+            });
+            var VendorCategory = selectedVendorCategory + "";
+        }
+        if ($('#vendor_code :selected').length > 0) {
+            var selectedVendorCode = [];
+            $('#vendor_code :selected').each(function (i, selected) {
+                selectedVendorCode[i] = $(selected).val();
+            });
+            var VendorCode = selectedVendorCode + "";
+        }
+        if ($('#item_id :selected').length > 0) {
+            var selectedItem = [];
+            $('#item_id :selected').each(function (i, selected) {
+                selectedItem[i] = $(selected).val();
+            });
+            var Item = selectedItem + "";
+        }
+
+        $.ajax({
+            url: '/Report/GetPurchaseInvoiceSummaryReport',
+            method: "Post",
+            cache: false,
+            data: { vendor_category: VendorCategory, priority_id: Priorities, currency_id: Currencies, business_unit_id: BusinessUnits, start_date: fromDate, end_date: toDate, plant: Plants },
+            success: function (data) {
+                $(".loading").hide();
+                $('#searchresult').empty().append(data);
+                //console.log(data);
+            },
+            error: function (http) {
+                console.log(XMLHttpRequest);
+            }
+        });
+    }
+</script>
+<div class="modal"><!-- Place at bottom of page --></div>

@@ -1,0 +1,493 @@
+﻿
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+<style>
+    .item_label {
+        font-size: 14px !important;
+    }
+</style>
+
+
+<div class="form-horizontal" style="margin-top:10px;">
+    <div class="form-group">
+        <div class="row">
+            <div class="form-horizontal">
+                <div class="x_content">
+                    <div class=row>
+                        <div class="col-md-6 col-lg-6 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">On Date</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <input type="date" id="fromDate" class="form-control radius" required="required">
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">Item </label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.item_list, "Select Item", htmlAttributes: new { @class = "form-control ", @required = true })
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <br />
+
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                                    <label> Process</label>
+                                </div>
+                                <div class="col-md-7 col-sm-7 col-xs-12">
+                                    @Html.DropDownList("process_id", (System.Web.Mvc.SelectList)ViewBag.process_list, "Select Process", new { @class = "form-control ", @required = true })
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                                    <label>Machine</label>
+                                </div>
+                                <div class="col-md-7 col-sm-7 col-xs-12">
+                                    @Html.DropDownList("machine_id", Enumerable.Empty<SelectListItem>(), "Select Process First", new { @class = "form-control ", @required = true, @disabled = true })
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                                    <label> Start time</label>
+                                </div>
+                                <div class="col-md-7 col-sm-7 col-xs-12">
+                                    <input type="time" id="start_time" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                                    <label>End Time</label>
+                                </div>
+                                <div class="col-md-7 col-sm-7 col-xs-12 ">
+                                    <input type="time" id="end_time" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                                    <label> Is Operation Parameter</label>
+                                </div>
+                                <div class="col-md-7 col-sm-7 col-xs-12">
+                                    <input type="checkbox" id="IS_OP_QC_PARAMETER">
+                                    <input type="hidden" id="is_op_qc_parameter" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                                    <label> Operator Parameter</label>
+                                </div>
+                                <div class="col-md-7 col-sm-7 col-xs-12">
+                                    @Html.DropDownList("mfg_op_oc_id", Enumerable.Empty<SelectListItem>(), "Select Machine First", new { @class = "form-control ", @required = true, @disabled = true })
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                                    <label>Quality Parameter</label>
+                                </div>
+                                <div class="col-md-7 col-sm-7 col-xs-12">
+                                    @Html.DropDownList("mfg_op_qc_id", Enumerable.Empty<SelectListItem>(), "Select Machine First", new { @class = "form-control ", @required = true, @disabled = true })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <div class=row>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+
+            </div>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+            </div>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+
+                <div class="col-md-7 col-lg-7 col-xs-12 pull-right">
+                    <button class="searchbutton searchButton" id="search"> &nbsp; Run Report </button>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-12 col-sm-12 col-md-12">
+
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2><b>SPC Chart</b></h2>
+                        <ul class="nav navbar-right panel_toolbox">
+                            <li>
+                                <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>
+                                        <a href="#">Settings 1</a>
+                                    </li>
+                                    <li>
+                                        <a href="#">Settings 2</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a class="close-link"><i class="fa fa-close"></i></a>
+                            </li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content" style="display:inline-block;max-height:290px;">
+                        <div id="graph_line" style="width:100%; max-height:300px;min-height:290px;"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="row" style="margin-top:10px">
+            <div class="col-lg-6 col-sm-6">
+
+                <div class="table-responsive">
+                    <table class="table table-responsive table-bordered table-striped " id="SPCGridReport"></table>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-responsive table-bordered table-striped " id="SPCGridReportCalculation"></table>
+                </div>
+
+            </div>
+
+        </div>
+
+        @*<div class="row">
+
+            <table border="1">
+                <tr></tr>
+            </table>
+
+        </div>*@
+
+
+
+
+
+
+        <div class="row">
+
+        </div>
+
+        <br />
+    </div>
+    </div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+    <script src="~/Scripts/raphael-min.js"></script>
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script src="~/Scripts/morris.js"></script>
+    <link href="~/Content/select2.min.css" rel="stylesheet" />
+
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $("#process_id").select2({
+            placeholder: "Select Process",
+            allowClear: true
+        });
+        $("#item_id").select2({
+            placeholder: "Select Item",
+            allowClear: true
+        });
+
+        $("#IS_OP_QC_PARAMETER").checkboxpicker();
+
+
+        $('#SPCGridReport').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            "columns": [
+                { "data": "row_id", bVisible: true, "title": "Sr.No" },
+                { "data": "tag_no", bVisible: true, "title": "Tag Number" },
+                { "data": "parameter_value", bVisible: true, "title": "Parameter Value" },
+                { "data": "employee_name", bVisible: true, "title": "Operator Name" },
+                { "data": "task_time1", bVisible: true, "title": "Task Time" },
+            ],
+
+        });
+
+        $('#SPCGridReportCalculation').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            "columns": [
+                { "data": "text", bVisible: true, "title": "" },
+                { "data": "value", bVisible: true, "title": "Value" },
+                //{ "data": "avg", bVisible: true, "title": "Average" },
+                //{ "data": "std_start_range", bVisible: true, "title": "Start Range" },
+                //{ "data": "std_end_range", bVisible: true, "title": "End Range" },
+                //{ "data": "range", bVisible: true, "title": "Range" },
+                //{ "data": "tolerance", bVisible: true, "title": "Tolerance" },
+                //{ "data": "sigma", bVisible: true, "title": "Sigma" },
+                //{ "data": "cp", bVisible: true, "title": "Cp" },
+                //{ "data": "cpk", bVisible: true, "title": "Cpk" },
+            ],
+
+        });
+
+
+
+    })
+
+
+
+    $(document).on('change', '#process_id', function () {
+        var process_id = $("#process_id").val();
+        if (process_id != "") {
+            $.ajax({
+                url: '@Url.Action("GetMachineListByProcess", "SPC")',
+                method: "POST",
+                cache: false,
+                data: { process_id: process_id },
+                success: function (data) {
+
+                    $("#machine_id").empty();
+                    $("#machine_id").append('<option value="">--Select--</option>');
+                    for (var i = 0; i < data.length; i++) {
+                        $("#machine_id").append('<option value="' + data[i].Value + '">' + data[i].Text + '</option>');
+                    }
+
+                    $("#machine_id").prop("disabled", false);
+                    $("#machine_id").select2({
+                        placeholder: "Select Machine",
+                        allowClear: true
+                    });
+                }
+            })
+        }
+    });
+
+    $(document).on('change', '#machine_id', function () {
+
+        var item_id = $("#item_id").val();
+        var machine_id = $("#machine_id").val();
+        if (machine_id != "") {
+            $.ajax({
+                url: '@Url.Action("Get_Operator_Name_List", "SPC")',
+                method: "POST",
+                cache: false,
+                data: { item_id: item_id, machine_id: machine_id },
+                success: function (data) {
+
+                    $("#mfg_op_oc_id").empty();
+                    $("#mfg_op_oc_id").append('<option value="">--Select--</option>');
+                    for (var i = 0; i < data.length; i++) {
+                        $("#mfg_op_oc_id").append('<option value="' + data[i].Value + '">' + data[i].Text + '</option>');
+                    }
+
+                    $("#mfg_op_oc_id").prop("disabled", false);
+                    $("#mfg_op_oc_id").select2({
+                        placeholder: "Select Parameter",
+                        allowClear: true
+                    });
+                    $("#is_op_qc_parameter").checked == true;
+                }
+            })
+
+            $.ajax({
+                url: '@Url.Action("Get_QCOperator_Name_List", "SPC")',
+                method: "POST",
+                cache: false,
+                data: { item_id: item_id, machine_id: machine_id },
+                success: function (data) {
+
+                    $("#mfg_op_qc_id").empty();
+                    $("#mfg_op_qc_id").append('<option value="">--Select--</option>');
+                    for (var i = 0; i < data.length; i++) {
+                        $("#mfg_op_qc_id").append('<option value="' + data[i].Value + '">' + data[i].Text + '</option>');
+                    }
+
+                    $("#mfg_op_qc_id").prop("disabled", false);
+                    $("#mfg_op_qc_id").select2({
+                        placeholder: "Select Parameter",
+                        allowClear: true
+                    });
+                }
+            })
+        }
+    });
+
+        $("#IS_OP_QC_PARAMETER").change(function () {
+            if ($("#IS_OP_QC_PARAMETER").prop('checked') == true) {
+                $("#mfg_op_oc_id").prop("disabled", false);
+                $("#mfg_op_qc_id").prop("disabled", true);
+                $("#is_op_qc_parameter").val(1);
+
+            }
+            else {
+                $("#mfg_op_oc_id").prop("disabled", true);
+                $("#mfg_op_qc_id").prop("disabled", false);
+                $("#is_op_qc_parameter").val(0);
+            }
+        });
+
+    var d1 = [];
+    $(document).on('click', '#search', function () {
+        
+        var fromDate = $("#fromDate").val();
+        var item_id = $("#item_id").val();
+        var process_id = $("#process_id").val();
+        var machine_id = $("#machine_id").val();
+        var start_time = $("#start_time").val();
+        var end_time = $("#end_time").val();
+        var mfg_op_oc_id = $("#mfg_op_oc_id").val();
+        var mfg_op_qc_id = $("#mfg_op_qc_id").val();
+
+        var is_operator_parameter = $("#is_op_qc_parameter").val();
+
+        var parameter_id = 0;
+        if (is_operator_parameter == 1) {
+            parameter_id = $("#mfg_op_oc_id").val();
+        } else {
+            parameter_id = $("#mfg_op_qc_id").val();
+        }
+        $('#graph_line').empty();
+
+        if (item_id == null || item_id == 0) {
+            swal("", "please Select Item", "error")
+        }
+        else if (process_id == null || process_id == 0) {
+            swal("", "please Select Process", "error")
+        }
+        else if (machine_id == null || machine_id == 0) {
+            swal("", "please Select Machine", "error")
+        }
+        else if (start_time == null || start_time == 0) {
+            swal("", "please Enter Start Time", "error")
+        }
+        else if (end_time == null || end_time == 0) {
+            swal("", "please Enter End Time", "error")
+        }
+        else if ($("#IS_OP_QC_PARAMETER").checked == true) {
+            if (mfg_op_oc_id == null || mfg_op_oc_id == 0) {
+                swal("", "please select Operation Parameter", "error");
+            }
+            else {
+                swal("", "please select Quality Parameter", "error");
+            }
+        }
+        else {
+            $.ajax({
+                url: '@Url.Action("GetSPCChartReport", "SPC")',
+                method: "POST",
+                //cache: false,
+                //async: false,
+                type: "GET",
+                dataType: "JSON",
+                async: false,
+                data: { fromDate: fromDate, item_id: item_id, machine_id: machine_id, start_time: start_time, end_time: end_time, is_operator_parameter: 1, parameter_id: parameter_id },
+                success: function (data) {
+
+                    var t2 = $('#SPCGridReport').DataTable();
+                    t2.fnClearTable();
+                    t2.fnAddData(data);
+
+                    console.log(data);
+                    $.each(data, function (i, x) {
+
+                        let parameter_value = parseFloat(x.parameter_value);
+                        if (isNaN(parameter_value))
+                            parameter_value = 0;
+
+                        d1.push({
+                            task_time: x.task_time1,
+                            parameter_value: parameter_value,
+                        });
+                    });
+
+
+                    new Morris.Line({
+                        element: 'graph_line',
+                        xkey: ['task_time'],
+                        ykeys: ['parameter_value'],
+                        labels: ['Value'],
+                        hideHover: 'auto',
+                        parseTime: false,
+                        lineColors: ['#26B99A', '#34495E', '#ACADAC', '#3498DB'],
+                        data: d1,
+                    });
+                }
+            });
+
+            // calculation ajax
+            $.ajax({
+                url: '@Url.Action("GetSPCChartReportCalculation", "SPC")',
+                method: "POST",
+                //cache: false,
+                //async: false,
+                type: "GET",
+                dataType: "JSON",
+                data: { fromDate: fromDate, item_id: item_id, machine_id: machine_id, start_time: start_time, end_time: end_time, is_operator_parameter: 1, parameter_id: parameter_id },
+                success: function (data) {
+                    console.log(data.is_parametervalue_string)
+                    if (data.is_parametervalue_string == 'true') {
+                        swal("", "", "error");
+                    }
+                    else {
+                        var t3 = $('#SPCGridReportCalculation').DataTable();
+                        t3.fnClearTable();
+                        t3.fnAddData(data);
+                    }
+                }
+            })
+        }
+
+
+    })
+
+
+    </script>
+}

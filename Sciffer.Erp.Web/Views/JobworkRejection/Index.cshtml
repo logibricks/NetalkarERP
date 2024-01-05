@@ -1,0 +1,127 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<jobwork_rejection_VM>("Searching")
+        .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "JobworkRejection" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);         
+        }))
+          .ContextMenuSettings(contextMenu =>
+          {
+              contextMenu.EnableContextMenu();
+              contextMenu.DisableDefaultItems();
+              contextMenu.CustomContextMenuItems(new List<Syncfusion.JavaScript.Models.CustomContexMenuItems>() {
+                  new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu", Text = "Print Report" },
+                  new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu1", Text = "Print Subsidiary Report" },
+              }); // CustomContext menu items
+          })
+
+
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "JobworkRejection" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "JobworkRejection" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "JobworkRejection" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("jobwork_rejection_id").HeaderText("ID").IsPrimaryKey(true).Visible(false).Add();
+            col.Field("doc_number").HeaderText("Document No").Add();
+            col.Field("category_name").HeaderText("Category Name").Add();
+            col.Field("item_name").HeaderText("Item").Add();
+            col.Field("quantity").HeaderText("Quantity").Add();
+            col.Field("posting_date").HeaderText("Posting Date").Format("{0:dd/MM/yyyy}").Add();
+            col.Field("reason").HeaderText("Reason").Add();
+            col.Field("bill_to_party_name").HeaderText("Bill to party").Visible(false).Add();
+            col.Field("ship_to_party_name").HeaderText("Ship to party").Visible(false).Add();
+            col.Field("place_of_supply_name").HeaderText("Place of supply").Visible(false).Add();
+            col.Field("place_of_delivery_name").HeaderText("Place of delivery").Visible(false).Add();
+            col.Field("plant_name").HeaderText("Plant").Add();
+            col.Field("territory_id_name").HeaderText("Territory").Visible(false).Add();
+            col.Field("sales_rm_id_name").HeaderText("Sales RM").Visible(false).Add();
+            col.Field("customer_po_date").HeaderText("Customer PO date").Format("{0:dd/MM/yyyy}").Visible(false).Add();
+            col.Field("customer_po_number").HeaderText("Customer PO number").Visible(false).Add();
+            col.Field("removal_date").HeaderText("Removal date").Format("{0:dd/MM/yyyy}").Visible(false).Add();
+            col.Field("removal_time").HeaderText("Removal time").Visible(false).Add();
+            col.Field("sales_against_order").HeaderText("Sales against order").Visible(false).Add();
+            col.Field("internal_remarks").HeaderText("Internal remarks").Visible(false).Add();
+            col.Field("remarks_on_doc").HeaderText("Remarks on doc").Visible(false).Add();
+            col.Field("mode_of_transport").HeaderText("Mode of transport").Visible(false).Add();
+            col.Field("vehical_no").HeaderText("Vehical no").Visible(false).Add();
+            col.Field("attachment").HeaderText("Attachment").Visible(false).Add();
+            col.Field("created_by").HeaderText("Created by").Visible(false).Add();
+            col.Field("created_ts").HeaderText("Created ts").Format("{0:dd/MM/yyyy}").Add();
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+            eve.ContextClick("contextclick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = '@Url.Action("Edit", "JobworkRejection")?id=' + args.rowData.jobwork_rejection_id;
+        }
+        if (args.requestType == "add") {
+            location.href = '@Url.Action("Create", "JobworkRejection")';
+        }
+    }
+    function contextclick(args) {
+        if (args.text == "Print Report") {
+            var url = "@Url.Action("Pdf", "JobworkRejection")?id=" + this.getSelectedRecords()[0].jobwork_rejection_id;
+            window.open(url);
+        }
+        if (args.text == "Print Subsidiary Report") {
+            var url = '@Url.Action("SubsidiaryPdf", "JobworkRejection")?id=' + this.getSelectedRecords()[0].jobwork_rejection_id;
+            window.open(url);
+        }
+    };
+
+    function rightClick(args) {
+        location.href = '@Url.Action("Details", "JobworkRejection")?id=' + args.data.jobwork_rejection_id;
+    }
+    $(document).ready(function () {
+        var num = '@Html.ViewBag.num';
+        if (num != '') {
+            if (num != undefined) {
+                sweetAlert("", num + " Saved successfully.", "success");
+            }
+        }
+    });
+</script>
+

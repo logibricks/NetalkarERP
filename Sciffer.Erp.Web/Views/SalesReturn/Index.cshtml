@@ -1,0 +1,144 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<sal_si_vm>("Summary")
+        .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "SalesReturn" }))
+         .EnableCaching()
+        .CachingPageSize(2)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+         .ContextMenuSettings(contextMenu =>
+         {
+             contextMenu.EnableContextMenu();
+             contextMenu.DisableDefaultItems();
+             contextMenu.CustomContextMenuItems(new List<Syncfusion.JavaScript.Models.CustomContexMenuItems>()
+             {
+                 new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu", Text = "Print Report" },
+                 new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu1", Text = "Print Subsidiary Report" },
+                 new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu2", Text = "Print Scrap Sales Invoice" }
+             });
+         })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "SalesReturn" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "SalesReturn" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "SalesReturn" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+         .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("sales_return_id").Width("15%").HeaderText("ID").Visible(false).IsPrimaryKey(true).Width(80).Add();
+            col.Field("return_number").Width("15%").HeaderText("Sales Return Number").Add();         
+            col.Field("category_name").Width("15%").HeaderText("Category").Visible(true).Add();
+            col.Field("posting_date").Width("15%").HeaderText("Posting Date").Format("{0:dd/MM/yyyy}").Visible(true).Add();
+            col.Field("buyer_name").Width("15%").HeaderText("Bill to party Name").Visible(true).Add();
+            col.Field("buyer_code").Width("15%").HeaderText("Bill to party Code").Visible(true).Add();
+            col.Field("consignee_name").Width("15%").HeaderText("Ship to Party Name").Visible(true).Add();
+            col.Field("consignee_code").Width("15%").HeaderText("Ship to Party Code").Visible(true).Add();
+            col.Field("net_value").Width("15%").HeaderText("Net Value").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(false).Add();
+            col.Field("net_currency_name").Width("15%").HeaderText("Currency").Visible(false).Add();
+            col.Field("gross_value").Width("15%").HeaderText("Gross Value").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(false).Add();
+            col.Field("gross_currency_name").Width("15%").HeaderText("Currency").Visible(false).Add();
+            col.Field("business_unit_name").Width("15%").HeaderText("Business Unit").Visible(false).Add();
+            col.Field("business_desc").Width("15%").HeaderText("Business Unit Code").Visible(false).Add();
+            col.Field("plant_code").Width("15%").HeaderText("Plant Code").Visible(false).Add();
+            col.Field("plant_name").Width("15%").HeaderText("Plant Description").Visible(false).Add();
+            col.Field("territory_name").Width("15%").HeaderText("Territory").Visible(false).Add();
+            col.Field("sales_rm_name").Width("15%").HeaderText("Sales RM").Visible(false).Add();
+            col.Field("billing_address").Width("15%").HeaderText("Billing Address").Visible(false).Add();
+            col.Field("billing_city").Width("15%").HeaderText("Billing City").Visible(false).Add();
+            col.Field("billing_pincode").Width("15%").HeaderText("Billing Pincode").Visible(false).Add();
+            col.Field("billing_country_name").Width("15%").HeaderText("Billing Country").Visible(false).Add();
+            col.Field("billing_state_name").Width("15%").HeaderText("Billing State").Visible(false).Add();
+            col.Field("billing_email_id").Width("15%").HeaderText("Billing Email").Visible(false).Add();
+            col.Field("shipping_address").Width("15%").HeaderText("Shipping Address").Visible(false).Add();
+            col.Field("shipping_city").Width("15%").HeaderText("Shipping City").Visible(false).Add();
+            col.Field("shipping_pincode").Width("15%").HeaderText("Shipping Pincode").Visible(false).Add();
+            col.Field("shipping_country_name").Width("15%").HeaderText("Shipping Country").Visible(false).Add();
+            col.Field("shipping_state_name").Width("15%").HeaderText("Shipping State").Visible(false).Add();
+            col.Field("payment_cycle_type_name").Width("15%").HeaderText("Payment Cycle Type").Visible(false).Add();
+            col.Field("payment_cycle_name").Width("15%").HeaderText("Payment Cycle").Visible(false).Add();
+            col.Field("payment_terms_name").Width("15%").HeaderText("Payment Terms").Visible(false).Add();
+            col.Field("credit_avail_after_invoice").Width("15%").HeaderText("Credit Available After Invoice").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(false).Add();
+            col.Field("tds_code_name").Width("15%").HeaderText("TDS Code").Visible(false).Add();
+            col.Field("gst_tds_code_name").Width("15%").HeaderText("GST TDS").Visible(false).Add();
+            col.Field("available_credit_limit").Width("15%").HeaderText("Available Credit Limit").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(false).Add();
+            col.Field("internal_remarks").Width("15%").HeaderText("Internal Remarks").Visible(false).Add();
+            col.Field("remarks_on_document").Width("15%").HeaderText("Remarks on Document").Visible(false).Add();
+            col.Field("round_off").Width("15%").HeaderText("Round Off").Visible(false).Add();
+            col.Field("attachment").Width("15%").HeaderText("Attachment").Width(150).Visible(false).Template("<a id='files' target='_blank' href='/Generic/Result?id={{:sales_return_id}}&controllername=SalesReturn'>File</a>").Add();
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+            eve.ContextClick("contextclick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = '@Url.Action("Edit", "SalesReturn")?id=' + args.rowData.sales_return_id;
+        }
+        if(args.requestType=="add")
+        {
+            location.href = '@Url.Action("Create", "SalesReturn")'
+        }
+        if (args.requestType == "delete") {
+            location.href = '@Url.Action("Delete", "SalesReturn")?id=' + args.rowData.sales_return_id;
+        }
+    }
+    function contextclick(args) {
+        if (args.text == "Print Report") {
+            var url = '@Url.Action("Pdf", "SalesReturn")?id=' + this.getSelectedRecords()[0].sales_return_id;
+            window.open(url);
+        }
+        if (args.text == "Print Subsidiary Report") {
+            var url = '@Url.Action("SunsidiaryPdf", "SalesReturn")?id=' + this.getSelectedRecords()[0].sales_return_id;
+            window.open(url);
+        }
+        if (args.text == "Print Scrap Sales Invoice") {
+            var url = '@Url.Action("ScrapSalesInvoice", "SalesReturn")?id=' + this.getSelectedRecords()[0].sales_return_id;
+            window.open(url);
+        }
+    };
+   $(document).ready(function () {
+        var doc_no = '@ViewBag.doc';
+        if (doc_no != '') {
+            if (doc_no != 0) {
+                sweetAlert("", doc_no +"success");
+            }
+        }
+    });
+</script>
+

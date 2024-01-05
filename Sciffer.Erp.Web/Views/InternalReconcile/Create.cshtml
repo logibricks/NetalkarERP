@@ -1,0 +1,410 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.fin_internal_reconcile_vm
+@{
+    ViewBag.Title = "Create";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal" style="margin-top:10px;">
+        <div id="pidetail" hidden></div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.category_list, new { @class = "form-control category validinput", @required = true, })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.posting_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control postingdocumentdate validinput", @required = true } })
+                            @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.entity_type_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("entity_type_id", (System.Web.Mvc.SelectList)ViewBag.entity_type_list, "---Select---", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.entity_type_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.entity_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("entity_id", Enumerable.Empty<SelectListItem>(), "---Select---", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.entity_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">Detail</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="table-responsive" style="max-height:500px;overflow-y:auto">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="12">Total</th>
+                                        <th style="text-align:right" id="total_amount"></th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg12 col-sm-12">
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <input type="submit" value="Create" class="btn btn-success" id="create" style="float:right" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+<script src="~/Scripts/jquery.js"></script>
+<script src="~/Scripts/datatable.js"></script>
+<script src="~/Scripts/sum.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            document.getElementById('posting_date').valueAsDate = new Date();
+            $("#entity_id").select2({
+                placeholder: "Select Entity",
+                allowClear: true
+            });
+        });
+        var checkedarray = [];
+
+        $(document).on('change', '#entity_id', function () {
+            var entity_type_id = $('#entity_type_id').val();
+            var entity_id = $(this).val();
+            var postingdate = $("#posting_date").val();
+            if (entity_id != '') {
+                var t = $('#ContactGrid').dataTable();
+                t.fnClearTable();
+                $.ajax({
+                    url: '@Url.Action("forInternalReconcileDetail", "InternalReconcile")',
+                    type: "GET",
+                    dataType: "json",
+                    data: { entity_type_id: entity_type_id, entity_id: entity_id, from_date: postingdate},
+                    success: function (reconcile)
+                    {
+                        reconcile = reconcile.sort((a, b) => b.fin_ledger_detail_id - a.fin_ledger_detail_id);
+                        reconcile = reconcile.reverse();
+                        console.log(reconcile);
+                        if (reconcile.length != 0)
+                        {
+                            t.fnAddData(reconcile);
+                            $('#ContactGrid tbody tr').find('.takeToRight').addClass('right');
+                        }
+
+                    }
+                });
+            }
+        });
+
+        $('#ContactGrid').dataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": true,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+
+
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
+
+                // Remove the formatting to get integer data for summation
+                var intVal = function (i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                        i : 0;
+                };
+
+                // Total over all pages
+                total = api
+                    .column(13)
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Total over this page
+                pageTotal = api
+                    .column(13, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Update footer
+                $(api.column(12).footer()).html(
+                    //'$' + pageTotal + ' ( $' + total + ' )'
+                    parseFloat(pageTotal).toFixed(2)
+                );
+            },
+
+
+
+
+
+
+
+            "columns": [
+        { "data": "fin_ledger_detail_id", bVisible: false , sWidth: "4%", "title": "Id" },
+        { "data": "rowIndex", sWidth: "4%", "title": "Sr No." },
+        { "data": "emptyString1", sWidth: "4%", "title": '<input type="checkbox" name="select_all" value="1" id="example-select-all">', 'render': function (data, type, full) { return '<input type="checkbox"  class="check" name="id[]"  id=chk>' } },
+        { "data": "document_type_id", sWidth: "4%", bVisible: false, },
+        { "data": "document_type_name", sWidth: "10%", "title": "Doc Type" },
+        { "data": "source_document_no", sWidth: "10%", "title": "Doc No" },
+        { "data": "ledger_date", sWidth: "10%", "title": "Posting Date" },
+        { "data": "ref1", sWidth: "10%", "title": "Ref1" },
+        { "data": "ref2", sWidth: "10%", "title": "Ref2" },
+        { "data": "ref3", sWidth: "10%", "title": "Ref3" },
+        { "data": "amount_local", sWidth: "10%", "title": "Amount", sClass: "takeToRight" },
+        { "data": "balance_local", sWidth: "10%", "title": "Balance Due", sClass: "takeToRight" },
+        { "data": "rowIndex1", "title": "Amount to reconcile", sWidth: "10%", 'render': function (data, type, full) { return '<input type="number"   id="balance_due' + data + '" class="form-control right balance_due"/>' } },
+        { "data": "emptyString1", sWidth: "10%", bVisible: false },
+
+        ]
+        });
+
+
+        $('#create').click(function (e) {
+            e.preventDefault();
+            if ($('#ContactGrid tbody tr td').hasClass('dataTables_empty')) {
+                sweetAlert("", "Some mandatory fields left blank!", "error");
+                return false;
+            }
+            if (checkedarray.length == 0) {
+                sweetAlert("", "Some mandatory fields left blank!", "error");
+                return false;
+            }
+                var t = $('#ContactGrid').dataTable();
+                var isFalse = true;
+                for (k = 0; k < checkedarray.length; k++) {
+                    var i = checkedarray[k];
+                    var text = t.fnGetData(i, 13);
+                    var txt = String(text);
+                    if (txt == '') {
+                        swal("", "Amount to reconcile cannot be left blank!", "error");
+                        return false;
+                        isFalse = false;
+                    }
+                    if (txt == '0') {
+                        swal("", "Amount to reconcile cannot be zero!", "error");
+                        return false;
+                        isFalse = false;
+                    }
+                    if (Math.abs(parseFloat(txt)) > Math.abs(parseFloat(t.fnGetData(i, 11)))) {
+                        swal("", "Amount to reconcile cannot be greater than Balance Due!", "error");
+                        return false;
+                        isFalse = false;
+                    }
+                }
+                var _total = parseFloat($('#total_amount').html());
+                if (parseFloat($('#total_amount').html()) != 0) {
+                    swal("", "Total Amount cannot be greater or less than zero!", "error");
+                    return false;
+            }
+            
+                $('#pidetail').empty();
+                if (isFalse == true) {
+                    for (k = 0; k < checkedarray.length; k++) {
+                        var i = checkedarray[k];
+                        $("#pidetail").append('<input type="" id="fin_ledger_detail_id' + i + '" name="fin_ledger_detail_id" value=' + t.fnGetData(i, 0) + '>');
+                        $("#pidetail").append('<input type="" id="doc_type_id1' + i + '" name="doc_type_id1" value=' + t.fnGetData(i, 3) + '>');
+                        $("#pidetail").append('<input type="" id="doc_category_id1' + i + '" name="doc_category_id1" value=' + 0 + '>');
+                        $("#pidetail").append('<input type="" id="doc_no1' + i + '" name="doc_no1" value=' + t.fnGetData(i, 5) + '>');
+                        $("#pidetail").append('<input type="" id="doc_posting_date1' + i + '" name="doc_posting_date1" value=' + t.fnGetData(i, 6) + '>');
+                        $("#pidetail").append('<input type="" id="amount1' + i + '" name="amount1" value=' + t.fnGetData(i, 10) + '>');
+                        $("#pidetail").append('<input type="" id="balance_amount1' + i + '" name="balance_amount1" value=' + t.fnGetData(i, 11) + '>');
+                        $("#pidetail").append('<input type="" id="reconcile_amount1' + i + '" name="reconcile_amount1" value=' + t.fnGetData(i, 13) + '>');
+                    }
+                    checkedarray.length = 0;
+                    document.forms[0].submit();
+                }
+            
+            });
+
+
+
+        $('#example-select-all').on('click', function () {
+            $('input[type="checkbox"]').attr('disabled', false);
+            checkedarray.length = 0;
+            var t = $('#ContactGrid').dataTable();
+            var trlen = t.fnGetData().length;
+            if ($(this).is(':checked')) {
+                $('input[type="checkbox"]', '#ContactGrid').prop('checked', true);
+                if (trlen > 0) {
+                    for (var j = 0; j <= trlen - 1; j++) {
+                        checkedarray.push(j);
+                        var balance = t.fnGetData(j, 11);
+                        var _balance_textBox= $('#balance_due' + (j + 1)).val();
+                        if (_balance_textBox == '') {
+                            $('#balance_due' + (j + 1)).val(balance);
+                            t.fnUpdate(balance, j, 13);
+                        }
+                        else {
+                            t.fnUpdate(_balance_textBox, j, 13);
+                        }
+                    }
+                }
+            }
+            else {
+                checkedarray.length = 0;
+                $('input[type="checkbox"]', '#ContactGrid').prop('checked', false);
+                for (var j = 0; j <= trlen - 1; j++) {
+                    t.fnUpdate('', j, 13);
+
+                }
+                $('.balance_due').val('');
+            }
+            $('input[type="checkbox"]').removeAttr('disabled');
+        });
+        var table = $('#ContactGrid').DataTable();
+        var index1 = '';
+
+        $('#ContactGrid tbody').on('click', 'tr', function () {
+            console.log(table.row(this).data());
+            index1=table.row(this).index()
+
+        });
+        $(document).on('click', '.check1', function () {
+
+            var index = index1;//parseInt($(this).parent('td').parent('tr').find('td:first-child').html())-1;
+            var index_new = index1;//parseInt($(this).parent('td').parent('tr').find('td:first-child').html())-1;
+            var index_new1 = parseInt($(this).parent('td').parent('tr').find('td:first-child').html()) - 1;
+            var t = $('#ContactGrid').dataTable();
+            var balance_due = $('#balance_due' + (parseInt(index) + 1)).val();
+            var balance = t.fnGetData(index, 11);
+            if ($(this).is(':checked')) {
+                checkedarray.push(index_new);
+                if (balance_due == '') {
+                    var balance_due = $('#balance_due' + (parseInt(index_new1) + 1)).val(balance);
+                    t.fnUpdate(balance, index_new1, 13);
+                }
+                else
+                {
+                    t.fnUpdate(balance_due, index_new1, 13);
+                }
+            }
+            else {
+                var checkedIndex = checkedarray.indexOf(parseInt(index_new1));
+                checkedarray.splice(checkedIndex, 1);
+                var balance_due = $('#balance_due' + (parseInt(index_new1) + 1)).val('');
+                t.fnUpdate('', index_new1, 13);
+
+            }
+
+        });
+
+        $(document).on('click', '.check', function () {
+
+            var index_new = index1;
+            var index = parseInt($(this).parent('td').parent('tr').find('td:first-child').html()) - 1;
+            var t = $('#ContactGrid').dataTable();
+            var balance_due = $('#balance_due' + (parseInt(index) + 1)).val();
+            var balance = t.fnGetData(index, 11);
+            if ($(this).is(':checked')) {
+                checkedarray.push(index);
+                if (balance_due == '') {
+                    var balance_due = $('#balance_due' + (parseInt(index) + 1)).val(balance);
+                    t.fnUpdate(balance, index, 13);
+                }
+                else {
+                    t.fnUpdate(balance_due, index, 13);
+                }
+            }
+            else {
+                var checkedIndex = checkedarray.indexOf(parseInt(index));
+                checkedarray.splice(checkedIndex, 1);
+                var balance_due = $('#balance_due' + (parseInt(index) + 1)).val('');
+                t.fnUpdate('', index, 13);
+
+            }
+
+        });
+
+
+        $(document).on('change', '.balance_due', function () {
+            var index = parseInt($(this).parent('td').parent('tr').find('td:first-child').html()) - 1;
+            var _balance_due = $(this).val();
+            if (_balance_due != '') {
+                _balance_due = parseFloat(_balance_due).toFixed(2);
+            }
+            var t = $('#ContactGrid').dataTable();
+            if ($(this).parent('td').parent('tr').find('.check').is(':checked')) {
+                t.fnUpdate(_balance_due, index, 13);
+            }
+        });
+
+
+
+
+        $('#entity_type_id').change(function () {
+            var txt = $('#entity_type_id option:selected').text();
+            FillDescription(txt);
+        });
+          function FillDescription(txt) {
+            var t = $('#ContactGrid').dataTable();
+            t.fnClearTable();
+            if (txt != '') {
+                $('#entity_id').val("").trigger('change');
+                $('#entity_id').html("");
+                $("#entity_id").append($('<option></option>').val("").html(""));
+                $.ajax({
+                url: "@Url.Action("GetEntityType", "Generic")?name="+ txt,
+                method: 'get',
+                async: false,
+                success: function (data) {
+                    $.each(data, function (index, dt) {
+                        $('#entity_id').append('<option value=' + dt.id + '>' + dt.code + '/' + dt.name + '</option>');
+                    });
+                }
+            });
+        }
+        else {
+                $('#entity_id').val("").trigger('change');
+        }
+        }
+    </script>
+
+}
+<style>
+    #ContactGrid tr th {
+        font-weight: normal !important;
+    }
+</style>

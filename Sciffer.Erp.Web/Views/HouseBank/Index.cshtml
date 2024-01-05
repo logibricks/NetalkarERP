@@ -1,0 +1,103 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<br /><br /><br />
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<ref_bank_accountvm>("Searching")
+          .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "HouseBank" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+         .PageSettings(p => { p.PageSize(10); })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic",new {ctrlname= "HouseBank" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic",new { ctrlname = "HouseBank" })).ExportToWordAction(Url.Action("ExportToWord", "Generic",new { ctrlname = "HouseBank" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("bank_account_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Add();
+            col.Field("bank_name").Width("15%").HeaderText("Bank").Add();
+            col.Field("bank_code").Width("15%").HeaderText("Bank Code").Visible(false).Add();
+            col.Field("bank_account_code").Width("15%").HeaderText("Bank Account Code").Add();
+            col.Field("bank_account_type").Width("15%").HeaderText("Account Type").Add();
+            col.Field("bank_account_number").Width("15%").HeaderText("Account Number").Add();
+            col.Field("bank_swift_code").Width("15%").HeaderText("Swift Code").Visible(false).Add();
+            col.Field("bank_ifsc_code").Width("15%").HeaderText("IFSC Code").Visible(false).Add();
+            col.Field("bank_city").Width("15%").HeaderText("City").Visible(false).Add();
+            col.Field("country_name").Width("15%").HeaderText("Country").Visible(false).Add();
+            col.Field("bank_state").Width("15%").HeaderText("State").Visible(false).Add();
+            col.Field("bank_branch").Width("15%").HeaderText("Branch").Add();
+            col.Field("bank_currency").Width("15%").HeaderText("Currency").Visible(false).Add();
+            col.Field("gl_account").Width("15%").HeaderText("GL Account").Add();
+            col.Field("is_blocked").Width("15%").HeaderText("Is Blocked").Visible(false).Add();
+        }).ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+<script>
+    var flag = true;
+    function complete(args) {
+
+        if (args.requestType == "beginedit")
+        {
+            location.href = "@Url.Action("Edit", "HouseBank")?id="+ args.rowData.bank_account_id;
+        }
+        if (args.requestType == "add") {
+            location.href = "@Url.Action("Create", "HouseBank")";
+        }
+    }
+    function EndProcess() {
+        var gridObj = $("#Searching").ejGrid("instance");
+        //console.log(gridObj);
+        gridObj.refreshContent();
+    }
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

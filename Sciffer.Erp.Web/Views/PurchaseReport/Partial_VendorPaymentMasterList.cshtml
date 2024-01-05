@@ -1,0 +1,44 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<purchase_order_report_vm>("Editing")
+                        .Datasource(ds => ds.URL(Url.Action("Get_Purchase_Order_Report", "PurchaseReport") + "?entity=" + ViewBag.entity + "&vendor_category_id=" + ViewBag.vendor_category_id + "&vendor_priority_id=" + ViewBag.vendor_priority_id).Adaptor(AdaptorType.UrlAdaptor))
+                            .AllowPaging().PageSettings(a => a.PageSize(20))
+                            .AllowFiltering()
+                                .FilterSettings(X => X.FilterType(FilterType.Excel))
+                            .ShowColumnChooser()
+                            .AllowSorting()
+                            .AllowScrolling()
+                            .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "PurchaseReport", new { ctrlname = "VendorPaymentMasterList" })))
+                                                .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                        .ToolbarSettings(toolbar =>
+                        {
+                            toolbar.ShowToolbar().ToolbarItems(items =>
+                            {
+                                items.AddTool(ToolBarItems.Search);
+                                items.AddTool(ToolBarItems.ExcelExport);
+                                items.AddTool(ToolBarItems.PrintGrid);
+                            });
+                        })
+                .Columns(col =>
+                {
+                    col.Field("vendor_code").Width("10%").HeaderText("Vendor Code").Add();
+                    col.Field("vendor_name").Width("10%").HeaderText("Vendor Name").Add();
+                    col.Field("payment_terms_code").Width("10%").HeaderText("Payment Terms Code").Add();
+                    col.Field("payment_terms_description").Width("10%").HeaderText("Payment Terms Description").Visible(true).Add();
+                    col.Field("due_date_based").Width("10%").HeaderText("Due Date Based On").TextAlign(TextAlign.Right).Visible(true).Add();
+                    col.Field("payment_cycle_type_name").Width("10%").HeaderText("Payment Cycle Type").Visible(true).Add();
+                    col.Field("payment_cycle_name").Width("10%").HeaderText("Payment Cycle").TextAlign(TextAlign.Right).Visible(true).Add();
+                    col.Field("bank_code").Width("10%").HeaderText("Bank COde").Visible(true).Add();
+                    col.Field("bank_name").Width("10%").HeaderText("Bank Name").Visible(true).Add();
+                //col.Field("Branch").Width("10%").HeaderText("Branch").Visible(false).Add();
+                //col.Field("Account_Type").Width("10%").HeaderText("Account Type").Visible(false).Add();
+                col.Field("bank_ifsc_code").Width("10%").HeaderText("IFSC COde").Visible(true).Add();
+                    col.Field("bank_account_number").Width("10%").HeaderText("Account Number").Visible(true).Add();
+
+                })
+            .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickp"); })
+                                                            ).Render();}
+@Html.EJ().ScriptManager()
+
+

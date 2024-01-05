@@ -1,0 +1,85 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<report_production_vm>("Editing")
+                .Datasource(ds => ds.URL(Url.Action("Get_report_production", "ProductionReport") + "?entity=" + ViewBag.entity +  "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&item_id=" + ViewBag.item_id + " &machine_id=" + ViewBag.machine_id + "&tag_number=" + ViewBag.tag_number +  "&is_qc_remark=" + ViewBag.is_qc_remark + "&process_id=" + ViewBag.process_id ).Adaptor(AdaptorType.UrlAdaptor))
+                            .AllowPaging().PageSettings(a => a.PageSize(20))
+                    .AllowFiltering()
+                        .FilterSettings(X => X.FilterType(FilterType.Excel))
+                    .ShowColumnChooser()
+                    .AllowSorting()
+                    .AllowScrolling()
+                    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "ProductionReport", new { ctrlname = "QCParamatersStatus" })))
+                    .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                .ToolbarSettings(toolbar =>
+                {
+                    toolbar.ShowToolbar().ToolbarItems(items =>
+                    {
+                        items.AddTool(ToolBarItems.Search);
+                        items.AddTool(ToolBarItems.ExcelExport);
+                        items.AddTool(ToolBarItems.PrintGrid);
+                    });
+                })
+        .Columns(col =>
+        {
+          // col.Field("machine_id").Width("15%").HeaderText("Machine Id").Add();
+          col.Field("tag_no").Width("15%").HeaderText("Tag Number ").Add();
+            col.Field("item_code").Width("15%").HeaderText("Item Code").Add();
+          //col.Field("item_name").Width("15%").HeaderText("Item Description ").Add();
+          col.Field("machine_code").Width("15%").HeaderText("Machine Code").Add();
+            col.Field("machine_desc").Width("15%").HeaderText("Machine Description").Add();
+
+            col.Field("process_code").Width("15%").HeaderText("Operation Code").Add();
+            col.Field("process_description").Width("15%").HeaderText("Operation Description").Add();
+
+            col.Field("parameter_name").Width("15%").HeaderText("Paramater").Add();
+            col.Field("std_range_start").Width("15%").HeaderText("Std Range Start").Add();
+            col.Field("std_range_end").Width("15%").HeaderText("Std Range End").Add();
+
+            col.Field("parameter_value").Width("15%").HeaderText("Actual Result").Add();
+            col.Field("shift_code").Width("15%").HeaderText("Shift").Add();
+            col.Field("user_name").Width("15%").HeaderText("Operator").Add();
+            col.Field("DatePart").Width("15%").HeaderText("Date").Add();
+            col.Field("TimePart").Width("15%").HeaderText("Time").Add();
+
+
+        })
+        .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick"); })
+        ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+<script type="text/javascript">
+    function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1) {
+            if ($('#machine_id :selected').length > 0) {
+                var selectedmachineid = [];
+                $('#machine_id :selected').each(function (i, selected) {
+                    selectedmachineid[i] = $(selected).val();
+                });
+                var machineid = selectedmachineid + "";
+            }
+            if ($('#item_id :selected').length > 0) {
+                var selecteditemid = [];
+                $('#item_id :selected').each(function (i, selected) {
+                    selectedmachineid[i] = $(selected).val();
+                });
+                var itemid = selectedmachineid + "";
+            }
+            if ($('#process_id :selected').length > 0) {
+                var selectedoperationid = [];
+                $('#process_id :selected').each(function (i, selected) {
+                    selectedoperationid[i] = $(selected).val();
+                });
+                var operationid = selectedoperationid + "";
+            }
+            this.model["from_date"] = $("#fromDate").val();
+            this.model["to_date"] = $("#toDate").val();
+            this.model["machine_id"] = $("#machine_id").val();
+            this.model["item_id"] = $("#item_id").val();
+            this.model["tag_number"] = $("#tag_number").val();
+            this.model["process_id"] = $("#process_id").val();
+        }
+
+    }
+</script>
+
+

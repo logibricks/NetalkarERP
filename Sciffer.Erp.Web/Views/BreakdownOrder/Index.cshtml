@@ -1,0 +1,99 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<ref_plan_breakdown_order_VM>("Searching")
+         .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "BreakdownOrder" }))
+        .EnableCaching()
+        .CachingPageSize(2)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            //items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "BreakdownOrder" })))
+        .AllowSorting()
+        .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("plan_breakdown_order_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Add();
+            col.Field("category_name").Width("15%").HeaderText("Category").Add();
+            col.Field("doc_number").Width("15%").HeaderText("Doc Number").Add();
+            col.Field("creation_date").Width("15%").HeaderText("Creation Date").Add();
+            col.Field("maintenance_type").Width("15%").HeaderText("Maintenance Type").Add();
+            col.Field("plant_name").Width("15%").HeaderText("Plant").Add();
+            col.Field("machine_name").Width("15%").HeaderText("Machine").Add();
+            col.Field("actual_start_date").Width("15%").HeaderText("Actual Start Date").Add();
+            col.Field("actual_finish_date").Width("15%").HeaderText("Actual Finish date").Add();
+            col.Field("order_executed_by_name").Width("15%").HeaderText("Order Executed By").Add();
+            col.Field("permit_no").Width("15%").HeaderText("Permit No").Add();
+            col.Field("notification_no").Width("15%").HeaderText("Notification No").Add();
+            col.Field("remarks").Width("15%").HeaderText("Remarks").Add();
+            col.Field("attachment").Width("15%").HeaderText("Attachments").Add();           
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var doc_no = '@ViewBag.num';
+        console.log(doc_no);
+        if (doc_no != '') {
+            if (doc_no != 0) {
+                sweetAlert("", doc_no + " Saved successfully!", "success");
+            }
+        }
+    });
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = "@Url.Action("Edit", "BreakdownOrder")?id=" + args.rowData.plan_breakdown_order_id;
+        }
+        if (args.requestType == "add") {
+            location.href = '@Url.Action("Create", "BreakdownOrder")';
+        }
+    }
+    function rightClick(args) {
+        location.href = "@Url.Action("Details", "BreakdownOrder")?id=" + args.data.plan_breakdown_order_id;
+    }
+    function Click(args) {
+        $('a').css('color','red');
+    }
+
+    
+</script>
+
+
+
+
+
+
+
+

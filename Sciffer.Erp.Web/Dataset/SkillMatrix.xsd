@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="SkillMatrix" targetNamespace="http://tempuri.org/SkillMatrix.xsd" xmlns:mstns="http://tempuri.org/SkillMatrix.xsd" xmlns="http://tempuri.org/SkillMatrix.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="SkillMatrix" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="SkillMatrix" msprop:Generator_UserDSName="SkillMatrix">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="isHistory" msprop:Generator_TableClassName="isHistoryDataTable" msprop:Generator_TableVarName="tableisHistory" msprop:Generator_RowChangedName="isHistoryRowChanged" msprop:Generator_TablePropName="isHistory" msprop:Generator_RowDeletingName="isHistoryRowDeleting" msprop:Generator_RowChangingName="isHistoryRowChanging" msprop:Generator_RowEvHandlerName="isHistoryRowChangeEventHandler" msprop:Generator_RowDeletedName="isHistoryRowDeleted" msprop:Generator_RowClassName="isHistoryRow" msprop:Generator_UserTableName="isHistory" msprop:Generator_RowEvArgName="isHistoryRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="operator_level_mapping_id" msprop:Generator_ColumnVarNameInTable="columnoperator_level_mapping_id" msprop:Generator_ColumnPropNameInRow="operator_level_mapping_id" msprop:Generator_ColumnPropNameInTable="operator_level_mapping_idColumn" msprop:Generator_UserColumnName="operator_level_mapping_id" type="xs:string" minOccurs="0" />
+              <xs:element name="MappingId" msprop:Generator_ColumnVarNameInTable="columnMappingId" msprop:Generator_ColumnPropNameInRow="MappingId" msprop:Generator_ColumnPropNameInTable="MappingIdColumn" msprop:Generator_UserColumnName="MappingId" type="xs:string" minOccurs="0" />
+              <xs:element name="operator_id" msprop:Generator_ColumnVarNameInTable="columnoperator_id" msprop:Generator_ColumnPropNameInRow="operator_id" msprop:Generator_ColumnPropNameInTable="operator_idColumn" msprop:Generator_UserColumnName="operator_id" type="xs:string" minOccurs="0" />
+              <xs:element name="level_id" msprop:Generator_ColumnVarNameInTable="columnlevel_id" msprop:Generator_ColumnPropNameInRow="level_id" msprop:Generator_ColumnPropNameInTable="level_idColumn" msprop:Generator_UserColumnName="level_id" type="xs:string" minOccurs="0" />
+              <xs:element name="level_code" msprop:Generator_ColumnVarNameInTable="columnlevel_code" msprop:Generator_ColumnPropNameInRow="level_code" msprop:Generator_ColumnPropNameInTable="level_codeColumn" msprop:Generator_UserColumnName="level_code" type="xs:string" minOccurs="0" />
+              <xs:element name="machine_id" msprop:Generator_ColumnVarNameInTable="columnmachine_id" msprop:Generator_ColumnPropNameInRow="machine_id" msprop:Generator_ColumnPropNameInTable="machine_idColumn" msprop:Generator_UserColumnName="machine_id" type="xs:string" minOccurs="0" />
+              <xs:element name="machine_name" msprop:Generator_ColumnVarNameInTable="columnmachine_name" msprop:Generator_ColumnPropNameInRow="machine_name" msprop:Generator_ColumnPropNameInTable="machine_nameColumn" msprop:Generator_UserColumnName="machine_name" type="xs:string" minOccurs="0" />
+              <xs:element name="fromDate" msprop:Generator_ColumnVarNameInTable="columnfromDate" msprop:Generator_ColumnPropNameInRow="fromDate" msprop:Generator_ColumnPropNameInTable="fromDateColumn" msprop:Generator_UserColumnName="fromDate" type="xs:string" minOccurs="0" />
+              <xs:element name="toDate" msprop:Generator_ColumnVarNameInTable="columntoDate" msprop:Generator_ColumnPropNameInRow="toDate" msprop:Generator_ColumnPropNameInTable="toDateColumn" msprop:Generator_UserColumnName="toDate" type="xs:string" minOccurs="0" />
+              <xs:element name="is_active1" msprop:Generator_ColumnVarNameInTable="columnis_active1" msprop:Generator_ColumnPropNameInRow="is_active1" msprop:Generator_ColumnPropNameInTable="is_active1Column" msprop:Generator_UserColumnName="is_active1" type="xs:string" minOccurs="0" />
+              <xs:element name="machine_id_list" msprop:Generator_ColumnVarNameInTable="columnmachine_id_list" msprop:Generator_ColumnPropNameInRow="machine_id_list" msprop:Generator_ColumnPropNameInTable="machine_id_listColumn" msprop:Generator_UserColumnName="machine_id_list" type="xs:string" minOccurs="0" />
+              <xs:element name="OperatorName" msprop:Generator_ColumnVarNameInTable="columnOperatorName" msprop:Generator_ColumnPropNameInRow="OperatorName" msprop:Generator_ColumnPropNameInTable="OperatorNameColumn" msprop:Generator_UserColumnName="OperatorName" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="isCurrentHistory" msprop:Generator_TableClassName="isCurrentHistoryDataTable" msprop:Generator_TableVarName="tableisCurrentHistory" msprop:Generator_RowChangedName="isCurrentHistoryRowChanged" msprop:Generator_TablePropName="isCurrentHistory" msprop:Generator_RowDeletingName="isCurrentHistoryRowDeleting" msprop:Generator_RowChangingName="isCurrentHistoryRowChanging" msprop:Generator_RowEvHandlerName="isCurrentHistoryRowChangeEventHandler" msprop:Generator_RowDeletedName="isCurrentHistoryRowDeleted" msprop:Generator_RowClassName="isCurrentHistoryRow" msprop:Generator_UserTableName="isCurrentHistory" msprop:Generator_RowEvArgName="isCurrentHistoryRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="operator_level_mapping_id" msprop:Generator_ColumnVarNameInTable="columnoperator_level_mapping_id" msprop:Generator_ColumnPropNameInRow="operator_level_mapping_id" msprop:Generator_ColumnPropNameInTable="operator_level_mapping_idColumn" msprop:Generator_UserColumnName="operator_level_mapping_id" type="xs:string" minOccurs="0" />
+              <xs:element name="MappingId" msprop:Generator_ColumnVarNameInTable="columnMappingId" msprop:Generator_ColumnPropNameInRow="MappingId" msprop:Generator_ColumnPropNameInTable="MappingIdColumn" msprop:Generator_UserColumnName="MappingId" type="xs:string" minOccurs="0" />
+              <xs:element name="operator_id" msprop:Generator_ColumnVarNameInTable="columnoperator_id" msprop:Generator_ColumnPropNameInRow="operator_id" msprop:Generator_ColumnPropNameInTable="operator_idColumn" msprop:Generator_UserColumnName="operator_id" type="xs:string" minOccurs="0" />
+              <xs:element name="level_id" msprop:Generator_ColumnVarNameInTable="columnlevel_id" msprop:Generator_ColumnPropNameInRow="level_id" msprop:Generator_ColumnPropNameInTable="level_idColumn" msprop:Generator_UserColumnName="level_id" type="xs:string" minOccurs="0" />
+              <xs:element name="level_code" msprop:Generator_ColumnVarNameInTable="columnlevel_code" msprop:Generator_ColumnPropNameInRow="level_code" msprop:Generator_ColumnPropNameInTable="level_codeColumn" msprop:Generator_UserColumnName="level_code" type="xs:string" minOccurs="0" />
+              <xs:element name="machine_id" msprop:Generator_ColumnVarNameInTable="columnmachine_id" msprop:Generator_ColumnPropNameInRow="machine_id" msprop:Generator_ColumnPropNameInTable="machine_idColumn" msprop:Generator_UserColumnName="machine_id" type="xs:string" minOccurs="0" />
+              <xs:element name="machine_name" msprop:Generator_ColumnVarNameInTable="columnmachine_name" msprop:Generator_ColumnPropNameInRow="machine_name" msprop:Generator_ColumnPropNameInTable="machine_nameColumn" msprop:Generator_UserColumnName="machine_name" type="xs:string" minOccurs="0" />
+              <xs:element name="fromDate" msprop:Generator_ColumnVarNameInTable="columnfromDate" msprop:Generator_ColumnPropNameInRow="fromDate" msprop:Generator_ColumnPropNameInTable="fromDateColumn" msprop:Generator_UserColumnName="fromDate" type="xs:string" minOccurs="0" />
+              <xs:element name="toDate" msprop:Generator_ColumnVarNameInTable="columntoDate" msprop:Generator_ColumnPropNameInRow="toDate" msprop:Generator_ColumnPropNameInTable="toDateColumn" msprop:Generator_UserColumnName="toDate" type="xs:string" minOccurs="0" />
+              <xs:element name="is_active1" msprop:Generator_ColumnVarNameInTable="columnis_active1" msprop:Generator_ColumnPropNameInRow="is_active1" msprop:Generator_ColumnPropNameInTable="is_active1Column" msprop:Generator_UserColumnName="is_active1" type="xs:string" minOccurs="0" />
+              <xs:element name="machine_id_list" msprop:Generator_ColumnVarNameInTable="columnmachine_id_list" msprop:Generator_ColumnPropNameInRow="machine_id_list" msprop:Generator_ColumnPropNameInTable="machine_id_listColumn" msprop:Generator_UserColumnName="machine_id_list" type="xs:string" minOccurs="0" />
+              <xs:element name="OperatorName" msprop:Generator_ColumnVarNameInTable="columnOperatorName" msprop:Generator_ColumnPropNameInRow="OperatorName" msprop:Generator_ColumnPropNameInTable="OperatorNameColumn" msprop:Generator_UserColumnName="OperatorName" type="xs:string" minOccurs="0" />
+              <xs:element name="machine_level" msprop:Generator_ColumnVarNameInTable="columnmachine_level" msprop:Generator_ColumnPropNameInRow="machine_level" msprop:Generator_ColumnPropNameInTable="machine_levelColumn" msprop:Generator_UserColumnName="machine_level" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Header" msprop:Generator_TableClassName="HeaderDataTable" msprop:Generator_TableVarName="tableHeader" msprop:Generator_RowChangedName="HeaderRowChanged" msprop:Generator_TablePropName="Header" msprop:Generator_RowDeletingName="HeaderRowDeleting" msprop:Generator_RowChangingName="HeaderRowChanging" msprop:Generator_RowEvHandlerName="HeaderRowChangeEventHandler" msprop:Generator_RowDeletedName="HeaderRowDeleted" msprop:Generator_RowClassName="HeaderRow" msprop:Generator_UserTableName="Header" msprop:Generator_RowEvArgName="HeaderRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="user_id" msprop:Generator_ColumnVarNameInTable="columnuser_id" msprop:Generator_ColumnPropNameInRow="user_id" msprop:Generator_ColumnPropNameInTable="user_idColumn" msprop:Generator_UserColumnName="user_id" type="xs:string" minOccurs="0" />
+              <xs:element name="user_code" msprop:Generator_ColumnVarNameInTable="columnuser_code" msprop:Generator_ColumnPropNameInRow="user_code" msprop:Generator_ColumnPropNameInTable="user_codeColumn" msprop:Generator_UserColumnName="user_code" type="xs:string" minOccurs="0" />
+              <xs:element name="user_name" msprop:Generator_ColumnVarNameInTable="columnuser_name" msprop:Generator_ColumnPropNameInRow="user_name" msprop:Generator_ColumnPropNameInTable="user_nameColumn" msprop:Generator_UserColumnName="user_name" type="xs:string" minOccurs="0" />
+              <xs:element name="notes" msprop:Generator_ColumnVarNameInTable="columnnotes" msprop:Generator_ColumnPropNameInRow="notes" msprop:Generator_ColumnPropNameInTable="notesColumn" msprop:Generator_UserColumnName="notes" type="xs:string" minOccurs="0" />
+              <xs:element name="employeephoto" msprop:Generator_ColumnVarNameInTable="columnemployeephoto" msprop:Generator_ColumnPropNameInRow="employeephoto" msprop:Generator_ColumnPropNameInTable="employeephotoColumn" msprop:Generator_UserColumnName="employeephoto" type="xs:string" minOccurs="0" />
+              <xs:element name="photo" msprop:Generator_ColumnVarNameInTable="columnphoto" msprop:Generator_ColumnPropNameInRow="photo" msprop:Generator_ColumnPropNameInTable="photoColumn" msprop:Generator_UserColumnName="photo" type="xs:base64Binary" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="footerdata" msprop:Generator_TableClassName="footerdataDataTable" msprop:Generator_TableVarName="tablefooterdata" msprop:Generator_TablePropName="footerdata" msprop:Generator_RowDeletingName="footerdataRowDeleting" msprop:Generator_RowChangingName="footerdataRowChanging" msprop:Generator_RowEvHandlerName="footerdataRowChangeEventHandler" msprop:Generator_RowDeletedName="footerdataRowDeleted" msprop:Generator_UserTableName="footerdata" msprop:Generator_RowChangedName="footerdataRowChanged" msprop:Generator_RowEvArgName="footerdataRowChangeEvent" msprop:Generator_RowClassName="footerdataRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="level_desc" msprop:Generator_ColumnVarNameInTable="columnlevel_desc" msprop:Generator_ColumnPropNameInRow="level_desc" msprop:Generator_ColumnPropNameInTable="level_descColumn" msprop:Generator_UserColumnName="level_desc" type="xs:string" minOccurs="0" />
+              <xs:element name="level_code" msprop:Generator_ColumnVarNameInTable="columnlevel_code" msprop:Generator_ColumnPropNameInRow="level_code" msprop:Generator_ColumnPropNameInTable="level_codeColumn" msprop:Generator_UserColumnName="level_code" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,255 @@
+﻿@using Sciffer.Erp.Domain.Model
+@{
+    ViewBag.Title = "Index";
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<br /><br /><br />
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<ref_user_management>("Grid")
+       .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.Datasource).RemoveURL(Url.Action("InlineDelete", "UserManagement")).InsertURL(Url.Action("InlineInsert", "UserManagement")).UpdateURL(Url.Action("InlineInsert", "UserManagement"))
+                       .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(10); })
+        .EnableAltRow()
+
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Add);
+                items.AddTool(ToolBarItems.Edit);
+                items.AddTool(ToolBarItems.Update);
+                items.AddTool(ToolBarItems.Cancel);
+                items.AddTool(ToolBarItems.ExcelExport);
+                items.AddTool(ToolBarItems.PrintGrid);
+            });
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "UserManagement" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+         .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+
+            col.Field("user_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Width(80).Add();
+            col.Field("user_name").Width("15%").HeaderText("User Name").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("user_code").Width("15%").HeaderText("User Code").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("employee_name").Width("15%").HeaderText("Employee ").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("email").Width("15%").HeaderText("E-mail ").ValidationRules(val => val.AddRule("required", true)).Visible(false).Add();
+            col.Field("mobile_no").Width("15%").HeaderText("Mobile No ").ValidationRules(val => val.AddRule("required", true)).Visible(false).Add();
+            col.Field("branch_name").Width("15%").HeaderText("Branch ").ValidationRules(val => val.AddRule("required", true)).Visible(false).Add();
+            col.Field("department_name").Width("15%").HeaderText("Department ").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("password").Width("15%").HeaderText("Password ").ValidationRules(val => val.AddRule("required", true)).Visible(false).Add();
+           
+            col.Field("notes").Width("15%").HeaderText("Note ").ValidationRules(val => val.AddRule("required", true)).Visible(false).Add();
+            col.Field("is_block").Width("15%").HeaderText("Blocked").Visible(false).Add();
+            col.Field("is_authentication").Width("15%").HeaderText("Authentication").Visible(false).Add();
+        }).ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+</div>
+
+<script id="template" type="text/template">
+    <div class="row">
+        <input type="hidden" id="user_id" class="" name="user_id" value="{{: user_id}}">
+    </div>
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+            User Name *
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-12">
+            <input type="text" id="user_name" name="user_name" class="form-control" value="{{:user_name}}">
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+            User Code *
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-12">
+            <input type="text" id="user_code" name="user_code" class="form-control" value="{{:user_code}}">
+        </div>
+    </div>
+
+    <br />
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+            Employee
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-12">
+            @Html.DropDownList("employee_id", (new System.Web.Mvc.SelectList(ViewBag.employeelist, "employee_id", "employee_name")), "--select--", htmlAttributes: new { @class = "form-control", @onchange = "GetUnit(this.value)" })
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+            E-mail
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-12">
+            <input type="text" id="email" name="email" class="form-control" value="{{:email}}">
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+            Mobile
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-12">
+            <input type="text" id="mobile_no" name="mobile_no" class="form-control" value="{{:mobile_no}}">
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+            Branch
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-12">
+            @Html.DropDownList("branch_id", (new System.Web.Mvc.SelectList(ViewBag.branchlist, "BRANCH_ID", "BRANCH_NAME")), "--select--", htmlAttributes: new { @class = "form-control" })
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+            Department
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-12">
+            @Html.DropDownList("department_id", (new System.Web.Mvc.SelectList(ViewBag.deptlist, "DEPARTMENT_ID", "DEPARTMENT_NAME")), "--select--", htmlAttributes: new { @class = "form-control" })
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+            Password *
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-12">
+            <input type="password" id="password" name="password" class="form-control" value="{{:password}}">
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+            Notes
+        </div>
+        <div class="col-lg-6 col-md-6 col-xs-12">
+            <input type="text" id="notes" name="notes" class="form-control" value="{{:notes}}">
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+            Authentication
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="checkbox" id="is_authentication" name="is_authentication">
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+            Blocked
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="checkbox" id="is_block" name="is_block">
+        </div>
+    </div>
+
+</script>
+
+
+<script type="text/javascript">
+
+    var flag = true;
+    function complete(args) {
+        if (args.requestType == "add") {
+
+            $('#is_block').checkboxpicker();
+            $('#is_authentication').checkboxpicker();
+        }
+        if (args.requestType == "beginedit") {
+
+
+            $("#employee_id").val(args.rowData.employee_id);
+            $("#department_id").val(args.rowData.department_id);
+            
+            $("#branch_id").val(args.rowData.branch_id);
+            if (args.rowData.is_block == true) {
+                //Check
+                document.getElementById('is_block').setAttribute('checked', 'checked');
+            }
+            else {
+                //UnCheck
+                document.getElementById('is_block').removeAttribute('checked');
+            }
+            if (args.rowData.is_authentication == true) {
+                //Check
+                document.getElementById('is_authentication').setAttribute('checked', 'checked');
+            }
+            else {
+                //UnCheck
+                document.getElementById('is_authentication').removeAttribute('checked');
+            }
+            $('#is_block').checkboxpicker();
+            $('#is_authentication').checkboxpicker();
+        }
+        if (args.requestType == "save") {
+            if (args.data.text == 'duplicate') {
+                sweetAlert("", "User already exists!", "error");
+                if (args.model.dataSource.dataSource.json[0].user_id == null) {
+                    args.model.dataSource.dataSource.json = args.model.dataSource.dataSource.json.splice(1, args.model.dataSource.dataSource.json.length);
+                }
+            }
+            var gridObj = $("#Grid").ejGrid("instance");
+            gridObj.refreshContent();
+        }
+    }
+
+    function EndProcess() {
+        var gridObj = $("#Grid").ejGrid("instance");
+        console.log(gridObj);
+        gridObj.refreshContent();
+    }
+    function GetUnit(id) {
+        if (id != '') {
+            $.ajax({
+                type: 'GET',
+                url: "@Url.Action("GetEmployeeList", "UserManagement")",
+                data: { id: id },
+            success: function (cycle) {
+                //  console.log(ITEM.list.asset_code_id);
+                $.each(cycle, function (i, ITEM) {                
+
+                    $("#email").val(ITEM.email_id);
+                    $("#mobile_no").val(ITEM.mobile);
+                    $("#branch_id").val(ITEM.branch_id);
+                    $("#department_id").val(ITEM.department_id);
+                });
+
+            },
+            error: function (emp) {
+
+                $('#email').val('');
+                $('#mobile_no').val('');
+                $('#branch_id').val('');
+                $('#department_id').val('');
+            }
+        });
+    }
+    else {
+            $('#email').val('');
+            $('#mobile_no').val('');
+            $('#branch_id').val('');
+            $('#department_id').val('');
+    }
+
+    }
+
+</script>

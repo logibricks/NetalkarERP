@@ -1,0 +1,136 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+
+
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<REF_EMPLOYEE_VM>("Searching")
+       .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "Employee" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .ContextMenuSettings(contextMenu =>
+        {
+            contextMenu.EnableContextMenu();
+            contextMenu.DisableDefaultItems();
+            contextMenu.CustomContextMenuItems(new List<Syncfusion.JavaScript.Models.CustomContexMenuItems>() { new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu", Text = "Print Report" } }); // CustomContext menu items
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic",new {ctrlname= "Employee" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "Employee" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "Employee" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+         .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+
+
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("employee_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("salutation_name").Width("15%").HeaderText("Salutation").Add();
+            col.Field("employee_name").Width("15%").HeaderText("Employee Name").Add();
+            col.Field("employee_code").Width("15%").HeaderText("Employee Code").Add();
+            col.Field("employee_number").Width("15%").HeaderText("Employee Number").Add();
+            col.Field("designation").Width("15%").HeaderText("Designation").Add();
+            col.Field("category").Width("15%").HeaderText("Category").Add();
+            col.Field("department").Width("15%").HeaderText("Department").Add();
+            col.Field("grade").Width("15%").HeaderText("Grade").Visible(false).Add();
+            col.Field("blocked").Width("15%").HeaderText("Grade").Visible(false).Add();
+            col.Field("fathers_name").Width("15%").HeaderText("Fathers Name").Visible(false).Add();
+            col.Field("mothers_name").Width("15%").HeaderText("Mothers Name").Visible(false).Add();
+            col.Field("date_of_birth").Width("15%").HeaderText("Date of Birth").Visible(false).Add();
+            col.Field("gender").Width("15%").HeaderText("Sex").Visible(false).Add();
+            col.Field("marrital").Width("15%").HeaderText("Marital Status").Visible(false).Add();
+            col.Field("spouse_name").Width("15%").HeaderText("Spouses Name").Visible(false).Add();
+            col.Field("bank_name").Width("15%").HeaderText("Bank Name").Visible(false).Add();
+            col.Field("bank_account_no").Width("15%").HeaderText("Bank Account Number").Visible(false).Add();
+            col.Field("ifsc_code").Width("15%").HeaderText("IFSC Code").Visible(false).Add();
+            col.Field("country1").Width("15%").HeaderText("Present Country").Visible(false).Add();
+            col.Field("state1").Width("15%").HeaderText("Present State").Visible(false).Add();
+
+
+            col.Field("present_add_res_no").Width("15%").HeaderText("Present Res. No").Visible(false).Add();
+            col.Field("present_add_res_name").Width("15%").HeaderText("Present Res. Name").Visible(false).Add();
+            col.Field("present_add_street").Width("15%").HeaderText("Present Road/Street").Visible(false).Add();
+            col.Field("present_add_locality").Width("15%").HeaderText("Present Locality/Area").Visible(false).Add();
+            col.Field("present_add_city").Width("15%").HeaderText("Present City/District").Visible(false).Add();
+            col.Field("present_add_pincode").Width("15%").HeaderText("Present Pincode").Visible(false).Add();
+            col.Field("country2").Width("15%").HeaderText("Permanent Country").Visible(false).Add();
+            col.Field("state2").Width("15%").HeaderText("Permanent State").Visible(false).Add();
+            col.Field("permanent_add_res_no").Width("15%").HeaderText("Permanent Res. No").Visible(false).Add();
+            col.Field("permanent_add_res_name").Width("15%").HeaderText("Permanent Res. Name").Visible(false).Add();
+            col.Field("permanent_add_street").Width("15%").HeaderText("Permanent Road/Street").Visible(false).Add();
+            col.Field("permanent_add_locality").Width("15%").HeaderText("Permanent Locality/Area").Visible(false).Add();
+            col.Field("permanent_add_city").Width("15%").HeaderText("Permanent City/District").Visible(false).Add();
+            col.Field("permanent_add_pincode").Width("15%").HeaderText("Permanent Pincode").Visible(false).Add();
+
+            col.Field("email_id").Width("15%").HeaderText("Email").Visible(false).Add();
+            col.Field("mobile").Width("15%").HeaderText("Mobile").Visible(false).Add();
+            col.Field("std_code").Width("15%").HeaderText("STD Code").Visible(false).Add();
+            col.Field("phone").Width("15%").HeaderText("Phone").Visible(false).Add();
+            col.Field("plant_name").Width("15%").HeaderText("Plant").Visible(false).Add();
+            col.Field("branch").Width("15%").HeaderText("Branch").Visible(false).Add();
+            col.Field("date_of_joining").Width("15%").HeaderText("Date Of Joining").Visible(false).Add();
+            col.Field("division").Width("15%").HeaderText("Division").Visible(false).Add();
+            col.Field("reason_for_leaving").Width("15%").HeaderText("Reason for Leaving").Visible(false).Add();
+
+            col.Field("date_of_leaving").Width("15%").HeaderText("Date of Leaving").Visible(false).Add();
+            col.Field("esi_no").Width("15%").HeaderText("ESI NO.").Visible(false).Add();
+            col.Field("esi_dispensary").Width("15%").HeaderText("ESI DISPENSARY").Visible(false).Add();
+            col.Field("pf_no").Width("15%").HeaderText("PF NO.").Visible(false).Add();
+
+            col.Field("pf_no_dept").Width("15%").HeaderText("PF NO. FOR DEPT. FILE").Visible(false).Add();
+            col.Field("pan_number").Width("15%").HeaderText("Pan Number").Visible(false).Add();
+      
+           
+            col.Field("remarks").Width("15%").HeaderText("Remarks").Visible(false).Add();
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+     .e-editcell {
+        display:none
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = '@Url.Action("Edit", "Employee")?id=' + args.rowData.employee_id;
+        }
+        if (args.requestType == "add") {
+            location.href = '@Url.Action("Create", "Employee")';
+        }
+    }
+    function rightClick(args) {
+        location.href = '@Url.Action("Details", "Employee")?id=' + args.data.employee_id;
+    }
+</script>

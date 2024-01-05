@@ -1,0 +1,151 @@
+﻿
+
+@using Sciffer.Erp.Domain.ViewModel
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".loading").hide();
+        $('.mickey').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            maxHeight: '200',
+            enableCaseInsensitiveFiltering: true,
+            allowClear: true,
+            maximumResultsForSearch: 1,
+            numberDisplayed: 0,
+        });
+    });
+</script>
+<style>
+
+</style>
+<div class="loading">Loading &#8230;</div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        
+               
+
+                    <div class=row>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">From Date</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <input type="date" id="fromDate" class="form-control radius" required="required">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">To Date</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <input type="date" id="toDate" class="form-control radius" required="required">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <div class="col-md-5 col-lg-5 col-xs-12">
+                                <label></label>
+                            </div>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <button class="searchbutton searchButton" id="search"> &nbsp; Run Report </button>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class=row>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">Account Type</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                @Html.DropDownList("account_type_id", (System.Web.Mvc.SelectList)ViewBag.account_type_list, htmlAttributes: new { @class = "form-control" })
+
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">Category</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                @Html.DropDownList("category_id", Enumerable.Empty<SelectListItem>(), htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+       
+
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        
+                <div id="searchresult">
+                    @Html.Partial("Partial_GeneralLedger", (object)ViewBag)
+                </div>
+            </div>
+        </div>
+
+
+
+<script type="text/javascript">
+    $("#search").click(function () {
+        AdvanceSearch();
+    });
+    document.getElementById('fromDate').valueAsDate = new Date();
+    document.getElementById('toDate').valueAsDate = new Date();
+    function AdvanceSearch() {
+
+        //if ($('#account_type_id :selected').length > 0) {
+        //    var selectedAccountType = [];
+        //    $('#account_type_id :selected').each(function (i, selected) {
+        //        selectedAccountType[i] = $(selected).val();
+        //    });
+        //    var AccountType = selectedAccountType + "";
+        //}
+        if ($('#category_id :selected').length > 0) {
+            var selectedCategory = [];
+            $('#category_id :selected').each(function (i, selected) {
+                selectedCategory[i] = $(selected).val();
+            });
+            var Category = selectedCategory + "";
+        }
+
+
+        $.ajax({
+            url: '/Report/GetGeneralLedgerReport',
+            method: "Post",
+            cache: false,
+            data: { accounttype: AccountType, start_date: fromDate, end_date: toDate, category: Category },
+            success: function (data) {
+                $(".loading").hide();
+                $('#searchresult').empty().append(data);
+                //console.log(data);
+            },
+            error: function (http) {
+                console.log(XMLHttpRequest);
+            }
+        });
+    }
+    $(".loading").show();
+    function FillDescription(txt) {
+        if (txt != '') {
+            $.ajax({
+                url: '/Generic/GetEntityType?name=' + txt,
+                method: 'get',
+                async: false,
+                success: function (data) {
+                    $('#category_id').empty();
+                    $('#category_id').append('<option>--Select--</option>');
+                    $.each(data, function (index, dt) {
+                        $('#category_id').append('<option value=' + dt.id + '>' + dt.code + ' - ' + dt.name + '</option>');
+                    });
+                }
+            });
+        }
+        else {
+            $('#category_id').empty();
+            $('#category_id').append('<option>--Select--</option>');
+        }
+    }
+    $('#account_type_id').change(function () {
+        var txt = $('#account_type_id option:selected').text();
+        FillDescription(txt);
+    });
+</script>
+<div class="modal"><!-- Place at bottom of page --></div>

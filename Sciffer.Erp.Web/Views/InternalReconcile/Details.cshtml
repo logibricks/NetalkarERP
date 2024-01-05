@@ -1,0 +1,90 @@
+﻿@model Sciffer.Erp.Domain.Model.fin_internal_reconcile
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>fin_internal_reconcile</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ref_document_numbring.category)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ref_document_numbring.category)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_ENTITY_TYPE.ENTITY_TYPE_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_ENTITY_TYPE.ENTITY_TYPE_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.category_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.category_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.document_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.document_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.posting_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.posting_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.entity_type_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.entity_type_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.entity_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.entity_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.created_by)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.created_by)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.created_ts)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.created_ts)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.internal_reconsile_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

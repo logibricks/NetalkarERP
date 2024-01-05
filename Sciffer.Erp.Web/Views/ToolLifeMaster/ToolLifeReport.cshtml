@@ -1,0 +1,165 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "ToolLifeReport";
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".loading").hide();
+        $('.mickey').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            maxHeight: '200',
+            enableCaseInsensitiveFiltering: true,
+            allowClear: true,
+            maximumResultsForSearch: 1,
+            numberDisplayed: 0,
+        });
+    });
+</script>
+
+
+<div class="loading">Loading &#8230;</div>
+<div class="form-horizontal">
+    <div class=row>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Item List</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("ITEM_ID", (System.Web.Mvc.SelectList)ViewBag.item_list, htmlAttributes: new { @class = "form-control mickey ", multiple = "multiple" })
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Tool List *</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("tool_id", (System.Web.Mvc.SelectList)ViewBag.tool_list, htmlAttributes: new { @class = "form-control mickey ", multiple = "multiple" })
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Tool Renew Type List</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("tool_renew_type_id", (System.Web.Mvc.SelectList)ViewBag.tool_type_list, htmlAttributes: new { @class = "form-control mickey ", multiple = "multiple" })
+            </div>
+        </div>
+     
+
+    </div>
+    <br />
+
+    <div class=row>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Machine List</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.machine_list, htmlAttributes: new { @class = "form-control mickey ", multiple = "multiple" })
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">From Date</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <input type="date" id="fromDate" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">To Date</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <input type="date" id="toDate" class="form-control radius">
+            </div>
+        </div>
+    </div>    
+    <br />
+    <div class="row">
+        <div class="col-md-4 col-lg-4 col-xs-12" style="float:right">
+            <button class="searchbutton searchButton" id="search" style="float:right"> Run Report </button>
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div id="searchresult">
+        @Html.Partial("Partial_ToolLifeReport", (object)ViewBag)
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+    });
+
+    $("#search").click(function () {
+
+        AdvanceSearch();
+    });
+
+    document.getElementById('fromDate').valueAsDate = new Date();
+    document.getElementById('toDate').valueAsDate = new Date();
+
+    function AdvanceSearch() {
+        var fromDate = $("#fromDate").val();
+        var toDate = $("#toDate").val();
+        var tool_id = $("#tool_id").val();
+        var item_id = $("#ITEM_ID").val();
+        var tool_renew_type_id = $("#tool_renew_type_id").val();
+        var machine_id = $("#machine_id").val();
+
+
+        if ($('#ITEM_ID :selected').length > 0) {
+            var selectedItem = [];
+            $('#ITEM_ID :selected').each(function (i, selected) {
+                selectedItem[i] = $(selected).val();
+            });
+            var ItemList = selectedItem + "";
+        }
+
+        if ($('#tool_id :selected').length > 0) {
+            var selectedTool = [];
+            $('#tool_id :selected').each(function (i, selected) {
+                selectedTool[i] = $(selected).val();
+            });
+            var ToolList = selectedTool + "";
+        }
+
+        if ($('#tool_renew_type_id :selected').length > 0) {
+            var selectedToolRenewType = [];
+            $('#tool_renew_type_id :selected').each(function (i, selected) {
+                selectedToolRenewType[i] = $(selected).val();
+            });
+            var ToolRenewTypeList = selectedToolRenewType + "";
+        }
+
+        if ($('#machine_id :selected').length > 0) {
+            var selectedMachine = [];
+            $('#machine_id :selected').each(function (i, selected) {
+                selectedMachine[i] = $(selected).val();
+            });
+            var MachineList = selectedMachine + "";
+        }
+
+        $(".loading").show();
+        $.ajax({
+            url: "@Url.Action("Tool_Life_Report", "ToolLifeMaster")",
+            method: "Post",
+            cache: false,
+            data: { entity: "get_tool_life_report", tool_id: ToolList, tool_renew_type_id: ToolRenewTypeList, item_id: ItemList, machine_id: MachineList, fromDate: fromDate, toDate: toDate },
+            success: function (data) {
+                $(".loading").hide();
+                $('#searchresult').empty().append(data);
+            },
+            error: function (http) {
+                $(".loading").hide();
+                $("", "Something went wrong", "error");
+                console.log(XMLHttpRequest);
+            }
+        });
+
+    }
+</script>
+<div class="modal"><!-- Place at bottom of page --></div>
+
+

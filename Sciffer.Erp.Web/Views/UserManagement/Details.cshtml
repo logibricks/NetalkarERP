@@ -1,0 +1,106 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_user_management
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ref_user_management</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_BRANCH.BRANCH_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_BRANCH.BRANCH_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_DEPARTMENT.DEPARTMENT_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_DEPARTMENT.DEPARTMENT_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_EMPLOYEE.employee_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_EMPLOYEE.employee_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ref_user_management_role.role_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ref_user_management_role.role_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.user_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.user_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.user_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.user_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.mobile_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.mobile_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.password)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.password)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_block)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_block)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.notes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.notes)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.user_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,202 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_plan_maintenance
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ref_plan_maintenance</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ref_machine.machine_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ref_machine.machine_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ref_machine_category.machine_category_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ref_machine_category.machine_category_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ref_maintenance_type.maintenance_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ref_maintenance_type.maintenance_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_PLANT.PLANT_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_PLANT.PLANT_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.plan_start_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.plan_start_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.plan_end_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.plan_end_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.cycle_start_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.cycle_start_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.frequency)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.frequency)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.frequency_type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.frequency_type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.repeat_base_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.repeat_base_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.create_order_days)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.create_order_days)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.create_order_dtype)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.create_order_dtype)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.maintenance_period)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.maintenance_period)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.maintenance_period_type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.maintenance_period_type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.allowed_delay)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.allowed_delay)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.allowed_delay_type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.allowed_delay_type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.allowed_early_completion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.allowed_early_completion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.allowed_early_comlpletion_type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.allowed_early_comlpletion_type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.allow_new_order)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.allow_new_order)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.counter_frequency)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.counter_frequency)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.remarks)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.remarks)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.attachement)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.attachement)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_active)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.plan_maintenance_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

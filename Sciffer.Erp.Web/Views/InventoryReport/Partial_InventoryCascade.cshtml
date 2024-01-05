@@ -1,0 +1,41 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<report_inventory_vm>("Editing")
+          .Datasource(ds => ds.URL(Url.Action("GetInventoryReport", "InventoryReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&plant_id=" + ViewBag.plant_id + "&sloc_id=" + ViewBag.sloc_id + "&item_id=" + ViewBag.item_id + "&item_category_id=" + ViewBag.item_category_id + "&bucket_id=" + ViewBag.bucket_id ).Adaptor(AdaptorType.UrlAdaptor))
+                                    
+                                          .AllowFiltering()
+                                          .AllowPaging().PageSettings(a => a.PageSize(20))
+                                              .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                          .ShowColumnChooser()
+                                          .AllowSorting()
+                                          .AllowScrolling()
+                                          .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "InventoryReport", new { ctrlname = "InventoryCascadeReport" })))
+                                           .ScrollSettings(scroll => { scroll.Width("100%").Height("50%"); })
+
+                                      .ToolbarSettings(toolbar =>
+                                      {
+                                          toolbar.ShowToolbar().ToolbarItems(items =>
+                                          {
+                                              items.AddTool(ToolBarItems.Search);
+                                              items.AddTool(ToolBarItems.ExcelExport);
+                                              items.AddTool(ToolBarItems.PrintGrid);
+                                          });
+                                      })
+                              .Columns(col =>
+                              {
+                                  col.Field("item_code").Width("10%").HeaderText("Item Code").Add();
+                                  col.Field("item_name").Width("10%").HeaderText("Item Description").Add();
+                                  col.Field("plant_code").Width("10%").HeaderText("Plant Code").Add();
+                                  col.Field("plant_name").Width("10%").HeaderText("Plant Description").Visible(true).Add();
+                                  col.Field("storage_location_name").Width("10%").HeaderText("SLoc").Visible(true).Add();
+                                  col.Field("bucket_name").Width("10%").HeaderText("Bucket").Visible(true).Add();
+                                  col.Field("batch_number").Width("10%").HeaderText("Batch").Visible(true).Add();
+                                  col.Field("quantity").Width("10%").HeaderText("Qty").Format("{0:n2}").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                  col.Field("uom_name").Width("10%").HeaderText("UoM").Visible(true).Add();
+
+                              })
+                     .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicki"); })).Render();}
+@Html.EJ().ScriptManager()
+
+
+

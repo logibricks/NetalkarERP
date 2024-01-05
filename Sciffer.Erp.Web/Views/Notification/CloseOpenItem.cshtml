@@ -1,0 +1,105 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "CloseOpenItem";
+}
+<br /><br /><br />
+
+<script type="text/x-jsrender" id="checkboxTemplate">
+    <input type="checkbox" name="checklist" class="checkbox checkbox-custom" value="{{:notification_id}}" />
+</script>
+
+<div>
+    @(Html.EJ().Grid<ref_pm_notification_vm>("CloseOpenItemGrid")
+        .Datasource(ds => { ds.Json((IEnumerable<object>)ViewBag.DataSource).Adaptor(AdaptorType.RemoteSaveAdaptor); })
+        .EnableAltRow().AllowPaging().PageSettings(a => a.PageSize(20))
+        .PageSettings(p => { p.PageSize(12); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("get_mal_notification", "Notification")))
+        //.Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "ActivityStatus"))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20)).PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%").Height("Auto"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("notification_id").HeaderText("Notification ID").IsPrimaryKey(true).Add();
+            col.Field("module_form_name").HeaderText("Form Name").Add();
+            col.Field("category").HeaderText("Category").Add();
+            col.Field("doc_number").HeaderText("Doc Number").Add();
+            col.Field("notification_date").HeaderText("Notification Date").Format("{0:dd/MM/yyyy}").Add();
+            //col.Field("notification_description").HeaderText("Notification Description").Add();
+            col.Field("plant_code").HeaderText("Plant").Add();
+            col.HeaderText("Select").Template(true).TemplateID("#checkboxTemplate").AllowFiltering(false).ShowInColumnChooser(false).Width(50).TextAlign(TextAlign.Center).Add();
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<div class="row">
+    <div class="col-lg-12 col-sm-12">
+        <div class="form-group">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <input type="button" value="Close" id="close_notification" data-controller="ItemMaster" class="btn btn-success" onclick="UpdateStatus();" style="float:right" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function UpdateStatus() {
+        var notifications_ids = [];
+        $('input[name="checklist"]:checked').each(function () {
+            notifications_ids.push($(this).val());
+        });
+
+        if (notifications_ids.length > 0) {
+
+            swal({
+                title: "Are you sure?",
+                text: "Your will not be able to recover this imaginary file!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, Close it!",
+                closeOnConfirm: false
+            },
+            function () {
+                $.ajax({
+                    url: '@Url.Action("UpdateNotificationtStatus", "Notification")',
+                    cache: false,
+                    type: 'POST',
+                    data: { notifications_ids: notifications_ids, status: 0 },
+                    success: function (data) {
+                        $("#loadingimage1").hide();
+                        if (data == "") {
+                            swal("Closed!", "Your Treansaction has been closed.", "success");
+                        }
+                        else {
+                            swal(data, "", "warning");
+                        }
+                        location.reload();
+                    },
+                    Error: function (data) {
+                        swal("Something went wrong", "", "error");
+                    }
+                });
+
+            });
+        }
+        else {
+            swal("Please select atleast one record", "", "error");
+        }
+    }
+
+</script>

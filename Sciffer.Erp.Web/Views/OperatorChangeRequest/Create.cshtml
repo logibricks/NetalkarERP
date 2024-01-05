@@ -1,0 +1,362 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.operator_change_req_vm
+
+<h2>Operator Change Request</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="row form-horizontal">
+    <hr />
+    <div id="ParameterData"></div>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="row">
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.category_id, new { @class = "control-label col-md-4" })
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    <input type="hidden" id="is_active" name="is_active" value="true" />
+                    @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.category_list, new { @class = "form-control validinput setPlant", @required = true })
+                    @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.posting_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control postingdocumentdate validinput", @required = true } })
+                    @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <br />
+    <hr />
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading"></div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.operator_id, new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <input type="hidden" id="is_active" name="is_active" value="true" />
+                                @Html.DropDownList("operator_id", (System.Web.Mvc.SelectList)ViewBag.operator_list, new { @class = "form-control " })
+                                @Html.ValidationMessageFor(model => model.operator_id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.machine_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.DropDownList("machine_id", Enumerable.Empty<SelectListItem>(), "---Select---", new { @class = "form-control " })
+                                @Html.ValidationMessageFor(model => model.machine_id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.current_level_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.DropDownList("current_level_id", (System.Web.Mvc.SelectList)ViewBag.level_list, new { @class = "form-control " , @disabled = "disabled"})
+                                @Html.ValidationMessageFor(model => model.current_level_id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.new_level_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.DropDownList("new_level_id", (System.Web.Mvc.SelectList)ViewBag.level_list, new { @class = "form-control " })
+                                @Html.ValidationMessageFor(model => model.new_level_id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.current_level, new { @class = "control-label col-md-4" })
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    @Html.EditorFor(model => model.current_level, new { htmlAttributes = new { @class = "form-control" ,@disabled = "disabled"} })
+                    @Html.ValidationMessageFor(model => model.current_level, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.new_level, new { @class = "control-label col-md-4" })
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    @Html.EditorFor(model => model.new_level, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.new_level, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>*@
+                    <div class="col-lg-1 col-sm-1">
+                        <div class="form-group">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <button type="button" class="btn btn-primary" id="add_parameter">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="srno3" />
+                </div>
+                <br />
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-responsive table-bordered table-striped" id="ParameterGrid">
+                            <thead>
+                                <tr>
+                                    <th hidden><label>Op Change Req Id</label></th>
+                                    <th><label>Sr. No.</label></th>
+                                    <th><label>Operator</label></th>
+                                    <th><label>Machine</label></th>
+                                    <th><label>Current Level</label></th>
+                                    <th><label>New Level</label></th>
+                                    <th><label>Action</label></th>
+                                    <th><label>Operator Id</label></th>
+                                    <th><label>Machine Id</label></th>
+                                    <th><label>CurrentLevel Id</label></th>
+                                    <th><label>NewLevel Id</label></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="deleteids" name="deleteids" value="0" />
+        <input type="hidden" id="parameterdetail" name="parameterdetail" />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-success" data-controller="OperatorChangeRequest" onclick="DataTableToForm()" style="float:right" id="create" name="create" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            document.getElementById('posting_date').valueAsDate = new Date();
+        $("#operator_id").select2({
+            placeholder: "Select Operator",
+            allowClear: true
+        });
+        $("#machine_id").select2({
+            placeholder: "Select Machine",
+            allowClear: true
+        });
+        $("#current_level_id").select2({
+            placeholder: "Select Current Level",
+            allowClear: true
+        });
+        $("#new_level_id").select2({
+            placeholder: "Select New Level",
+            allowClear: true
+        });
+
+            $("#operator_id").val('').trigger('change');
+            $("#current_level_id").val('').trigger('change');
+            $("#new_level_id").val('').trigger('change');
+        });
+        var machine_list;
+        var grid_index;
+
+        $("#operator_id").change(function(){
+            var operator_id = $(this).val();
+            if (operator_id != "" && operator_id != null) {
+                    $.ajax({
+                        url: '@Url.Action("GetData", "SkillMatrix")',
+                        type: 'GET',
+                        data: { entity: "get_machine_drpdwn", id: parseInt(operator_id)},
+                        success: function (data) {
+                            if (data.result != null) {
+
+                                machine_list = data.result;
+
+                                $("#machine_id").empty().trigger('change');
+                                $("#machine_id").append('<select id="machine_id" class="form-control " name="machine_id"  >');
+                                for (var i = 0; i < data.result.length; i++) {
+                                    $("#machine_id").append('<option value="' + data.result[i].machine_id + '">' + data.result[i].machine_name + '</option>');
+                                }
+                                $("#machine_id").val();
+                                $("#machine_id").append('</select>');
+                                $("#machine_id").select2({
+                                    placeholder: "Select Machine",
+                                    allowClear: true
+                                });
+
+                                if (grid_index == undefined) {
+                                    $("#machine_id").val('').trigger('change');
+                                }
+                               
+
+                            }
+                            else {
+                                $("#machine_id").val(0);
+                            }
+                        },
+                    });
+                }
+                else {
+
+                    $("#machine_id").empty().trigger('change');
+               // $("#machine_id").val('').trigger('change');
+                }
+        })
+
+
+        $("#machine_id").change(function () {
+
+            var machine_id = $(this).val();
+            if (machine_id != "" && machine_id != null) {
+
+                var current_level = machine_list.filter(a => a.machine_id == machine_id)[0].level_id
+                $("#current_level_id").val(current_level).trigger('change');;
+            }
+
+
+        });
+
+        $('#ParameterGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                { sname: "q", bVisible: false },
+                { sname: "a", bVisible: true },
+                { sname: "b", bVisible: true },
+                { sname: "c", bVisible: true },
+                { sname: "d", bVisible: true },
+                { sname: "e", bVisible: true },
+                {
+                    sname: "f", sWidth: "8%",
+                    bSortable: false,
+                    mRender: function (data, type, full) {
+                        return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" />'
+                        //<img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete" />';
+                    }
+                },
+              { sname: "g", bVisible: false },
+                { sname: "h", bVisible: false },
+                { sname: "i", bVisible: false },
+                { sname: "j", bVisible: false }]
+
+        });
+
+        $('#add_parameter').click(function () {
+            var t3 = $('#ParameterGrid').DataTable()
+            var rowCount = t3.fnGetData().length;
+            var operator_name = $('#operator_id option:selected').text();
+            var machine_name = $('#machine_id option:selected').text();
+            var current_level = $('#current_level_id option:selected').text();
+            var new_level = $('#new_level_id option:selected').text();
+            var operator_id = $('#operator_id').val();
+            var machine_id = $('#machine_id').val();
+            var current_level_id = $('#current_level_id').val();
+            var new_level_id = $('#new_level_id').val();
+           
+            if (operator_name == '') {
+                swal("", "Please Select Operator!!", "error");
+                return false;
+            }
+            if (machine_name == '') {
+                swal("", "Please Select Machine!!", "error");
+                return false;
+            }
+            
+            if (new_level == '') {
+                swal("", "Please Enter New Level", "error");
+                return false;
+            }
+
+            if ($("#srno3").val() == "") {
+                for (var k = 0; k <= rowCount - 1; k++) {
+                    if (t3.fnGetData(k)[2] == operator_name && t3.fnGetData(k)[3] == machine_name) {
+                        swal("", "Operator-Machine details are already added.", "error");
+                        return false;
+                    }
+                }
+                t3.fnAddData(['', rowCount + 1, operator_name, machine_name, current_level, new_level, '', operator_id, machine_id, current_level_id, new_level_id
+                ]);
+            }
+            else {
+
+                var cc = parseInt($("#srno3").val());
+                t3.fnUpdate(['', cc + 1, operator_name, machine_name, current_level, new_level, '', operator_id, machine_id, current_level_id, new_level_id], cc)
+            }
+            clearmodel1();
+        });
+
+
+        function clearmodel1() {
+            $("#operator_id").val('').trigger('change');
+            $("#machine_id").val('').trigger('change');
+            $("#current_level_id").val('').trigger('change');
+            $("#new_level_id").val('').trigger('change');
+            $('#srno3').val('');
+        }
+
+        $('#ParameterGrid').on('click', '.edit', function () {
+            var t = $('#ParameterGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            grid_index = id;
+            $('#srno3').val(id);
+            $("#operator_id").val(t.fnGetData(id)[7]).trigger('change');
+            $("#machine_id").val(t.fnGetData(id)[8]).trigger('change');
+            $("#current_level_id").val(t.fnGetData(id)[9]);
+            $("#new_level_id").val(t.fnGetData(id)[10]);
+        });
+
+        function DataTableToForm() {
+            var t = $('#ParameterGrid').dataTable();
+
+            var rowCount = t.fnGetData().length;
+
+            //if (rowCount > 0) {
+
+                for (i = 0; i < rowCount; i++) {
+
+                    $("#ParameterData").append('<input type="hidden" id="operator_change_request_list_id' + i + '" name="operator_change_request_list_id">');
+                    $("#ParameterData").append('<input type="hidden" id="operator_list_id' + i + '" name="operator_list_id">');
+                    $("#ParameterData").append('<input type="hidden" id="machine_list_id' + i + '" name="machine_list_id">');
+                    $("#ParameterData").append('<input type="hidden" id="current_level_list_id' + i + '" name="current_level_list_id">');
+                    $("#ParameterData").append('<input type="hidden" id="new_level_list_id' + i + '" name="new_level_list_id">');
+
+                    $("#operator_change_request_list_id" + i).val(t.fnGetData(i)[0]);
+                    $("#operator_list_id" + i).val(t.fnGetData(i)[7]);
+                    $("#machine_list_id" + i).val(t.fnGetData(i)[8]);
+                    $("#current_level_list_id" + i).val(t.fnGetData(i)[9]);
+                    $("#new_level_list_id" + i).val(t.fnGetData(i)[10]);
+
+                }
+
+            //}
+            //else {
+            //    swal("", "Detail Table cannot be Empty!!", "error");
+            //    return false;
+            //}
+
+           
+        }
+    </script>
+}
+

@@ -1,0 +1,175 @@
+﻿
+
+@using Sciffer.Erp.Domain.ViewModel
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.mickey').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            maxHeight: '200',
+            enableCaseInsensitiveFiltering: true,
+            allowClear: true,
+            maximumResultsForSearch: 1,
+            numberDisplayed: 0,
+        });
+    });
+</script>
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel panel">
+            <div class="x_title">
+                <h2 style="font-size:18px">
+                    Ledger Details Report 
+                </h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="form-horizontal">
+                <div class="x_content">
+
+                    <div class=row>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">From Date</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <input type="date" id="fromDate" class="form-control radius" required="required">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">To Date</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <input type="date" id="toDate" class="form-control radius" required="required">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <div class="col-md-5 col-lg-5 col-xs-12">
+                                <label></label>
+                            </div>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <button class="searchbutton searchButton" id="search"> &nbsp; Run Report </button>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class=row>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">Vendor</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                @Html.DropDownList("vendor_id", (System.Web.Mvc.SelectList)ViewBag.vendor_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">Customer</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                @Html.DropDownList("customer_id", (System.Web.Mvc.SelectList)ViewBag.customer_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">Employee</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                @Html.DropDownList("employee_id", (System.Web.Mvc.SelectList)ViewBag.employee_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel panel">
+            <div class="x_title">
+                <h2 style="font-size:18px"></h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div id="searchresult">
+                    @Html.Partial("Partial_LedgerDetails", (object)ViewBag)
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+<script type="text/javascript">
+    $("#search").click(function () {
+        AdvanceSearch();
+    });
+    document.getElementById('fromDate').valueAsDate = new Date();
+    document.getElementById('toDate').valueAsDate = new Date();
+    function AdvanceSearch() {
+
+        //if ($('#account_type_id :selected').length > 0) {
+        //    var selectedAccountType = [];
+        //    $('#account_type_id :selected').each(function (i, selected) {
+        //        selectedAccountType[i] = $(selected).val();
+        //    });
+        //    var AccountType = selectedAccountType + "";
+        //}
+        var fromDate = $("#fromDate").val();
+        var toDate = $("#toDate").val();
+        var AccountType = $("#account_type_id").val();
+        
+        if ($('#customer_id :selected').length > 0) {
+            var selectedCustomer = [];
+            $('#customer_id :selected').each(function (i, selected) {
+                selectedCustomer[i] = $(selected).val();
+            });
+            var Customer = selectedCustomer + "";
+        }
+        if ($('#vendor_id :selected').length > 0) {
+            var selectedVendor = [];
+            $('#vendor_id :selected').each(function (i, selected) {
+                selectedVendor[i] = $(selected).val();
+            });
+            var Vendor = selectedVendor + "";
+        }
+        if ($('#employee_id :selected').length > 0) {
+            var selectedEmployee = [];
+            $('#employee_id :selected').each(function (i, selected) {
+                selectedEmployee[i] = $(selected).val();
+            });
+            var Employee = selectedEmployee + "";
+        }
+
+
+        $.ajax({
+            url: '/Report/GetLedgerDetailsReport',
+            method: "Post",
+            cache: false,
+            data: {start_date: fromDate, end_date: toDate },
+            success: function (data) {
+                $(".loading").hide();
+                $('#searchresult').empty().append(data);
+                //console.log(data);
+            },
+            error: function (http) {
+                console.log(XMLHttpRequest);
+            }
+        });
+    }
+</script>
+<div class="modal"><!-- Place at bottom of page --></div>

@@ -1,0 +1,176 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+}
+<script src="~/Content/dropzone/dist/min/dropzone.min.js"></script>
+<link href="~/Content/dropzone/dist/min/dropzone.min.css" rel="stylesheet">
+<script>
+    Dropzone.options.dropzoneform =
+        {
+            acceptedFiles: '.pdf',
+            maxFiles: 100,
+
+            init: function () {
+                this.on("complete", function (data) {
+                    if (data.accepted == false) {
+                        swal("Please upload PDF only", "", "error");
+                    }
+                    else {
+                        var res = eval('(' + data.xhr.responseText + ')');
+
+                        var vv = "Y";
+
+                        if (res.Status == "Success") {
+
+                            swal("", res.Message, "success");
+                        }
+                        else {
+                            swal(res.Message, "", "error");
+                        }
+                    }
+                });
+                this.on("maxfilesexceeded", function (data) {
+                    this.removeFile(data);
+                });
+                this.on("addedfile", function (data) {
+                    swaltimer("Uploading File", "Please Wait while we process uploaded file", "info", 3000, true);
+                });
+            }
+        }
+</script>
+
+<div class="row form-horizontal">
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <label class="col-md-4">
+                Select Process *
+            </label>
+            <div class="col-md-8">
+                @Html.DropDownList("process_id", (System.Web.Mvc.SelectList)ViewBag.process_list, "", htmlAttributes: new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-sm-6">
+
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-6">
+            <label class="col-md-4">
+                Select Machine *
+            </label>
+            <div class="col-md-8">
+                @Html.DropDownList("machine_id", Enumerable.Empty<SelectListItem>(), "", new { Class = "form-control", @disabled = "disabled" })
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <label class="col-md-4">
+                Select Item *
+            </label>
+            <div class="col-md-8">
+                @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.item_list, "", htmlAttributes: new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+    <br />
+    <hr />
+    <div class="row">
+        <style>
+            .dropzone {
+                border: 2px solid rgba(0,0,0,0.3);
+                background-color:#eee;
+                color:#0064ff;
+            }
+        </style>
+        <div class="col-md-12" id="upload_wizard">
+            @using (Html.BeginForm("UploadFile", "OperatorScreenUpgradation", FormMethod.Post, new { id = "dropzoneform", enctype = "multipart/form-data", Class = "dropzone dz-clickable", multiple = "multiple" }))
+            {
+                <input type="hidden" name="ITEM_ID" id="ITEM_ID"/>
+                <input type="hidden" name="MACHINE_ID" id="MACHINE_ID"/>
+                <input type="hidden" name="PROCESS_ID" id="PROCESS_ID"/>
+                <div class="dz-message">
+                    <h4 id="fname">Drop Your Content </h4>
+                    <div class="fallback">
+                        <input name="file" type="file" accept=".pdf" />
+                        <input type="submit" value="Upload" />
+                    </div>
+                </div>
+            }
+        </div>
+        <br />
+    </div>
+</div>
+<br /><br />
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+
+        function swaltimer(title, text, type, timer, showConfirmButton) {
+            swal({
+                title: title,
+                text: text,
+                type: type,
+                timer: timer,
+                showConfirmButton: showConfirmButton
+            });
+        }
+
+        $(document).ready(function () {
+            $("#process_id").select2({
+                placeholder: "Select Process",
+                allowClear: true
+            });
+
+            $("#item_id").select2({
+                placeholder: "Select Item",
+                allowClear: true
+            });
+
+            $("#machine_id").select2({
+                placeholder: "First Select Process",
+                allowClear: true
+            });
+        })
+
+
+        $("#process_id").change(function () {
+
+            $("#PROCESS_ID").val($(this).val());
+
+            $.ajax({
+                url: "@Url.Action("GetMachineListByProcess", "OperatorScreenUpgradation")",
+                method: "POST",
+                cache: false,
+                data: { process_id: $(this).val() },
+                success: function (data) {
+
+                    $("#machine_id").empty();
+                    $("#machine_id").append('<option value="">--Select--</option>');
+                    for (var i = 0; i < data.length; i++) {
+                        $("#machine_id").append('<option value="' + data[i].Value + '">' + data[i].Text + '</option>');
+                    }
+
+                    $("#machine_id").prop("disabled", false);
+                    $("#machine_id").select2({
+                        placeholder: "Select Machine",
+                        allowClear: true
+                    });
+                }
+            })
+        });
+
+        $("#item_id").change(function () {
+            $("#ITEM_ID").val($(this).val());
+        });
+
+        $("#machine_id").change(function () {
+            $("#MACHINE_ID").val($(this).val());
+        })
+    </script>
+}

@@ -1,0 +1,253 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Template GL Mapping <small></small></h2>
+<hr />
+@using (Html.BeginForm("UpdateRecords", "TemplateGL", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div id="rights_id"></div>
+    <div class="row">
+        <div class="clearfix"></div>
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="form">
+                <div class="area">          
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="template_id">Template</label>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("template_id", (System.Web.Mvc.SelectList)ViewBag.TemplateList, "--Select--", new { @class = "form-control validinput",@required=true })
+                                </div>
+                            </div>
+                        </div>
+                    
+                    </div>
+                    <br />
+                    <div class="row removediv" >
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="template_detail_id">Group Name</label>                               
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("template_detail_id", Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control validinput template_detail_id" })
+                               </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="template_detail_id">GL Name</label>
+                                <div class="col-md-5 col-sm-5 col-xs-12">
+                                    @Html.DropDownList("gl_ledger_id", (System.Web.Mvc.SelectList)ViewBag.GlList, "--Select--", new { @class = "form-control validinput gl_ledger_id" })
+                                </div>
+                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                    <button type="button" id="add" class="btn btn-primary">Add</button>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg12 col-sm-12">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="container">
+                    <div class="inputs">
+                        <table id="ContactGrid" class="table table-striped table-bordered" style="font-size:14px;">
+                            <thead>
+                                <tr>
+                                    <th>Sr No.</th>
+                                    <th>Group Name</th>
+                                    <th>GL</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            if ('@ViewBag.msg' != "") {
+               sweetAlert("", '@ViewBag.msg', "success");
+            }
+
+            $("#template_detail_id").select2({
+                placeholder: "Select Group",
+                allowClear: true
+            });
+
+            $("#gl_ledger_id").select2({
+                placeholder: "Select GL",
+                allowClear: true
+            });
+
+        });
+        var group=@Html.Raw(Json.Encode(ViewBag.TemplateGroupList));
+        $("#template_id").change(function () {
+            $("#ContactGrid tbody").empty();
+            $("#template_detail_id").empty();
+            $("#template_detail_id").trigger("change");
+            var id = $("#template_id").val();
+            if(id!="")
+            {
+                let _group=group.filter(a=>a.template_id==id);
+                let _grouplist=_group.map(function(a){return {'id':a.template_detail_id,'text':a.group_name}});
+                if(_grouplist.length!=0)
+                {
+                    $("#template_detail_id").select2({
+                        placeholder: "Select Group",
+                        allowClear: true,
+                        data:_grouplist
+                    });
+                }
+
+                $("#template_detail_id").select2({
+                    placeholder: "Select Group",
+                    allowClear: true
+                });
+
+                var k=0;
+                $.ajax({
+                url: "@Url.Action("GetGroupByTemplate", "TemplateGL")",
+                method: "POST",
+                cache: false,
+                async:false,
+                data: { id: id },
+                success: function (data)
+                {
+                    console.log(data);
+                    if(data.length>0)
+                    {
+                        $.each(data, function(key, value) {
+                            if(value.gl_ledger_id1!=null)
+                            {
+                                var sr_no = key+1;
+                                k=sr_no;
+                                if(sr_no==1)
+                                {
+                                    $('#ContactGrid tbody').append('<tr><td id=tdsr_no' + sr_no + '>' + sr_no + '</td><td id=tdtemplatedetailid' + sr_no + '></td><td id=tdGLledgerid' + sr_no + '></td><td><button type="button" class="btn btn-primary btn_add_rows" id="btn_add_rows"><span class="glyphicon glyphicon-plus"></span></button></td></tr>');
+
+                                }
+                                else
+                                {
+                                    $('#ContactGrid tbody').append('<tr><td id=tdsr_no' + sr_no + '>' + sr_no + '</td><td id=tdtemplatedetailid' + sr_no + '></td><td id=tdGLledgerid' + sr_no + '></td><td><button type="button" class="btn btn-primary btn_add_rows" id="btn_add_rows"><span class="glyphicon glyphicon-plus"></span></button><button type="button" class="btn btn-danger btn_delete_rows btn_delete_row" id="btn_delete_row"><span class="glyphicon glyphicon-minus-sign"></span></button></td></tr>');
+                                }
+                                $('#tdtemplatedetailid' + sr_no).append($('#template_detail_id').clone().removeAttr("style").removeAttr("id").attr('id','template_detail_id' + sr_no));
+                                $('#tdGLledgerid' + sr_no).append($('#gl_ledger_id').clone().removeAttr("style").removeAttr("id").attr('id','gl_ledger_id' + sr_no));
+                                $("#template_detail_id" + sr_no).select2({
+                                    placeholder: "Select Group",
+                                    allowClear: true,
+
+                                });
+                                $("#gl_ledger_id" + sr_no).select2({
+                                    placeholder: "Select Group",
+                                    allowClear: true
+                                });
+                                $("#template_detail_id" + sr_no).val(value.template_detail_id1).trigger("change");
+                                $("#gl_ledger_id" + sr_no).val(value.gl_ledger_id1).trigger("change");
+                            }
+                        });
+
+                    }
+                }
+            });
+                if(k!=0)
+                {
+                    $('.removediv').remove();
+                }
+            }
+
+        });
+
+        $("#add").click(function(){
+            if($("#template_detail_id").val()=="")
+            {
+                sweetAlert("", "Please select group name !", "error");
+                return false;
+            }
+            else if($("#gl_ledger_id").val()=="")
+            {
+                sweetAlert("", "Please select GL !", "error");
+                return false;
+            }
+            else
+            {
+                var sr_no = 1;
+                $('#ContactGrid tbody').append('<tr><td id=tdsr_no' + sr_no + '>' + sr_no + '</td><td id=tdtemplatedetailid' + sr_no + '></td><td id=tdGLledgerid' + sr_no + '></td><td><button type="button" class="btn btn-primary btn_add_rows" id="btn_add_rows"><span class="glyphicon glyphicon-plus"></span></button></td></tr>');
+                $('#tdtemplatedetailid' + sr_no).append($('#template_detail_id').clone().removeAttr("style").removeAttr("id").attr('id','template_detail_id' + sr_no));
+                $('#tdGLledgerid' + sr_no).append($('#gl_ledger_id').clone().removeAttr("style").removeAttr("id").attr('id','gl_ledger_id' + sr_no));
+                $("#template_detail_id" + sr_no).select2({
+                    placeholder: "Select Group",
+                    allowClear: true,
+
+                });
+                $("#gl_ledger_id" + sr_no).select2({
+                    placeholder: "Select Group",
+                    allowClear: true
+                });
+                $("#template_detail_id" + sr_no).val($('#template_detail_id').val()).trigger("change");
+                $("#gl_ledger_id" + sr_no).val($('#gl_ledger_id').val()).trigger("change");
+                $('.removediv').remove();
+            }
+        });
+
+        $(document).on('click', '.btn_add_rows', function () {
+            try {
+                if ($(this).closest('tr').find('.taxtype_id').val() == '') {
+                    sweetAlert("", "Tax Element is required!", "error");
+                    return false;
+                }
+                else if ($(this).closest('tr').find('.tax_charged_on').val() == '') {
+                    sweetAlert("", "Tax charged on is required!", "error");
+                    return false;
+                }
+                else if ($(this).closest('tr').next('tr').length >0) {
+                    return false;
+                }
+                else {
+                    var sr_no = 1;
+                    var tax_code = "";
+                    if ($('#ContactGrid tr').length > 1) {
+                        sr_no = parseInt($(this).closest('tr').find('td:eq(0)').html());
+                        sr_no = sr_no + 1;
+                    }
+                    $('#ContactGrid tbody').append('<tr><td id=tdsr_no' + sr_no + '>' + sr_no + '</td><td id=tdtemplatedetailid' + sr_no + '></td><td id=tdGLledgerid' + sr_no + '></td><td><button type="button" class="btn btn-primary btn_add_rows" id="btn_add_rows"><span class="glyphicon glyphicon-plus"></span></button><button type="button" class="btn btn-danger btn_delete_rows btn_delete_row" id="btn_delete_row"><span class="glyphicon glyphicon-minus-sign"></span></button></td></tr>');
+
+                    $('#tdsr_no' + sr_no).html(sr_no);
+                    $('#tdtemplatedetailid' + sr_no).append($(this).closest('tr').find('.template_detail_id').clone().removeAttr("style").removeAttr("id").attr('id','template_detail_id' + sr_no));
+                    $('#tdGLledgerid' + sr_no).append($(this).closest('tr').find('.gl_ledger_id').clone().removeAttr("style").removeAttr("id").attr('id','gl_ledger_id' + sr_no));
+                    $("#template_detail_id" + sr_no).select2({
+                        placeholder: "Select Group",
+                        allowClear: true,
+
+                    });
+                    $("#gl_ledger_id" + sr_no).select2({
+                        placeholder: "Select Group",
+                        allowClear: true
+                    });
+                   // $(this).closest('tr').find('.btn_add_rows,.btn_delete_rows').addClass('hidden')
+                }
+            } catch (msg) { console.log(msg.message) }
+        });
+        $('#ContactGrid').on('click', '.btn_delete_row', function () {
+            var sr_no = parseInt($(this).closest('tr').find('td:eq(0)').html()) - 1;
+            $('#tdbtn_add_rows' + sr_no).find('.btn_add_rows,.btn_delete_rows').removeClass('hidden');
+            $(this).closest('tr').remove().fadeOut('slow');
+        })
+    </script>
+}

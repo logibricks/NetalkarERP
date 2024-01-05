@@ -1,0 +1,2937 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.pur_poVM
+@using Newtonsoft.Json
+@{ ViewBag.Title = "Create"; }
+@using (Html.BeginForm("Create", "PurchaseOrder", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+@Html.AntiForgeryToken()
+                <div class="form-horizontal" style="margin-top:10px;">
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div id="PoHidden"></div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-6">
+                                @*<div class="form-group">
+                                        @Html.LabelFor(model => model.pur_requisition_id, "Purchase Requisition", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                        <div class="col-md-8 col-sm-8 col-xs-12">
+                                            @Html.DropDownList("pur_requisition_id", Enumerable.Empty<SelectListItem>(), "---Select---", new { @class = "form-control removedisabled", @required = true, @disabled = "disabled" })
+                                            @Html.ValidationMessageFor(model => model.pur_requisition_id, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>*@
+                                <div class="form-group">
+
+                                    @Html.LabelFor(model => model.item_service_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12 " })
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        @Html.DropDownList("item_service_id", (System.Web.Mvc.SelectList)ViewBag.item_type, new { @class = "form-control", @onchange = "changeItemType(this.value);" })
+                                        @Html.ValidationMessageFor(model => model.item_service_id, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="col-lg-4 col-sm-4 service">
+                                        @Html.DropDownList("with_without_service_id", new List<SelectListItem>
+                                                     {
+                                new SelectListItem{ Text=" With Service Codes", Value = "1" },
+                                new SelectListItem{ Text="Without Service Codes", Value = "2" }
+                             }, new { @class = "form-control", @onchange = "changeGrid(this.value);" })
+                                        @Html.ValidationMessageFor(model => model.item_service_id, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.po_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.EditorFor(model => model.po_date, new { htmlAttributes = new { @class = "form-control postingdocumentdate validinput", @required = true } })
+                                        @Html.ValidationMessageFor(model => model.po_date, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.category_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.category_list, new { @class = "form-control category validinput removedisabled setPlant", @required = true, })
+                                        @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.vendor_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12 " })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.DropDownList("vendor_id", (System.Web.Mvc.SelectList)ViewBag.vendor_list, "---Select---", new { @class = "form-control validinput", @onchange = "GetVendorDetails(this.value);" })
+                                        @Html.ValidationMessageFor(model => model.vendor_id, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.net_value, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                    <div class="col-md-5 col-sm-5 col-xs-12">
+                                        @Html.EditorFor(model => model.net_value, new { htmlAttributes = new { @class = "form-control right validinput removedisabled net_value", @type = "number", @required = true, @disabled = "disabled" } })
+                                        @Html.ValidationMessageFor(model => model.net_value, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                        @Html.DropDownList("net_value_currency_id", (System.Web.Mvc.SelectList)ViewBag.currency_list, new { @class = "form-control removedisabled", @disabled = "disabled" })
+                                        @Html.ValidationMessageFor(model => model.net_value_currency_id, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.gross_value, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                    <div class="col-md-5 col-sm-5 col-xs-12">
+                                        @Html.EditorFor(model => model.gross_value, new { htmlAttributes = new { @class = "form-control right validinput removedisabled gross_value", @type = "number", @required = true, @disabled = "disabled" } })
+                                        @Html.ValidationMessageFor(model => model.gross_value, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                        @Html.DropDownList("gross_value_currency_id", (System.Web.Mvc.SelectList)ViewBag.currency_list, new { @class = "form-control removedisabled", @disabled = "disabled" })
+                                        @Html.ValidationMessageFor(model => model.gross_value_currency_id, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 col-sm-4 item">
+                                <input type="button" value="Select Purchase Requisition" name="purchaserequisition" id="purchaserequisition" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+                        <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                            <li class="active"><a data-toggle="tab" href="#sectionA">General</a></li>
+                            <li><a data-toggle="tab" href="#sectionB">Line Item</a></li>
+                            <li><a data-toggle="tab" href="#sectionG">Delivery Schedule</a></li>
+                            <li><a data-toggle="tab" href="#sectionC">Vendor</a></li>
+                            <li><a data-toggle="tab" href="#sectionD">Accounting</a></li>
+                            @*<li><a data-toggle="tab" href="#sectionF">Status</a></li>*@
+                            <li><a data-toggle="tab" href="#sectionE">Information</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.business_unit_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.DropDownList("business_unit_id", (System.Web.Mvc.SelectList)ViewBag.business_list, "---Select---", new { @class = "form-control validinput", @required = true })
+                                                @Html.ValidationMessageFor(model => model.business_unit_id, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.plant_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plant_list, "---Select---", new { @class = "form-control validinput selectedbycategory removedisabled", @disabled = "disabled", @required = true, @onchange = "GetStorageLocation(this.value);" })
+                                                @Html.ValidationMessageFor(model => model.plant_id, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.freight_terms_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.DropDownList("freight_terms_id", (System.Web.Mvc.SelectList)ViewBag.freight_list, "---Select---", new { @class = "form-control validinput", @required = true })
+                                                @Html.ValidationMessageFor(model => model.freight_terms_id, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.place_of_supply_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.DropDownList("place_of_supply_id", (System.Web.Mvc.SelectList)ViewBag.state_list, "---Select---", new { @class = "form-control removedisabled", @disabled = "disabled" })
+                                                @Html.ValidationMessageFor(model => model.place_of_supply_id, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.vendor_quotation_no, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.EditorFor(model => model.vendor_quotation_no, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.vendor_quotation_no, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.vendor_quotation_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.EditorFor(model => model.vendor_quotation_date, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.vendor_quotation_date, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.valid_until, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.EditorFor(model => model.valid_until, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.valid_until, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.form_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.DropDownList("form_id", (System.Web.Mvc.SelectList)ViewBag.form_list, "---Select---", new { @class = "form-control " })
+                                                @Html.ValidationMessageFor(model => model.form_id, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.ref_doc_no, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.EditorFor(model => model.ref_doc_no, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.ref_doc_no, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.delivery_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.EditorFor(model => model.delivery_date, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.delivery_date, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.is_rcm, "RCM", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.EditorFor(model => model.is_rcm, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.is_rcm, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.responsibility_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.DropDownList("responsibility_id", (System.Web.Mvc.SelectList)ViewBag.employee_list, "---Select---", new { @class = "form-control  ", })
+                                                @Html.ValidationMessageFor(model => model.responsibility_id, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="sectionB" class="tab-pane fade" style="margin-top:10px;">
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                                <button type="button" class="btn btn-primary" id="btn_open_modal_item" style="float:right" onclick="Initialize();"><span class="glyphicon glyphicon-plus"></span>Add Item</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="table-responsive">
+                                        <table class="table table-responsive table-bordered table-striped clearGridbyCategory" id="ContactGrid"></table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6">
+
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="table-responsive">
+                                            <table class="table table-responsive table-bordered table-striped taxgrid" id="TaxGrid"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="sectionG" class="tab-pane fade" style="margin-top:10px;">
+                                <div class="row" id="staggered_delivery">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading"></div>
+                                        <div class="panel-body">
+                                            <div class="table-responsive">
+                                                <input type="hidden" id="items_id" />
+                                                <table class="table table-responsive table-bordered table-striped" id="Staggerd_Table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th><label>Sr.No.</label></th>
+                                                            <th><label>Item</label></th>
+                                                            <th><label>Date</label></th>
+                                                            <th><label>Quantity</label></th>
+                                                            <th><label>ItemId</label></th>
+                                                            <th><label>Itemqty</label></th>
+                                                            <th><label>flag</label></th>
+                                                            <th><label>Action</label></th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" id="blancket_delivery">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">Blanket Order</div>
+                                        <div class="panel-body">
+                                            <div class="row" style="margin-top:10px;">
+                                                <div class="col-lg-6 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="maximum_limit_qty" class="control-label col-md-4 col-sm-4 col-xs-12">Maximum Limit Qty. * </label>
+                                                        <div class="col-md-8 col-sm-8 col-xs-12">
+                                                            <input type="number" class="form-control" id="maximum_limit_qty" name="maximum_limit_qty" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-sm-6">
+
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-lg-6 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="valid_from_date" class="control-label col-md-4 col-sm-4 col-xs-12">Valid From * </label>
+                                                        <div class="col-md-8 col-sm-8 col-xs-12">
+                                                            <input type="date" class="form-control" id="valid_from_date" name="valid_from_date" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-6 col-sm-6">
+                                                    <div class="form-group">
+                                                        <label for="valid_to_date" class="control-label col-md-4 col-sm-4 col-xs-12">Valid To * </label>
+                                                        <div class="col-md-8 col-sm-8 col-xs-12">
+                                                            <input type="date" class="form-control" id="valid_to_date" name="valid_to_date" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="sectionC" class="tab-pane fade" style="margin-top:10px;">
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.billing_address, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.EditorFor(model => model.billing_address, new { htmlAttributes = new { @class = "form-control ddlform validinput removedisabled", @disabled = "disabled", @required = true } })
+                                                @Html.ValidationMessageFor(model => model.billing_address, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.billing_city, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.EditorFor(model => model.billing_city, new { htmlAttributes = new { @class = "form-control ddlform validinput removedisabled", @disabled = "disabled", @required = true } })
+                                                @Html.ValidationMessageFor(model => model.billing_city, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.billing_pin_code, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.EditorFor(model => model.billing_pin_code, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                                                @Html.ValidationMessageFor(model => model.billing_pin_code, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.country_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.DropDownList("country_id", (System.Web.Mvc.SelectList)ViewBag.country_list, "---Select---", new { @class = "form-control validinput removedisabled", @disabled = "disabled", @required = true })
+                                                @Html.ValidationMessageFor(model => model.country_id, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.billing_state_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.DropDownList("billing_state_id", (System.Web.Mvc.SelectList)ViewBag.state_list, "---Select---", new { @class = "form-control validinput removedisabled", @disabled = "disabled", @required = true })
+                                                @Html.ValidationMessageFor(model => model.billing_state_id, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.email_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.EditorFor(model => model.email_id, new { htmlAttributes = new { @class = "form-control ddlform email removedisabled", @disabled = "disabled" } })
+                                                @Html.ValidationMessageFor(model => model.email_id, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.gst_in, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.EditorFor(model => model.gst_in, new { htmlAttributes = new { @class = "form-control removedisabled validinput", @disabled = "disabled", } })
+                                                @Html.ValidationMessageFor(model => model.gst_in, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.gst_vendor_type_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.DropDownList("gst_vendor_type_id", (System.Web.Mvc.SelectList)ViewBag.gst_list, "---Select---", new { @class = "form-control removedisabled validinput", @disabled = "disabled", })
+                                                @Html.ValidationMessageFor(model => model.gst_vendor_type_id, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.mobile_number, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.EditorFor(model => model.mobile_number, new { htmlAttributes = new { @class = "form-control ddlform removedisabled", @disabled = "disabled" } })
+                                                @Html.ValidationMessageFor(model => model.mobile_number, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="sectionD" class="tab-pane fade" style="margin-top:10px;">
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.payment_cycle_type_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.DropDownList("payment_cycle_type_id", (System.Web.Mvc.SelectList)ViewBag.payment_cycle_type_list, "---Select---", new { @class = "form-control validinput", @required = true, @onchange = "FillPaymentCycle()" })
+                                                @Html.ValidationMessageFor(model => model.payment_cycle_type_id, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.payment_cycle_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.DropDownList("payment_cycle_id", (System.Web.Mvc.SelectList)ViewBag.payment_cycle_list, "---Select---", new { @class = "form-control validinput", @required = true })
+                                                @Html.ValidationMessageFor(model => model.payment_cycle_id, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.payment_terms_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.DropDownList("payment_terms_id", (System.Web.Mvc.SelectList)ViewBag.payment_terms_list, "---Select---", new { @class = "form-control validinput", @required = true })
+                                                @Html.ValidationMessageFor(model => model.payment_terms_id, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6 hidden">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.gst_no, htmlAttributes: new { @class = "control-label col-md-4" })
+                                            <div class="col-md-8">
+                                                @Html.EditorFor(model => model.gst_no, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                                                @Html.ValidationMessageFor(model => model.gst_no, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row hidden">
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.pan_no, htmlAttributes: new { @class = "control-label col-md-4" })
+                                            <div class="col-md-8">
+                                                @Html.EditorFor(model => model.pan_no, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                                                @Html.ValidationMessageFor(model => model.pan_no, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.ecc_no, htmlAttributes: new { @class = "control-label col-md-4" })
+                                            <div class="col-md-8">
+                                                @Html.EditorFor(model => model.ecc_no, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                                                @Html.ValidationMessageFor(model => model.ecc_no, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row hidden">
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.vat_tin_no, htmlAttributes: new { @class = "control-label col-md-4" })
+                                            <div class="col-md-8">
+                                                @Html.EditorFor(model => model.vat_tin_no, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                                                @Html.ValidationMessageFor(model => model.vat_tin_no, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.cst_tin_no, htmlAttributes: new { @class = "control-label col-md-4" })
+                                            <div class="col-md-8">
+                                                @Html.EditorFor(model => model.cst_tin_no, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                                                @Html.ValidationMessageFor(model => model.cst_tin_no, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6 hidden">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.service_tax_no, htmlAttributes: new { @class = "control-label col-md-4" })
+                                            <div class="col-md-8">
+                                                @Html.EditorFor(model => model.service_tax_no, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                                                @Html.ValidationMessageFor(model => model.service_tax_no, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div id="sectionF" class="tab-pane fade" style="margin-top:10px;">
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6" hidden>
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.status_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.DropDownList("status_id", (System.Web.Mvc.SelectList)ViewBag.status_list, new { @class = "form-control validinput", @required = true })
+                                                @Html.ValidationMessageFor(model => model.status_id, "", new { @class = "text-danger" })
+                                                @Html.DropDownList("tax_list", (System.Web.Mvc.SelectList)ViewBag.tax_list, new { @class = "form-control hidden" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div id="sectionE" class="tab-pane fade" style="margin-top:10px;">
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.internal_remarks, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.EditorFor(model => model.internal_remarks, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.internal_remarks, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.remarks_on_document, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.EditorFor(model => model.remarks_on_document, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.remarks_on_document, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="productdetail" name="productdetail" />
+                                    <input type="hidden" id="formdetail" name="formdetail" />
+                                    <input type="hidden" id="deleteids" name="deleteids" />
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.attachement, "Attachment", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                <input type="file" class="form-control" id="FileUpload" name="FileUpload" accept="application/pdf, image/*" />
+                                                @Html.ValidationMessageFor(model => model.attachement, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                                <div class="row">
+                                    <div class="col-lg12 col-sm-12">
+                                        <div class="form-group">
+                                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                                <input type="submit" value="Create" data-controller="PurchaseOrder" id="create" class="btn btn-success" onclick="TabletoJeson();" style="float:right" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> <!-- Modal -->
+
+                                                                <div class="modal fade" id="myModal" role="dialog">
+                                                                    <div class="modal-dialog">
+                                                                        <!-- Modal content-->
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <button type="button" class="close" data-dismiss="modal" onclick="clearmodel();">&times;</button>
+                                                                                <h4 class="modal-title">Item Details</h4>
+                                                                            </div>
+                                                                            <div class="modal-body" style="max-height:500px;overflow:auto">
+                                                                                <div class="row hide_item_type hidden">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label col-md-3">
+                                                                                            Item Type <span class="required">*</span>
+                                                                                        </label>
+                                                                                        <div class="col-md-7">
+                                                                                            @Html.DropDownList("item_type_id", (System.Web.Mvc.SelectList)ViewBag.item_type, "--Select--", new { @class = "form-control col-md-7 col-xs-12" })
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <br />
+                                                                                <div class="row">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label col-md-3">
+                                                                                            Item <span class="required">*</span>
+                                                                                        </label>
+                                                                                        <div class="col-md-7">
+                                                                                            @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.item_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12", @onchange = "GetUnit(this.value)", @style = "width: 100%;" })
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <br />
+                                                                                <div class="row">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label col-md-3" for="first-name">
+                                                                                            User Description
+                                                                                        </label>
+                                                                                        <div class="col-md-7">
+                                                                                            <textarea class="form-control col-md-7 col-xs-12" id="udescription" rows="3"></textarea>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <br />
+                                                                                <div class="row hide_hsn">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label col-md-3" for="first-name" id="lbl_sac_hsn_id">
+                                                                                            HSN Code <span class="required">*</span>
+                                                                                        </label>
+                                                                                        <div class="col-md-7">
+                                                                                            @Html.DropDownList("sac_hsn_id", (System.Web.Mvc.SelectList)ViewBag.hsncodelist, "---Select---", new { @class = "form-control col-md-7 col-xs-12" })
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <br />
+
+                                                                                <div class="row dt_col_hide" id="divsloc">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label col-md-3">
+                                                                                            SLoc <span class="required">*</span>
+                                                                                        </label>
+                                                                                        <div class="col-md-7">
+                                                                                            @Html.DropDownList("sloc_id", Enumerable.Empty<SelectListItem>(), "", new { @class = "form-control col-md-7 col-xs-12", @style = "width: 100%;" })
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <br class="dt_col_hide" />
+                                                                                <div class="row dt_col_hide" id="divdelivery">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label col-md-3">
+                                                                                            Delivery Date <span class="required">*</span>
+                                                                                        </label>
+                                                                                        <div class="col-md-7">
+
+                                                                                            <input type="date" class="form-control col-md-7 col-xs-12" id="dte">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <br class="dt_col_hide" />
+                                                                                <div class="row dt_col_hide" id="qtext">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label col-md-3" for="first-name">
+                                                                                            Quantity <span class="required">*</span>
+                                                                                        </label>
+                                                                                        <div class="col-md-4">
+                                                                                            <input type="number" class="form-control col-md-7 col-xs-12" id="quantity" onchange="calculation()">
+                                                                                        </div>
+                                                                                        <div class="col-md-3">
+                                                                                            @Html.DropDownList("uom_id", (System.Web.Mvc.SelectList)ViewBag.uom_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12", @disabled = "disabled" })
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <br />
+                                                                                <div class="row">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label col-md-3" for="first-name" id="uprice"></label>
+                                                                                        <div class="col-md-7">
+                                                                                            <input type="number" class="form-control col-md-7 col-xs-12" id="unitprice" onchange="calculation()">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <br />
+                                                                                <div class="row">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label col-md-3" for="first-name">
+                                                                                            Discount (%) <span class="required"></span>
+                                                                                        </label>
+                                                                                        <div class="col-md-7">
+                                                                                            <input type="number" min="0" max="3" class="form-control col-md-7 col-xs-12" id="discount" onchange="calculation()">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <br class="dt_col_hide" />
+                                                                                <div class="row dt_col_hide">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label col-md-3" for="first-name">
+                                                                                            Effective Unit Price <span class="required">*</span>
+                                                                                        </label>
+                                                                                        <div class="col-md-7">
+                                                                                            <input type="number" class="form-control col-md-7 col-xs-12" id="effectiveprice" disabled>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <br />
+                                                                                <div class="row">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label col-md-3" for="first-name">
+                                                                                            Purchase Value <span class="required">*</span>
+                                                                                        </label>
+                                                                                        <div class="col-md-7">
+                                                                                            <input type="number" class="form-control col-md-7 col-xs-12" id="salesvalue" disabled onchange="GetFreightTerms(this.value)">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <br class="dt_col_hide" />
+                                                                                <div class="row dt_col_hide">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label col-md-3" for="first-name">
+                                                                                            Taxable Rate <span class="required">*</span>
+                                                                                        </label>
+                                                                                        <div class="col-md-7">
+                                                                                            <input type="number" class="form-control col-md-7 col-xs-12" id="assessablerate" onchange="asscalculation()">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <br class="dt_col_hide" />
+                                                                                <div class="row dt_col_hide">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label col-md-3" for="first-name">
+                                                                                            Taxable Value <span class="required">*</span>
+                                                                                        </label>
+                                                                                        <div class="col-md-7">
+                                                                                            <input type="number" class="form-control col-md-7 col-xs-12" id="assessablevalue" disabled>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <br />
+                                                                                <div class="row">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label col-md-3" for="first-name">
+                                                                                            Tax Code <span class="required">*</span>
+                                                                                        </label>
+                                                                                        <div class="col-md-7">
+                                                                                            @Html.DropDownList("tax_id", Enumerable.Empty<SelectListItem>(), "---Select---", new { @class = "form-control col-md-7 col-xs-12" })
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <br class="pr_no_datehide hidden" />
+                                                                                <div class="row pr_no_datehide hidden">
+                                                                                    <div class="form-group">
+                                                                                        <label class="control-label col-md-3" for="first-name">
+                                                                                            PR Number + Date <span class="required"></span>
+                                                                                        </label>
+                                                                                        <div class="col-md-7">
+                                                                                            <input type="text" class="form-control col-md-7 col-xs-12" id="pr_no_date" disabled>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <br />
+                                                                            <div class="modal-footer">
+                                                                                <input type="hidden" id="srno" />
+                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                                                                                <button type="button" class="add btn btn-primary">Add Item</button>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+
+                                                                                <div class="modal fade" id="DeliveryModal" role="dialog">
+                                                                                    <div class="modal-dialog">
+                                                                                        <!-- Modal content-->
+                                                                                        <div class="modal-content">
+                                                                                            <div class="modal-header">
+                                                                                                <button type="button" class="close" data-dismiss="modal" onclick="clearmodeldel();">&times;</button>
+                                                                                                <h4 class="modal-title">Schedule Details</h4>
+                                                                                            </div>
+                                                                                            <div class="modal-body" style="max-height:500px;overflow:auto">
+
+                                                                                                <div class="row" id="divdelivery">
+                                                                                                    <div class="form-group">
+                                                                                                        <label class="control-label col-md-3">
+                                                                                                            Delivery Date <span class="required">*</span>
+                                                                                                        </label>
+                                                                                                        <div class="col-md-7">
+
+                                                                                                            <input type="date" class="form-control col-md-7 col-xs-12" id="del_date">
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <br />
+                                                                                                <div class="row" id="qtext">
+                                                                                                    <div class="form-group">
+                                                                                                        <label class="control-label col-md-3" for="first-name">
+                                                                                                            Quantity <span class="required">*</span>
+                                                                                                        </label>
+                                                                                                        <div class="col-md-7">
+                                                                                                            <input type="number" class="form-control col-md-7 col-xs-12" id="del_quantity">
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <br />
+                                                                                            </div>
+                                                                                            <br />
+                                                                                            <div class="modal-footer">
+                                                                                                <input type="number" id="srnodel" hidden />
+                                                                                                <input type="number" id="sum_delquantity" hidden />
+                                                                                                <input type="text" id="item_names" hidden />
+                                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodeldel();">Close</button>
+                                                                                                <button type="button" class="adddel btn btn-primary">Add Schedule</button>
+                                                                                            </div>
+                                                                                        </div>
+
+                                                                                    </div>
+                                                                                </div>
+
+                                                                                                <div class="modal fade " id="myModal1" role="dialog">
+                                                                                                    <div class="modal-dialog modal-xl">
+                                                                                                        <div class="modal-content ">
+                                                                                                            <div class="modal-header ">
+                                                                                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                                                                                <h4 class="modal-title">Purchase Order</h4>
+                                                                                                            </div>
+                                                                                                            <div class="modal-body">
+                                                                                                                <div class="row">
+                                                                                                                    <div class="col-lg-4 col-sm-4">
+                                                                                                                        <div class="form-group">
+                                                                                                                            <label class="control-label col-md-4">
+                                                                                                                                @Html.RadioButton("radio_id", "radio_pr ", isChecked: true) Search By PR Number
+                                                                                                                            </label>
+                                                                                                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                                                                                                @Html.DropDownList("req_id", (System.Web.Mvc.SelectList)ViewBag.requisition_list, "---Select---", new { @class = "form-control", @onchange = "GetPurRequisition(this);" })
+
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <div class="col-lg-4 col-sm-4">
+                                                                                                                        <div class="form-group">
+                                                                                                                            <label class="control-label col-md-4">
+                                                                                                                                @Html.RadioButton("radio_id", "radio_vendor ", isChecked: false)  Search By Vendor
+                                                                                                                            </label>
+                                                                                                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                                                                                                @Html.DropDownList("req_id_vn", (System.Web.Mvc.SelectList)ViewBag.requisition_list, "---Select---", new { @class = "form-control", @onchange = "GetPurRequisition(this);", @disabled = true })
+
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                    <div class="col-lg-4 col-sm-4">
+                                                                                                                        <div class="form-group">
+                                                                                                                            <label class="control-label col-md-4">
+                                                                                                                                @Html.RadioButton("radio_id", "radio_item ", isChecked: false)   Search By Item
+                                                                                                                            </label>
+                                                                                                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                                                                                                @Html.DropDownList("req_id_itm", (System.Web.Mvc.SelectList)ViewBag.requisition_list, "---Select---", new { @class = "form-control", @onchange = "GetPurRequisition(this);", @disabled = true })
+
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                                <br />
+                                                                                                                <div class="row">
+                                                                                                                    <div class="form-group">
+                                                                                                                        <div class="table-responsive">
+                                                                                                                            <table class="table table-responsive table-bordered table-striped" id="pogrid"></table>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </div>
+                                                                                                            <div class="modal-footer">
+                                                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                                                                <button type="button" class="addSALES btn btn-primary" disabled="disabled">Add</button>
+                                                                                                                <input type="hidden" id="requisition_detail_id" />
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+
+                                                                                                                <div class="modal fade" id="myModalTDS" role="dialog">
+                                                                                                                    <div class="modal-dialog modal-lg">
+
+                                                                                                                        <!-- Modal content-->
+                                                                                                                        <div class="modal-content">
+                                                                                                                            <div class="modal-header">
+                                                                                                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                                                                                                <h4 class="modal-title">Information</h4>
+                                                                                                                            </div>
+                                                                                                                            <div class="modal-body">
+                                                                                                                                <div class="table-responsive">
+                                                                                                                                    <table class="table table-responsive table-bordered table-striped" id="JEGrid">
+                                                                                                                                        <thead>
+                                                                                                                                            <tr>
+                                                                                                                                                <th><label>SR No.</label></th>
+                                                                                                                                                <th><label>Vendor Name</label></th>
+                                                                                                                                                <th><label>PO No</label></th>
+                                                                                                                                                <th><label>PO Date</label></th>
+                                                                                                                                                <th><label>Price</label></th>
+                                                                                                                                                <th><label>PO Qty</label></th>
+                                                                                                                                                <th><label>GRN Qty</label></th>
+                                                                                                                                            </tr>
+                                                                                                                                        </thead>
+                                                                                                                                    </table>
+
+                                                                                                                                    <br />
+
+                                                                                                                                    <table class="table table-bordered table-sm" id="JEGrid1">
+                                                                                                                                        <thead>
+                                                                                                                                            <tr>
+                                                                                                                                                <th style="width: 0.1%"><label></label></th>
+                                                                                                                                                <th style="width: 0.1%"><label>Total</label></th>
+
+                                                                                                                                            </tr>
+                                                                                                                                        </thead>
+                                                                                                                                    </table>
+
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+<style>
+    @@media (min-width: 768px) {
+        .modal-dialog {
+            width: 600px;
+            margin: 30px auto;
+        }
+    }
+
+    @@media (min-width: 992px) {
+        .modal-lg {
+            width: 900px;
+        }
+    }
+
+    @@media (min-width: 768px) {
+        .modal-xl {
+            width: 90%;
+            max-width: 1400px;
+        }
+    }
+</style>
+<script src="~/script/jquery-3.2.1.min.js"></script>
+<script src="~/script/bootstrap.min.js"></script>
+<script src="~/script/jquery.dataTables.min.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+
+        var indx = 0;
+        var flags = 0;
+        $(document).ready(function () {
+
+            $('#btn_open_modal_item').hide();
+            $("#blancket_delivery").hide();
+            $(".service").hide();
+            $('#is_rcm').checkboxpicker();
+            Get_Tax(0);
+            var error=@Html.Raw(Json.Encode(ViewBag.error));
+
+            if(error !="")
+            {
+                sweetAlert("",error,"error");
+            }
+            document.getElementById('po_date').valueAsDate = new Date();
+            $('#uprice').text("Unit Price *");
+            $("#unitpricetext").text("Unit Price");
+            $("#vendor_id").select2({
+                placeholder: "Select Vendor",
+                allowClear: true
+            });
+            $("#plant_id").select2({
+                placeholder: "Select Plant",
+                allowClear: true
+            });
+            $("#business_unit_id").select2({
+                placeholder: "Select Business Unit",
+                allowClear: true
+            });
+            $("#responsibility_id").select2({
+                placeholder: "Select Employee",
+                allowClear: true
+            });
+            $("#item_id").select2({
+                placeholder: "Select Item",
+                allowClear: true
+            });
+            $("#tax_id").select2({
+                placeholder: "Select Tax",
+                allowClear: true
+            });
+            $("#sloc_id").select2({
+                placeholder: "Select SLoc",
+                allowClear: true
+            });
+            $("#hsn_id").select2({
+                placeholder: "Select HSN/SAC",
+                allowClear: true
+            });
+            $("#req_id").select2({
+                placeholder: "Search By PR Number",
+                allowClear: true
+            });
+            $("#req_id_vn").select2({
+                placeholder: "Search By Vendor",
+                allowClear: true
+            });
+            $("#req_id_itm").select2({
+                placeholder: " Search By Item",
+                allowClear: true
+            });
+            $("#sac_hsn_id").select2({
+                placeholder: " Search HSN/SAC",
+                allowClear: true
+            });freight_terms_id
+            $("#freight_terms_id").select2({
+                placeholder: " Search Freight Terms",
+                allowClear: true
+            });
+            $('#example-select-all').on('click', function () {
+                if ($(this).hasClass('allChecked')) {
+                    $('input[type="checkbox"]', '#pogrid').prop('checked', false);
+                } else {
+                    $('input[type="checkbox"]', '#pogrid').prop('checked', true);
+                }
+                $(this).toggleClass('allChecked');
+            });
+        });
+        $("#purchaserequisition").on("click", function (event) {
+            try{
+                $("#req_id,#req_id_vn,#req_id_itm").empty();
+                $("#req_id,#req_id_vn,#req_id_itm").append("<option value='0'><option/>");
+                $("#req_id,#req_id_vn,#req_id_itm").select2("val","");
+                var t = $('#pogrid').dataTable();
+                t.fnClearTable();
+                var plant_id = $('#plant_id').val();
+                $.ajax({
+                    url:'@Url.Action("GetPR","PurchaseOrder")',
+                    data:{plant_id:plant_id},
+                    method:'get',
+                    async :false,
+                    success:function(data){
+                        $.each(data[0],function(index,element){
+                            $('#req_id').append("<option value="+element.pur_requisition_id+">"+element.pur_requisition_number+"<option/>");
+                        })
+                        $.each(data[1],function(index,ele){
+                            $('#req_id_vn').append("<option value="+ele.vendor_id+">"+ele.vendor_name+"<option/>");
+                        })
+                        $.each(data[2],function(index,elem){
+                            $('#req_id_itm').append("<option value="+elem.item_id+">"+elem.item_code+"<option/>");
+                        })
+                    }
+                });
+
+                $("#po_number").val('').trigger("change");
+                $('#myModal1').modal('show');
+                $('#example-select-all').attr('checked', false);
+
+            }catch(msg){msg.message}
+        })
+
+        function GetStorageLocation(id) {
+            if (id == "") {
+                id = 0;
+            }
+            $.ajax({
+                url: '@Url.Action("GetStorageLocation", "Generic")',
+                type: "GET",
+                dataType: "JSON",
+                data: { id: id },
+                success: function (id) {
+                    $("#sloc_id").html(""); // clear before appending new list
+                    $("#sloc_id").append($('<option></option>').val("").html("---Select---"));
+                    $.each(id, function (i, cycle) {
+                        $("#sloc_id").append(
+                            $('<option></option>').val(cycle.storage_location_id).html(cycle.storage_location_name));
+                        $('#place_of_supply_id').val(cycle.state_id);
+                    });
+                }
+            });
+        }
+        // Set category_id on change plant
+        function GetDocumentCategory(id) {
+            if (id == "") {
+                id = 0;
+            }
+            $.ajax({
+                url: '@Url.Action("GetCategoryListByPlant", "Generic")',
+                type: "GET",
+                dataType: "JSON",
+                data: { id: 72,plant_id:id },
+                success: function (id) {
+                    $("#category_id").html(""); // clear before appending new list
+                    $.each(id, function (i, cycle) {
+                        $("#category_id").append(
+                            $('<option></option>').val(cycle.document_numbring_id).html(cycle.category));
+                    });
+                }
+            });
+        }
+
+
+        $('#Staggerd_Table').on('click', '.addsta', function () {
+            var t = $('#Staggerd_Table').dataTable();
+            clearmodeldel();
+            var rowCountde = t.fnGetData().length;
+            var id = $(this).parent('td').parent('tr').index();
+            $("#items_id").val(t.fnGetData(id)[4]);
+            $("#item_names").val(t.fnGetData(id)[1]);
+            var sr = t.fnGetData(id)[0];
+            $('#srnodel').val(sr);
+            $('#DeliveryModal').modal('show');
+        });
+
+
+        function calculateTotal(){
+            try{
+
+                var c = $('#Staggerd_Table').dataTable();
+                var len = c.fnGetData().length;
+                var itemid = $("#items_id").val();
+                var sr =$('#srnodel').val();
+                var _total = 0;
+
+                for (i = 0; i < len; i++){
+
+                    if( itemid == c.fnGetData(i)[4] && parseInt(sr) == c.fnGetData(i)[0])
+                    {
+                        _total = _total + parseFloat(c.fnGetData(i)[3]);
+                        $('#sum_delquantity').val(parseFloat(_total).toFixed(2));
+                    }
+
+                }
+
+            }catch(msg){console.log(msg.message)}
+        }
+
+        $(".adddel").on("click", function (event) {
+            var st = $('#Staggerd_Table').dataTable();
+            var rowCount = st.fnGetData().length;
+            var totdelqty = 0;
+            var srnos =  $('#srnodel').val();
+            var itemid = $("#items_id").val();
+
+
+            calculateTotal();
+            var val = 0;
+            for (i = 0; i < rowCount; i++) {
+
+
+                if( itemid == st.fnGetData(i)[4] && parseInt(srnos) == st.fnGetData(i)[0])
+                {
+
+                    var dt = $('#del_date').val()
+                    var dt1 = st.fnGetData(i)[2];
+
+                    if(dt != "" && dt1 != "")
+                    {
+                        var date = new Date(dt);
+                        date.setHours(0,0,0,0);
+                        var date1 = new Date(dt1);
+                        date1.setHours(0,0,0,0);
+                        var today = new Date();
+                        today.setHours(0,0,0,0);
+
+                        if(srnos!="")
+                        {
+                            if(date.getTime() === date1.getTime() )
+                            {
+                                swal("Delivery Date already exist for selected item !!", "", "error");
+                                return val = 1;
+                            }
+                        }
+
+
+                        if(date < today )
+                        {
+                            swal("Delivery Date should be greater than Today' Date!!", "", "error");
+                            return val = 1;
+                        }
+
+                    }
+
+                    totdelqty = +$('#sum_delquantity').val()+ +$('#del_quantity').val();
+                    var itemqty = st.fnGetData(i)[5];
+
+                    if(parseInt(itemqty) <  totdelqty )
+                    {
+                        swal("Total Qty cannot be greater than Item Qty!!", "", "error");
+                        return val = 1;
+                    }
+
+                    if( $('#del_quantity').val() == 0)
+                    {
+                        swal("Qty cannot be Zero!!", "", "error");
+                        return val = 1;
+                    }
+
+                    flags = st.fnGetData(i)[6];
+
+                }
+
+
+            }
+
+            if(val == 0)
+            {
+                if(flags == 0)
+                {
+                    st.fnAddData([parseInt($('#srnodel').val()),$('#item_names').val(),$('#del_date').val(),parseFloat($('#del_quantity').val()).toFixed(2),itemid,itemqty,0,'']);
+                    $('#DeliveryModal').modal('hide');
+                }
+                else
+                {
+
+                    st.fnUpdate($('#del_date').val(), indx, 2);
+                    st.fnUpdate(parseFloat($('#del_quantity').val()).toFixed(2), indx, 3);
+                    st.fnUpdate(0, indx, 6);
+                    $('#DeliveryModal').modal('hide');
+                }
+
+            }
+
+
+        });
+
+        var array_polist = [];
+        $(".add").on("click", function (event) {
+            try{
+                var item_id = $("#item_id").val();
+                var item_name = $("#item_id").find("option:selected").text();
+                var slocid = $("#sloc_id").val();
+                if (slocid == "") {
+                    slocid = 0;
+                }
+                var slocname = $("#sloc_id").find("option:selected").text();
+                var userdescription = $("#udescription").val();
+                var delevery_date = $("#dte").val();
+                var qty = $("#quantity").val();
+                var unit_id = $("#uom_id").val();
+                if (unit_id == "") {
+                    unit_id = 0;
+                }
+                var unit_name = $("#uom_id").find("option:selected").text();
+                var unit_price = $("#unitprice").val();
+                var discount = $("#discount").val();
+                var effectiveprice = $("#effectiveprice").val();
+                var salesvalue = $("#salesvalue").val();
+                var assessablerate = $("#assessablerate").val();
+                var assessablevalue = $("#assessablevalue").val();
+                var taxcode = $("#tax_id").find("option:selected").text();
+                var taxid = $("#tax_id").val();
+                var requisition_detail_id = $("#requisition_detail_id").val();
+                var delqt =  $('#sum_delquantity').val();
+                var hsn_id = $("#sac_hsn_id").val();
+                var hsn = $("#sac_hsn_id :selected").text();
+                if(hsn=='---Select---'){hsn=''}
+                if (requisition_detail_id == "") {
+                    requisition_detail_id = 0;
+                }
+                if (discount == '') {
+                    discount = 0;
+                }
+
+                var date1 = new Date(delevery_date);
+                date1.setHours(0,0,0,0);
+                var today = new Date();
+                today.setHours(0,0,0,0);
+
+                if(date1 < today)
+                {
+                    swal("Delivery Date should be greater than or equal to Today's Date!!", "", "error");
+                    return false;
+                }
+
+                var item_type_id = $("#item_type_id").val();
+
+                if (item_id == '') {
+                    swal("", "Please Select Item!", "error");
+                    return false;
+                }
+                else if ((slocid == '') && ($('#divsloc').css('display') != 'none')) {
+                    swal("", "Please select SLoc.", "error");
+                    return false;
+                }
+                else if ((delevery_date == '') && ($('#divdelivery').css('display') != 'none')) {
+                    swal("", "Please Select Delivery Date.", "error");
+                    return false;
+                }
+                else if ((qty == '') && ($("#quantity").prop('disabled') == false)) {
+                    swal("", "Please Enter Quantity.", "error");
+                    return false;
+                }
+                else if ((parseFloat(qty) <= 0) && ($("#quantity").prop('disabled') == false)) {
+                    swal("", "Quantity should be greater than zero.", "error");
+                    return false;
+                }
+                else if ((unit_id == '') && ($("#qtext").css('display') != 'none')) {
+                    swal("", "Please select Unit.", "error");
+                    return false;
+                }
+                else  if (unit_price == '') {
+                    swal("", "Please enter unit price.", "error");
+                    return false;
+                }
+                else if (salesvalue == '') {
+                    swal("", "Please enter purchase value.", "error");
+                    return false;
+                }
+                else if(parseFloat(salesvalue)<=0)
+                {
+                    swal("", "Purchase value should be greater than zero.", "error");
+                    return false;
+                }
+                if (taxid == '') {
+                    swal("", "Please select tax code.", "error");
+                    return false;
+                }
+                else if (hsn_id=='') {
+                    swal("", "SAC/HSN Code is required .", "error");
+                    return false;
+                }
+                else if (hsn_id=='0') {
+                    swal("", "SAC/HSN Code is required .", "error");
+                    return false;
+                }
+
+                else{
+                    let obj = {}
+                    obj.item_id =item_id ;
+                    obj.item_name = item_name;
+                    obj.sloc_id =slocid ;
+                    obj.sloc_name = slocname;
+                    obj.user_description = userdescription;
+                    obj.delivery_date = delevery_date;
+                    obj.po_qty = qty;
+                    obj.uom_id = unit_id;
+                    obj.uom_name = unit_name;
+                    obj.unit_price = unit_price;
+                    obj.discount = discount;
+                    obj.effective_price = effectiveprice;
+                    obj.purchase_value = salesvalue;
+                    obj.taxable_rate = assessablerate;
+                    obj.taxable_value = assessablevalue;
+                    obj.tax_name = taxcode;
+                    obj.tax_id = taxid;
+                    obj.hsn_id = hsn_id;
+                    obj.hsn_name = hsn;
+                    obj.item_type_id = item_type_id;
+                    obj.pur_requisition_detail_id = requisition_detail_id;
+                    obj.calc_qty = parseFloat(qty)*parseFloat(unit_price);
+                    if ($("#srno").val() == "") {
+
+                        $('#sum_delquantity').val(obj.po_qty);
+                        let _table = $('#ContactGrid').dataTable();
+                        var it = _table.fnGetData().length;
+                        var no = it+1;
+                        obj.detsr = no;
+                        _table.fnAddData(obj);
+
+                        var st = $('#Staggerd_Table').dataTable();;
+                        var rowCount = st.fnGetData().length;
+                        st.fnAddData([no,obj.item_name,obj.delivery_date,parseFloat(obj.po_qty).toFixed(2),obj.item_id,parseFloat(obj.po_qty).toFixed(2),0,''])
+
+                    }
+                    else {
+
+
+                        let _idx = parseInt($("#srno").val());
+                        var st = $('#Staggerd_Table').dataTable();;
+                        var rowCount = st.fnGetData().length;
+                        var xx = st.fnGetData(_idx)[5];
+
+                        if(parseInt(qty) < parseInt(xx))
+                        {
+                            swal("Delivery Qty is greater than Item Qty!!", "", "error");
+                            return false;
+                        }
+
+                        if (parseInt(qty) > parseInt(xx)) {
+
+                            swal({
+                                title: "Are you sure?",
+                                text: "Delivery Qty is not equal to Item Qty!!!",
+                                type: "warning",
+                                showCancelButton: true,
+                                confirmButtonClass: "btn-danger",
+                                confirmButtonText: "Yes, Save it!",
+                                closeOnConfirm: false
+                            },
+                                function () {
+
+                                    let _table1 = $('#ContactGrid').dataTable();
+                                    let _table = $('#ContactGrid').DataTable();
+                                    _table.cell(_idx, 'item_id:name').data(item_id).draw();
+                                    _table.cell(_idx, 'item_name:name').data(item_name).draw();
+                                    _table.cell(_idx, 'sloc_id:name').data(slocid).draw();
+                                    _table.cell(_idx, 'sloc_name:name').data(slocname).draw();
+                                    _table.cell(_idx, 'user_description:name').data(userdescription).draw();
+                                    _table.cell(_idx, 'po_qty:name').data(qty).draw();
+                                    _table.cell(_idx, 'uom_id:name').data(unit_id).draw();
+                                    _table.cell(_idx, 'uom_name:name').data(unit_name).draw();
+                                    _table.cell(_idx, 'unit_price:name').data(unit_price).draw();
+                                    _table.cell(_idx, 'discount:name').data(discount).draw();
+                                    _table.cell(_idx, 'effective_price:name').data(effectiveprice).draw();
+                                    _table.cell(_idx, 'purchase_value:name').data(salesvalue).draw();
+                                    _table.cell(_idx, 'taxable_rate:name').data(assessablerate).draw();
+                                    _table.cell(_idx, 'taxable_value:name').data(assessablevalue).draw();
+                                    _table.cell(_idx, 'tax_name:name').data(taxcode).draw();
+                                    _table.cell(_idx, 'tax_id:name').data(taxid).draw();
+                                    _table.cell(_idx, 'hsn_id:name').data(hsn_id).draw();
+                                    _table.cell(_idx, 'hsn_name:name').data(hsn).draw();
+                                    if (item_type_id != undefined) {
+                                        _table.cell(_idx, 'item_type_id:name').data(item_type_id).draw();
+                                    }
+
+
+                                    for (i = 0; i < rowCount; i++) {
+
+                                        if (st.fnGetData(i)[0] == _table1.fnGetData(_idx).detsr) {
+                                            st.fnUpdate(parseFloat(qty).toFixed(2), i, 5);
+                                        }
+
+                                    }
+                                    swal("Saved!", "Qty has been Saved.", "success");
+                                });
+                        }
+
+                        if (parseInt(qty) == parseInt(xx)) {
+
+
+                                    let _table1 = $('#ContactGrid').dataTable();
+                                    let _table = $('#ContactGrid').DataTable();
+                                    _table.cell(_idx, 'item_id:name').data(item_id).draw();
+                                    _table.cell(_idx, 'item_name:name').data(item_name).draw();
+                                    _table.cell(_idx, 'sloc_id:name').data(slocid).draw();
+                                    _table.cell(_idx, 'sloc_name:name').data(slocname).draw();
+                                    _table.cell(_idx, 'user_description:name').data(userdescription).draw();
+                                    _table.cell(_idx, 'po_qty:name').data(qty).draw();
+                                    _table.cell(_idx, 'uom_id:name').data(unit_id).draw();
+                                    _table.cell(_idx, 'uom_name:name').data(unit_name).draw();
+                                    _table.cell(_idx, 'unit_price:name').data(unit_price).draw();
+                                    _table.cell(_idx, 'discount:name').data(discount).draw();
+                                    _table.cell(_idx, 'effective_price:name').data(effectiveprice).draw();
+                                    _table.cell(_idx, 'purchase_value:name').data(salesvalue).draw();
+                                    _table.cell(_idx, 'taxable_rate:name').data(assessablerate).draw();
+                                    _table.cell(_idx, 'taxable_value:name').data(assessablevalue).draw();
+                                    _table.cell(_idx, 'tax_name:name').data(taxcode).draw();
+                                    _table.cell(_idx, 'tax_id:name').data(taxid).draw();
+                                    _table.cell(_idx, 'hsn_id:name').data(hsn_id).draw();
+                                    _table.cell(_idx, 'hsn_name:name').data(hsn).draw();
+                                    if (item_type_id != undefined) {
+                                        _table.cell(_idx, 'item_type_id:name').data(item_type_id).draw();
+                                    }
+
+
+                                    for (i = 0; i < rowCount; i++) {
+
+                                        if (st.fnGetData(i)[0] == _table1.fnGetData(_idx).detsr) {
+                                            st.fnUpdate(parseFloat(qty).toFixed(2), i, 5);
+                                        }
+
+                                    }
+                                    swal("Saved!", "Qty has been Saved.", "success");
+
+                        }
+
+                    }
+                }
+
+                clearmodel();
+               // clearmodeldel();
+                getnetTotal();
+                let t = $('#ContactGrid').dataTable();
+                var rowCount1 = t.fnGetData().length;
+                var str;
+                var str1;
+                var tot = 0;
+                var tot_qty=0;
+                for (i = 0; i < rowCount1; i++) {
+                    str1 = t.fnGetData(i).tax_id + "~";
+                    str1 = str1 + t.fnGetData(i).taxable_value + "~";
+                    str1 = str1 + t.fnGetData(i).purchase_value;
+                    if (i == 0) {
+                        str = str1 + ","
+                    }
+                    else {
+                        str = str + str1 + ",";
+                    }
+                    tot = tot + parseFloat(t.fnGetData(i).purchase_value);
+                    tot_qty = tot_qty + parseFloat(t.fnGetData(i).po_qty);
+                }
+                GetTaxDetail(str.slice(0, -1), tot, $("#po_date").val());
+                $("#diff1").val(tot_qty);
+                return true;
+            }catch(msg){console.log(msg.message)}
+        });
+
+        function clearmodel() {
+            $("#item_id").val('').trigger("change");
+            $("#quantity").val('');
+            $("#uom_id").val('');
+            $("#unitprice").val('');
+            $("#dte").val('');
+            $("#discount").val('');
+            $("#effectiveprice").val('');
+            $("#salesvalue").val('');
+            $("#assessablerate").val('');
+            $("#assessablevalue").val('');
+            $("#udescription").val('');
+            $("#tax_id").val('').trigger("change");
+            $("#sloc_id").val("").trigger("change");
+            $("#srno").val('');
+            $('#requisition_detail_id').val('');
+            $("#sac_hsn_id").val(0);
+        }
+
+        function clearmodeldel() {
+            if($("#del_quantity").val()!="")
+            {
+                //var st = $('#Staggerd_Table').dataTable();
+                //var rowCountde = st.fnGetData().length;
+                //var id = $(this).parent('td').parent('tr').index();
+                //st.fnUpdate($('#del_date').val(), indx, 2);
+                //st.fnUpdate(parseFloat($('#del_quantity').val()).toFixed(2), indx, 3);
+                //st.fnUpdate(0, indx, 6);
+                $("#del_quantity").val('');
+                $("#del_date").val('');
+            }
+
+
+        }
+
+        function calculation() {
+            var quantity = $("#quantity").val();
+            var unitprice = $("#unitprice").val();
+            var discount = $("#discount").val();
+            var assessable = $("#assessablerate").val();
+            var effectiveprice = 0;
+            if (quantity == "") {
+                quantity = 0;
+            }
+            if (unitprice == "") {
+                unitprice = 0;
+            }
+            if (discount == "") {
+                effectiveprice = unitprice;
+            }
+            else {
+                effectiveprice = unitprice - (unitprice * discount / 100);
+            }
+            $("#effectiveprice").val(parseFloat(effectiveprice).toFixed(2));
+            $("#assessablerate").val(parseFloat(effectiveprice).toFixed(2));
+            $("#salesvalue").val(parseFloat(effectiveprice * quantity).toFixed(2));
+            var assessable1 = $("#assessablerate").val();
+            $("#assessablevalue").val(parseFloat(assessable1 * quantity).toFixed(2));
+        }
+        function asscalculation() {
+            var quantity = $("#quantity").val();
+            var assessable1 = $("#assessablerate").val();
+            $("#assessablevalue").val(parseFloat(assessable1 * quantity).toFixed(2));
+        }
+        $('#Staggerd_Table').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": true,
+
+            aoColumns: [
+                     { sname: "a", bVisible: true, sWidth: "5%" },
+                     { sname: "e", bVisible: true, },
+                     { sname: "b" },
+                     { sname: "c", bVisible: true,sClass:"right" },
+                     { sname: "f", bVisible: false,sWidth: "8%"  },
+                     { sname: "g", bVisible: false,sWidth: "8%"  },
+                     { sname: "h", bVisible: false,sWidth: "8%"  },
+                     {
+                         sname: "d", sWidth: "10%",
+                         bSortable: false,
+                         mRender: function (data, type, full) {
+                             return '<img class="editsta" src="../images/writing_file.png" height="20px" width="25px" alt="Edit"  /><img class="deletesta" src="../images/remove.png" height="20px" width="25px" alt="Delete" /><img class="addsta" src="../images/Add.png" height="20px" width="25px" alt="Add" />';
+                         }
+                     },
+
+
+            ]
+
+        });
+
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "bInfo": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bSortable":false,
+            "searching": false,
+            "columns": [
+                     { name: "sr_no","data":"",'defaultContent':'', "title":"Sr. No.", bVisible: true,"render":function(data,display,full,meta){
+                         return meta.row+1
+                     } },
+                     { name: "item_id","data":"item_id",'defaultContent':'', "title":"item_id", bVisible: false,},
+                     { name: "item_code","data":"item_code",'defaultContent':'', "title":"Item Code", bVisible: false,},
+                     { name: "item_name","data":"item_name",'defaultContent':'', "title":"Item", bVisible: true,},
+                     { name: "user_description","data":"user_description",'defaultContent':'', "title":"User Description", bVisible: true,},
+                     { name: "hsn_id","data":"hsn_id",'defaultContent':'', "title":"hsn_id", bVisible: false,},
+                     { name: "hsn_name","data":"hsn_name",'defaultContent':'', "title":"HSn/SAC", bVisible: true,},
+                     { name: "sloc_id","data":"sloc_id",'defaultContent':'', "title":"sloc_id", bVisible: false,},
+                     { name: "sloc_name","data":"sloc_name",'defaultContent':'', "title":"SLOC", bVisible: false,},
+                     { name: "delivery_date","data":"delivery_date",'defaultContent':'', "title":"Delivery Date", bVisible: true,},
+                     { name: "po_qty","data":"po_qty",'defaultContent':'', "title":"Quantity",sClass:"right", bVisible: true,},
+                     { name: "uom_id","data":"uom_id",'defaultContent':'', "title":"uom_id", bVisible: false,},
+                     { name: "uom_name","data":"uom_name",'defaultContent':'', "title":"UoM", bVisible: true,},
+                     { name: "effective_price","data":"effective_price",'defaultContent':'',sClass:"right", "title":"Eff. Price", bVisible: true,},
+                     { name: "purchase_value","data":"purchase_value",'defaultContent':'',sClass:"right", "title":"Pur Value", bVisible: true,},
+                     { name: "taxable_rate","data":"taxable_rate",'defaultContent':'', "title":"Taxable Rate", bVisible: true,sClass:"right"},
+                     { name: "taxable_value","data":"taxable_value",'defaultContent':'', "title":"Taxable Value", bVisible: true,sClass:"right"},
+                     { name: "tax_id","data":"tax_id",'defaultContent':'', "title":"tax_id", bVisible: false,},
+                     { name: "tax_name","data":"tax_name",'defaultContent':'', "title":"Tax Code", bVisible: true,},
+                     { name: "pur_requisition_number","data":"pur_requisition_number",'defaultContent':'', "title":"PR Number + Date", bVisible: false,},
+                     { name: "vendor_name","data":"vendor_name",'defaultContent':'', "title":"Vendor Details", bVisible: false,},
+                     { name: "unit_price","data":"unit_price",'defaultContent':'', "title":"unit_price", bVisible: false,},
+                     { name: "discount","data":"discount",'defaultContent':'', "title":"discount", bVisible: false,},
+                     { name: "balance_quantity","data":"balance_quantity",'defaultContent':'', "title":"PR Qty Balance", bVisible: false,},
+                     { name: "info_price","data":"info_price",'defaultContent':'', "title":"info_price", bVisible: false,},
+                     { name: "net_value","data":"net_value",'defaultContent':'', "title":"net_value", bVisible: false,},
+                     { name: "vendor_id","data":"vendor_id",'defaultContent':'', "title":"vendor_id", bVisible: false,},
+                     { name: "pur_requisition_id","data":"pur_requisition_id",'defaultContent':'', "title":"pur_requisition_id", bVisible: false,},
+                     { name: "plant_id","data":"plant_id",'defaultContent':'', "title":"plant_id", bVisible: false,},
+                     { name: "plant_name","data":"plant_name",'defaultContent':'', "title":"plant_name", bVisible: false,},
+                     { name: "freight_terms_id","data":"freight_terms_id",'defaultContent':'', "title":"freight_terms_id", bVisible: false,},
+                     { name: "business_unit_id","data":"business_unit_id",'defaultContent':'', "title":"business_unit_id", bVisible: false,},
+                     { name: "business_unit_name","data":"business_unit_name",'defaultContent':'', "title":"business_unit_name", bVisible: false,},
+                     { name: "calc_qty","data":"calc_qty",'defaultContent':'', "title":"calc_qty", bVisible: false,},
+                     { name: "item_type_id","data":"item_type_id",'defaultContent':'', "title":"item_type_id", bVisible: false,},
+                     { name: "pur_requisition_detail_id","data":"pur_requisition_detail_id",'defaultContent':'', "title":"pur_requisition_detail_id", bVisible: false,},
+                     { name: "action","data":"",'defaultContent':'', "title":"Action", bVisible: true,"render":function(data,display,full,meta){
+                         return '<img class="edit" src="../images/writing_file.png" height="20px" data-index="'+meta.row+'" width="25px" alt="Edit"  /><img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete" />';
+                     }
+                     },
+             { name: "detsr","data":"detsr",'defaultContent':'', "title":"detsr", bVisible: false,},],
+        });
+        $('#ContactGrid').on('click', '.edit', function () {
+            var t = $('#ContactGrid').dataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            $('#myModal').modal('show');
+            $("#srno").val(id);
+            var d_id = t.fnGetData(id).pur_requisition_detail_id;
+            if(d_id!=undefined ||d_id!='' || d_id!=null ){
+                $("#item_id").attr('disabled',true);
+            }
+            else{
+                $("#item_id").attr('disabled',false);
+                $('#pr_no_datehide').addClass('hidden');
+            }
+            if(d_id!=0 ){
+                $("#pr_no_date").val(t.fnGetData(id).pur_requisition_number);
+                $('.pr_no_datehide').removeClass('hidden');
+            }
+            else{
+                $('.pr_no_datehide').addClass('hidden');
+            }
+            $("#item_id").val(t.fnGetData(id).item_id).trigger('change');
+            $('#dte').val(t.fnGetData(id).delivery_date);
+            $('#udescription').val(t.fnGetData(id).user_description);
+            $('#sac_hsn_id').val(t.fnGetData(id).hsn_id);
+            $('#quantity').val(t.fnGetData(id).po_qty);
+            $('#uom_id').val(t.fnGetData(id).uom_id);
+            $('#unitprice').val(t.fnGetData(id).unit_price);
+            $('#discount').val(t.fnGetData(id).discount);
+            $('#effectiveprice').val(t.fnGetData(id).effective_price);
+            $('#salesvalue').val(t.fnGetData(id).purchase_value);
+            $('#assessablerate').val(t.fnGetData(id).taxable_rate);
+            $('#assessablevalue').val(t.fnGetData(id).taxable_value);
+            $('#tax_id').val(t.fnGetData(id).tax_id).trigger('change');
+            $('#sloc_id').val(t.fnGetData(id).sloc_id).trigger('change');
+            $("#requisition_detail_id").val(t.fnGetData(id).requisition_detail_id);
+            $("#item_type_id").val(t.fnGetData(id).item_type_id);
+        });
+        function ClearTable()
+        {
+            var t = $('#ContactGrid').dataTable();;
+            if(t.fnGetData().length>0)
+            {
+                t.fnClearTable();
+                $('.taxgrid tbody').html('');
+                $(".net_value").val("");
+                $(".gross_value").val("");
+            }
+        }
+        function GetVendorDetails(id) {
+            if (id == "") {
+                id = 0;
+                $('#billing_address').val('');
+                $('#billing_city').val('');
+                $('#country_id').val('');
+                $('#billing_state_id').val('');
+                $('#billing_pin_code').val('');
+                $('#email_id').val('');
+                $('#payment_cycle_id').val('');
+                $('#payment_terms_id').val('');
+                $('#freight_terms_id').val('').trigger("change");
+                $('#parment_cycle_type_id').val('');
+            }
+            else {
+                id = id;
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetVendorDetails", "Generic")',
+                    data: { id: id },
+                    success: function (emp) {
+                        $('#billing_address').val(emp.billing.BILLING_ADDRESS);
+                        $('#billing_city').val(emp.billing.BILLING_CITY);
+                        $('#country_id').val(emp.billing.BILLING_COUNTRY_ID);
+                        var billing_state_id=$('#billing_state_id').val();
+
+                        if(billing_state_id!=emp.billing.BILLING_STATE_ID)
+                        {
+                            if(billing_state_id!="")
+                            {
+                                ClearTable();
+                            }
+                            $('#billing_state_id').val(emp.billing.BILLING_STATE_ID).trigger("change");
+                        }
+                        //  $('#billing_state_id').val(emp.billing.BILLING_STATE_ID);
+                        $('#billing_pin_code').val(emp.billing.BILLING_PINCODE);
+                        $('#email_id').val(emp.billing.EMAIL_ID_PRIMARY);
+                        $('#mobile_number').val(emp.billing.TELEPHONE_PRIMARY);
+                        $('#payment_cycle_id').val(emp.billing.PAYMENT_CYCLE_ID);
+                        $('#payment_terms_id').val(emp.billing.PAYMENT_TERMS_ID);
+                        $('#freight_terms_id').val(emp.billing.FREIGHT_TERMS_ID).trigger("change");
+                        $("#payment_cycle_type_id").val(emp.billing.PAYMENT_CYCLE_TYPE_ID);
+                        $("#gst_no").val(emp.billing.gst_no);
+                        $("#pan_no").val(emp.billing.pan_no);
+                        $("#service_tax_no").val(emp.billing.service_tax_no);
+                        $("#ecc_no").val(emp.billing.ecc_no);
+                        $("#cst_tin_no").val(emp.billing.cst_tin_no);
+                        $("#vat_tin_no").val(emp.billing.vat_tin_no);
+                        $("#net_value_currency_id").val(emp.billing.CREDIT_LIMIT_CURRENCY_ID);
+                        $("#gross_value_currency_id").val(emp.billing.CREDIT_LIMIT_CURRENCY_ID);
+                        $('#gst_vendor_type_id').val(emp.billing.gst_vendor_type_id);
+                        $('#gst_in').val(emp.billing.gst_no);
+                    },
+                    error: function (emp) {
+                        $('#billing_address').val('');
+                        $('#billing_city').val('');
+                        $('#country_id').val('');
+                        $('#billing_state_id').val('');
+                        $('#billing_pin_code').val('');
+                        $('#email_id').val('');
+                        $('#payment_cycle_id').val('');
+                        $('#payment_terms_id').val('');
+                        $('#freight_terms_id').val('').trigger("change");
+                        $('#parment_cycle_type_id').val('');
+                        $("#gst_no").val('');
+                        $("#pan_no").val('');
+                        $("#service_tax_no").val('');
+                        $("#ecc_no").val('');
+                        $("#cst_tin_no").val('');
+                        $("#vat_tin_no").val('');
+                    }
+                });
+            }
+        }
+        function GetPrice(id)
+        {
+            if ($("#srno").val() == "") {
+                var vendor_id=$("#vendor_id").val();
+                $("#unitprice").val("");
+                $("#discount").val("");
+                $("#effectiveprice").val("");
+                $("#assessablerate").val("");
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetVendorItemPrice", "PurchaseOrder")',
+                    data: { vendor_id: vendor_id,item_id:id },
+                    async:false,
+                    success: function (ITEM) {
+                        $("#unitprice").val(parseFloat('1').toFixed(2));
+                        $("#unitprice").val(ITEM.price);
+
+                        if(ITEM.discount_type_id!=2)
+                        {
+                            $("#discount").val(ITEM.discount);
+                        }
+                        else
+                        {
+                            $("#discount").val(ITEM.discount*100/ITEM.price);
+                        }
+
+                        $("#effectiveprice").val(ITEM.price_after_discount);
+                        $("#assessablerate").val(ITEM.price_after_discount);
+                        calculation();
+                    }
+                });
+            }
+        }
+        function GetUnit(id) {
+            var plant_state_id = $('#place_of_supply_id').val();
+            var supply_state_id = $('#billing_state_id').val();
+            if (id != '' && $('#with_without_service_id').val() == 1)
+            {
+                GetPrice(id);
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetUserDescriptionForItem", "Generic")',
+                    data: { id: id },
+                    async:false,
+                    success: function (ITEM) {
+                        $('#uom_id').val(ITEM.UOM_ID);
+                        $('#udescription').val(ITEM.user_description);
+                        Get_hsn_saclist();
+                        $('#sac_hsn_id').val(ITEM.sac_id).trigger("change");
+                        if(ITEM.ITEM_CATEGORY_NAME=="Freight")
+                        {
+                            $("#unitprice").attr("disabled", true);
+                            $("#quantity").attr("disabled", true);
+                            $("#assessablerate").attr("disabled", true);
+                            $("#discount").attr("disabled", true);
+                            $("#salesvalue").removeAttr("disabled", true);
+                            $("#unitprice").val(parseFloat('1').toFixed(2));
+                            $("#discount").val(parseFloat('0').toFixed(2));
+                            $("#effectiveprice").val(parseFloat('1').toFixed(2));
+                            $("#assessablerate").val(parseFloat('1').toFixed(2));
+
+                        }
+                        else
+                        {
+                            $("#unitprice").removeAttr("disabled", true);
+                            $("#quantity").removeAttr("disabled", true);
+                            $("#assessablerate").removeAttr("disabled", true);
+                            $("#discount").removeAttr("disabled", true);
+                            $("#salesvalue").attr("disabled", true);
+                            //$("#unitprice").val('');
+                            //$("#discount").val('');
+                            //$("#effectiveprice").val('');
+                            //$("#assessablerate").val('');
+                            $("#quantity").val('1');
+                            //$("#assessablevalue").val('');
+                            calculation();
+                        }
+                        try{
+                            if(supply_state_id!=''){
+                                plant_state_id =parseInt(plant_state_id);
+                                if(supply_state_id==plant_state_id){
+                                    if(ITEM.within_state_tax_id!=0){
+                                        if($("#srno").val()=="")
+                                        {
+                                            $('#tax_id').val('').trigger('change');
+                                            $('#tax_id').val(ITEM.within_state_tax_id).trigger('change');
+                                        }
+                                    }
+                                }
+                                else{
+                                    if($("#srno").val()=="")
+                                    {
+                                        $('#tax_id').val('').trigger('change');
+                                        $('#tax_id').val(ITEM.inter_state_tax_id).trigger('change');
+                                    }
+                                }
+                            }
+                        }catch(msg){console.log(msg.message)}
+                    },
+                    error: function (emp) {
+                        $("#unitprice").removeAttr("disabled", true);
+                        $("#quantity").removeAttr("disabled", true);
+                        $("#assessablerate").removeAttr("disabled", true);
+                        $("#discount").removeAttr("disabled", true);
+                        $("#salesvalue").attr("disabled", true);
+                        $("#quantity").val('1');
+                        $("#discount").val('');
+                        $("#effectiveprice").val('');
+                        $("#assessablerate").val('');
+                        $("#quantity").val('');
+                        $("#assessablevalue").val('');
+                        $("#salesvalue").val('');
+                    }
+                });
+
+            }
+            else {
+                $("#unitprice").removeAttr("disabled", true);
+                $("#quantity").removeAttr("disabled", true);
+                $("#assessablerate").removeAttr("disabled", true);
+                $("#discount").removeAttr("disabled", true);
+                $("#salesvalue").attr("disabled", true);
+                $("#unitprice").val('');
+                $("#discount").val('');
+                $("#effectiveprice").val('');
+                $("#assessablerate").val('');
+                $("#quantity").val('1');
+                $("#assessablevalue").val('');
+                $("#salesvalue").val('');
+            }
+
+        }
+        function getnetTotal() {
+            var t = $('#ContactGrid').dataTable();;
+            var rowCount = t.fnGetData().length;
+            var total = 0;
+            for (var i = 0; i < rowCount; i++) {
+                total = total + parseFloat(t.fnGetData(i).purchase_value);
+            }
+            $("#net_value").val(parseFloat(total).toFixed(2));
+            $("#gross_value").val(parseFloat(total).toFixed(2));
+        }
+        function FillPaymentCycle() {
+            var Payment_Cycle = $('#parment_cycle_type_id').val();
+            if (Payment_Cycle = "") {
+                Payment_Cycle = 0;
+            }
+            $.ajax({
+                url: '@Url.Action("FillPaymentCycle", "Generic")',
+                type: "GET",
+                dataType: "JSON",
+                data: { Payment_Type_id: Payment_Cycle },
+                success: function (Payment_Cycle) {
+
+                    $("#payment_cycle_id").html(""); // clear before appending new list
+                    $("#payment_cycle_id").append($('<option></option>').val(0).html("---Select---"));
+                    $.each(Payment_Cycle, function (i, cycle) {
+                        $("#payment_cycle_id").append(
+                            $('<option></option>').val(cycle.PAYMENT_CYCLE_ID).html(cycle.PAYMENT_CYCLE_NAME));
+                    });
+                }
+            });
+
+        }
+        function TabletoJeson() {
+            var t = $('#ContactGrid').dataTable();
+            var rowCount = t.fnGetData().length;
+            var t1 = $('#Staggerd_Table').dataTable();
+            var rowCount1 = t1.fnGetData().length;
+
+            $("#PoHidden").empty();
+            for (i = 0; i < rowCount; i++) {
+                var item_type_id=t.fnGetData(i).item_type_id;
+                var user_description = t.fnGetData(i).user_description ;
+                if(item_type_id==undefined||item_type_id==''){var item_type_id=0}
+                if(user_description==undefined||user_description==''){var user_description=''}
+                var sloc_id =t.fnGetData(i).sloc_id==null?0:t.fnGetData(i).sloc_id;
+                var uom_id =t.fnGetData(i).uom_id==null?0:t.fnGetData(i).uom_id;
+                var eff = t.fnGetData(i).effective_price==null?0:t.fnGetData(i).effective_price;
+                var tax_rate = t.fnGetData(i).taxable_rate==null?0:t.fnGetData(i).taxable_rate;
+                var tax_value = t.fnGetData(i).taxable_value==null?0:t.fnGetData(i).taxable_value;
+                var d_id = t.fnGetData(i).pur_requisition_detail_id==null?0:t.fnGetData(i).pur_requisition_detail_id;
+                var hsn_id = t.fnGetData(i).hsn_id==null?0:t.fnGetData(i).hsn_id;
+                var detsr = t.fnGetData(i).detsr;
+                $("#PoHidden").append('<input type="hidden"  name="item_ids" value=' + t.fnGetData(i).item_id + ' >');
+                $("#PoHidden").append('<input type="hidden" id="user_des'+i+'"  name="user_descriptions" value=' + user_description + '>');
+                $("#PoHidden").append('<input type="hidden"  name="sloc_ids" value=' + sloc_id + '>');
+                $("#PoHidden").append('<input type="hidden"  name="Linedelivery_dates" value=' + t.fnGetData(i).delivery_date + '>');
+                $("#PoHidden").append('<input type="hidden"  name="quantitys" value=' + t.fnGetData(i).po_qty + '>');
+                $("#PoHidden").append('<input type="hidden" name="uom_ids" value=' + uom_id + '>');
+                $("#PoHidden").append('<input type="hidden"  name="unit_prices" value=' + t.fnGetData(i).unit_price + '>');
+                $("#PoHidden").append('<input type="hidden" name="discounts" value=' + t.fnGetData(i).discount + '>');
+                $("#PoHidden").append('<input type="hidden"  name="eff_prices" value=' + eff + '>');
+                $("#PoHidden").append('<input type="hidden"  name="pur_values" value=' + t.fnGetData(i).purchase_value + '>');
+                $("#PoHidden").append('<input type="hidden"  name="ass_rates" value=' + tax_rate + '>');
+                $("#PoHidden").append('<input type="hidden"  name="ass_values" value=' + tax_value + '>');
+                $("#PoHidden").append('<input type="hidden"  name="tax_ids" value=' + t.fnGetData(i).tax_id + '>');
+                $("#PoHidden").append('<input type="hidden"  name="pur_requisition_detail_ids" value=' + d_id + '>');
+                //$("#PoHidden").append('<input type="hidden" id="po_detail_id' + i + '" name="po_detail_id" value=' + t.fnGetData(i)[0] + '>');
+                $("#PoHidden").append('<input type="hidden" id="sac_hsn_ids' + i + '" name="sac_hsn_ids" value=' + hsn_id + ' >');
+                $("#PoHidden").append('<input type="hidden" id="item_type_ids' + i + '" name="item_type_ids" value=' + item_type_id+ ' />');
+                $("#PoHidden").append('<input type="hidden" id="detsrs' + i + '" name="detsrs" value=' + detsr+ ' />');
+                $("#user_des" + i).val( t.fnGetData(i).user_description);
+            }
+            for (i = 0; i < rowCount1; i++) {
+                $("#PoHidden").append('<input type="hidden" id="po_staggered_delivery_id' + i + '" name="po_staggered_delivery_id" value=' + 0 + ' >');
+                $("#PoHidden").append('<input type="hidden" id="staggered_date' + i + '" name="staggered_date" value=' + t1.fnGetData(i)[2] + ' >');
+                $("#PoHidden").append('<input type="hidden" id="staggered_qty' + i + '" name="staggered_qty" value=' + t1.fnGetData(i)[3] + ' >');
+                $("#PoHidden").append('<input type="hidden" id="staggered_item' + i + '" name="staggered_item" value=' + t1.fnGetData(i)[4] + ' >');
+                $("#PoHidden").append('<input type="hidden" id="srnos' + i + '" name="srnos" value=' + t1.fnGetData(i)[0] + ' >');
+            }
+        }
+        function FillItem(id) {
+            if (id == "") {
+                id = 0;
+            }
+            else {
+                id = id;
+            }
+            $.ajax({
+                url: '@Url.Action("GetItemOrGL", "Generic")',
+                type: "GET",
+                dataType: "JSON",
+                async: false,
+                data: { id: id,item_type_id:$("#item_service_id").val() },
+                success: function (item) {
+                    $("#item_id").html("");
+                    $("#item_id").append($('<option></option>').val("").html("---Select---"));
+                    if (id != 2) {
+                        if($("#with_without_service_id").val() == 1)
+                        {
+                            var item1 = item.filter(a=>a.item_type_id == $('#item_service_id').val())
+                            $.each(item1, function (i, cycle) {
+                                $("#item_id").append(
+                                    $('<option></option>').val(cycle.ITEM_ID).html(cycle.ITEM_NAME));
+                            });
+                        }
+                        else
+                        {
+                            $.each(item, function (i, cycle) {
+                                $("#item_id").append(
+                                    $('<option></option>').val(cycle.ITEM_ID).html(cycle.ITEM_NAME));
+                            });
+                        }
+
+                    }
+                    else {
+                        $.each(item, function (i, cycle) {
+                            $("#item_id").append(
+                                $('<option></option>').val(cycle.gl_ledger_id).html(cycle.gl_ledger_name));
+                        });
+                    }
+
+                }
+            });
+        }
+        function changeGrid(id)
+        {
+            var table = $('#ContactGrid').dataTable();
+            table.fnClearTable();
+            $("#net_value").val('');
+            $("#gross_value").val('');
+            if(id==1)
+            {
+                $('#purchaserequisition').attr('disabled',false);
+                let t = $('#ContactGrid').DataTable();
+                t.columns("delivery_date:name").visible(true).draw();
+                t.columns("po_qty:name").visible(true).draw();
+                t.columns("uom_name:name").visible(true).draw();
+                $('.dt_col_hide').show();
+                $('#quantity').val('');
+                $('#uprice').text("Unit Price *");
+                $("#unitpricetext").text("Unit Price");
+                $('.hide_item_type').addClass('hidden');
+                $("#item_id").select2({
+                    placeholder: "Select Item",
+                    allowClear: true
+                });
+                FillItem(1);
+
+            }
+            else
+            {
+                $('#purchaserequisition').attr('disabled',true);
+                let t = $('#ContactGrid').DataTable();
+                t.columns("delivery_date:name").visible(false);
+                t.columns("po_qty:name").visible(false);
+                t.columns("uom_name:name").visible(false);
+                $('.dt_col_hide').hide();
+                $('#quantity').val(1);
+                $('#uprice').text("Price *");
+                $("#unitpricetext").text("Price");
+                $('.hide_item_type').removeClass('hidden');
+                $("#item_id").select2({
+                    placeholder: "Select GL",
+                    allowClear: true
+                });
+
+
+                FillItem(2);
+            }
+        }
+        function changeItemType(id) {
+            var table = $('#ContactGrid').dataTable();
+            table.fnClearTable();
+            $("#net_value").val('');
+            $("#gross_value").val('');
+            if (id == 2) {
+                $('#btn_open_modal_item').show()
+                let t = $('#ContactGrid').DataTable();
+                t.columns("delivery_date:name").visible(false);
+                t.columns("po_qty:name").visible(false);
+                t.columns("uom_name:name").visible(false);
+
+
+                if($("#with_without_service_id").val()==1)
+                {
+                    t.columns("delivery_date:name").visible(true).draw();
+                    t.columns("po_qty:name").visible(true).draw();
+                    t.columns("uom_name:name").visible(true).draw();
+                    $('#purchaserequisition').attr('disabled',false);
+                    $('.dt_col_hide').show();
+                    $('#quantity').val('');
+                    $('#uprice').text("Unit Price *");
+                    $("#unitpricetext").text("Unit Price");
+                    $("#item_id").select2({
+                        placeholder: "Select Item",
+                        allowClear: true
+                    });
+                    FillItem(1);
+                    $(".item").show();
+                    $('.hide_item_type').addClass('hidden');
+                }
+                else
+                {
+                    $('.dt_col_hide').hide();
+                    $('#quantity').val(1);
+                    $('#uprice').text("Price *");
+                    $("#unitpricetext").text("Price");
+                    $('.hide_item_type').removeClass('hidden');
+                    $('#purchaserequisition').attr('disabled',true);
+                    $("#item_id").select2({
+                        placeholder: "Select GL",
+                        allowClear: true
+                    });
+                    $(".item").hide();
+                    FillItem(2);
+                }
+
+
+                $('#freight_terms_id').attr('disabled', 'disabled');
+                $('#freight_terms_id').addClass('removedisabled');
+                var idd = $('#freight_terms_id option:contains(Not Applicable)').val();
+                $('#freight_terms_id').val(idd).trigger("change");
+
+
+                $(".service").show();
+            }
+            else {
+                $('#btn_open_modal_item').hide()
+                let t = $('#ContactGrid').DataTable();
+                t.columns("delivery_date:name").visible(true).draw();
+                t.columns("po_qty:name").visible(true).draw();
+                t.columns("uom_name:name").visible(true).draw();
+                $('#purchaserequisition').attr('disabled',false);
+                $('.dt_col_hide').show();
+                $('#quantity').val('');
+                $('#uprice').text("Unit Price *");
+                $("#unitpricetext").text("Unit Price");
+                $("#item_id").select2({
+                    placeholder: "Select Item",
+                    allowClear: true
+                });
+                FillItem(1);
+                var idd1 = $('#freight_terms_id option:contains(---Select---)').val();
+                $('#freight_terms_id').removeAttr('disabled', 'disabled');
+                $('#freight_terms_id').removeClass('removedisabled');
+                $('#freight_terms_id').val(idd1).trigger("change");
+                $('.hide_item_type').addClass('hidden');
+                $(".item").show();
+                $(".service").hide();
+            }
+            fill_hsn();
+        }
+        function Initialize() {
+            if($("#plant_id").val()=="")
+            {
+                swal("", "Please select Plant !", "error");
+                return false;
+            }
+            if($("#vendor_id").val()=="")
+            {
+                swal("", "Please select Vendor !", "error");
+                return false;
+            }
+            $("#item_id").attr('disabled',false);
+                $("#myModal").modal('show');
+                $('.pr_no_datehide').addClass('hidden');
+
+        }
+        function GetTaxDetail(taxdetail, amount, dt) {
+            $.ajax({
+                url: '@Url.Action("GetTaxCalculation", "Generic")',
+                type: "GET",
+                dataType: "JSON",
+                data: {entity:"calculatetax", st: taxdetail, amt: amount, dt: dt, tds_code_id: 0 },
+                success: function (Payment_Cycle) {
+                    $('#TaxGrid tbody').html('');
+                    $.each(Payment_Cycle, function (i, cycle) {
+                        $('#TaxGrid').append('<tbody>');
+                        $('#TaxGrid').append('<tr><td>' + cycle.tax_name + '</td><td align="right">' +  parseFloat(cycle.tax_value).toFixed(2) + '</td></tr>')
+                        $('#TaxGrid').append('</tbody>');
+                        $("#gross_value").val( parseFloat(cycle.tax_value).toFixed(2));
+                    });
+                }
+            });
+        }
+
+        $(document).on('change', 'input[type="checkbox"]', function () {
+            if ($('.check').is(':checked')) {
+                $('.addSALES').removeAttr('disabled');
+            }
+            else {
+                $('.addSALES ').attr('disabled', true);
+            }
+        });
+
+        function GetPurRequisition(poid) {
+            var t = $('#pogrid').dataTable();
+            t.fnClearTable();
+            var entity = '';
+            if($(poid).attr('id')=='req_id'){
+                entity = 'getpurRequisitionforPO';
+            }
+            else if($(poid).attr('id')=='req_id_vn'){
+                entity = 'getpurRequisitionbyvendor';
+            }
+            else{
+                entity = 'getpurRequisitionbyitem';
+            }
+
+            var rowCount = t.fnGetData().length;
+            var i = 1;
+            var j = 0;
+            if (poid.value!= "") {
+                $.ajax({
+                    url: '@Url.Action("GetPurRquisitionList", "PurchaseOrder")',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: {entity:entity, id: poid.value },
+                    success: function (poid) {
+                        t.fnAddData(poid);
+                    }
+                });
+            }
+        }
+        $('#pogrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "columns": [
+                     { name: "sr_no","data":"",'defaultContent':'', "title":"Sr. No.", bVisible: true,"render":function(data,display,full,meta){
+                         return meta.row+1
+                     } },
+                     { name: "item_id","data":"item_id",'defaultContent':'', "title":"item_id", bVisible: false,},
+                     { name: "item_code","data":"item_code",'defaultContent':'', "title":"Item Code", bVisible: false,},
+                     { name: "item_names","data":"item_names",'defaultContent':'', "title":"Item Description", bVisible: false,},
+                     { name: "item_name","data":"item_name",'defaultContent':'', "title":"Item Code + Description", bVisible: true,},
+                     { name: "pur_requisition_number","data":"pur_requisition_number",'defaultContent':'', "title":"PR Number + Date", bVisible: false,},
+                     { name: "vendor_name","data":"vendor_name",'defaultContent':'', "title":"Vendor Details", bVisible: true,},
+                     { name: "hsn_id","data":"hsn_id",'defaultContent':'', "title":"Item Code + Description", bVisible: false,},
+                      { name: "hsn_sac","data":"hsn_sac",'defaultContent':'',sWidth:"10%", "title":"HSN/SAC", bVisible: true,"render":function(data,display,full,meta){
+
+
+                          var select = '<select class="form-control hsn" data-index="'+ meta.row+'" id="hsn_id'+meta.row+'"></select>';
+                          var option = '';
+                          if($('#hsn_id'+meta.row+'').val() == undefined)
+                          {
+                              $.each(data,function(index,item){
+                                  option = option + '<option value='+item.id+'>'+item.code+'</option>';
+                              });
+                              var dropdown= $(select).append(option);
+                              return  dropdown[0].outerHTML;
+                          }
+
+                          //var  dropdowns = $('#hsn_id').clone().removeAttr('id').attr('data-index',meta.row).removeAttr('tabindex').attr('id', 'hsncodelist'+meta.row).removeAttr('style').addClass('hsncodelist')[0].outerHTML;
+                          //return  dropdown;
+                      }},
+                     { name: "storage_location_id","data":"storage_location_id",'defaultContent':'', "title":"sloc_id", bVisible: false,},
+                     { name: "storage_location_id","data":"storage_location_id",'defaultContent':'', "title":"SLOC", bVisible: true,"render":function(data,display,full,meta){
+                         var  dropdowns = $('#sloc_id').clone().removeAttr('id').attr('data-index',meta.row).removeAttr('tabindex').attr('id', 'sloc_list'+meta.row).removeAttr('style').addClass('sloc_list')[0].outerHTML;
+                         return  dropdowns;
+                     }},
+                     { name: "delivery_dates","data":"delivery_dates",'defaultContent':'', "title":"delivery_dates", bVisible: false,},
+                     { name: "delivery_date","data":"delivery_date",'defaultContent':'', "title":"Delivery Date", bVisible: true,"render":function(data,display,full,meta){
+                         return '<input type="datetime" id="delivery_date' +  meta.row + '" data-index="'+ meta.row+'" class="form-control delivery_date" />';
+                     }},
+                     { name: "uom_id","data":"uom_id",'defaultContent':'', "title":"uom_id", bVisible: false,},
+                     { name: "uom_name","data":"uom_name",'defaultContent':'', "title":"UoM", bVisible: true,},
+                     { name: "quantity","data":"quantity",'defaultContent':'', "title":"Original PR Qty", bVisible: true,sClass:"right"},
+                     { name: "balance_quantity", "data": "balance_quantity", 'defaultContent': '', "title": "PR Qty Balance", bVisible: true, sClass: "right" },
+
+                    {
+                        name: "aa", sWidth: "8%", "title": "INFO", bVisible: true, sClass: "right",
+                        bSortable: false,
+                        mRender: function (data, type, full) {
+                            //return '<center><img class="glyphicon glyphicon-plus" height="20px" width="25px" alt="Edit" /></center> ';
+                            return '<center><button type="button" id="toggle" title="JE Entry" class="btn btn-primary" onclick="JE_Entry();"><span class="glyphicon glyphicon-plus"></span></button></center>';
+                        }
+                    },
+
+                     { name: "po_quantity","data":"po_quantity",'defaultContent':'',sClass:"right", "title":"PO Qty", bVisible: true,"render":function(data,display,full,meta){
+                         return '<input type="number" id="po_qty' + meta.row + '" data-index="'+ meta.row+'" class="form-control po_qty" />';
+                     }},
+                     { name: "unit_price","data":"unit_price",'defaultContent':'', "title":"Unit Price", bVisible: true,"render":function(data,display,full,meta){
+                         return '<input type="number" id="unitPrice' +  meta.row+ '" value='+data+' data-index="'+ meta.row+'" class="form-control unit_price"  />';
+                     }},
+                      { name: "discount","data":"discount",'defaultContent':'', "title":"Discount(%)", bVisible: true,"render":function(data,display,full,meta){
+                          return '<input type="number" id="discount' +  meta.row+ '" data-index="'+ meta.row+'" class="form-control discount" value='+data+' />';
+                      }},
+                       { name: "tax_id","data":"tax_id",'defaultContent':'', "title":"Tax Code", bVisible: true,"render":function(data,display,full,meta){
+                           var  drops = $('#tax_list').clone().attr('data-index',meta.row).removeAttr('id').attr('id', 'tax_id'+meta.row).removeAttr('style').removeClass('hidden').addClass('tax_list')[0].outerHTML;
+                           return  drops;
+                       }},
+                     { name: "info_price","data":"info_price",'defaultContent':'', "title":"", bVisible: false,},
+                     { name: "net_value","data":"net_value",'defaultContent':'', "title":"", bVisible: false,},
+                     { name: "vendor_id","data":"vendor_id",'defaultContent':'', "title":"", bVisible: false,},
+                     { name: "pur_requisition_id","data":"pur_requisition_id",'defaultContent':'', "title":"", bVisible: false,},
+                     { name: "plant_id","data":"plant_id",'defaultContent':'', "title":"", bVisible: false,},
+                     { name: "plant_name","data":"plant_name",'defaultContent':'', "title":"", bVisible: false,},
+                     { name: "freight_terms_id","data":"freight_terms_id",'defaultContent':'', "title":"", bVisible: false,},
+                     { name: "business_unit_id","data":"business_unit_id",'defaultContent':'', "title":"", bVisible: false,},
+                     { name: "business_unit_name","data":"business_unit_name",'defaultContent':'', "title":"", bVisible: false,},
+                     { name: "pur_requisition_detail_id","data":"pur_requisition_detail_id",'defaultContent':'', "title":"pur_requisition_detail_id", bVisible: false,},
+                     { name: "user_description","data":"user_description",'defaultContent':'', "title":"user_description", bVisible: false,},
+                     { name: "action","data":"action",'defaultContent':'', "title":'<input type="checkbox" name="select_all" value="1" id="example-select-all">', bVisible: true,"render":function(data,display,full,meta){
+                         return '<input type="checkbox" data-index="'+ meta.row+'" class="check" id="chk'+meta.row+'">';
+                     }
+                     }],
+            "fnRowCallback":function(nRow, aData, iDisplayIndex, iDisplayIndexFull){
+
+                $(nRow).find('.sloc_list').val(aData.storage_location_id);
+                if($('.hsn').val() != undefined)
+                {
+                    aData.hsn_id = $('.hsn').val();
+                }
+
+                $(nRow).find('.hsn').val(aData.hsn_id);
+                var date = aData.delivery_dates.replace('.','-').replace('.','-');
+                $(nRow).find('.delivery_date').val(date).attr('type','date');
+            }
+        });
+        //var _deletes_array = [];
+        $('#ContactGrid').on('click', '.delete', function () {
+            var st = $('#Staggerd_Table').dataTable();
+            var rowCount1 = st.fnGetData().length;
+            var t = $('#ContactGrid').dataTable();
+
+            var id = $(this).parent('td').parent('tr').index();
+            //var deleteids = t.fnGetData(id).pur_requisition_detail_id;
+            swal({
+                title: "Are you sure?",
+
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            },
+     function (isConfirm) {
+         if (isConfirm) {
+             for (j = rowCount1-1; j >= 0; j--) {
+
+                 var ctid = t.fnGetData(id).detsr;
+
+                     if(st.fnGetData(j) != null)
+                     {
+                         var ids = st.fnGetData(j)[0];
+                         if(parseInt(ids) == parseInt(ctid))
+                         {
+                             st.fnDeleteRow(j);
+                         }
+                     }
+
+             }
+             t.fnDeleteRow(id);
+             $('#sum_delquantity').val('');
+             getnetTotal();
+             var rowCount = t.fnGetData().length;
+             var str = "";
+             var str1 = "";
+             var tot = 0;
+             var tot_qty=0;
+             for (i = 0; i < rowCount; i++) {
+                 str1 = t.fnGetData(i).tax_id + "~";
+                 str1 = str1 + t.fnGetData(i).calc_qty + "~";
+                 str1 = str1 + t.fnGetData(i).calc_qty;
+                 if (i == 0) {
+                     str = str1 + ","
+                 }
+                 else {
+                     str = str + str1 + ",";
+                 }
+                 tot = tot + parseFloat(t.fnGetData(i).calc_qty);
+                 tot_qty = tot_qty + parseFloat(t.fnGetData(i).calc_qty);
+             }
+             GetTaxDetail(str.slice(0, -1), tot, $("#po_date").val());
+             $("#diff1").val(tot_qty);
+                  var len = t.fnGetData().length;
+         var len1 = st.fnGetData().length;
+         var i = 1;
+         var row = 0;
+         if (len > 0) {
+             $('#ContactGrid tbody tr').each(function () {
+                 t.fnUpdate(i, row, 1);
+                 i++;
+                 row++;
+             });
+         }
+
+         if (len1 > 0) {
+             for (i = 0; i < len; i++) {
+                 for (j = 0; j < len1; j++) {
+
+                     if(t.fnGetData()[i][2] == st.fnGetData()[j][4])
+                     {
+                         st.fnUpdate(t.fnGetData()[i][1], j, 0);
+                     }
+                 }
+
+             }
+
+         }
+         }
+     });
+        });
+
+
+
+
+
+        var checkedarray = [];
+        $(".addSALES").on("click", function (event) {
+            var srt = 0;
+            let t =  $('#ContactGrid').dataTable();
+            var len = t.fnGetData().length;
+            srt = len;
+            $('#pogrid tbody tr').each(function(){
+                if($(this).find('.check').is(':checked')){
+                    let _hsn_id = $(this).find('.hsn').val();
+                    let _hsn_text = $(this).find('.hsn :selected').text();
+                    let _sloc = $(this).find('.sloc_list').val();
+                    let _sloc_text = $(this).find('.sloc_list :selected').text();
+                    let _po_qty = $(this).find('.po_qty').val();
+                    let _unit_price = $(this).find('.unit_price').val();
+                    let _tax_list = $(this).find('.tax_list').val();
+                    let _tax_list_text = $(this).find('.tax_list :selected').text();
+                    let _delivery_date = $(this).find('.delivery_date').val();
+                    let _discount = $(this).find('.discount').val();
+                    if(_discount==''){_discount=0}
+                    if(_hsn_id==''){
+                        swal("", "HSN/SAC is required!", "error");
+                        return false;
+                    }
+                    else if(_sloc==''){
+                        swal("", "SLOC is required!", "error");
+                        return false;
+                    }
+                    else if(_po_qty==''){
+                        swal("", "PO Qty is required!", "error");
+                        return false;
+                    }
+                    else if(_po_qty=='0'){
+                        swal("", "PO Qty should be greater than zero!", "error");
+                        return false;
+                    }
+                    else if(_unit_price==''){
+                        swal("", "Unit Price is required!", "error");
+                        return false;
+                    }
+                    else if(_unit_price=='0'){
+                        swal("", "Unit Price should be greater than zero!", "error");
+                        return false;
+                    }
+                    else if(_tax_list==''){
+                        swal("", "Tax Code is required!", "error");
+                        return false;
+                    }
+                    else{
+                        if($("#req_id").val()!=''){
+                            $("#pur_requisition_id").append('<option value="'+$("#req_id").val()+'">'+$("#req_id :selected").text()+'</option>');
+                            $("#pur_requisition_id").val($("#req_id").val());
+                        }
+
+
+
+                        var po_list = {};
+                        let _table =  $('#pogrid').dataTable();
+                        let index =parseInt($(this).find('.check').attr('data-index'));
+                        po_list.item_id = _table.fnGetData(index).item_id;
+                        po_list.item_name = _table.fnGetData(index).item_name;
+                        po_list.item_names = _table.fnGetData(index).item_names;
+                        po_list.item_code = _table.fnGetData(index).item_code;
+                        po_list.pur_requisition_number = _table.fnGetData(index).pur_requisition_number;
+                        po_list.vendor_name = _table.fnGetData(index).vendor_name;
+                        po_list.hsn_id = _hsn_id;
+                        po_list.hsn_name = _hsn_text;
+                        po_list.sloc_id = _sloc;
+                        po_list.sloc_name = _sloc_text;
+                        po_list.delivery_date = _delivery_date;
+                        po_list.po_qty = parseFloat(_po_qty).toFixed(2);
+                        po_list.unit_price = _unit_price;
+                        po_list.discount = _discount;
+                        po_list.tax_id = _tax_list;
+                        po_list.tax_name = _tax_list_text;
+                        po_list.uom_id = _table.fnGetData(index).uom_id;
+                        po_list.uom_name = _table.fnGetData(index).uom_name;
+                        po_list.quantity = _table.fnGetData(index).quantity;
+                        po_list.balance_quantity = _table.fnGetData(index).balance_quantity;
+                        po_list.info_price = _table.fnGetData(index).info_price;
+                        po_list.net_value = _table.fnGetData(index).net_value;
+                        po_list.vendor_id = _table.fnGetData(index).vendor_id;
+                        po_list.pur_requisition_id = _table.fnGetData(index).pur_requisition_id;
+                        po_list.plant_id = _table.fnGetData(index).plant_id;
+                        po_list.plant_name = _table.fnGetData(index).plant_name;
+                        po_list.freight_terms_id = _table.fnGetData(index).freight_terms_id;
+                        po_list.business_unit_id = _table.fnGetData(index).business_unit_id;
+                        po_list.business_unit_name = _table.fnGetData(index).business_unit_name;
+                        let _discounted = (parseFloat(_unit_price)*_discount)/100;
+                        let after_discount = parseFloat(_unit_price)-_discounted;
+                        let eff =parseFloat(after_discount);
+                        po_list.effective_price =parseFloat(eff).toFixed(2);
+                        po_list.purchase_value =parseFloat((parseFloat(_po_qty))*parseFloat(after_discount)).toFixed(2);
+                        po_list.calc_qty = parseFloat(_po_qty)*parseFloat(_unit_price);
+                        po_list.taxable_value = parseFloat((parseFloat(_po_qty))*parseFloat(after_discount)).toFixed(2);
+                        po_list.taxable_rate = parseFloat(eff).toFixed(2);
+                        po_list.pur_requisition_detail_id = _table.fnGetData(index).pur_requisition_detail_id;
+                        po_list.user_description = _table.fnGetData(index).user_description;
+                        po_list.detsr = srt + 1;
+                        srt++;
+                        array_polist.push(po_list);
+
+
+                    }
+                }
+            });
+            if(array_polist.length>0){
+                try{
+                    let _table =  $('#ContactGrid').dataTable();
+                    _table.fnAddData(array_polist);
+
+                    var detrows = _table.fnGetData().length;
+                    var st = $('#Staggerd_Table').dataTable();;
+                    var rowCount = st.fnGetData().length;
+                    st.fnClearTable();
+                    for (i = 0; i < detrows; i++) {
+
+                        $('#sum_delquantity').val(_table.fnGetData(i).po_qty);
+                        var sts = +i+ +1;
+                        st.fnAddData([sts,_table.fnGetData(i).item_name, _table.fnGetData(i).delivery_date,parseFloat(_table.fnGetData(i).po_qty).toFixed(2),_table.fnGetData(i).item_id,_table.fnGetData(i).po_qty,0,''])
+
+                    }
+
+                    array_polist.length = 0;
+                    getnetTotal();
+                    try{
+                        let t = $('#ContactGrid').dataTable();
+                        var rowCount1 = t.fnGetData().length;
+                        var str;
+                        var str1;
+                        var tot = 0;
+                        var tot_qty=0;
+                        for (i = 0; i < rowCount1; i++) {
+                            str1 = t.fnGetData(i).tax_id + "~";
+                            str1 = str1 + t.fnGetData(i).taxable_value + "~";
+                            str1 = str1 + t.fnGetData(i).purchase_value;
+                            if (i == 0) {
+                                str = str1 + ","
+                            }
+                            else {
+                                str = str + str1 + ",";
+                            }
+                            tot = tot + parseFloat(t.fnGetData(i).purchase_value);
+                            tot_qty = tot_qty + parseFloat(t.fnGetData(i).po_qty);
+                        }
+                    }
+                    catch(err){
+                        checkedarray.length = 0;
+                    }
+                    GetTaxDetail(str.slice(0, -1), tot, $("#po_date").val());
+                    $("#diff1").val(tot_qty);
+                    var plant_id = $("#plant_id").val();
+                    if(plant_id!="")
+                    {
+                       // GetDocumentCategory(plant_id);
+                    }
+                    $('#myModal1').modal('hide');
+                    $('#category_id').prop('disabled','disabled');
+
+                }catch(msg){console.log(msg.message)}
+            }
+
+        });
+        function GetFreightTerms(value)
+        {
+            $("#quantity").val(parseFloat(value).toFixed(2));
+            $("#assessablevalue").val(parseFloat(value).toFixed(2));
+            $("#salesvalue").val(parseFloat(value).toFixed(2));
+        }
+        $('#example-select-all').on('click', function () {
+            checkedarray.length = 0;
+            var t = $('#pogrid').dataTable();;
+            var trlen = t.fnGetData().length;
+            if ($(this).is(':checked')) {
+                if (trlen > 0) {
+                    for (var j = 0; j <= trlen - 1; j++) {
+                        var sr_no = t.fnGetData(j)[1];
+                        checkedarray.push(sr_no);
+                    }
+                }
+            }
+            else {
+                checkedarray.length = 0;
+            }
+        });
+        $(document).on('click', '.check', function () {
+            var t = $('#pogrid').dataTable();;
+            var index = $(this).parent('td').parent('tr').index();
+            var trlen = $(this).parent('td').parent('tr').length;
+            if ($(this).is(':checked')) {
+                for (var i = 1; i <= trlen; i++) {
+                    var sr_no = t.fnGetData(index)[1];
+                    checkedarray.push(sr_no);
+                }
+            }
+            else {
+                checkedarray.splice(index,1);
+            }
+        });
+
+        $('#Staggerd_Table').on('click', '.editsta', function () {
+            var t = $('#Staggerd_Table').dataTable();;
+            var id = $(this).parent('td').parent('tr').index();
+            indx = id;
+            $('#DeliveryModal').modal('show');
+             var sr = t.fnGetData(id)[0];
+            $('#srnodel').val(sr);
+            $("#del_date").val(t.fnGetData(id)[2]);
+            $('#del_quantity').val(t.fnGetData(id)[3]);
+            $("#items_id").val(t.fnGetData(id)[4]);
+            t.fnUpdate('', id, 2);
+            t.fnUpdate(0, id, 3);
+            t.fnUpdate(1, id, 6);
+
+        });
+        $('#Staggerd_Table').on('click', '.deletesta', function () {
+
+            var t = $('#Staggerd_Table').dataTable();;
+            var id = $(this).parent('td').parent('tr').index();
+            var deleteids = t.fnGetData(id)[1];
+            swal({
+                title: "Are you sure?",
+
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            },
+     function (isConfirm) {
+         if (isConfirm) {
+             t.fnDeleteRow(id);
+             var len = t.fnGetData().length;
+             var tot_qty=0;
+             for (j = 0; j < len; j++)
+             {
+                 tot_qty+=parseFloat(t.fnGetData(j)[2]);
+             }
+             $("#diff2").val(tot_qty);
+             var i = 1;
+             var row = 0;
+             if (len > 0) {
+                 $('#Staggerd_Table tbody tr').each(function () {
+                     t.fnUpdate(i, row, 0);
+                     i++;
+                     row++;
+                 });
+             }
+         }
+     });
+        });
+
+        $('#pogrid').on('change', '.hsn', function () {
+            var index = $(this).attr('data-index');
+            var _hsn = $(this).val();
+            var t = $('#pogrid').dataTable();;
+            t.fnUpdate(_hsn, parseInt(index), 24);
+        });
+        $('#item_type_id').change(function(){
+            fill_hsn();
+        });
+        function fill_hsn(){
+            var item_type_id = $('#item_type_id').val();
+            if(item_type_id==''){item_type_id=0}
+            if(item_type_id!=''){
+                try{
+                    $.ajax({
+                        url:'@Url.Action("Get_hsn_sac","Generic")',
+                        data:{id:item_type_id},
+                        method:'get',
+                        async:false,
+                        success:function(hsn){
+                            $('#sac_hsn_id').empty();
+                            $('#sac_hsn_id').append('<option value='+0+'>--Select--</option>');
+                            $.each(hsn,function(k,v){
+                                $('#sac_hsn_id').append('<option value='+v.id+'>'+v.code+'</option>');
+                            });
+                        }
+                    });
+                }
+                catch(msg){msg.message}
+            }
+        };
+        function Get_hsn_saclist(){
+            var item_type_id = $('#item_id').val();
+            if(item_type_id==''){item_type_id=0}
+            if(item_type_id!=''){
+                try{
+                    $.ajax({
+                        url:'@Url.Action("Get_hsn_saclist", "Generic")',
+                        data:{id:item_type_id},
+                        method:'get',
+                        async:false,
+                        success:function(hsn){
+                            $('#sac_hsn_id').empty();
+                            $('#sac_hsn_id').append('<option value='+0+'>--Select--</option>');
+                            $.each(hsn,function(k,v){
+                                $('#sac_hsn_id').append('<option value='+v.id+'>'+v.code+'</option>');
+                            });
+                        }
+                    });
+                }
+                catch(msg){msg.message}
+            }
+        };
+        function Get_Tax(id){
+            if(id==''){id=0}
+            try{
+                $.ajax({
+                    url:'@Url.Action("GetTaxByRCM", "Generic")',
+                    data:{id:id},
+                    method:'get',
+                    async:false,
+                    success:function(hsn){
+
+                        $('#tax_id').empty();
+                        $('#tax_id').append('<option>--Select--</option>');
+                        $.each(hsn,function(k,v){
+                            $('#tax_id').append('<option value='+v.tax_id+'>'+v.tax_name+'</option>');
+                        });
+                    }
+                });
+            }
+            catch(msg){msg.message}
+        };
+        $('#is_rcm').change(function () {//do something when the user clicks the box sameas
+            if ($(this).is(':checked')) {
+                Get_Tax(1);
+            }
+            else {
+                Get_Tax(0);
+            }
+        });
+        $('input[type=radio]').on('click',function(){
+            try{
+                var table = $('#pogrid').DataTable();
+                if($(this).attr('value')=='radio_pr '){
+                    table.columns("pur_requisition_number:name").visible(false);
+                    table.columns("item_name:name").visible(true);
+                    table.columns("vendor_name:name").visible(true);
+                }
+                if($(this).attr('value')=='radio_vendor '){
+                    table.columns("pur_requisition_number:name").visible(true);
+                    table.columns("item_name:name").visible(true);
+                    table.columns("vendor_name:name").visible(false);
+                }
+                if($(this).attr('value')=='radio_item '){
+                    table.columns("pur_requisition_number:name").visible(true);
+                    table.columns("item_name:name").visible(false);
+                    table.columns("vendor_name:name").visible(true);
+                }
+
+                $('input[type=radio]').parent('label').next('div').find('select').attr('disabled',true)
+                $(this).parent('label').next('div').find('select').attr('disabled',false);
+            }catch(mgs){console.log(msg.message)}
+        })
+        $('#pogrid').on('keyup','.po_qty',function(){
+            try{
+                let _idx = parseInt($(this).attr('data-index'));
+                let _table = $('#pogrid').dataTable();
+                let _balance_qty = _table.fnGetData(_idx).balance_quantity
+                if(_balance_qty==''){_balance_qty=0}else{_balance_qty=parseFloat(_balance_qty)}
+                let _po_qty = $(this).val();
+                if(_po_qty==''){_po_qty=0}else{_po_qty=parseFloat(_po_qty)}
+                if(_po_qty>_balance_qty){
+                    $(this).val('');
+                    swal("", "PO Qty should be less than PR Qty Balance!", "error");
+                    return false;
+                }
+            }catch(msg){console.log(msg.message)}
+        })
+        $('#myModal').on('keyup','#quantity',function(){
+            try{
+                if($("#srno").val()!=''){
+                    let _idx = parseInt($("#srno").val());
+                    let _table = $('#ContactGrid').dataTable();
+                    let _balance_qty = _table.fnGetData(_idx).balance_quantity
+                    if(_balance_qty==''){_balance_qty=0}else{_balance_qty=parseFloat(_balance_qty)}
+                    let _po_qty = $(this).val();
+                    if(_po_qty==''){_po_qty=0}else{_po_qty=parseFloat(_po_qty)}
+                    let _original_qty  = _table.fnGetData(_idx).po_qty
+                    if(_original_qty==''){_original_qty=0}else{_original_qty=parseFloat(_original_qty)}
+                    if(_po_qty>_balance_qty){
+                        $(this).val(_original_qty);
+                        swal("", "PO Qty should be less than PR Qty Balance!", "error");
+                        return false;
+                    }
+                }
+            }catch(msg){console.log(msg.message)}
+        })
+
+        $('#JEGrid').DataTable({
+            "bPaginate": true,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            "pageLength": 10,
+            aoColumns: [
+                { sname: "a" },
+                { sname: "b", "sClass": "right" },
+                { sname: "c", "sClass": "right" },
+                { sname: "d", "sClass": "right" },
+                { sname: "e", "sClass": "right" },
+                { sname: "f", "sClass": "right" },
+                { sname: "g", "sClass": "right" }
+
+            ]
+
+        });
+
+        $('#JEGrid1').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                { sname: "a" },
+                { sname: "b", "sClass": "right" }
+
+            ]
+
+        });
+
+        function JE_Entry() {
+            var t = $('#pogrid').dataTable();
+            var rowCount = t.fnGetData().length;
+            var item_id;
+
+            for (j = 0; j < rowCount; j++) {
+                item_id = t.fnGetData(j,1);
+            }
+            //if (str3 != "") {
+            GetJE_Entry(item_id)
+            //}
+            $('#myModalTDS').modal('show');
+        }
+        function GetJE_Entry(item_id) {
+
+            var Open_PR;
+            var Open_PO;
+            var Current_Stock_Blocked;
+            var Open_PR_Free;
+            var Open_PR_Quality;
+
+            var c = $('#JEGrid').dataTable();
+            var t1 = $('#JEGrid1').dataTable();
+            $.ajax({
+                url: '@Url.Action("GetPoHistory", "PurchaseOrder")',
+                type: "GET",
+                dataType: "JSON",
+                async: false,
+                data: { entity: 'GetAllPoHistory', item_id: item_id},
+                success: function (value) {
+                    c.fnClearTable();
+                    $.each(value, function (i, cycle) {
+                        c.fnAddData([i+1,cycle.vendor_name, cycle.po_no, cycle.po_date, cycle.item_cost, cycle.quantity, cycle.grn_quantity])
+                    });
+                }
+            });
+
+            $.ajax({
+                url: '@Url.Action("GetPoHistory", "PurchaseOrder")',
+                type: "GET",
+                dataType: "JSON",
+                async: false,
+                data: { entity: 'Current_Stock', item_id: item_id},
+                success: function (value) {
+                    t1.fnClearTable();
+                    t1.fnAddData(['Current Stock(Blocked)', value[0].blocked]);
+                    t1.fnAddData(['Current Stock(Free)', value[0].free]);
+                    t1.fnAddData(['Current Stock(Quality)', value[0].current_stock]);
+                }
+            });
+
+             $.ajax({
+                url: '@Url.Action("GetPoHistory", "PurchaseOrder")',
+                type: "GET",
+                dataType: "JSON",
+                async: false,
+                 data: { entity: 'Open_PO', item_id: item_id},
+                success: function (value) {
+                    t1.fnAddData(['Open PO', value[0].Open_PO]);
+                }
+             });
+
+            $.ajax({
+                url: '@Url.Action("GetPoHistory", "PurchaseOrder")',
+                type: "GET",
+                dataType: "JSON",
+                async: false,
+                data: { entity: 'Open_PR', item_id: item_id},
+                success: function (value) {
+                    t1.fnAddData(['Open PR', value[0].Open_PR]);
+                }
+            });
+
+        }
+        const fewSeconds = 3
+        document.querySelector('#create').addEventListener('click', (e) => {
+            e.target.disabled = true
+            setTimeout(() => {
+                e.target.disabled = false
+            }, fewSeconds * 1000)
+        })
+    </script>
+}
+
+
+

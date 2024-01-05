@@ -1,0 +1,197 @@
+﻿@model Sciffer.Erp.Domain.Model.TreeViewNodeCostCenter
+@{
+
+    ViewBag.Title = "Index";
+}
+<style type="text/css">
+    .ThinListTable1 {
+        width: 100%;
+    }
+
+    .ThinListTable1 ul {
+        list-style-type: none;
+        //border-bottom: 1px;
+    }
+
+    .ThinListTable1 li {
+        margin: 0px;
+    }
+
+    .ThinListTable1 li:hover {
+        border: 1pt solid red;
+    }
+
+    .picked {
+        background: #dcd4d4;
+    }
+
+    .Account {
+        color: #0026ff;
+    }
+
+    .scrollit {
+        overflow: scroll;
+        height: 515px;
+    }
+
+    .padding {
+        padding: 8px 15px 4px 8px; /* Add some padding */
+    }
+
+    .panel-default > .panel-heading {
+        background-color: #fcfcfc;
+    }
+
+    .table > tbody > tr > td {
+        padding: 0px !important;
+    }
+
+    .table {
+        margin-bottom: 0px !important;
+    }
+
+    .list-group-item {
+        padding: 0px 15px;
+    }
+
+    .panel-body {
+        padding: 0px !important;
+    }
+</style>
+
+
+<div class="row">
+    <div class="col-sm-8">
+        <div class="panel panel-default">
+            <div class="panel-heading" style="height:50px;">
+                <div style="float:left; display:inline-block;">
+                    <div class="glyphicon glyphicon-plus padding" id="create1"></div>
+                    <div class="glyphicon glyphicon-pencil edit padding" id="edit" onclick="javascript: EditCall($(this).attr('value'));"></div>
+                    <div class="fa fa-child padding" id="child" onclick="javascript: ChildCall($(this).attr('value'));"></div>
+                    <a href="@Url.Action("ExportData", "CostCenter", null)" class="padding">
+                        <img src="~/images/export.PNG" />
+                    </a>
+                </div>
+                <div style="float:right">
+                    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." class="padding">
+                </div>
+            </div>
+
+            <div class="panel-body scrollit">
+                <div class="ThinListTable1" id="myUL">
+                    @Html.Partial("ChildNode", Model.ChildNode)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4" id="create_partial"></div>
+</div>
+<div class="loading">Loading&#8230;</div>
+<script>
+    function myFunction() {
+        // Declare variables
+        var input, filter, ul, li, a, i;
+        input = document.getElementById('myInput');
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("myUL");
+        li = ul.getElementsByTagName('li');
+
+        // Loop through all list items, and hide those who don't match the search query
+        for (i = 0; i < li.length; i++) {
+            a = li[i];
+            if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
+    function mouseHandler(e) {
+        // Add Picked Class
+        if ($(this).hasClass('picked')) {
+            $(this).removeClass('picked');
+
+        } else {
+            $(".picked").removeClass('picked');
+            $(this).addClass('picked');
+            var value1 = $(this).attr('id');
+            $("#edit").attr('value', value1);
+            var value = $(this).find('.Head');
+            if (value.length == 1) {
+                var head = $(this).attr('id');
+                $("#child").attr('value', head);
+            }
+            else {
+                $("#child").attr('value', head + "-" + "Account");
+                //sweetAlert("", "Add Children to Parent only!", "error");
+            }
+        }
+    }
+
+    function start() {
+        // Bind all li
+        $('.ThinListTable1 li').bind('click', mouseHandler);
+    }
+
+    $(document).ready(start);
+    $('#create1').click(function () {
+        $("#create_partial").empty();
+        //$(".loading").show();
+        $.ajax({          
+            url: '@Url.Action("Create", "CostCenter")',
+            cache: false,
+            success: (function (data) {
+                $('#create_partial').append(data);
+                $(".loading").hide();
+            })
+        })
+
+    })
+    function EditCall(id) {
+        console.log(id);
+
+        if (id == undefined) {
+            sweetAlert("", "Select row to edit!", "error");
+        }
+        else {
+            $(".loading").show();
+            $("#create_partial").empty();
+            $.ajax({
+                url: '@Url.Action("Edit", "CostCenter")',               
+                data: { id: id },
+                cache: false,
+                success: (function (data) {
+                    $('#create_partial').append(data);
+                    $(".loading").hide();
+
+                })
+            })
+        }
+    }
+
+    function ChildCall(id) {
+        if (id == undefined) {
+            sweetAlert("", "Select row to Add Child!", "error");
+        }
+        else {
+            if (id != undefined + "-Account") {
+                $(".loading").show();
+                $("#create_partial").empty();
+                $.ajax({
+                    url: '@Url.Action("Child", "CostCenter")',                   
+                    data: { id: id },
+                    cache: false,
+                    success: (function (data) {
+                        $('#create_partial').append(data);
+                        $(".loading").hide();
+                    })
+                })
+            }
+            else {
+                $("#create_partial").empty();
+                sweetAlert("", "Add Child to Parent Only!", "error");
+            }
+        }
+    }
+
+</script>

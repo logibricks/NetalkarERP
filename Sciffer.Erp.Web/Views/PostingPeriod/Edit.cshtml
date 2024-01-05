@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.ViewModel.posting_periods>
+    @using Newtonsoft.Json
+    @{
+        ViewBag.Title = "Create";
+    }
+    <div>
+        @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+        @(Html.EJ().Grid<object>("Grid")
+       .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.DataSource).UpdateURL(Url.Action("ChangePostingStatus", "PostingPeriod"))
+                       .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .FilterSettings(filter => { filter.FilterType(FilterType.Menu); })
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing(); })
+        .EnableAltRow()
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                
+                items.AddTool(ToolBarItems.Edit);
+                items.AddTool(ToolBarItems.Update);
+                items.AddTool(ToolBarItems.Cancel);
+            });
+        })      
+        .AllowSorting()
+        
+        .IsResponsive()
+        .AllowFiltering()
+        .AllowReordering()
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("posting_periods_detail_id").HeaderText("ID").IsPrimaryKey(true).Width(100).Visible(false).AllowEditing(false).Add();
+            col.Field("posting_periods_id").HeaderText("Posting Periods ID").IsPrimaryKey(true).Width(100).Visible(false).Add();
+            col.Field("financial_year_id").HeaderText("Financial Year ID").Width(100).Visible(false).Add();
+            col.Field("financial_year").HeaderText("Financial Year").Width(150).AllowEditing(false).Add();
+            col.Field("frequency_id").HeaderText("Frequency ID").Visible(false).Width(100).Add();
+            col.Field("frequency").HeaderText("Frequency").Width(100).AllowEditing(false).Add();
+            col.Field("no_of_periods").HeaderText("No Of Periods").AllowEditing(false).Width(100).Add();
+            col.Field("from_date").HeaderText("From date").Format("{0: dd/MM/yyyy}").AllowEditing(false).Width(150).Add();
+            col.Field("to_date").HeaderText("To date").Format("{0: dd/MM/yyyy}").AllowEditing(false).Width(150).Add();
+            //col.Field("status_name").HeaderText("Status Name").Add();
+            col.Field("posting_periods_code").HeaderText("Posting Periods Code").AllowEditing(false).Width(150).Add();
+            //col.Field("status_id").HeaderText("Status").Add();
+            col.Field("status_id").HeaderText("Status Name").ForeignKeyField("status_id")
+               .ForeignKeyValue("status_name").DataSource((IEnumerable<object>)ViewBag.Status).AllowEditing(true)
+               .TextAlign(TextAlign.Left).Add();
+
+        })
+        .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+        )
+    </div>
+<br />
+<br>
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+    
+<script>
+    
+    function EndProcess() {
+        var gridObj = $("#Grid").ejGrid("instance");
+        //console.log(gridObj);
+        gridObj.refreshContent();
+
+    }
+</script>
+
+    

@@ -1,0 +1,64 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<report_production_vm>("Editing")
+                                                                                                                       .Datasource(ds => ds.URL(Url.Action("Get_report_production", "ProductionReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + " &item_id=" + ViewBag.item_id + "&is_qc_remark=" + ViewBag.is_qc_remark).Adaptor(AdaptorType.UrlAdaptor))
+                                                                                                                        .AllowPaging().PageSettings(a => a.PageSize(20))
+                                                                                                                          .AllowFiltering()
+                                                                                                                              .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                                                                                          .ShowColumnChooser()
+                                                                                                                          .AllowSorting()
+                                                                                                                          .AllowScrolling()
+                                                                                                                          .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "ProductionReport", new { ctrlname = "TagNumberReadyForSale" })))
+                                                                                                                          .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                                                                                                      .ToolbarSettings(toolbar =>
+                                                                                                                      {
+                                                                                                                          toolbar.ShowToolbar().ToolbarItems(items =>
+                                                                                                                          {
+                                                                                                                              items.AddTool(ToolBarItems.Search);
+                                                                                                                              items.AddTool(ToolBarItems.ExcelExport);
+                                                                                                                              items.AddTool(ToolBarItems.PrintGrid);
+                                                                                                                          });
+                                                                                                                      })
+                                                                                                              .Columns(col =>
+                                                                                                              {
+                                                                                                                // col.Field("machine_id").Width("15%").HeaderText("Machine Id").Add();
+
+
+                                                                                                                col.Field("item_name").Width("15%").HeaderText("Item Description").Add();
+                                                                                                                  col.Field("tag_no").Width("15%").HeaderText("Tag No").Add();
+                                                                                                                //col.Field("prod_order_no").Width("15%").HeaderText("Production Order No").Add();
+                                                                                                                //col.Field("prod_order_date").Width("15%").HeaderText("Production Order Date").Format("{0:dd/MMM/yyyy}").Add();
+                                                                                                                //col.Field("oper").Width("15%").HeaderText("Operator").Add();
+                                                                                                                // col.Field("status_name").Width("15%").HeaderText("Status Name").Add();
+                                                                                                                // col.Field("quantity").Width("15%").HeaderText("Quantity").TextAlign(TextAlign.Right).Add();
+                                                                                                                //col.Field("balance_qty").Width("15%").HeaderText("Balance Qty").TextAlign(TextAlign.Right).Add();
+
+                                                                                                            })
+                                                                                                              .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick"); })
+                                                                                  ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+    function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1) {
+            if ($('#item_id :selected').length > 0) {
+                var selecteditemid = [];
+                $('#item_id :selected').each(function (i, selected) {
+                    selecteditemid[i] = $(selected).val();
+                });
+                var itemid = selecteditemid + "";
+            }
+
+
+            this.model["item_id"] = itemid;
+
+            this.model["from_date"] = $("#fromDate").val();
+
+
+        }
+
+    }
+</script>
+
+

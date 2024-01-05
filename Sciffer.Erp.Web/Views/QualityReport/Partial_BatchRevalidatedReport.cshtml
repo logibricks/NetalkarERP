@@ -1,0 +1,44 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<report_quality_vm>("FlatGrid")
+                        .Datasource(ds => ds.URL(Url.Action("Get_report_quality", "QualityReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&sloc_id=" + ViewBag.sloc_id + "&plant_id=" + ViewBag.plant_id + "&item_id=" + ViewBag.item_id).Adaptor(AdaptorType.UrlAdaptor))
+                            .AllowPaging().PageSettings(a => a.PageSize(20))
+                            .AllowFiltering()
+                                .FilterSettings(X => X.FilterType(FilterType.Excel))
+                            .ShowColumnChooser()
+                            .AllowSorting()
+                            .AllowScrolling()
+                            .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "QualityReport", new { ctrlname = "BatchRevalidatedReport" })))
+                                                                .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                        .ToolbarSettings(toolbar =>
+                        {
+                            toolbar.ShowToolbar().ToolbarItems(items =>
+                            {
+                                items.AddTool(ToolBarItems.Search);
+                                items.AddTool(ToolBarItems.ExcelExport);
+                                items.AddTool(ToolBarItems.PrintGrid);
+                            });
+                        })
+                .Columns(col =>
+                {
+                    col.Field("item_code").Width("10%").HeaderText("Doc Number").Add();
+                    col.Field("item_code").Width("10%").HeaderText("Doc Date").Format("{0:dd/MMM/yyyy}").Add();
+                    col.Field("item_code").Width("10%").HeaderText("Item Code").Add();
+                    col.Field("item_name").Width("10%").HeaderText("Item Description").Add();
+                    col.Field("plant_code").Width("10%").HeaderText("Plant").Add();
+                    col.Field("storage_location_name").Width("10%").HeaderText("Sloc").Add();
+                    col.Field("batch_number").Width("10%").HeaderText("Batch").Add();
+                    col.Field("storage_location_name").Width("10%").HeaderText("Sloc").Add();
+                    col.Field("batch_number").Width("10%").HeaderText("Bucket ").Add();
+                    col.Field("batch_number").Width("10%").HeaderText("Qty In Stock ").Add();
+                    col.Field("batch_number").Width("10%").HeaderText("Accepted Qty ").Add();
+                    col.Field("batch_number").Width("10%").HeaderText("Rejected Qty ").Add();
+                    col.Field("batch_number").Width("10%").HeaderText("Original ").Add();
+                    col.Field("P_Date").Width("10%").HeaderText("New Expiry Date ").Format("{0:dd/MMM/yyyy}").Add();
+
+                })
+            .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickq"); })
+        ).Render();}
+@Html.EJ().ScriptManager()
+

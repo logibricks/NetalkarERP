@@ -1,0 +1,136 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.REF_CREDIT_CARD_VM
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model=>model.credit_card_id)
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.credit_card_code, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.credit_card_code, new { htmlAttributes = new { @class = "form-control validinput removedisabled num", @disabled="disabled" } })
+                        @Html.ValidationMessageFor(model => model.credit_card_code, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.credit_card_number, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.credit_card_number, new { htmlAttributes = new { @class = "form-control validinput removedisabled num1", @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.credit_card_number, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.bank_id, "Bank Name *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("bank_id", (System.Web.Mvc.SelectList)ViewBag.bank_list, "---Select---", htmlAttributes: new { @class = "form-control validinput" })
+                        @Html.ValidationMessageFor(model => model.bank_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.gl_ledger_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("gl_ledger_id", (System.Web.Mvc.SelectList)ViewBag.GL_list, "---Select---", htmlAttributes: new { @class = "form-control validinput" })
+                        @Html.ValidationMessageFor(model => model.gl_ledger_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.country_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("country_id", (System.Web.Mvc.SelectList)ViewBag.CountryNames, htmlAttributes: new { @class = "form-control removedisabled validinput", @disabled = "disabled" })
+                        @Html.ValidationMessageFor(model => model.country_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.currency_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("currency_id", (System.Web.Mvc.SelectList)ViewBag.CurrencyNames, htmlAttributes: new { @class = "form-control removedisabled validinput", @disabled = "disabled" })
+                        @Html.ValidationMessageFor(model => model.currency_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.is_blocked, "Blocked", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.is_blocked, new { htmlAttributes = new { @class = "form-control " } })
+                        @Html.ValidationMessageFor(model => model.is_blocked, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Update" data-controller="CreditCard" onclick="EnableControl();" data-id="@Model.credit_card_id" class="btn btn-success" id="create" name="create" style="float:right" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+  @Html.ActionLink("Back to List", "Index", "", new { @class = "btn btn-primary" })
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+  
+<script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#is_blocked').checkboxpicker();
+                });
+                function EnableControl()
+                {
+                    $('#credit_card_code').prop('disabled', false);
+                    $('#bank_name').prop('disabled', false);
+                    $('#country_id').prop('disabled', false);
+                    $('#gl_ledger_name').prop('disabled', false);
+                    $('#credit_card_number').prop('disabled', false);
+                    $('#currency_id').prop('disabled', false);
+                }
+                $("#bank_id").select2({
+                    maximumSelectionLength: 4,
+                    placeholder: "Select Bank Name",
+                    allowClear: true
+
+                });
+                $("#gl_ledger_id").select2({
+                    maximumSelectionLength: 4,
+                    placeholder: "Select GL Account",
+                    allowClear: true
+
+                });
+
+    </script>
+}

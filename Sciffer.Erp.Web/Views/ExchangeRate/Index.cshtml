@@ -1,0 +1,182 @@
+﻿<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+@using Sciffer.Erp.Domain.Model
+
+@{
+    ViewBag.Title = "Index";
+}
+<br /><br /><br />
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<ref_exchangerate_vm>("Grid")
+        .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.datasource).RemoveURL(Url.Action("InlineDelete", "ExchangeRate")).InsertURL(Url.Action("InlineInsert", "ExchangeRate")).UpdateURL(Url.Action("InlineInsert", "ExchangeRate"))
+                       .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true).ShowConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(10); })
+        .EnableAltRow()
+        .ToolbarSettings(toolbar =>
+
+        toolbar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.Update);
+            items.AddTool(ToolBarItems.Cancel);
+            items.AddTool(ToolBarItems.ExcelExport);          
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "ExchangeRate" })))  
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("exchange_rate_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Width(80).Add();
+            col.Field("unit1").Width("15%").HeaderText("Unit").ValidationRules(v => v.AddRule("required", true)).Add();
+            col.Field("currency1").Width("15%").HeaderText("Currency 1").Visible(false).ValidationRules(v => v.AddRule("required", true)).Add();
+            col.Field("currency1_name").Width("15%").HeaderText("Currency 1").Add();
+            col.Field("unit2").Width("15%").HeaderText("Unit").ValidationRules(v => v.AddRule("required", true)).Add();
+            col.Field("currency2").Width("15%").HeaderText("Currency 2").Visible(false).ValidationRules(v => v.AddRule("required", true)).Add();
+            col.Field("currency2_name").Width("15%").HeaderText("Currency 2").Add();
+            col.Field("from_date").Width("15%").HeaderText("Effective Date").Format("{0:dd/MM/yyyy}").ValidationRules(v => v.AddRule("required", true)).Add();
+            col.Field("is_blocked").Width("15%").HeaderText("Blocked").Visible(false).Add();
+
+
+        }).ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+</div>
+<script id="template" type="text/template">
+
+    <div>
+        <div class="row">
+
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="hidden" id="exchange_rate_id" name="exchange_rate_id" value="{{: exchange_rate_id}}" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                       <label class="control-label col-md-4 col-sm-4 col-xs-12">Unit *</label>
+                        <div class="col-md-5 col-sm-5 col-xs-12">
+                            <input type="number" class="form-control pull-right" name="unit1" id="unit1" value="{{:unit1}}" />
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            @Html.DropDownList("currency1", (System.Web.Mvc.SelectList)ViewBag.currency_list1,"--Select--", new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-4 col-sm-4 col-xs-12">Unit*</label>
+                        <div class="col-md-5 col-sm-5 col-xs-12">
+                            <input type="number" class="form-control pull-right" name="unit2" id="unit2" value="{{:unit2}}" />
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            @Html.DropDownList("currency2", (System.Web.Mvc.SelectList)ViewBag.currency_list2, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-4 col-sm-4 col-xs-12">Effective Date *</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="date" id="from_date" name="from_date" value="{{: from_date}}" class="form-control" />                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-4 col-sm-4 col-xs-12"> Blocked</label>
+         
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <input type="checkbox" name="is_blocked" value="{{:is_blocked}}" class="form-control" id="is_blocked">
+                    </div>
+
+
+                </div>
+
+            </div>
+    </div>
+</script>
+@*<style>
+    .e-editedrow {
+        display: none;
+    }
+     .e-editcell {
+        display:none
+    }
+</style>*@
+
+<script type="text/javascript">
+
+    function complete(args) {
+       
+        if (args.requestType == "beginedit")
+        {
+            document.getElementById('unit1').setAttribute('disabled', 'disabled');
+            document.getElementById('unit2').setAttribute('disabled', 'disabled');
+            document.getElementById('currency1').setAttribute('disabled', 'disabled');
+            document.getElementById('currency2').setAttribute('disabled', 'disabled');
+            document.getElementById('from_date').setAttribute('disabled', 'disabled');
+            function convert(str) {
+                var date = new Date(str),
+                    mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+                    day = ("0" + date.getDate()).slice(-2);
+                return [date.getFullYear(), mnth, day].join("-");
+            }
+            console.log(args.rowData);
+
+            if (args.rowData.is_blocked == true) {
+                document.getElementById("is_blocked").setAttribute('checked', 'checked');
+            }
+
+            else {
+                document.getElementById("is_blocked").removeAttribute('checked');
+            }
+            $("#is_blocked").checkboxpicker();
+            $("#currency2").val(args.rowData.currency2);
+            $("#currency1").val(args.rowData.currency1); 
+            $('#from_date').val(convert(args.rowData.from_date));
+        }
+        
+        if (args.requestType == "save") {
+            if (args.data.text == 'duplicate') {
+                sweetAlert("", "Exchange Rate already exists!", "error");
+                if (args.model.dataSource.dataSource.json[0].exchange_rate_id == null) {
+                    args.model.dataSource.dataSource.json = args.model.dataSource.dataSource.json.splice(1, args.model.dataSource.dataSource.json.length);
+                }
+            }
+            var gridObj = $("#Grid").ejGrid("instance");
+            gridObj.refreshContent();
+        }
+        if(args.requestType=="add")
+        {
+            $("#is_blocked").checkboxpicker();
+
+        }
+    }
+
+    function EndProcess() {
+        var gridObj = $("#Grid").ejGrid("instance");
+        console.log(gridObj);
+        gridObj.refreshContent();
+    }
+    
+</script>

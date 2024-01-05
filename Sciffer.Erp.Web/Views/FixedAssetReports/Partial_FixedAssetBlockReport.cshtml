@@ -1,0 +1,43 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+@{(Html.EJ().Grid<fixed_asset_report_vm>("Editing")
+                    .Datasource(ds1 => ds1.URL(Url.Action("FixedAssetReport", "FixedAssetReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&depreciation_type=" + ViewBag.depreciation_type + "&asset_code_id=" + ViewBag.asset_code_id + "&depreciation_area_id=" + ViewBag.depreciation_area_id + "&asset_class_id=" + ViewBag.asset_class_id + "&asset_group_id=" + ViewBag.asset_group_id).Adaptor(AdaptorType.UrlAdaptor))
+                          .AllowPaging().PageSettings(a1 => a1.PageSize(20))
+                              .AllowFiltering()
+                              .FilterSettings(X1 => X1.FilterType(FilterType.Excel))
+                              .ShowColumnChooser()
+                              .AllowSorting()
+                              .AllowScrolling()
+                              .Mappers(map1 => map1.ExportToExcelAction(Url.Action("ExportToExcel", "InventoryReport", new { ctrlname = "FixedAssetBlockReport" })))
+                              .ScrollSettings(scroll1 => { scroll1.Width("100%"); })
+                        
+                          .ToolbarSettings(toolbar1 =>
+                          {
+                              toolbar1.ShowToolbar().ToolbarItems(items1 =>
+                              {
+                                  items1.AddTool(ToolBarItems.Search);
+                                  items1.AddTool(ToolBarItems.ExcelExport);
+                                  items1.AddTool(ToolBarItems.PrintGrid);
+                              });
+                          })
+                  .Columns(col1 =>
+
+                  {
+                      col1.Field("asset_class").Width("15%").HeaderText("Asset Class").Add();
+                      col1.Field("opening_wdv").Width("15%").HeaderText("Opening WDV").Add();
+                      col1.Field("sales_proceed").Width("15%").HeaderText("SALES PROCEED").Add();
+                      col1.Field("addition_used_more_than_eighty_day").Width("15%").HeaderText("ADDITION (used more than 80 days)").Add();
+                      col1.Field("addition_used_less_than_eighty_day").Width("15%").HeaderText("ADDITION (used less than 80 days)").Add();
+                      col1.Field("total").Width("15%").HeaderText("TOTAL").Add();
+                      col1.Field("depreciation_on_opening_wdv").Width("15%").HeaderText("DEPRECIATION ON OPENING WDV").Add();
+                      col1.Field("depreciation_on_addition_used_for_one_eighty_or_more").Width("15%").HeaderText("DEPRECIATION ON ADDITION (used for 180 days or more)").Add();
+                      col1.Field("depreciation_on_addition_used_for_one_eighty_or_less").Width("15%").HeaderText("DEPRECIATION ON ADDITION (used for less than 180 days)").Add();
+                      col1.Field("additional_depreciation").Width("15%").HeaderText("ADDITIONAL DEPRECIATION").Add();
+                      col1.Field("total_depreciation").Width("15%").HeaderText("TOTAL DEPRECIATION").Add();
+                      col1.Field("closing_wdv").Width("15%").HeaderText("CLOSING WDV").Add();
+                  })
+                      .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickFixedAsset"); })
+                                                          ).Render();}
+@Html.EJ().ScriptManager()

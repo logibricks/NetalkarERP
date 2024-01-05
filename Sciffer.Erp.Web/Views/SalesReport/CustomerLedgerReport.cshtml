@@ -1,0 +1,116 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#customer_id").select2({
+            placeholder: "Select Customer",
+            allowClear: true
+        });
+    });
+</script>
+
+<div class="loading">Loading &#8230;</div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+
+        <div class="form-horizontal">
+            <div class=row>
+                <div class="col-md-6 col-lg-6 col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-lg-3 col-xs-12">Customer</label>
+                        <div class="col-md-9 col-lg-9 col-xs-12">
+                            @Html.DropDownList("customer_id", (System.Web.Mvc.SelectList)ViewBag.customer_list, htmlAttributes: new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-xs-12">
+                    <label class="control-label col-md-5 col-lg-5 col-xs-12">From Date</label>
+                    <div class="col-md-7 col-lg-7 col-xs-12">
+                        <input type="date" id="fromDate" class="form-control" required="required">
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-xs-12">
+                    <label class="control-label col-md-5 col-lg-5 col-xs-12">To Date</label>
+                    <div class="col-md-7 col-lg-7 col-xs-12">
+                        <input type="date" id="toDate" class="form-control radius" required="required">
+                    </div>
+                </div>
+         
+            </div>
+            <div class=row>
+                <div class="col-md-4 col-lg-4 col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-lg-3 col-xs-12"></label>
+                        <div class="col-md-9 col-lg-9 col-xs-12">                           
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4 col-xs-12">
+                    <label class="control-label col-md-5 col-lg-5 col-xs-12"></label>
+                    <div class="col-md-7 col-lg-7 col-xs-12">                        
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4 col-xs-12">
+                    <label class="control-label col-md-5 col-lg-5 col-xs-12"></label>
+                    <div class="col-md-7 col-lg-7 col-xs-12">
+                        <button class="searchbutton searchButton" style="float:right" id="search"> &nbsp; Run Report </button>
+                    </div>
+                </div>
+            </div>     
+         </div>
+    </div>
+</div>
+
+
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+
+        <div id="searchresult">
+            @Html.Partial("Partial_CustomerLedgerReport", (object)ViewBag)
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#search").click(function () {       
+        AdvanceSearch();
+    });
+    document.getElementById('fromDate').valueAsDate = new Date();
+    document.getElementById('toDate').valueAsDate = new Date();
+    function AdvanceSearch() {
+        if ($('#customer_id').val() == "") {
+            swal("", "Please select Customer!", "error");
+            return false;
+        };
+        if ($('#customer_id :selected').length > 0) {
+            var selectedCustomerCategory = [];
+            $('#customer_id :selected').each(function (i, selected) {
+                selectedCustomerCategory[i] = $(selected).val();
+            });
+            var Customer = selectedCustomerCategory + "";
+        }
+        $(".loading").show();
+
+        $.ajax({
+            url: "@Url.Action("Sales_Order_Report", "SalesReport")",
+            method: "Post",
+        cache: false,
+        data: {
+            entity: "getcustomerledger",
+            customer_id: Customer, from_date: $("#fromDate").val(), to_date: $("#toDate").val()
+        },
+        success: function (data) {
+            $(".loading").hide();
+            $('#searchresult').empty().append(data);
+        },
+        error: function (http) {
+            console.log(XMLHttpRequest);
+        }
+    });
+    }
+</script>
+<div class="modal"><!-- Place at bottom of page --></div>

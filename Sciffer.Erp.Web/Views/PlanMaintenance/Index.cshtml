@@ -1,0 +1,112 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<ref_plan_maintenance_VM>("Searching")
+        .Datasource((IEnumerable<object>)ViewBag.DataSource)
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "PlanMaintenance" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("plan_maintenance_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Add();
+            col.Field("doc_number").Width("15%").HeaderText("Doc Number").Visible(true).Add();
+            col.Field("posting_date").Width("15%").HeaderText("Posting Date").Visible(true).Add();
+            col.Field("category_name").Width("15%").HeaderText("Category").Visible(true).Add();
+            col.Field("machine_name").Width("15%").HeaderText("Machine Name").Visible(true).Add();
+            col.Field("machine_category_name").Width("15%").HeaderText("Machine Category").Visible(true).Add();
+            col.Field("maintenance_type_name").Width("15%").HeaderText("Maintenance Type").Visible(true).Add();
+            col.Field("plan_start_date").Width("15%").HeaderText("Plan Start Date").Visible(false).Add();
+            col.Field("plan_end_date").Width("15%").HeaderText("Plan End Date").Visible(false).Add();
+            col.Field("cycle_start_date").Width("15%").HeaderText("Cycle Start Date").Visible(false).Add();
+            col.Field("frequency").Width("15%").HeaderText("Frequency").Visible(false).Add();
+            col.Field("frequency_type").Width("15%").HeaderText("Frequency Type").Visible(false).Add();
+            col.Field("create_order_days").Width("15%").HeaderText("Create Order Days").Visible(false).Add();
+            col.Field("create_order_dtype").Width("15%").HeaderText("Create Order Days Type").Visible(false).Add();
+            col.Field("maintenance_period").Width("15%").HeaderText("Maintenance Period").Visible(false).Add();
+            col.Field("maintenance_period_type").Width("15%").HeaderText("Maintenance Period Type").Visible(false).Add();
+            col.Field("allowed_delay").Width("15%").HeaderText("Allowed Delay").Visible(false).Add();
+            col.Field("allowed_delay_type").Width("15%").HeaderText("Allowed Delay Type").Visible(false).Add();
+            col.Field("allowed_early_completion").Width("15%").HeaderText("Allowed Early Completion").Visible(false).Add();
+            col.Field("allowed_early_comlpletion_type").Width("15%").HeaderText("Early Completion Type").Visible(false).Add();
+            col.Field("days_before").Width("15%").HeaderText("Days Before").Visible(false).Add();
+            col.Field("create_order_yes").Width("15%").HeaderText("Create Order Yes/No").Visible(false).Add();
+            col.Field("plant_name").Width("15%").HeaderText("Plant Name").Visible(false).Add();
+            col.Field("model_no").Width("15%").HeaderText("Model No").Visible(false).Add();
+            col.Field("manufacturer_part_no").Width("15%").HeaderText("Manufacturer Part No").Visible(false).Add();
+            col.Field("manufacturing_serial_number").Width("15%").HeaderText("Manufacturer Serial No").Visible(false).Add();
+            col.Field("asset_code_id").Width("15%").HeaderText("Asset Code No").Visible(false).Add();
+            col.Field("asset_tag_no").Width("15%").HeaderText("Asset Tag No").Visible(false).Add();
+            col.Field("manufacturer").Width("15%").HeaderText("Manufacturer").Visible(false).Add();
+            col.Field("employee_name").Width("15%").HeaderText("Employee Name").Visible(false).Add();
+            col.Field("remarks").Width("15%").HeaderText("Remarks").Add();
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = "@Url.Action("Edit", "PlanMaintenance")?id=" + args.rowData.plan_maintenance_id;
+        }
+        if (args.requestType == "add") {
+            location.href = '@Url.Action("Create", "PlanMaintenance")';
+        }
+    }
+    function rightClick(args) {
+        location.href = "@Url.Action("Details", "PlanMaintenance")?id=" + args.data.plan_maintenance_id;
+    }
+    function Click(args) {
+        $('a').css('color','red');
+    }
+
+    $(document).ready(function () {
+        var doc_no = '@ViewBag.doc';
+        //console.log(doc_no);
+        if (doc_no != '') {
+            if (doc_no != 0) {
+                sweetAlert("", doc_no +" Saved successfully!", "success");
+            }
+        }
+    });
+</script>
+
+
+
+
+
+
+
+

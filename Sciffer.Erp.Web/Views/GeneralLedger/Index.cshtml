@@ -1,0 +1,290 @@
+﻿
+@model Sciffer.Erp.Domain.Model.TreeViewNodeVM
+@{
+
+    ViewBag.Title = "Index";
+}
+<style type="text/css">
+    .ThinListTable1 {
+        width: 100%;
+    }
+
+        .ThinListTable1 ul {
+            list-style-type: none;
+            //border-bottom: 1px;
+        }
+
+        .ThinListTable1 li {
+            margin: 0px;
+        }
+
+            .ThinListTable1 li:hover {
+                border: 1pt solid red;
+            }
+
+    .picked {
+        background: #dcd4d4;
+    }
+
+    .Account {
+        color: #0026ff;
+    }
+
+    .scrollit {
+        overflow: scroll;
+        height: 515px;
+    }
+
+    .table > tbody > tr > td {
+        padding: 0px !important;
+    }
+
+    .table {
+        margin-bottom: 0px !important;
+    }
+
+    .list-group-item {
+        padding: 0px 15px;
+    }
+
+    .panel-body {
+        padding: 0px !important;
+    }
+
+    .padding {
+        padding: 8px 15px 4px 8px; /* Add some padding */
+    }
+
+    .panel-default > .panel-heading {
+        background-color: #fcfcfc;
+    }
+</style>
+
+
+<div class="container get">
+    <div class="row">
+
+        <div class="col-sm-1"></div>
+        <div class="col-sm-2 text-center ">
+            @Html.ActionLink("Assets", "Index", "GeneralLedger", new { name = "Assets" }, new { @class = "btn btn-default Assets" })
+        </div>
+        <div class="col-sm-2 text-center">
+            @Html.ActionLink("Liabilities", "Index", "GeneralLedger", new { name = "Liabilities" }, new { @class = "Liabilities btn btn-default" })
+        </div>
+        <div class="col-sm-2 text-center">
+            @Html.ActionLink("Equity", "Index", "GeneralLedger", new { name = "Equity" }, new { @class = "Equity btn btn-default" })
+        </div>
+        <div class="col-sm-2 text-center">
+            @Html.ActionLink("Income", "Index", "GeneralLedger", new { name = "Income" }, new { @class = "Income btn btn-default" })
+        </div>
+        <div class="col-sm-2 text-center">
+            @Html.ActionLink("Expenses", "Index", "GeneralLedger", new { name = "Expenses" }, new { @class = "Expenses btn btn-default" })
+        </div>
+    </div>
+</div>
+<br />
+
+<div class="row">
+    <div class="col-sm-8">
+        <div class="panel panel-default">
+            <div class="panel-heading" style="height:50px;">
+                <div style="float:left; display:inline-block;">
+                    <div class="glyphicon glyphicon-plus padding" id="create1"></div>
+                    <div class="glyphicon glyphicon-pencil edit padding" id="edit" onclick="javascript: EditCall($(this).attr('value'));"></div>
+                    <div class="fa fa-child padding" id="child" onclick="javascript: ChildCall($(this).attr('value'));"></div>
+                    <a href="@Url.Action("ExportData", "GeneralLedger", null)" class="padding">
+                        <img src="~/images/export.PNG" />
+                    </a>
+                </div>
+                <div style="float:right">
+                    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." class="padding">
+                </div>
+            </div>
+
+            <div class="panel-body scrollit">
+                <div class="ThinListTable1" id="myUL">
+                    @Html.Partial("ChildNode", Model.ChildNode)
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4" id="create_partial"></div>
+</div>
+<div class="loading">Loading&#8230;</div>
+
+<script>
+    $(document).ready(function () {
+        start();
+        $(".loading").hide();
+
+        var x = $(location).attr('href')
+        var value = x.split("=");
+        if (value[1] == "Equity") {
+            $(".Equity").css("background-color", "#dcd4d4");
+        }
+        else if (value[1] == "Liabilities") {
+            $(".Liabilities").css("background-color", "#dcd4d4");
+        }
+        else if (value[1] == "Expenses") {
+            $(".Expenses").css("background-color", "#dcd4d4");
+        }
+        else if (value[1] == "Income") {
+            $(".Income").css("background-color", "#dcd4d4");
+        }
+        else {
+            $(".Assets").css("background-color", "#dcd4d4");
+        }
+
+    })
+
+    $('#create1').click(function () {
+        $("#create_partial").empty();
+        $(".loading").show();
+        $.ajax({
+            url: '@Url.Action("Create", "GeneralLedger")',
+            cache: false,
+            success: (function (data) {
+                $('#create_partial').append(data);
+                $(".loading").hide();
+            })
+        })
+
+    })
+
+    function myFunction() {
+        // Declare variables
+        var input, filter, ul, li, a, i;
+        input = document.getElementById('myInput');
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("myUL");
+        li = ul.getElementsByTagName('li');
+
+        // Loop through all list items, and hide those who don't match the search query
+        for (i = 0; i < li.length; i++) {
+            a = li[i];
+            if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
+    //function  Export(){
+    //    $.ajax({
+    //        url: '/GeneralLedger/ExportData',
+    //        cache: false,
+    //        contentType: 'application/json; charset=utf-8',
+    //        datatype: 'json',
+    //        type: "GET",
+    //        success: (function (data) {
+    //            sweetAlert("", "Data Export Sucessfully!", "success");
+    //        })
+    //    })
+    //}
+
+    function EditCall(id) {
+        console.log(id);
+
+        if (id == undefined) {
+            sweetAlert("", "Select row to edit!", "error");
+        }
+        else {
+            $(".loading").show();
+            $("#create_partial").empty();
+            $.ajax({
+                url: '@Url.Action("Edit", "GeneralLedger")',
+                data: { id: id },
+                cache: false,
+                success: (function (data) {
+                    $('#create_partial').append(data);
+                    $(".loading").hide();
+                    var id = $("#gl_account_type").val();
+                    FillGlParentLedger(id)
+                })
+            })
+        }
+    }
+
+    function ChildCall(id) {
+        if (id == undefined) {
+            sweetAlert("", "Select row to Add Child!", "error");
+        }
+        else {
+            if (id != undefined + "-Account") {
+                $(".loading").show();
+                $("#create_partial").empty();
+                $.ajax({
+                    url: '@Url.Action("Child", "GeneralLedger")',
+                    data: { id: id },
+                    cache: false,
+                    success: (function (data) {
+                        $('#create_partial').append(data);
+                        $(".loading").hide();
+                        var id = $("#gl_account_type").val();
+                        FillGlParentLedger(id)
+                    })
+                })
+            }
+            else {
+                $("#create_partial").empty();
+                sweetAlert("", "Add Child to Parent Only!", "error");
+            }
+        }
+    }
+    function FillGlParentLedger(id) {
+        var Account_type = id;
+
+        $.ajax({
+            url: '@Url.Action("FillParentList", "GeneralLedger")',
+            type: "GET",
+            dataType: "JSON",
+            data: { id: Account_type },
+            success: function (Account_type) {
+
+                $("#gl_parent_ledger_code").html(""); // clear before appending new list
+                $("#gl_parent_ledger_code").append($('<option></option>').val(0).html("---Select---"));
+                $.each(Account_type, function (i, cycle) {
+                    $("#gl_parent_ledger_code").append(
+                        $('<option></option>').val(cycle.gl_ledger_code).html(cycle.gl_ledger_name));
+
+                });
+                $("#gl_parent_ledger").html(""); // clear before appending new list
+                $("#gl_parent_ledger").append($('<option></option>').val(0).html("---Select---"));
+                $.each(Account_type, function (i, cycle) {
+                    $("#gl_parent_ledger").append(
+                        $('<option></option>').val(cycle.gl_ledger_code).html(cycle.gl_ledger_name));
+
+                });
+
+            }
+        });
+    }
+    function mouseHandler(e) {
+        // Add Picked Class
+        if ($(this).hasClass('picked')) {
+            $(this).removeClass('picked');
+
+        } else {
+            $(".picked").removeClass('picked');
+            $(this).addClass('picked');
+            var value1 = $(this).attr('id');
+            $("#edit").attr('value', value1);
+            var value = $(this).find('.Head');
+            if (value.length == 1) {
+                var head = $(this).attr('id');
+                $("#child").attr('value', head);
+            }
+            else {
+                $("#child").attr('value', head + "-" + "Account");
+                //sweetAlert("", "Add Children to Parent only!", "error");
+            }
+        }
+    }
+
+    function start() {
+        // Bind all li
+        $('.ThinListTable1 li').bind('click', mouseHandler);
+    }
+
+
+</script>

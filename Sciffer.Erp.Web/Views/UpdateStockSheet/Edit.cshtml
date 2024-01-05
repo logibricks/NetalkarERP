@@ -1,0 +1,335 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.update_stock_count_vm
+@{
+    ViewBag.Title = "Edit";
+}
+@using (Html.BeginForm("Edit", "UpdateStockSheet", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(x=>x.update_stock_count_id)
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.CategoryList, "Select Category", new { @class = "form-control validinput removedisabled", @disabled = "disabled", @required = true, })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.plant_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plant, "Select Plant", new { @class = "form-control validinput removedisabled", @disabled = "disabled", @required = true})
+                            @Html.ValidationMessageFor(model => model.plant_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.create_stock_sheet_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("create_stock_sheet_id", (System.Web.Mvc.SelectList)ViewBag.StockSheet, "Select Document No", new { @class = "form-control validinput removedisabled", @disabled = "disabled", @required = true })
+                        @Html.ValidationMessageFor(model => model.create_stock_sheet_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.posting_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control validinput removedisabled", @disabled = "disabled", @required = true, @type = "date" } })
+                        @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.sloc_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("sloc_id", (System.Web.Mvc.SelectList)ViewBag.storage, "Select Storage", new { @class = "form-control validinput removedisabled", @disabled = "disabled", @required = true })
+                        @Html.ValidationMessageFor(model => model.sloc_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.document_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.document_date, new { htmlAttributes = new { @class = "form-control validinput removedisabled", @disabled = "disabled", @required = true, @type = "date" } })
+                        @Html.ValidationMessageFor(model => model.document_date, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.bucket_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("bucket_id", (System.Web.Mvc.SelectList)ViewBag.bucket, "Select Bucket", new { @class = "form-control validinput removedisabled", @disabled = "disabled", @required = true, })
+                        @Html.ValidationMessageFor(model => model.bucket_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.item_category_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12 " })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("item_category_id", (System.Web.Mvc.SelectList)ViewBag.item_category_list, "Select Item Category", new { @class = "form-control validinput removedisabled", @disabled = "disabled", @required = true, })
+                        @Html.ValidationMessageFor(model => model.item_category_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>             
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ref_1, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12 " })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.ref_1, new { htmlAttributes = new { @class = "form-control validinput removedisabled", @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.ref_1, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.status_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("status_id", (System.Web.Mvc.SelectList)ViewBag.status, "Select Bucket", new { @class = "form-control validinput removedisabled", @disabled = "disabled", @required = true, })
+                        @Html.ValidationMessageFor(model => model.status_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>            
+        </div>
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">Stock Quantity > 0</a></li>
+                <li><a data-toggle="tab" href="#sectionB">Stock Quantity = 0</a></li>
+                <li><a data-toggle="tab" href="#sectionC">Stock Quantity = null</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane active" style="margin-top:10px;max-height:400px;overflow-y:auto">
+                    <div class="table-responsive">
+                        <table class="table table-responsive table-bordered table-striped " id="stock_quantity_grater_than_0"></table>
+                    </div>
+                </div>
+
+                <div id="sectionB" class="tab-pane fade" style="margin-top:10px;max-height:400px;overflow-y:auto">
+                    <div class="table-responsive">
+                        <table class="table table-responsive table-bordered table-striped " id="stock_quantity_equal_to_0"></table>
+                    </div>
+                </div>
+
+                <div id="sectionC" class="tab-pane fade" style="margin-top:10px;max-height:400px;overflow-y:auto">
+                    <div class="table-responsive">
+                        <table class="table table-responsive table-bordered table-striped " id="stock_quantity_is_null"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="ParameterData"></div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" data-controller="CreateStockSheet" onclick="TableToJeson()" class="btn btn-success" id="create" name="Create" style="float:right" />
+            </div>
+        </div>
+    </div>
+}
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+
+        //document.getElementById("document_date").valueAsDate = new Date();
+        //document.getElementById("posting_date").valueAsDate = new Date();
+
+        $("#plant_id").select2({
+            placeholder: "Select Plant",
+            allowClear: true
+        });
+        $("#sloc_id").select2({
+            placeholder: "Select Storage",
+            allowClear: true
+        });
+        $("#bucket_id").select2({
+            placeholder: "Select Bucket",
+            allowClear: true
+        });
+        $("#category_id").select2({
+            placeholder: "Select Category",
+            allowClear: true
+        });
+        $("#status_id").select2({
+            placeholder: "Select Status",
+            allowClear: true
+        });
+        $("#create_stock_sheet_id").select2({
+            placeholder: "Select Document No",
+            allowClear: true
+        });
+        GetCreateStockData($("#update_stock_count_id").val())
+    });
+
+
+    $('#stock_quantity_grater_than_0').DataTable({
+        "bPaginate": false,
+        "ordering": false,
+        "bfooter": false,
+        "info": false,
+        "bLengthChange": false,
+        "bAutoWidth": false,
+        "bFilter": false,
+        "bSort": false,
+        "columns": [
+            { "data": "item_code", bVisible: true, "title": "Item Code" },
+            { "data": "UOM", bVisible: true, "title": "UOM" },
+            { "data": "batch_number", bVisible: true, "title": "Batch No" },
+            { "data": "actual_qty", bVisible: true, "title": "Actual Quantity" },
+        ],
+
+    });
+
+
+    $('#stock_quantity_is_null').DataTable({
+        "bPaginate": false,
+        "ordering": false,
+        "bfooter": false,
+        "info": false,
+        "bLengthChange": false,
+        "bAutoWidth": false,
+        "bFilter": false,
+        "bSort": false,
+        "columns": [
+            { "data": "item_code", bVisible: true, "title": "Item Code" },
+            { "data": "UOM", bVisible: true, "title": "UOM" },
+            { "data": "batch_number", bVisible: true, "title": "Batch No" },
+            { "data": "actual_qty", bVisible: true, "title": "Actual Quantity" },
+        ],
+
+    });
+
+    $('#stock_quantity_equal_to_0').DataTable({
+        "bPaginate": false,
+        "ordering": false,
+        "bfooter": false,
+        "info": false,
+        "bLengthChange": false,
+        "bAutoWidth": false,
+        "bFilter": false,
+        "bSort": false,
+        "columns": [
+            { "data": "item_code", bVisible: true, "title": "Item Code" },
+            { "data": "UOM", bVisible: true, "title": "UOM" },
+            { "data": "batch_number", bVisible: true, "title": "Batch No" },
+            { "data": "actual_qty", bVisible: true, "title": "Actual Quantity" },
+        ],
+
+    });
+
+    function GetStorageLocation(id) {
+        if (id == "") {
+            id = 0;
+        }
+        $.ajax({
+            url: '@Url.Action("GetStorageLocation", "Generic")',
+            type: "GET",
+            dataType: "JSON",
+            data: { id: id },
+            success: function (id) {
+                $("#sloc_id").html(""); // clear before appending new list
+                $("#sloc_id").append($('<option></option>').val("").html("---Select---"));
+                $.each(id, function (i, cycle) {
+                    $("#sloc_id").append(
+                        $('<option></option>').val(cycle.storage_location_id).html(cycle.storage_location_name));
+                });
+            }
+        });
+
+        $.ajax({
+            url: '@Url.Action("GetCreateStockSheet", "Generic")',
+            type: "GET",
+            dataType: "JSON",
+            data: { plant_id: id },
+            success: function (id) {
+                $("#create_stock_sheet_id").html(""); // clear before appending new list
+                $("#create_stock_sheet_id").append($('<opCRT_STOCKtion></option>').val("").html("---Select---"));
+                $.each(id, function (i, cycle) {
+                    $("#create_stock_sheet_id").append(
+                        $('<option></option>').val(cycle.create_stock_sheet_id).html(cycle.document_no));
+                });
+            }
+        });
+    }
+
+    function GetCreateStockData(id) {
+        if (id == "") {
+            id = 0;
+        }
+        $.ajax({
+            url: '@Url.Action("Get_StockQuantity_Details", "CreateStockSheet")',
+            type: "GET",
+            dataType: "JSON",
+            data: { id: id, form: "UPT_STOCK" },
+            success: function (data) {
+
+                var stock_grater_than_zero = $('#stock_quantity_grater_than_0').DataTable();
+                stock_grater_than_zero.fnClearTable();
+                stock_grater_than_zero.fnAddData(data.grater_than_zero1);
+
+                var stock_less_is_null = $('#stock_quantity_is_null').DataTable();
+                stock_less_is_null.fnClearTable();
+                stock_less_is_null.fnAddData(data.stock_less_is_null1);
+
+                var stock_equal_to_zero = $('#stock_quantity_equal_to_0').DataTable();
+                stock_equal_to_zero.fnClearTable();
+                stock_equal_to_zero.fnAddData(data.equal_zero1);
+
+            }
+        });
+    }
+
+
+    function TableToJeson() {
+
+        var t = $('#stock_quantity_grater_than_0').dataTable();
+
+        var rowCount = t.fnGetData().length;
+
+        for (i = 0; i < rowCount; i++) {
+
+            $("#ParameterData").append('<input type="hidden" id="create_stock_sheet_detail_idi' + i + '" name="create_stock_sheet_detail_id">');
+            $("#ParameterData").append('<input type="hidden" id="item_code' + i + '" name="item_code">');
+            $("#ParameterData").append('<input type="hidden" id="UOM' + i + '" name="UOM">');
+            $("#ParameterData").append('<input type="hidden" id="batch_number' + i + '" name="batch_number">');
+            $("#ParameterData").append('<input type="hidden" id="actual_qty' + i + '" name="actual_qty" value = ' + $("#textbox-" + t.fnGetData(i, 0)).val() + '>');
+
+            $("#create_stock_sheet_detail_idi" + i).val(t.fnGetData(i, 0));
+            $("#item_code" + i).val(t.fnGetData(i, 1));
+            $("#UOM" + i).val(t.fnGetData(i, 2));
+            $("#batch_number" + i).val(t.fnGetData(i, 3));
+        }
+    }
+    </script>
+
+}
+
+
+
+

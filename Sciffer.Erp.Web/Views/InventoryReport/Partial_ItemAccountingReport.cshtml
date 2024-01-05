@@ -1,0 +1,59 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<report_inventory_vm>("Editing")
+                      .Datasource(ds => ds.URL(Url.Action("GetInventoryReport", "InventoryReport") + "?entity=" + ViewBag.entity).Adaptor(AdaptorType.UrlAdaptor))
+                          .AllowPaging().PageSettings(a => a.PageSize(20))
+                              .AllowFiltering()
+                                  .FilterSettings(X => X.FilterType(FilterType.Excel))
+                              .ShowColumnChooser()
+                              .AllowSorting()
+                              .AllowScrolling()
+                              .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "InventoryReport", new { ctrlname = "ItemAccountingReport" })))
+                              .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                          .ToolbarSettings(toolbar =>
+                          {
+                              toolbar.ShowToolbar().ToolbarItems(items =>
+                              {
+                                  items.AddTool(ToolBarItems.Search);
+                                  items.AddTool(ToolBarItems.ExcelExport);
+                                  items.AddTool(ToolBarItems.PrintGrid);
+                              });
+                          })
+                      .Columns(col =>
+                      {
+                          col.Field("item_code").Width("10%").HeaderText("Item Code").Add();
+                          col.Field("item_name").Width("10%").HeaderText("Item Description ").Add();
+                          col.Field("item_type_name").Width("10%").HeaderText("Item Type ").Add();
+                          col.Field("item_category_name").Width("10%").HeaderText("Item Category ").Add();
+                          col.Field("item_group_name").Width("10%").HeaderText("Item group ").Add();
+                          col.Field("item_group_name").Width("10%").HeaderText("Item valuation").Add();
+                          col.Field("item_accounting_name").Width("10%").HeaderText("Item Accounting ").Add();
+                          col.Field("Inventory_Account").Width("10%").HeaderText("Inventory Account ").Add();
+                          col.Field("Consumption_Account").Width("10%").HeaderText("Consumption Account").Add();
+                          col.Field("Revaluation_Account").Width("10%").HeaderText("Revaluation Account").Add();
+                          col.Field("COGP_Account").Width("10%").HeaderText("COGP Account").Add();
+                          col.Field("COGS_Account").Width("10%").HeaderText("COGS Account").Add();
+                          col.Field("Scrap_P_and_L_Account").Width("10%").HeaderText("Scrap P &L Account").Add();
+                          col.Field("Price_Difference_Account").Width("10%").HeaderText("Price Difference Account").Add();
+                          col.Field("Stock_Differences_Account").Width("10%").HeaderText("Stock Differences Account").Add();
+                          col.Field("By_Product_P_and_L_Account").Width("10%").HeaderText("By Product P &L Account").Add();
+                          col.Field("GRIR_Clearing_Account").Width("10%").HeaderText("GRIR Clearing Account").Add();
+                          col.Field("Sales_GL").Width("10%").HeaderText("Sales GL").Add();
+                          col.Field("Sales_Return_GL").Width("10%").HeaderText("Sales Return GL").Add();
+                          col.Field("Costing_Difference").Width("10%").HeaderText("Costing Difference").Add();
+
+
+
+
+                      })
+  .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicki"); })
+  ).Render();}
+@Html.EJ().ScriptManager()
+
+
+
+
+
+
+

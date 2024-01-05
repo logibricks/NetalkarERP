@@ -1,0 +1,201 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.mickey').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            maxHeight: '200',
+            enableCaseInsensitiveFiltering: true,
+            allowClear: true,
+            maximumResultsForSearch: 1,
+            numberDisplayed: 0,
+        });
+    });
+</script>
+<div class="loading">Loading &#8230;</div>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+
+        <div class=row>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">From Date</label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    <input type="date" id="fromDate" class="form-control radius" required="required">
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">To Date</label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    <input type="date" id="toDate" class="form-control radius" required="required">
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                    <label></label>
+                </div>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    <button class="searchbutton searchButton" id="search"> &nbsp; Run Report </button>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class=row>
+            @*<div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">Status</label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    @Html.DropDownList("frequency_id", new List<SelectListItem>
+                                {
+                                   new SelectListItem { Text = "Ok Parts", Value = "1" },
+                                    new SelectListItem { Text = "Rejected Parts", Value = "2" },
+                                     new SelectListItem { Text = "Both", Value = "3" }
+
+
+
+                                 }, new { @class = "form-control" })
+
+                </div>
+            </div>*@
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">Shift</label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    @Html.DropDownList("shift_id", (System.Web.Mvc.SelectList)ViewBag.shift_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+
+                </div>
+            </div>
+            @*<div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">Operation</label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    @Html.DropDownList("process_id", (System.Web.Mvc.SelectList)ViewBag.oprlist, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+
+                </div>
+            </div>*@
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">Machine Code</label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    @Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.mplist, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">Item Code</label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.item_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+                </div>
+            </div>
+            </div>
+        <br/>
+        <div class=row>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">User Code</label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    @Html.DropDownList("user_id", (System.Web.Mvc.SelectList)ViewBag.userlist, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+
+        <div id="searchresult">
+            @Html.Partial("Partial_Userwiseproductionreport", (object)ViewBag)
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+
+        $("#shift_id").multiselect('selectAll', false);
+        $('#shift_id').multiselect('updateButtonText');
+        $("#machine_id").multiselect('selectAll', false);
+        $('#machine_id').multiselect('updateButtonText');
+        $("#item_id").multiselect('selectAll', false);
+        $('#item_id').multiselect('updateButtonText');
+        $("#process_id").multiselect('selectAll', false);
+        $("#process_id").multiselect('updateButtonText')
+        $("#user_id").multiselect('selectAll', false);
+        $("#user_id").multiselect('updateButtonText')
+    });
+    $("#search").click(function () {
+        AdvanceSearch();
+    });
+    document.getElementById('fromDate').valueAsDate = new Date();
+    document.getElementById('toDate').valueAsDate = new Date();
+    function AdvanceSearch() {
+        var fromDate = $("#fromDate").val();
+        var toDate = $("#toDate").val();
+        if ($('#shift_id :selected').length > 0) {
+            var selectedshiftid = [];
+            $('#shift_id :selected').each(function (i, selected) {
+                selectedshiftid[i] = $(selected).val();
+            });
+            var shiftid = selectedshiftid + "";
+        }
+        if ($('#machine_id :selected').length > 0) {
+            var selectedmachineid = [];
+            $('#machine_id :selected').each(function (i, selected) {
+                selectedmachineid[i] = $(selected).val();
+            });
+            var machineid = selectedmachineid + "";
+        }
+        if ($('#item_id :selected').length > 0) {
+            var selecteditemid = [];
+            $('#item_id :selected').each(function (i, selected) {
+                selecteditemid[i] = $(selected).val();
+            });
+            var itemid = selecteditemid + "";
+        }
+        //if ($('#process_id :selected').length > 0) {
+        //    var selectedprocess_id = [];
+        //    $('#process_id :selected').each(function (i, selected) {
+        //        selectedprocess_id[i] = $(selected).val();
+        //    });
+        //    var processid = selectedprocess_id + "";
+        //}
+        if ($('#user_id :selected').length > 0) {
+            var selecteduser_id = [];
+            $('#user_id :selected').each(function (i, selected) {
+                selecteduser_id[i] = $(selected).val();
+            });
+            var userid = selecteduser_id + "";
+        }
+        $(".loading").show();
+        @*$.ajax({
+            url: "@Url.Action("report_production", "ProductionReport")",
+            method: "Post",
+        cache: false,
+        data: {
+            entity: "get_User_wise_production_report", from_date: fromDate, to_date: toDate, plant_id: plantid, machine_id: machineid
+        },
+        success: function (data) {
+            $(".loading").hide();
+            $('#searchresult').empty().append(data);
+        },
+        error: function (http) {
+            console.log(XMLHttpRequest);
+        }
+        });*@
+        $.ajax({
+            url: "@Url.Action("Get_Partial", "ProductionReport")",
+            method: "Post",
+            cache: false,
+            data: { entity: "get_User_wise_production_report", from_date: fromDate, to_date: toDate, shift_id: shiftid, machine_id: machineid, item_id: itemid, user_id: userid, is_qc_remark: "false" },
+            success: function (data) {
+                $(".loading").hide();
+                $('#searchresult').empty().append(data);
+            },
+            error: function (http) {
+                $(".loading").hide();
+                $("", "Something went wrong", "error");
+                console.log(XMLHttpRequest);
+            }
+        });
+
+    }
+</script>
+<div class="modal"><!-- Place at bottom of page --></div>

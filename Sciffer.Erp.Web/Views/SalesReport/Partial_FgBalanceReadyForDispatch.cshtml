@@ -1,0 +1,59 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{
+    (Html.EJ().Grid<sales_order_report_vm>("Editing")
+        // .Datasource((IEnumerable<object>)ViewBag.datasource)
+        .Datasource(ds => ds.URL(Url.Action("GetSalesOrderData", "SalesReport") + "?entity=" + ViewBag.entity + "&item_id=" + ViewBag.item_id)
+        .EnableCaching().CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .AllowPaging().PageSettings(a => a.PageSize(20))
+        .FilterSettings(X => X.FilterType(FilterType.Excel))
+        .ShowColumnChooser()
+        .AllowSorting()
+        .AllowScrolling()
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "SalesReport", new { ctrlname = "FgBalanceReadyForDispatch" })))
+
+        .ScrollSettings(scroll => { scroll.Width("100%"); })
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Search);
+                items.AddTool(ToolBarItems.ExcelExport);
+                items.AddTool(ToolBarItems.PrintGrid);
+            });
+        })
+          .Columns(col =>
+          {
+              col.Field("item_code").Width("15%").HeaderText("Item Code").Add();
+              col.Field("fg_quantity").Width("15%").HeaderText("Quantity").Add();
+
+
+          })
+          .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick"); })
+
+          ).Render();
+}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1) {
+
+
+            if ($('#item_id :selected').length > 0) {
+                var selectedItem = [];
+                $('#item_id :selected').each(function (i, selected) {
+                    selectedItem[i] = $(selected).val();
+                });
+                var Item = selectedItem + "";
+            }
+            this.model["item_id"] = Item;
+            this.model["entity"] = "get_fg_balance_ready_for_dispatch";
+        }
+    }
+</script>
+

@@ -1,0 +1,120 @@
+﻿<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+@model IEnumerable<Sciffer.Erp.Domain.Model.REF_FORM>
+@using Sciffer.Erp.Domain.Model
+@{
+    ViewBag.Title = "Index";
+}
+
+<br /><br /><br />
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<REF_FORM>("Grid")
+       .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.DataSource).RemoveURL(Url.Action("InlineDelete", "Forms")).InsertURL(Url.Action("InlineInsert", "Forms")).UpdateURL(Url.Action("InlineInsert", "Forms"))
+                       .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true).ShowConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(10); })
+        .EnableAltRow()
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Add);
+                items.AddTool(ToolBarItems.Edit);
+                items.AddTool(ToolBarItems.Update);
+                items.AddTool(ToolBarItems.Cancel);
+                items.AddTool(ToolBarItems.ExcelExport);               
+                items.AddTool(ToolBarItems.PrintGrid);
+            });
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "Forms" })))            
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("FORM_ID").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("FORM_NAME").Width("15%").HeaderText("Form Type").ValidationRules(v => v.AddRule("required", true)).Add();
+            col.Field("IS_BLOCKED").Width("15%").HeaderText("Blocked").Visible(false).Add();
+        })
+        .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+
+</div>
+
+<script id="template" type="text/template">
+    <form name="add_form">
+        <div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <input type="hidden" id="FORM_ID" name="FORM_ID" value="{{: FORM_ID}}" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                    Form Type *
+                </div>
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <input type="text" id="FORM_NAME" name="FORM_NAME" value="{{: FORM_NAME}}" class="form-control" />
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                   Block
+                </div>
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <input type="checkbox" id="IS_BLOCKED" name="IS_BLOCKED" class="form-control" />
+
+                </div>
+            </div>
+        </div>
+    </form>
+</script>
+
+
+
+<script type="text/javascript">
+    var flag = true;
+    function complete(args) {
+        if (args.requestType == "add") {
+            $('#IS_BLOCKED').checkboxpicker();
+        }
+        if (args.requestType == "beginedit") {
+            document.getElementById('FORM_NAME').setAttribute('disabled', 'disabled');
+            if (args.rowData.IS_BLOCKED == true) {
+                document.getElementById('IS_BLOCKED').setAttribute('checked', 'checked');
+            }
+            else {
+
+                document.getElementById('IS_BLOCKED').removeAttribute('checked');
+            }
+            $('#IS_BLOCKED').checkboxpicker();
+        }
+        if (args.requestType == "save") {
+            if (args.data.text == 'duplicate') {
+                sweetAlert("", "Form type already exists!", "error");
+                if (args.model.dataSource.dataSource.json[0].payment_terms_id == null) {
+                    args.model.dataSource.dataSource.json = args.model.dataSource.dataSource.json.splice(1, args.model.dataSource.dataSource.json.length);
+                }
+            }
+            var gridObj = $("#Grid").ejGrid("instance");
+            gridObj.refreshContent();
+        }
+    }
+
+    function EndProcess() {
+        var gridObj = $("#Grid").ejGrid("instance");
+        //console.log(gridObj);
+        gridObj.refreshContent();
+    }
+
+
+
+</script>

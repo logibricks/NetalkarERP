@@ -1,0 +1,809 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.ref_asset_master_data_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+<div class="loading">Loading &#8230;</div>
+@using (Html.BeginForm("Create", "AssetMasterData", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form_main", @id = "form_main" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        <div>@Html.ValidationSummary(true, "", new { @class = "text-danger" })</div>
+        @Html.HiddenFor(a => a.asset_master_data_id, new { @class = "primary_id hidden" })
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.asset_master_data_code, htmlAttributes: new { Class = "control-label col-md-4 " })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.asset_master_data_code, new { htmlAttributes = new { @class = "form-control removedisabled ", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.asset_master_data_code, "", new { Class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.machine_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.machineList, "--select--", htmlAttributes: new { @class = "form-control removedisabled removedisabled", @onchange = "GetMachineDetails(this.value)", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.machine_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.asset_master_data_desc, htmlAttributes: new { Class = "control-label col-md-4 " })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.asset_master_data_desc, new { htmlAttributes = new { @class = "form-control removedisabled removedisabled ", } })
+                            @Html.ValidationMessageFor(model => model.asset_master_data_desc, "", new { Class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.asset_class_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("asset_class_id", (new System.Web.Mvc.SelectList(ViewBag.assetclassList, "asset_class_id", "asset_class_code")), "--select--", htmlAttributes: new { @class = "form-control removedisabled removedisabled", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.asset_class_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.asset_group_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("asset_group_id", (new System.Web.Mvc.SelectList(ViewBag.assetgroupList, "asset_group_id", "asset_group_code")), "--select--", htmlAttributes: new { @class = "form-control removedisabled removedisabled", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.asset_group_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.status_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("status_id", (new System.Web.Mvc.SelectList(ViewBag.statusList, "status_id", "status_name")), "--select--", htmlAttributes: new { @class = "form-control removedisabled" })
+                            @Html.ValidationMessageFor(model => model.status_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">General</a></li>
+                <li><a data-toggle="tab" href="#sectionB">Asset History </a></li>
+                <li><a data-toggle="tab" href="#sectionC">Depreciation Parameters</a></li>
+                <li><a data-toggle="tab" href="#sectionD">Depreciation</a></li>
+                <li><a data-toggle="tab" href="#sectionE">Asset Ledger</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.plant_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plantList, "--select--", htmlAttributes: new { @class = "form-control removedisabled" })
+                                    @Html.ValidationMessageFor(model => model.plant_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.purchase_order, htmlAttributes: new { Class = "control-label col-md-4 " })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.purchase_order, new { htmlAttributes = new { @class = "form-control removedisabled ", } })
+                                    @Html.ValidationMessageFor(model => model.purchase_order, "", new { Class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.manufacturer, htmlAttributes: new { Class = "control-label col-md-4 " })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.manufacturer, new { htmlAttributes = new { @class = "form-control removedisabled ", } })
+                                    @Html.ValidationMessageFor(model => model.manufacturer, "", new { Class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.manufacturer_part_no, htmlAttributes: new { Class = "control-label col-md-4 " })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.manufacturer_part_no, new { htmlAttributes = new { @class = "form-control removedisabled ", } })
+                                    @Html.ValidationMessageFor(model => model.manufacturer_part_no, "", new { Class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.manufacturing_country_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("manufacturing_country_id", (new System.Web.Mvc.SelectList(ViewBag.countryList, "COUNTRY_ID", "COUNTRY_NAME")), "--select--", htmlAttributes: new { @class = "form-control removedisabled" })
+                                    @Html.ValidationMessageFor(model => model.manufacturing_country_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.priority_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("priority_id", (System.Web.Mvc.SelectList)ViewBag.priorityList, "--select--", htmlAttributes: new { @class = "form-control removedisabled" })
+                                    @Html.ValidationMessageFor(model => model.priority_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.business_unit_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("business_unit_id", (System.Web.Mvc.SelectList)ViewBag.businessunitList, "--select--", htmlAttributes: new { @class = "form-control removedisabled" })
+                                    @Html.ValidationMessageFor(model => model.business_unit_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.asset_tag_no, htmlAttributes: new { Class = "control-label col-md-4 " })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.asset_tag_no, new { htmlAttributes = new { @class = "form-control removedisabled ", } })
+                                    @Html.ValidationMessageFor(model => model.asset_tag_no, "", new { Class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.purchasing_vendor_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("purchasing_vendor_id", (System.Web.Mvc.SelectList)ViewBag.vendorList, "--select--", htmlAttributes: new { @class = "form-control removedisabled" })
+                                    @Html.ValidationMessageFor(model => model.purchasing_vendor_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.model_no, htmlAttributes: new { Class = "control-label col-md-4 " })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.model_no, new { htmlAttributes = new { @class = "form-control removedisabled ", } })
+                                    @Html.ValidationMessageFor(model => model.model_no, "", new { Class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.manufacturing_serial_number, htmlAttributes: new { Class = "control-label col-md-4 " })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.manufacturing_serial_number, new { htmlAttributes = new { @class = "form-control removedisabled ", } })
+                                    @Html.ValidationMessageFor(model => model.manufacturing_serial_number, "", new { Class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.manufacturing_date, htmlAttributes: new { Class = "control-label col-md-4 " })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.manufacturing_date, new { htmlAttributes = new { @class = "form-control removedisabled ", } })
+                                    @Html.ValidationMessageFor(model => model.manufacturing_date, "", new { Class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.cost_center_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("cost_center_id", (new System.Web.Mvc.SelectList(ViewBag.costcenterList, "cost_center_id", "cost_center_code")), "--select--", htmlAttributes: new { @class = "form-control removedisabled" })
+                                    @Html.ValidationMessageFor(model => model.cost_center_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sectionB" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.dep_area_id2, htmlAttributes: new { @class = "control-label col-md-3 col-sm-3 col-xs-12" })
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @Html.DropDownList("dep_area_id2", (System.Web.Mvc.SelectList)ViewBag.GetDepArea, new { @class = "form-control removedisabled" })
+                                    @Html.ValidationMessageFor(model => model.dep_area_id2, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.capitalization_date, htmlAttributes: new { Class = "control-label col-md-4 " })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.capitalization_date, new { htmlAttributes = new { @class = "form-control removedisabled ", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.capitalization_date, "", new { Class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default col-lg-6 col-sm-6 pull-left">
+                        <div class="panel-heading">CURRENT</div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-12 col-sm-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.historical_cost, htmlAttributes: new { Class = "control-label col-md-7 " })
+                                        <div class="col-md-5 col-sm-5 col-xs-12">
+                                            @Html.EditorFor(model => model.historical_cost, new { htmlAttributes = new { @class = "form-control removedisabled ", @disabled = "disabled", @style = "text-align:right;" } })
+                                            @Html.ValidationMessageFor(model => model.historical_cost, "", new { Class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 col-sm-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.accumulated_dep, htmlAttributes: new { Class = "control-label col-md-7 " })
+                                        <div class="col-md-5 col-sm-5 col-xs-12">
+                                            @Html.EditorFor(model => model.accumulated_dep, new { htmlAttributes = new { @class = "form-control removedisabled ", @disabled = "disabled", @style = "text-align:right;" } })
+                                            @Html.ValidationMessageFor(model => model.accumulated_dep, "", new { Class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 col-sm-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.net_value, htmlAttributes: new { Class = "control-label col-md-7 " })
+                                        <div class="col-md-5 col-sm-5 col-xs-12">
+                                            @Html.EditorFor(model => model.net_value, new { htmlAttributes = new { @class = "form-control removedisabled ", @disabled = "disabled", @style = "text-align:right;" } })
+                                            @Html.ValidationMessageFor(model => model.net_value, "", new { Class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default col-lg-6 col-sm-6 pull-right">
+                        <div class="panel-heading">OPENING ( UPLOAD) </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-12 col-sm-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.op_historical_cost, htmlAttributes: new { Class = "control-label col-md-7 " })
+                                        <div class="col-md-5 col-sm-5 col-xs-12">
+                                            @Html.EditorFor(model => model.op_historical_cost, new { htmlAttributes = new { @class = "form-control removedisabled ", @disabled = "disabled", @style = "text-align:right;" } })
+                                            @Html.ValidationMessageFor(model => model.op_historical_cost, "", new { Class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 col-sm-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.op_accumulated_dep, htmlAttributes: new { Class = "control-label col-md-7 " })
+                                        <div class="col-md-5 col-sm-5 col-xs-12">
+                                            @Html.EditorFor(model => model.op_accumulated_dep, new { htmlAttributes = new { @class = "form-control removedisabled ", @disabled = "disabled", @style = "text-align:right;" } })
+                                            @Html.ValidationMessageFor(model => model.op_accumulated_dep, "", new { Class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 col-sm-12">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.op_net_value, htmlAttributes: new { Class = "control-label col-md-7 " })
+                                        <div class="col-md-5 col-sm-5 col-xs-12">
+                                            @Html.EditorFor(model => model.op_net_value, new { htmlAttributes = new { @class = "form-control removedisabled ", @disabled = "disabled", @style = "text-align:right;" } })
+                                            @Html.ValidationMessageFor(model => model.op_net_value, "", new { Class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionC" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="DEPRECIATION">
+                                <thead>
+                                    <tr>
+                                        <th><label>DEPRECIATION AREA</label></th>
+                                        <th><label>DEPRECIATION CODE & DESCRIPTION</label></th>
+                                        <th><label>DEPRECIATION START DATE</label></th>
+                                        <th><label>DEPRECIATION END DATE</label></th>
+                                        <th><label>DEPRECIATION FREQUENCY</label></th>
+                                        <th><label>USEFUL LIFE ( MONTHS)</label></th>
+                                        <th><label>REMAINING LIFE ( MONTHS)</label></th>
+                                        <th><label>DEPRECIATION AREA ID</label></th>
+                                        <th><label>DEPRECIATION CLASS ID</label></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionD" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.dep_area_id, htmlAttributes: new { @class = "control-label col-md-3 col-sm-3 col-xs-12" })
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @Html.DropDownList("dep_area_id", Enumerable.Empty<SelectListItem>(), "---Select---", new { @class = "form-control removedisabled" })
+                                    @Html.ValidationMessageFor(model => model.dep_area_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="DEPRECIATIONAREA">
+                                <thead>
+                                    <tr>
+                                        <th><label>FINALCIAL YEAR</label></th>
+                                        <th><label>PERIOD</label></th>
+                                        <th><label>PLANNED </label></th>
+                                        <th><label>POSTED</label></th>
+                                        <th><label>JE NO & DATE </label></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionE" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.dep_area_id1, htmlAttributes: new { @class = "control-label col-md-3 col-sm-3 col-xs-12" })
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @Html.DropDownList("dep_area_id1", (System.Web.Mvc.SelectList)ViewBag.GetDepArea, "---Select---", new { @class = "form-control removedisabled" })
+                                    @Html.ValidationMessageFor(model => model.dep_area_id1, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="Ledger">
+                                <thead>
+                                    <tr>
+                                        <th><label>DATE </label></th>
+                                        <th><label>TRANSACTION </label></th>
+                                        <th><label>VALUE</label></th>
+                                        <th><label>CLOSING BALANCE </label></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg12 col-sm-12">
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <input type="button" value="Update" data-controller="AssetMasterData" class="btn btn-success pull-right" id="create" name="create" onclick="TabletoJeson();" />
+                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary pull-left" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript">
+
+        $.date = function(dateObject) {
+            var d = new Date(dateObject);
+            var day = d.getDate();
+            var month = d.getMonth() + 1;
+            var year = d.getFullYear();
+            if (day < 10) {
+                day = "0" + day;
+            }
+            if (month < 10) {
+                month = "0" + month;
+            }
+            var date =  year+ "-" + month + "-" +day ;
+            return date;
+        };
+
+                        $("#machine_id").select2({
+                            placeholder: "Select Machine",
+                            allowClear: true
+                        });
+
+                        $("#asset_class_id").select2({
+                            placeholder: "Select Asset Class",
+                            allowClear: true
+                        });
+
+                        $("#asset_group_id").select2({
+                            placeholder: "Select Asset Group",
+                            allowClear: true
+                        });
+                        $("#status_id").select2({
+                            placeholder: "Select Status",
+                            allowClear: true
+                        });
+                        $("#plant_id").select2({
+                            placeholder: "Select Plant",
+                            allowClear: true
+                        });
+                        $("#manufacturing_country_id").select2({
+                            placeholder: "Select Country",
+                            allowClear: true
+                        });
+                        $("#priority_id").select2({
+                            placeholder: "Select Priority",
+                            allowClear: true
+                        });
+                        $("#business_unit_id").select2({
+                            placeholder: "Select Business Unit",
+                            allowClear: true
+                        });
+                        $("#purchasing_vendor_id").select2({
+                            placeholder: "Select Vendor",
+                            allowClear: true
+                        });
+
+                        $("#cost_center_id").select2({
+                            placeholder: "Select Cost Center",
+                            allowClear: true
+                        });
+
+                        $("#dep_area_id").select2({
+                            placeholder: "Select Dep Area",
+                            allowClear: true
+                        });
+
+                        $("#dep_area_id1").select2({
+                            placeholder: "Select Dep Area",
+                            allowClear: true
+                        });
+
+
+                        $(document).ready(function(){
+
+                            var abc = document.getElementById('machine_id').value;
+                            if(abc != 0){
+                                GetMachineDetails(abc);
+                            }
+
+                        });
+
+//Machine Details************************************************************************************************************************************************************
+
+                        let _machine_list =   @Html.Raw(JsonConvert.SerializeObject(ViewBag.machineList1));
+                        function GetMachineDetails(id) {
+                            if (id != '') {
+                                let _row = _machine_list.filter(a=>a.machine_id == id);
+
+                                $('#plant_id').val(_row[0].plant_id).trigger('change');
+                                $('#purchase_order').val(_row[0].purchase_order_id);
+                                $('#manufacturer').val(_row[0].manufacturer);
+                                $('#manufacturer_part_no').val(_row[0].manufacturer_part_no);
+                                $('#manufacturing_country_id').val(_row[0].manufacturing_country_id).trigger('change');
+                                $('#priority_id').val(_row[0].priority_id).trigger('change');
+                                $('#business_unit_id').val(_row[0].business_unit_id).trigger('change');
+                                $('#asset_tag_no').val(_row[0].asset_tag_no);
+                                $('#purchasing_vendor_id').val(_row[0].purchasing_vendor).trigger('change');
+                                $('#model_no').val(_row[0].model_no);
+                                $('#manufacturing_serial_number').val(_row[0].manufacturing_serial_number);
+                                $('#manufacturing_date').val(_row[0].manufacturing_date);
+                                $('#asset_master_data_desc').val(_row[0].machine_name);
+
+                                if(_row[0].manufacturing_date != null){
+                                    $("#manufacturing_date").val($.date(_row[0].manufacturing_date));
+                                }
+
+                                $('#plant_id').attr('disabled', 'disabled');
+                                $('#purchase_order').attr('disabled', 'disabled');
+                                $('#manufacturer').attr('disabled', 'disabled');
+                                $('#manufacturer_part_no').attr('disabled', 'disabled');
+                                $('#manufacturing_country_id').attr('disabled', 'disabled');
+                                $('#priority_id').attr('disabled', 'disabled');
+                                $('#business_unit_id').attr('disabled', 'disabled');
+                                $('#asset_tag_no').attr('disabled', 'disabled');
+                                $('#purchasing_vendor_id').attr('disabled', 'disabled');
+                                $('#model_no').attr('disabled', 'disabled');
+                                $('#manufacturing_serial_number').attr('disabled', 'disabled');
+                                $('#manufacturing_date').attr('disabled', 'disabled');
+                                $('#asset_master_data_desc').attr('disabled', 'disabled');
+                                $('#cost_center_id').attr('disabled', 'disabled');
+                            }
+
+                            else
+                            {
+                                $('#plant_id').val('').trigger('change');
+                                $('#purchase_order').val('');
+                                $('#manufacturer').val('');
+                                $('#manufacturer_part_no').val('');
+                                $('#manufacturing_country_id').val('').trigger('change');
+                                $('#priority_id').val('').trigger('change');
+                                $('#business_unit_id').val('').trigger('change');
+                                $('#asset_tag_no').val('');
+                                $('#purchasing_vendor_id').val('').trigger('change');
+                                $('#model_no').val('');
+                                $('#manufacturing_serial_number').val('');
+                                $('#manufacturing_date').val('');
+                                $('#asset_master_data_desc').val('');
+
+                                $('#plant_id').attr('disabled', false);
+                                $('#purchase_order').attr('disabled', false);
+                                $('#manufacturer').attr('disabled', false);
+                                $('#manufacturer_part_no').attr('disabled', false);
+                                $('#manufacturing_country_id').attr('disabled', false);
+                                $('#priority_id').attr('disabled', false);
+                                $('#business_unit_id').attr('disabled', false);
+                                $('#asset_tag_no').attr('disabled', false);
+                                $('#purchasing_vendor_id').attr('disabled', false);
+                                $('#model_no').attr('disabled', false);
+                                $('#manufacturing_serial_number').attr('disabled', false);
+                                $('#manufacturing_date').attr('disabled', false);
+                                $('#asset_master_data_desc').attr('disabled', false);
+                                $('#cost_center_id').attr('disabled', false);
+                            }
+                        }
+
+//DEPRECIATION PARAMETER*********************************************************************************************************************************************************
+
+                        $('#DEPRECIATION').DataTable({
+                            "bPaginate": false,
+                            "ordering": false,
+                            "bfooter": false,
+                            "info": false,
+                            "bLengthChange": false,
+                            "bAutoWidth": false,
+                            "bFilter": false,
+                            "bSort": false,
+                            aoColumns: [
+                                     { sname: "a", sWidth: "15%",bVisible: true },
+                                     { sname: "c", sWidth: "15%",bVisible: true },
+                                     { sname: "a", sWidth: "15%","sClass":"numericCol",bVisible: true },
+                                     { sname: "b", sWidth: "10%","sClass":"numericCol",bVisible: true },
+                                     { sname: "e", sWidth: "10%" ,bVisible: true},
+                                     { sname: "f", sWidth: "10%","sClass":"numericCol",bVisible: true},
+                                     { sname: "g", sWidth: "10%","sClass":"numericCol",bVisible: true },
+                                     { sname: "h", sWidth: "10%",bVisible: false },
+                                     { sname: "i", sWidth: "10%",bVisible: false },
+                            ]
+
+                        });
+
+                        var t1 = $('#DEPRECIATION').DataTable();
+
+                        var dep_map = @Html.Raw(JsonConvert.SerializeObject(this.Model.ref_asset_master_data_dep_parameter_vm));
+
+                        var i = 1;
+
+                        var t2 = $('#Ledger').DataTable();
+                        var asset_ledger = @Html.Raw(JsonConvert.SerializeObject(this.Model.ref_asset_transaction_vm));
+
+                        $.each(dep_map,function(key,value){
+                            var start_date = $.datepicker.formatDate('dd-mm-yy', new Date($('#capitalization_date').val()));
+                            var start_date1 = $.datepicker.formatDate('mm-dd-yy', new Date($('#capitalization_date').val()));
+                            var date = new Date(start_date1);
+                            var months = value.useful_life_months
+                            var dt2 = addMonths(date, months);
+                            var dt1 = new Date();
+
+                            var date_diff_indays = Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate()) ) /(1000 * 60 * 60 * 24));
+                            var rate_months = (date_diff_indays/365)*12;
+                            var remaining_months =  parseFloat(rate_months).toFixed(4);
+
+                            if(remaining_months < 0)
+                            {
+                                remaining_months = parseFloat(0).toFixed(4);
+                            }
+
+                             t1.fnAddData([value.dep_area_code,value.dep_type_code,start_date,'<input type="date" id="end_date' + i + '" data-index='+i+' " onchange="checkfordate()" class="form-control removedisabled end_date" />',value.dep_type_frquency,value.useful_life_months,remaining_months,value.dep_area_id,value.asset_class_dep_id]);
+                            i = i + 1;
+                        });
+
+                        $.each(asset_ledger, function (key, value) {
+
+                            t2.fnAddData([value.posting_date.toString(), value.transaction_code.toString(), parseFloat(value.value).toString(), parseFloat(value.cum_value).toString()]);
+
+                        });
+
+                         @*var dep_map =@Html.Raw(JsonConvert.SerializeObject(ViewBag.AssetClassDepreciationList));
+                        var dep = dep_map.filter(x=>x.asset_class_id ==$('#asset_class_id').val() )
+                        var dep_area = _.uniq(dep,a=>a.dep_area_code);
+                        $.each(dep_area, function (index, dt) {
+                            $('#dep_area_id').append('<option value=' + dt.dep_area_id + '>' + dt.dep_area_code + '</option>');
+                        });
+
+                        var dep_area = _.uniq(dep,a=>a.dep_area_code);
+                        $.each(dep_area, function (index, dt) {
+                            $('#dep_area_id1').append('<option value=' + dt.dep_area_id + '>' + dt.dep_area_code + '</option>');
+                        });*@
+
+
+
+        //-----------------------------------------------------------------------------------------------------------------------------------------------
+                        function checkfordate()
+                        {
+
+                            var t = $('#DEPRECIATION').DataTable()
+                            var rowCount = t.fnGetData().length;
+
+                            for (i = 0; i < rowCount; i++) {
+
+                                var j = i + 1 ;
+                                var start_date = $.datepicker.formatDate('yy-dd-mm', new Date(t.fnGetData(i)[2]));
+                                var end_date = $('#end_date' + j).val();
+
+                                if(start_date != "" && end_date != "")
+                                {
+                                    var date1 = new Date(start_date.split('-')[0],start_date.split('-')[1],start_date.split('-')[2]);
+                                    var date2 = new Date(end_date.split('-')[0],end_date.split('-')[1],end_date.split('-')[2]);
+
+
+                                    if(date2 < date1)
+                                    {
+                                        swal("End Date Should be greater than Start Date!!", "", "error");
+                                        $('#end_date' + j).val("");
+                                    }
+
+                                }
+
+                            }
+
+
+                        }
+
+                        function addMonths (date, count) {
+                            if (date && count) {
+                                var m, d = (date = new Date(+date)).getDate()
+
+                                date.setMonth(date.getMonth() + count, 1)
+                                m = date.getMonth()
+                                date.setDate(d)
+                                if (date.getMonth() !== m) date.setDate(0)
+                            }
+                            return date
+                        }
+
+ //DEPRECIATION AREA*********************************************************************************************************************************************************
+
+//ASSET LEDGER**************************************************************************************************************************************************************
+
+//Update*********************************************************************************************************************************************************
+
+                        function TabletoJeson() {
+                            var DepParaArr = [];
+                            var t = $('#DEPRECIATION').DataTable()
+                            var rowCount = t.fnGetData().length;
+                            var obj = {
+                            };
+
+                            var arForm = $("#form_main").serializeArray();
+                            jQuery.each(arForm, function( i, formData ) {
+                                obj[formData.name]=formData.value;
+
+                            });
+
+                            for (i = 0; i < rowCount; i++) {
+                                    j = i+1
+                                    var end_date = $('#end_date' + j).val();
+                                    if( end_date!="" )
+                                    {
+                                        DepParaArr.push({
+                                            asset_master_dep_parameter_id : 0,
+                                            dep_area_id: t.fnGetData(i)[7],
+                                            dep_start_date:  $('#capitalization_date').val(),
+                                            dep_end_date: end_date,
+                                            dep_type_frquency_id : t.fnGetData(i)[4] == "MONTHLY" ? 1 : t.fnGetData(i)[4] == "ANNUALLY" ? 2: 0,
+                                            useful_life_months: t.fnGetData(i)[5],
+                                            remaining_life_months  : parseInt(t.fnGetData(i)[6]),
+                                            is_active:true,
+                                            asset_class_dep_id : t.fnGetData(i)[8]
+                                        });
+
+                                    }
+
+                                }
+
+
+
+                                $.ajax({
+                                    url: '@Url.Action("Save", "AssetMasterData")',
+                                    method: "Post",
+                                    cache: false,
+                                    async: false,
+                                    data: { Assetdata:obj, DepParaArr: DepParaArr },
+                                    success: function(data) {
+                                        swal({
+                                            title: "",
+                                            text: "Saved Successfully!",
+                                            type: "success"
+                                        }, function() {
+                                            location.href = '@Url.Action("Index", "AssetMasterData")';
+                                        });
+                                    },
+                                });
+
+                        }
+
+
+                        $("#dep_area_id2").change(function () {
+
+                            var dep_area_id = $("#dep_area_id2").val();
+                            var asset_master_data_id = $("#asset_master_data_id").val();
+                            var t1 = $('#DEPRECIATION').DataTable();
+                                $.ajax({
+                                    url: '@Url.Action("GetDepreciationAndLedgerDetails", "AssetMasterData")',
+                                    method: "Post",
+                                    cache: false,
+                                    async: false,
+                                    data: { dep_area_id: dep_area_id, asset_master_data_id: asset_master_data_id, name: "Depreciation" },
+                                    success: function(data) {
+                                        var dep_map = data.ref_asset_master_data_dep_parameter_vm;                                      
+
+                                        $.each(dep_map, function (key, value) {
+                                            var start_date = $.datepicker.formatDate('dd-mm-yy', new Date($('#capitalization_date').val()));
+                                            var start_date1 = $.datepicker.formatDate('mm-dd-yy', new Date($('#capitalization_date').val()));
+                                            var date = new Date(start_date1);
+                                            var months = value.useful_life_months
+                                            var dt2 = addMonths(date, months);
+                                            var dt1 = new Date();
+
+                                            var date_diff_indays = Math.floor((Date.UTC(dt2.getFullYear(), dt2.getMonth(), dt2.getDate()) - Date.UTC(dt1.getFullYear(), dt1.getMonth(), dt1.getDate())) / (1000 * 60 * 60 * 24));
+                                            var rate_months = (date_diff_indays / 365) * 12;
+                                            var remaining_months = parseFloat(rate_months).toFixed(4);
+
+                                            if (remaining_months < 0) {
+                                                remaining_months = parseFloat(0).toFixed(4);
+                                            }
+
+                                            t1.fnAddData([value.dep_area_code, value.dep_type_code, start_date, '<input type="date" id="end_date' + i + '" data-index=' + i + ' " onchange="checkfordate()" class="form-control removedisabled end_date" />', value.dep_type_frquency, value.useful_life_months, remaining_months, value.dep_area_id, value.asset_class_dep_id]);
+                                            i = i + 1;
+                                        });
+                                    }
+                                });
+                        });
+
+                        $("#dep_area_id1").change(function () {
+
+                            var dep_area_id = $("#dep_area_id2").val();
+                            var asset_master_data_id = $("#asset_master_data_id").val();
+                            var t2 = $('#Ledger').DataTable();
+                             $.ajax({
+                                    url: '@Url.Action("GetDepreciationAndLedgerDetails", "AssetMasterData")',
+                                    method: "Post",
+                                    cache: false,
+                                    async: false,
+                                 data: { dep_area_id: dep_area_id, asset_master_data_id: asset_master_data_id, name: "AssetLedger" },
+                                    success: function(data) {
+                                        var asset_ledger = data.ref_asset_transaction_vm;                                        
+                                        $.each(asset_ledger, function (key, value) {
+
+                                            t2.fnAddData([value.posting_date.toString(), value.transaction_code.toString(), parseFloat(value.value).toString(), parseFloat(value.cum_value).toString()]);
+
+                                        });
+                                    }
+                             });
+                        });
+</script>
+}
+<style>
+    .numericCol {
+        text-align: right;
+    }
+</style>

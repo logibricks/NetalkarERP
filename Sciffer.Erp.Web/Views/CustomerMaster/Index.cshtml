@@ -1,0 +1,145 @@
+﻿@*@model IEnumerable<Sciffer.Erp.Domain.ViewModel.REF_CUSTOMER_VM>*@
+@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<br /><br /><br />
+
+<div>
+    @(Html.EJ().Grid<CustomerVM>("FlatGrid")
+         .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "CustomerMaster" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+            //  items.AddTool(ToolBarItems.Search);
+
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "CustomerMaster" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "CustomerMaster" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "CustomerMaster" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+
+
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("customer_id").Width("15%").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Width(20).Add();
+            col.Field("category_name").Width("15%").HeaderText("Customer Category").Add();
+            col.Field("customer_code").Width("15%").HeaderText("Customer Code").Add();
+            col.Field("customer_name").Width("15%").HeaderText("Customer Name").Add();
+            col.Field("customer_display_name").Width("15%").HeaderText("Customer Display Name").Add();
+            col.Field("org_type").Width("15%").HeaderText("Organization Type").Add();
+            col.Field("billing_address").Width("15%").HeaderText("Billing Address").Add();
+            col.Field("billing_city").Width("15%").HeaderText("Billing City").Visible(true).Add();
+            col.Field("billing_pincode").Width("15%").HeaderText("Billing Pincode").Visible(true).Add();
+            col.Field("billing_country").Width("15%").HeaderText("Billing Country").Visible(true).Width(80).Add();
+            col.Field("billing_state").Width("15%").HeaderText("Billing State").Visible(true).Add();
+            col.Field("sales_rm_code").Width("15%").HeaderText("Sales RM Code").Visible(false).Add();
+            col.Field("sales_rm_name").Width("15%").HeaderText("Sales RM Name").Visible(false).Add();
+            col.Field("freight_terms").Width("15%").HeaderText("Freight Terms").Visible(false).Add();
+            col.Field("has_parent").Width("15%").HeaderText("Has Parent").Visible(false).Add();
+            col.Field("customer_parent").Width("15%").Width("15%").HeaderText("Customer Parent").Visible(false).Add();
+            col.Field("territory").Width("15%").HeaderText("Territory").Add();
+            col.Field("vendor_code").Width("15%").HeaderText("Vendor Code").Visible(false).Add();
+            col.Field("priority").Width("15%").HeaderText("Priority").Add();
+            col.Field("blocked").Width("15%").HeaderText("Blocked").Add();
+            col.Field("bank_name").Width("15%").HeaderText("Bank").Visible(false).Add();
+            col.Field("bank_account_number").Width("15%").HeaderText("Bank Account Number").Visible(false).Add();
+            col.Field("ifsc_code").Width("15%").HeaderText("IFSC Code").Visible(false).Add();
+            col.Field("core_address").Width("15%").HeaderText("Correspondence Address").Visible(false).Add();
+            col.Field("core_city").Width("15%").HeaderText("Correspondence City").Visible(false).Add();
+            col.Field("core_pincode").Width("15%").HeaderText("Correspondence Pincode").Visible(false).Add();
+            col.Field("core_country").Width("15%").HeaderText("Correspondence Country").Visible(false).Add();
+            col.Field("core_state").Width("15%").HeaderText("Correspondence State").Visible(false).Add();
+            col.Field("primary_email").Width("15%").HeaderText("Email").Visible(false).Add();
+            col.Field("telephone_code").Width("15%").HeaderText("Telephone Code").Visible(false).Add();
+            col.Field("telephone").Width("15%").HeaderText("Telephone Number").Visible(false).Add();
+            col.Field("website").Width("15%").HeaderText("Website").Visible(false).Add();
+            col.Field("fax").Width("15%").HeaderText("Fax").Visible(false).Add();
+            col.Field("default_currency").Width("15%").HeaderText("Default Currency").Visible(false).Add();
+            col.Field("payment_terms").Width("15%").HeaderText("Payment Terms").Visible(false).Add();
+            col.Field("payment_cycle_type").Width("15%").HeaderText("Payment Cycle Type").Visible(false).Add();
+            col.Field("payment_cycle").Width("15%").HeaderText("Payment Cycle").Visible(false).Add();
+            col.Field("credit_limit").Width("15%").HeaderText("Credit Limit").Visible(false).Add();
+            col.Field("tds_no").Width("15%").HeaderText("TDS Number").Visible(false).Add();
+            col.Field("pan_no").Width("15%").HeaderText("PAN").Visible(false).Add();
+            col.Field("vat_tin_no").Width("15%").HeaderText("VAT TIN No").Visible(false).Add();
+            col.Field("cst_tin_no").Width("15%").HeaderText("CST TIN No").Visible(false).Add();
+            col.Field("service_tax_no").Width("15%").HeaderText("Service Tax No").Visible(false).Add();
+            col.Field("ecc_no").Width("15%").HeaderText("ECC No").Visible(false).Add();
+            col.Field("commisionerate").Width("15%").HeaderText("Commisionerate").Visible(false).Add();
+            col.Field("range").Width("15%").HeaderText("Range").Visible(false).Add();
+            col.Field("division").Width("15%").HeaderText("Division").Visible(false).Add();
+            col.Field("gst_no").Width("15%").HeaderText("GSTIN").Visible(false).Add();
+            col.Field("gst_customer_type_name").Width("15%").HeaderText("GST Customer Type").Visible(false).Add();
+            col.Field("gst_registration_date").Width("15%").HeaderText("Date of Registration").Visible(false).Format("{0:dd/MM/yyyy}").Add();
+            col.Field("gst_tds_code").Width("15%").HeaderText("GST TDS Code").Visible(false).Add();
+            col.Field("aditional_info").Width("15%").HeaderText("Additional Information").Visible(false).Add();
+            col.Field("attachment").Width("15%").HeaderText("Attachment").Width(150).Visible(false).Template("<a target='_blank' href='/Generic/Result?id={{:customer_id}}&controllername=CustomerMaster'>File</a>").Add();
+
+        })
+        .ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+        )
+</div>
+
+<style>
+    .e-editedrow{
+        display:none;
+    }
+    .e-editcell{
+        display:none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = '@Url.Action("Edit", "CustomerMaster")?id=' + args.rowData.customer_id;
+        }
+        if(args.requestType=="add")
+        {
+            location.href = '@Url.Action("Create", "CustomerMaster")';
+        }
+    }
+
+    function rightClick(args) {       
+        location.href = '@Url.Action("Details", "CustomerMaster")?id=' + args.data.customer_id;
+    }
+
+    $(document).ready(function () {
+        var doc_no = '@ViewBag.doc';
+        if (doc_no != '') {
+            if (doc_no != 0) {
+                sweetAlert("", doc_no , "success");
+            }
+        }
+    });
+</script>
+    
+ 
+
+
+
+
+

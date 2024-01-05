@@ -1,0 +1,76 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.REF_VENDOR_VM
+@{
+    if (ViewBag.Count == null)
+    {
+        ViewBag.Count = 0;
+    }
+    int count = ViewBag.Count;
+}
+<tr>
+    <td hidden>
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.REF_VENDOR_CONTACTS[count].VENDOR_CONTACT_ID, new { htmlAttributes = new { @class = "form-control" } })
+
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.REF_VENDOR_CONTACTS[count].CONTACT_NAME, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.REF_VENDOR_CONTACTS[count].CONTACT_NAME, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.REF_VENDOR_CONTACTS[count].DESIGNATION, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.REF_VENDOR_CONTACTS[count].MOBILE_NO, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.REF_VENDOR_CONTACTS[count].PHONE_NO, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.REF_VENDOR_CONTACTS[count].EMAIL_ADDRESS, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.CheckBoxFor(model => model.REF_VENDOR_CONTACTS[count].SEND_SMS_FLAG, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.CheckBoxFor(model => model.REF_VENDOR_CONTACTS[count].SEND_EMAIL_FLAG, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+    </td>
+    <td>
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.HiddenFor(model => model.REF_VENDOR_CONTACTS[count].IS_ACTIVE, new { htmlAttributes = new { @class = "form-control" } })
+                <input type="button" class="btn btn-danger delete-country" value="Delete" />
+            </div>
+        </div>
+    </td>
+</tr>

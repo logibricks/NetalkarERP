@@ -1,0 +1,193 @@
+﻿
+@{
+    ViewBag.Title = "Operator Operation Mapping";
+}
+<br /><br /><br />
+<div id="ProcessOperatorDetails"></div>
+
+<div class="row form-group">
+    <div class="col-md-5">
+        <div class="col-md-3">
+            <label class="control-label">Select Operator</label>
+        </div>
+        <div class="col-md-9">
+            @Html.DropDownList("user_id", (System.Web.Mvc.SelectList)ViewBag.operatorlist, "---Select---", new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="col-md-3">
+            Select Operation
+        </div>
+        <div class="col-md-9" style="margin-top:-10px;" id="OPERATIONS">
+            @Html.DropDownList("process_id", (System.Web.Mvc.SelectList)ViewBag.processlist, htmlAttributes: new { @class = "form-control multiselect", multiple = "multiple" })
+        </div>
+    </div>
+    <div class="col-lg-2 col-sm-2" style="float:right">
+        <div class="form-group">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <button type="button" class="btn btn-primary" id="update">Update</button>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="srno3" />
+</div>
+
+<hr />
+
+<div class="row">
+    <div class="table-responsive">
+        <table class="table table-responsive table-bordered table-striped" id="OperationOperatorGrid" style="font-size:15px;">
+            <thead>
+                <tr>
+                    <th><label>Operator Id</label></th>
+                    <th><label>Sr. No.</label></th>
+                    <th><label>Operator Name</label></th>
+                    <th><label>Operation Id</label></th>
+                    <th><label>Operation Name</label></th>
+                    <th><label>Action</label></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function ()
+        {
+            window.onload = OperatorOperationMap;
+
+            $(".multiselect").multiselect({
+                includeSelectAllOption: true,
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: false,
+                numberDisplayed: 1,
+                maxHeight: 300,
+                maxWidth: 200,
+            });
+
+            $("#user_id").select2({
+                placeholder: "Select Operator",
+                allowClear: true
+            });
+
+        });
+
+        function OperatorOperationMap()
+        {
+            var t = $("#OperationOperatorGrid").DataTable();
+            t.fnClearTable();
+            var sr_no = t.fnGetData().length+1;
+            var data = @Html.Raw(Json.Encode(ViewBag.operatoroperationlist));
+
+            var i=1;
+
+            $.each(data, function(key, value)
+            {
+                t.fnAddData([
+                    value.operator_id,
+                    sr_no,
+                    value.operator_name,
+                    value.operation_id,
+                    value.operation_name,
+                   '',
+                ]);
+
+                i=i+1;
+                sr_no++;
+            });
+        }
+        $("#user_id").change(function(){
+            var user_id = $(this).val();
+            if(user_id != ""){
+                $.ajax({
+                    url: '@Url.Action("GetMachineRole", "OperatorOperationMapping")',
+                    type: 'POST',
+                    data: { user_id : user_id },
+                    success: function (data) {
+                        machinearray = data.split(",");
+                        if(machinearray.length>0)
+                        {
+                            $("#process_id").val(machinearray);
+                        }
+                        $("#process_id").multiselect("refresh");
+                    },
+                });
+            }
+        })
+        $("#update").click(function () {
+
+            if ($("#process_id").val() == null) {
+                swal("", "Please select atleast one process", "error");
+                return false;
+            }
+
+            if ($("#user_id").val() == '') {
+                swal("", "Please select operator", "error");
+                return false;
+            };
+
+            if ($('#process_id :selected').length > 0) {
+                var selectedOperations = [];
+                $('#process_id :selected').each(function (i, selected) {
+                    selectedOperations[i] = $(selected).val();
+                });
+                var operation_id = selectedOperations + "";
+            }
+
+            var operator_id = $("#user_id").val();
+
+            $.ajax({
+                url: '@Url.Action("UpdateOperatorOperationMapping", "OperatorOperationMapping")',
+                type: 'POST',
+                data: { operator_id: operator_id, operation_id: operation_id },
+                success: function (data) {
+                    console.log(data);
+                    if (data == "Saved") {
+                        swal(data, "Operations Added Successfully", "success");
+                    }
+                    else {
+                        swal("", data, "warning");
+                    }
+                    OperatorOperationMap();
+                },
+                error: function () {
+
+                },
+            });
+        })
+
+        $('#OperationOperatorGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "q", bVisible: false },
+                     { sname: "a", bVisible: true },
+                     { sname: "b", bVisible: true },
+                     { sname: "c", bVisible: false },
+                     { sname: "d", bVisible: true },
+                      {
+                          sname: "j", sWidth: "8%",
+                          bSortable: false,
+                          bVisible: false,
+                          mRender: function (data, type, full) {
+                              return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" onclick="editRow(' + full[1] + ');" />';
+                          }
+                      }
+            ]
+
+
+        });
+
+    </script>
+}

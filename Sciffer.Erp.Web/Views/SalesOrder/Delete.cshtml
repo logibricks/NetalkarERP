@@ -1,0 +1,296 @@
+﻿@model Sciffer.Erp.Domain.Model.SAL_SO
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>SAL_SO</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_BUSINESS_UNIT.BUSINESS_UNIT_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_BUSINESS_UNIT.BUSINESS_UNIT_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_CURRENCY.CURRENCY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_CURRENCY.CURRENCY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_CURRENCY1.CURRENCY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_CURRENCY1.CURRENCY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_CUSTOMER.CUSTOMER_CODE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_CUSTOMER.CUSTOMER_CODE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_CUSTOMER1.CUSTOMER_CODE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_CUSTOMER1.CUSTOMER_CODE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_FREIGHT_TERMS.FREIGHT_TERMS_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_FREIGHT_TERMS.FREIGHT_TERMS_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_PAYMENT_CYCLE.PAYMENT_CYCLE_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_PAYMENT_CYCLE.PAYMENT_CYCLE_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_PAYMENT_TERMS.PAYMENT_TERMS_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_PAYMENT_TERMS.PAYMENT_TERMS_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_PLANT.PLANT_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_PLANT.PLANT_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_SALES_CATEGORY.SALES_CATEGORY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_SALES_CATEGORY.SALES_CATEGORY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_STATE.STATE_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_STATE.STATE_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_STATE1.STATE_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_STATE1.STATE_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_TERRITORY.TERRITORY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_TERRITORY.TERRITORY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_USER.USER_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_USER.USER_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SO_NUMBER)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SO_NUMBER)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SO_DATE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SO_DATE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SAL_NET_VALUE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SAL_NET_VALUE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SAL_GROSS_VALUE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SAL_GROSS_VALUE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DELIVERY_DATE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DELIVERY_DATE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CUSTOMER_PO_NO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CUSTOMER_PO_NO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CUSTOMER_PO_DATE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CUSTOMER_PO_DATE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AVAIL_CREDIT_LIMIT)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AVAIL_CREDIT_LIMIT)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CREDIT_AVAIL_AFTER_ORDER)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CREDIT_AVAIL_AFTER_ORDER)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.INTERNAL_REMARKS)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.INTERNAL_REMARKS)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REMARKS)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REMARKS)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BILLING_ADDRESS)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BILLING_ADDRESS)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BILLING_CITY)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BILLING_CITY)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BILLING_PINCODE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BILLING_PINCODE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BILLING_EMAIL_ID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BILLING_EMAIL_ID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SHIPPING_ADDRESS)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SHIPPING_ADDRESS)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SHIPPING_CITY)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SHIPPING_CITY)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SHIPPING_PINCODE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SHIPPING_PINCODE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SHIPPING_EMAIL_ID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SHIPPING_EMAIL_ID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IS_ACTIVE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IS_ACTIVE)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

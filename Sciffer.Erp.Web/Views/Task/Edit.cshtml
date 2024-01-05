@@ -1,0 +1,556 @@
+﻿
+@model Sciffer.Erp.Domain.ViewModel.ref_task_vm
+@using Sciffer.Erp.Domain.Model;
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+@using (Html.BeginForm("Create", "Task", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form_main", @id = "form_main" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal" style="margin-top:10px;">
+        <div>@Html.ValidationSummary(true, "", new { @class = "text-danger" })</div>
+        @*<div id="task_id" hidden></div>*@
+        @*<div id="document_no" hidden></div>*@
+        @Html.HiddenFor(model => model.task_id)
+        @Html.HiddenFor(model => model.old_status_id)
+       
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.task_category_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.DropDownList("task_category_id", (System.Web.Mvc.SelectList)ViewBag.categorylist, "--Select--", new { @class = "form-control  removedisabled ", @disabled = "disabled", @required = true, @onchange = "GetDocumentNumber(this.value);" })
+                            @Html.ValidationMessageFor(model => model.task_category_id, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.EditorFor(model => model.document_no, new { htmlAttributes = new { @class = "form-control  removedisabled", } })
+                            @Html.ValidationMessageFor(model => model.document_no, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.task_type_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("task_type_id", (System.Web.Mvc.SelectList)ViewBag.Tasktypelist, "---Select---", new { @class = "form-control validinput removedisabled", @required = true, @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.task_type_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.task_doer_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("task_doer_id", (System.Web.Mvc.SelectList)ViewBag.Custlist, "---Select---", new { @class = "form-control validinput removedisabled", @required = true, @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.task_doer_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.task_reviewer_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("task_reviewer_id", (System.Web.Mvc.SelectList)ViewBag.Custlist, "---Select---", new { @class = "form-control validinput removedisabled", @required = true, @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.task_reviewer_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.task_name, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.task_name, new { htmlAttributes = new { @class = "form-control validinput removedisabled", @required = true, @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.task_name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.due_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.due_date, new { htmlAttributes = new { @class = "form-control removedisabled validinput ", @required = true, @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.due_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.is_recurring, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-1 col-sm-1 col-xs-12">
+                            @Html.CheckBox("is_recurring", new { @class = "removedisabled", @onchange = "ShowPeriodicity()", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.is_recurring, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.task_periodicity_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("task_periodicity_id", (System.Web.Mvc.SelectList)ViewBag.Periodiclist, "---Select---", new { @class = "form-control removedisabled ", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.task_periodicity_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-lg-7 col-sm-7">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.remind_before_days, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.EditorFor(model => model.remind_before_days, new { htmlAttributes = new { @class = "form-control validinput removedisabled", @required = true, @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.remind_before_days, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-7 col-sm-7">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.first_escalation_days, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.EditorFor(model => model.first_escalation_days, new { htmlAttributes = new { @class = "form-control validinput removedisabled", @required = true, @onchange = "GetValidation()", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.first_escalation_days, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-7 col-sm-7">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.second_escalation_days, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.EditorFor(model => model.second_escalation_days, new { htmlAttributes = new { @class = "form-control validinput removedisabled", @required = true, @onchange = "GetValidation()", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.second_escalation_days, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+                <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                    <li class="active"><a data-toggle="tab" href="#sectionA">Details</a></li>
+                    <li><a data-toggle="tab" href="#sectionB">Status</a></li>
+                    @*   <li><a data-toggle="tab" href="#sectionF">Transport Details</a></li>*@
+
+                </ul>
+                <div class="tab-content">
+                    <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                        <div class="row">
+                            <div class="row">
+                                <div class="col-lg-6 col-sm-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.task_details, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                        <div class="col-lg-8 col-sm-8 col-xs-12">
+                                            @Html.EditorFor(model => model.task_details, new { htmlAttributes = new { @class = "form-control validinput removedisabled", @required = true, @disabled = "disabled" } })
+                                            @Html.ValidationMessageFor(model => model.task_details, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-sm-6">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.attachment, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                        <div class="col-md-8 col-sm-8 col-xs-12">
+                                            <input type="file" class="form-control" id="FileUpload" name="FileUpload" onchange="checkduplicatefile()" />
+                                            @*@Html.ActionLink("Download", "Download", "Task", new { controller_name = "Task", id = Model.task_id }, new { @class = "btn-link" })accept="application/pdf, image/*"*@
+                                            @Html.ActionLink("Download Attachment", "Download", "Task", new { controller_name = "Task", id = Model.task_id }, new { @class = "btn-link" })
+                                            <input type="hidden" id="attachment" name="attachment" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div id="sectionB" class="tab-pane fade" style="margin-top:10px;">
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.status_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.DropDownList("status_id", (System.Web.Mvc.SelectList)ViewBag.StatusList, "---Select---", new { @class = "form-control validinput", @required = true, @onchange="CleareRemark()" })
+                                        @Html.ValidationMessageFor(model => model.status_id, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.new_attachment, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        <input type="file" class="form-control" id="FileUpload1" name="FileUpload1" onchange="checkduplicatefile()" />
+                                        @*@Html.ActionLink("Download", "Download1", "Task", new { controller_name = "Task", id = Model.task_id }, new { @class = "btn-link" }) accept="application/pdf, image/*"*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.new_remarks, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.EditorFor(model => model.new_remarks, new { htmlAttributes = new { @class = "form-control ", } })
+                                        @Html.ValidationMessageFor(model => model.new_remarks, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                          
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="table-responsive">
+                                <table class="table table-responsive table-bordered table-striped" id="item_valuation_grid">
+                                    <thead>
+                                        <tr>
+                                            <th><label>old status id</label></th>
+                                            <th><label>new status id</label></th>
+                                            <th><label>Sr. No.</label></th>
+                                            <th><label>OLD Status</label></th>
+                                            <th><label>New Status</label></th>
+                                            <th><label>Attachment</label></th>
+                                            <th><label>Download</label></th>
+                                            <th><label>Remarks</label></th>                                            
+                                            <th hidden><label>New Attachment</label></th>
+                                            <th hidden><label>Action</label></th>
+                                            <th><label>Created Date</label></th>
+                                            <th><label>Task Log Id</label></th>
+                                            
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col-lg12 col-sm-12">
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                        <input type="button" value="Update" data-controller="Task" class="btn btn-success" onclick="TabletoJeson();" style="float:right" id="create" name="create" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div>
+   
+</div>
+<script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+<script src="~/Scripts/requirevalidation.js"></script>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        function  checkduplicatefile(){
+            var f1= $("#FileUpload").val();
+            var f2=$("#FileUpload1").val();
+            if ((f1!="" || f1!=null) && (f2!="" || f2!=null)) {
+                if (f1==f2) {
+                    swal("", "Please upload different File!", "error");
+                    return false;
+                }
+
+            }
+        }
+
+        $(document).ready(function () {
+
+            //Display Only Date till today //
+            var dtToday = new Date();
+            var month = dtToday.getMonth() + 1;     // getMonth() is zero-based
+            var day = dtToday.getDate();
+            var year = dtToday.getFullYear();
+            if (month < 10)
+                month = '0' + month.toString();
+            if (day < 10)
+                day = '0' + day.toString();
+
+            var maxDate = year + '-' + month + '-' + day;
+            $('#due_date').attr('min', maxDate);
+
+            $("#task_category_id").select2({
+                placeholder: "Select Category",
+                allowClear: true
+            });
+
+            $("#task_type_id").select2({
+                placeholder: "Select Task Type",
+                allowClear: true
+            });
+
+            $("#task_doer_id").select2({
+                placeholder: "Select Task Doer",
+                allowClear: true
+            });
+
+            $("#task_reviewer_id").select2({
+                placeholder: "Select Task Reviewer",
+                allowClear: true
+            });
+
+            $("#task_periodicity_id").select2({
+                placeholder: "Select Periodicity",
+                allowClear: true
+            });
+
+            $("#status_id").select2({
+                placeholder: "Select Status",
+                allowClear: true
+            });
+
+            var data = @Html.Raw(JsonConvert.SerializeObject(this.Model));
+            $("#task_id").val(data.task_id);
+            $("#attachment").val(data.attachment);
+            $("#document_no").val(data.document_no);
+            $("#document_no").prop('disabled', true);
+            document.getElementById("FileUpload").disabled = true;
+            if (data.is_recurring == false) {
+                $('#is_recurring').prop('checked', false);
+                $("#task_periodicity_id").prop('disabled', true);
+            }
+            else {
+                $('#is_recurring').prop('checked', true);
+                $("#task_periodicity_id").prop('disabled', true);
+            }
+
+
+
+            var t = $('#item_valuation_grid').DataTable();
+
+            var i=1;
+            $.each(data.Status_log,function(key,value){
+
+                //t.fnAddData([i,value.new_status]);
+                t.fnAddData([value.old_status_id,value.new_status_id, i,value.old_status,value.new_status,value.oroginal_attachment,'',value.new_remarks,
+                             value.new_attachment,'',value.created_ts,value.task_log_id
+                           ]);
+
+                i=i+1;
+            });
+
+        });
+
+
+        function CleareRemark(){
+            $("#new_remarks").val('');
+        }
+
+        function GetValidation(){
+            var fvalue=$("#first_escalation_days").val();
+            var svalue = $("#second_escalation_days").val();
+            if (fvalue!="" || svalue!="" ) {
+
+                if (parseInt(fvalue) > parseInt(svalue)) {
+                    swal("", "2nd escalation should be more than 1st escalation!", "error");
+                    return false;
+
+                }
+            }
+
+        }
+
+
+        function GetDocumentNumber(id) {
+            if (id != '') {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetDocumentNumbering", "Generic")',
+                    data: { id: id },
+                    success: function (ITEM) {
+                        $('#document_no').val(ITEM);
+                    },
+                    error: function (emp) {
+                        $('#document_no').val('');
+                    }
+                });
+            }
+            else {
+                $('#document_no').val('');
+            }
+        }
+
+        function ShowPeriodicity() {
+            var val = $("#is_recurring").prop('checked');
+            if (val == true) {
+                $("#task_periodicity_id").prop('disabled', false);
+            }
+            else {
+                $("#task_periodicity_id").prop('disabled', true);
+
+            }
+        }
+
+
+        $('#item_valuation_grid').on('click', '.download', function () {
+
+            let index = $(this).parent('td').parent('tr').index();
+            let t = $('#item_valuation_grid').DataTable();
+            let task_log_id = t.fnGetData(index,11);
+            let file = t.fnGetData(index,5);
+           
+            if (file!=null && file!='' && file!='No File') {
+                location.href = ('@Url.Action("GridDownload", "Task")?controller_name=Task'+'&id='+task_log_id);
+    
+            }
+            else {
+                swal("", "No File Found!", "error");
+            }
+           
+         
+
+            @*$.ajax({
+                url: '@Url.Action("GridDownload", "Task")',
+                method: "Post",
+                cache: false,
+                async: false,
+                data: { controller_name: 'Task',id: task_log_id },
+                success: function(data) {
+
+
+
+                },
+            });*@
+        });
+
+        $('#item_valuation_grid').on('click', '.download1', function () {
+            let index = $(this).parent('td').parent('tr').index();
+            let t = $('#item_valuation_grid').DataTable();
+            let task_log_id = t.fnGetData(index,11);
+            let file = t.fnGetData(index,8);
+            if (file!=null && file!='' && file!="No File") {
+                location.href = ('@Url.Action("GridDownload1", "Task")?controller_name=Task'+'&id='+task_log_id);
+    
+            }
+            else {
+                swal("", "No File Found!", "error");
+            }
+            @*$.ajax({
+                url: '@Url.Action("GridDownload1", "Task")',
+                method: "Post",
+                cache: false,
+                async: false,
+                data: { controller_name: 'Task',id: task_log_id },
+                success: function(data) {
+
+                },
+            });*@
+        });
+
+        $('#item_valuation_grid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: false },
+                     { sname: "b", bVisible: false },
+
+                     { sname: "c", sWidth: "7%" },
+                     { sname: "d"},
+                     { sname: "e"},
+                     { sname: "f"},
+                       {
+                           sname: "g", sWidth: "5%",
+                           bSortable: false,
+                           mRender: function (data, type, full) {
+                               return '<img class="download" src="../images/download.PNG" height="20px" width="25px" alt="download" />';
+                           }
+                       },
+                     { sname: "h",sWidth: "25%"},
+                     { sname: "i",bVisible: false},
+                       {
+                           sname: "j", sWidth: "5%",
+                           bSortable: false,bVisible: false,
+                           mRender: function (data, type, full) {
+                               return '<img class="download1" src="../images/download.PNG" height="20px" width="25px" alt="download" />';
+                           }
+                       },
+                     { sname: "k" , sWidth: "10%"},
+                     { sname: "l", bVisible: false },
+
+
+            ]
+
+        });
+
+
+
+        function TabletoJeson() {
+
+            var status = $("#status_id option:selected").text();
+            if (status!="WIP") {
+                let val= $("#new_remarks").val();
+                if (val=="" || val==null){
+                    swal("", "Remark is Required!", "error");
+                    $("#new_remarks" ).last().addClass( "validinput" );
+                    return false;
+                }
+                else
+                {
+
+                    var task = {};
+                    task.task_id=$("#task").val();
+                    task.old_status_id = $('#old_status_id').val();
+                    @*$.ajax({
+                        url: '@Url.Action("Save", "Task")',
+                        method: "Post",
+                        cache: false,
+                        async: false,
+                        data: { task: task },
+                        success: function(data) {
+
+                            location.href = '@Url.Action("Index", "Task")';
+
+                        },
+                    });*@
+                }
+            }
+            else {
+                $( "#new_remark" ).removeClass("validinput" );
+                var task = {};
+                task.task_id=$("#task").val();
+                task.old_status_id = $('#old_status_id').val();
+                @*$.ajax({
+                    url: '@Url.Action("Save", "Task")',
+                    method: "Post",
+                    cache: false,
+                    async: false,
+                    data: { task: task },
+                    success: function(data) {
+
+                        location.href = '@Url.Action("Index", "Task")';
+
+                    },
+                });*@
+            }
+
+
+
+
+
+        }
+    </script>
+}

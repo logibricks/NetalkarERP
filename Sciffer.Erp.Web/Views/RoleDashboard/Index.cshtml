@@ -1,0 +1,136 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Role Rights <small></small></h2>
+<hr />
+@using (Html.BeginForm("UpdateRecords", "RoleDashboard", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div id="rights_id"></div>
+    <div class="row">
+        <div class="clearfix"></div>
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="form">
+                <div class="area">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                            <div class="col-md-8">
+                                @Html.DropDownList("role_id", (new System.Web.Mvc.SelectList(ViewBag.rolelist, "role_id", "role_name")), "--select--", htmlAttributes: new { @class = "form-control item", required = "required" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg12 col-sm-12">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <input type="submit" id="updateData" class="btn btn-primary" value="Update" onclick="TableToJson()" style="float:right;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="container">
+                    <div class="inputs"> 
+                            <table id="dashboardGrid" class="table table-striped table-bordered" style="font-size:14px;">                         
+                            </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            if ('@ViewBag.msg' != "") {
+                swal('@ViewBag.msg');
+            }
+
+
+
+            $("#role_id").select2({
+                placeholder: "Select Role",
+                allowClear: true
+            });
+
+        });
+
+        $('#dashboardGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bSortable": false,
+            "bOrderable": false,
+            "bFilter":false,
+            "columns": [
+                  { name: "module_name", "data": "module_name", bVisible: true, "bSortable": false, "defaultContent": "", "title": "Module" },
+                  { name: "dashboard_id", "data": "dashboard_id", bVisible: false, "bSortable": false, "defaultContent": "", "title": "ID" },
+                  { name: "dashboard_name", "data": "dashboard_name", "bSortable": false, "defaultContent": "", "title": "Dash Board", bVisible: true, },
+
+                  {
+                      name: "is_active", "data": "is_active", sClass: "CHECKBOXS", sWidth: "2%", "bSortable": false, "title": '<input type="checkbox" class="check_all" name="select_all" value="1" id="example-select-all">', 'render': function (data, type, full) {
+                          var chstr = '';
+                          if (data == true) {
+                              chstr = '<input type="checkbox"   class="check invoiceitemcheck" name="id[]" id="chk' + full.dashboard_id + '" checked>'
+                          }
+                          else {
+                              chstr = '<input type="checkbox"   class="check invoiceitemcheck" id="chk' + full.dashboard_id + '" name="id[]" >'
+                          }
+                          return chstr;
+                      }
+                  },
+            ]
+        });
+        $('#example-select-all').on('click', function () {
+            if ($(this).hasClass('allChecked')) {
+                $('input[type="checkbox"]', '#dashboardGrid').prop('checked', false);
+            } else {
+                $('input[type="checkbox"]', '#dashboardGrid').prop('checked', true);
+            }
+            $(this).toggleClass('allChecked');
+        });
+
+        $("#role_id").change(function () {
+            var role_id = $("#role_id").val();
+            var t = $('#dashboardGrid').DataTable();
+            t.fnClearTable();
+            $.ajax({
+                url: "@Url.Action("GetRoleDashboard", "RoleDashboard")",
+                method: "POST",
+                cache: false,
+                data: { role_id: role_id },
+                success: function (data)
+                {
+                    t.fnAddData(data);
+                }
+            });
+        });
+
+        function TableToJson() {
+            var t = $('#dashboardGrid').dataTable();
+            var rowCount1 = t.fnGetData().length;
+            $("#rights_id").empty();
+            for (i = 0; i < rowCount1; i++)
+            {
+                $("#rights_id").append('<input type="hidden" id="dashboard_id1' + i + '" name="dashboard_id1">');
+                $("#dashboard_id1" + i).val(t.fnGetData(i).dashboard_id);
+                $("#rights_id").append('<input type="hidden" id="is_active1' + i + '" name="is_active1">');
+                if ($('#chk' + t.fnGetData(i).dashboard_id).is(':checked')) {
+                    $("#is_active1" + i).val("1");
+                } else {
+                    $("#is_active1" + i).val("0");
+                }
+            }
+        }
+
+    </script>
+}

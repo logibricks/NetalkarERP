@@ -1,0 +1,98 @@
+﻿@model Sciffer.Erp.Domain.Model.material_requision_note
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>material_requision_note</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ref_document_numbring.category)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ref_document_numbring.category)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_PLANT.PLANT_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_PLANT.PLANT_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ref_status.status_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ref_status.status_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_STORAGE_LOCATION_receiving.storage_location_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_STORAGE_LOCATION_receiving.storage_location_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_STORAGE_LOCATION_sending.storage_location_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_STORAGE_LOCATION_sending.storage_location_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.document_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.document_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.requirement_by)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.requirement_by)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.remarks)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.remarks)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.type)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.material_requision_note_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

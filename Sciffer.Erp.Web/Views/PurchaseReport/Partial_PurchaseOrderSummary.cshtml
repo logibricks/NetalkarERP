@@ -1,0 +1,50 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<purchase_order_report_vm>("Editing")
+                                                .Datasource(ds => ds.URL(Url.Action("Get_Purchase_Order_Report", "PurchaseReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&vendor_category_id=" + ViewBag.vendor_category_id + "&vendor_priority_id=" + ViewBag.vendor_priority_id + "&currency_id=" + ViewBag.currency_id + "&plant_id=" + ViewBag.plant_id + "&business_unit_id=" + ViewBag.business_unit_id).Adaptor(AdaptorType.UrlAdaptor))
+                                                .AllowPaging().PageSettings(a => a.PageSize(20))
+                                                .AllowFiltering()
+                                                    .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                .ShowColumnChooser()
+                                                .AllowSorting()
+                                                .AllowScrolling()
+                                                .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "PurchaseReport", new { ctrlname = "PurchaseOrderSummary" })))
+                                                .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                            .ToolbarSettings(toolbar =>
+                                            {
+                                                toolbar.ShowToolbar().ToolbarItems(items =>
+                                                {
+                                                    items.AddTool(ToolBarItems.Search);
+                                                    items.AddTool(ToolBarItems.ExcelExport);
+                                                    items.AddTool(ToolBarItems.PrintGrid);
+                                                });
+                                            })
+
+                                                .ShowSummary()
+
+                                            .SummaryRow(row =>
+                                            {
+                                                row.Title("Total").SummaryColumns(col =>
+                                                {
+                                                    col.SummaryType(SummaryType.Sum).DisplayColumn("net_value").DataMember("net_value").Format("{0:n2}").Add();
+                                                    col.SummaryType(SummaryType.Sum).DisplayColumn("tax_value").DataMember("tax_value").Format("{0:n2}").Add();
+                                                    col.SummaryType(SummaryType.Sum).DisplayColumn("gross_value").DataMember("gross_value").Format("{0:n2}").Add();
+
+                                                }).Add();
+                                            })
+                                    .Columns(col =>
+                                    {
+                                        col.Field("vendor_code").Width("10%").HeaderText("Vendor Code").Add();
+                                        col.Field("vendor_name").Width("10%").HeaderText("Vendor Description").Add();
+                                        col.Field("vendor_parent_code").Width("10%").HeaderText("Parent Code").Add();
+                                        col.Field("vendor_parent_name").Width("10%").HeaderText("Parent Description").Visible(true).Add();
+                                        col.Field("net_value").Width("10%").HeaderText("Total Value").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                        col.Field("tax_value").Width("10%").HeaderText("Total Taxes").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                        col.Field("gross_value").Width("10%").HeaderText("Gross Value").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+
+                                    }).ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickp"); })
+                        ).Render();}
+@Html.EJ().ScriptManager()
+
+
+

@@ -1,0 +1,69 @@
+﻿
+@using Sciffer.Erp.Domain.Model
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+<p>
+    <a href="@Url.Action("Create", "Branch")" data-toggle="modal" class="btn-circle btn-lg btn-primary"><span class="glyphicon glyphicon-plus"></span> </a>
+</p>
+<div>
+    @(Html.EJ().Grid<ref_tax_type>("Searching")
+       .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "Branch" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.WordExport);
+            items.AddTool(ToolBarItems.PdfExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic",new {ctrlname= "Branch" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "Branch" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "Branch" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("BRANCH_ID").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Add();
+            col.Field("BRANCH_NAME").Width("15%").HeaderText("Branch Name").Add();
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = "Branch/Edit/" + args.rowData.BRANCH_ID;
+        }
+    }
+    function rightClick(args) {
+        location.href = "Branch/Details/" + args.data.BRANCH_ID;
+    }
+</script>
+

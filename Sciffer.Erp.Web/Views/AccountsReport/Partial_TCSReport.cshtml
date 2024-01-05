@@ -1,0 +1,62 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<accounts_report_vm>("Editing")
+  //.Datasource((IEnumerable<object>)ViewBag.datasource)
+  .Datasource(ds => ds.URL(Url.Action("GetAccountsData", "AccountsReport") + "?entity=" + ViewBag.entity + "&entity_id=" + ViewBag.entity_id + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date).Adaptor(AdaptorType.UrlAdaptor))
+  .AllowPaging()
+  .AllowFiltering()
+  .FilterSettings(X => X.FilterType(FilterType.Excel))
+  .ShowColumnChooser()
+  .AllowSorting()
+  .AllowScrolling()
+   .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "AccountsReport", new { ctrlname = ViewBag.ctrlname })))
+
+          .ToolbarSettings(toolbar =>
+          {
+              toolbar.ShowToolbar().ToolbarItems(items =>
+              {
+                  items.AddTool(ToolBarItems.Search);
+                  items.AddTool(ToolBarItems.ExcelExport);
+                  items.AddTool(ToolBarItems.PrintGrid);
+              });
+          })
+  .Columns(col =>
+  {
+      col.Field("VENDOR_CODE").Width("15%").HeaderText("Vendor Code").Add();
+      col.Field("VENDOR_NAME").Width("15%").HeaderText("Vendor Name").Add();
+      col.Field("pan_no").Width("15%").HeaderText("PAN No").Visible(true).Add();
+      col.Field("document_no").Width("15%").HeaderText("Document NO").Visible(true).Add();
+      col.Field("posting_date").Width("15%").HeaderText("Document Date").Format("{0:dd/MMM/yyyy}").Add();
+      col.Field("effective_unit_price").Width("15%").HeaderText("Net Value").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+      col.Field("item_basic_value").Width("15%").HeaderText("Gross Value").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+      col.Field("tcs_amount").Width("15%").HeaderText("TCS Value").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+
+  })
+  .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick"); })
+                                                      ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+ function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1) {
+
+            if ($('#entity_id :selected').length > 0) {
+                var selectedCustomeCategory = [];
+                $('#entity_id :selected').each(function (i, selected) {
+                    selectedCustomeCategory[i] = $(selected).val();
+                });
+                var cus = selectedCustomeCategory + "";
+            }
+            this.model["from_date"] = $("#fromDate").val();
+            this.model["to_date"] = $("#toDate").val();
+            this.model["entity_id"] = cus;
+            this.model["entity"] = $("#entity").val();
+           // this.model["entity_name"] = $("#customer_id :selected").text();
+        }
+
+    }
+
+
+</script>
+

@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="PurReq" targetNamespace="http://tempuri.org/PurReq.xsd" xmlns:mstns="http://tempuri.org/PurReq.xsd" xmlns="http://tempuri.org/PurReq.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="PurReq" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="PurReq" msprop:Generator_UserDSName="PurReq">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="PurReq" msprop:Generator_TableClassName="PurReqDataTable" msprop:Generator_TableVarName="tablePurReq" msprop:Generator_RowChangedName="PurReqRowChanged" msprop:Generator_TablePropName="_PurReq" msprop:Generator_RowDeletingName="PurReqRowDeleting" msprop:Generator_RowChangingName="PurReqRowChanging" msprop:Generator_RowEvHandlerName="PurReqRowChangeEventHandler" msprop:Generator_RowDeletedName="PurReqRowDeleted" msprop:Generator_RowClassName="PurReqRow" msprop:Generator_UserTableName="PurReq" msprop:Generator_RowEvArgName="PurReqRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="companyname" msprop:Generator_ColumnVarNameInTable="columncompanyname" msprop:Generator_ColumnPropNameInRow="companyname" msprop:Generator_ColumnPropNameInTable="companynameColumn" msprop:Generator_UserColumnName="companyname" type="xs:string" minOccurs="0" />
+              <xs:element name="plantname" msprop:Generator_ColumnVarNameInTable="columnplantname" msprop:Generator_ColumnPropNameInRow="plantname" msprop:Generator_ColumnPropNameInTable="plantnameColumn" msprop:Generator_UserColumnName="plantname" type="xs:string" minOccurs="0" />
+              <xs:element name="plantaddress" msprop:Generator_ColumnVarNameInTable="columnplantaddress" msprop:Generator_ColumnPropNameInRow="plantaddress" msprop:Generator_ColumnPropNameInTable="plantaddressColumn" msprop:Generator_UserColumnName="plantaddress" type="xs:string" minOccurs="0" />
+              <xs:element name="doccategory" msprop:Generator_ColumnVarNameInTable="columndoccategory" msprop:Generator_ColumnPropNameInRow="doccategory" msprop:Generator_ColumnPropNameInTable="doccategoryColumn" msprop:Generator_UserColumnName="doccategory" type="xs:string" minOccurs="0" />
+              <xs:element name="docnum" msprop:Generator_ColumnVarNameInTable="columndocnum" msprop:Generator_ColumnPropNameInRow="docnum" msprop:Generator_ColumnPropNameInTable="docnumColumn" msprop:Generator_UserColumnName="docnum" type="xs:string" minOccurs="0" />
+              <xs:element name="postingdate" msprop:Generator_ColumnVarNameInTable="columnpostingdate" msprop:Generator_ColumnPropNameInRow="postingdate" msprop:Generator_ColumnPropNameInTable="postingdateColumn" msprop:Generator_UserColumnName="postingdate" type="xs:string" minOccurs="0" />
+              <xs:element name="purreqsource" msprop:Generator_ColumnVarNameInTable="columnpurreqsource" msprop:Generator_ColumnPropNameInRow="purreqsource" msprop:Generator_ColumnPropNameInTable="purreqsourceColumn" msprop:Generator_UserColumnName="purreqsource" type="xs:string" minOccurs="0" />
+              <xs:element name="purreqid" msprop:Generator_ColumnVarNameInTable="columnpurreqid" msprop:Generator_ColumnPropNameInRow="purreqid" msprop:Generator_ColumnPropNameInTable="purreqidColumn" msprop:Generator_UserColumnName="purreqid" type="xs:string" minOccurs="0" />
+              <xs:element name="total" msprop:Generator_ColumnVarNameInTable="columntotal" msprop:Generator_ColumnPropNameInRow="total" msprop:Generator_ColumnPropNameInTable="totalColumn" msprop:Generator_UserColumnName="total" type="xs:string" minOccurs="0" />
+              <xs:element name="gst_no" msprop:Generator_ColumnVarNameInTable="columngst_no" msprop:Generator_ColumnPropNameInRow="gst_no" msprop:Generator_ColumnPropNameInTable="gst_noColumn" msprop:Generator_UserColumnName="gst_no" type="xs:string" minOccurs="0" />
+              <xs:element name="remarks" msprop:Generator_ColumnVarNameInTable="columnremarks" msprop:Generator_ColumnPropNameInRow="remarks" msprop:Generator_ColumnPropNameInTable="remarksColumn" msprop:Generator_UserColumnName="remarks" type="xs:string" minOccurs="0" />
+              <xs:element name="approval_status" msprop:Generator_ColumnVarNameInTable="columnapproval_status" msprop:Generator_ColumnPropNameInRow="approval_status" msprop:Generator_ColumnPropNameInTable="approval_statusColumn" msprop:Generator_UserColumnName="approval_status" type="xs:string" minOccurs="0" />
+              <xs:element name="plant_mobile" msprop:Generator_ColumnVarNameInTable="columnplant_mobile" msprop:Generator_ColumnPropNameInRow="plant_mobile" msprop:Generator_ColumnPropNameInTable="plant_mobileColumn" msprop:Generator_UserColumnName="plant_mobile" type="xs:string" minOccurs="0" />
+              <xs:element name="plant_email" msprop:Generator_ColumnVarNameInTable="columnplant_email" msprop:Generator_ColumnPropNameInRow="plant_email" msprop:Generator_ColumnPropNameInTable="plant_emailColumn" msprop:Generator_UserColumnName="plant_email" type="xs:string" minOccurs="0" />
+              <xs:element name="PLANT_CODE" msprop:Generator_ColumnVarNameInTable="columnPLANT_CODE" msprop:Generator_ColumnPropNameInRow="PLANT_CODE" msprop:Generator_ColumnPropNameInTable="PLANT_CODEColumn" msprop:Generator_UserColumnName="PLANT_CODE" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PurReqdetail" msprop:Generator_TableClassName="PurReqdetailDataTable" msprop:Generator_TableVarName="tablePurReqdetail" msprop:Generator_RowChangedName="PurReqdetailRowChanged" msprop:Generator_TablePropName="PurReqdetail" msprop:Generator_RowDeletingName="PurReqdetailRowDeleting" msprop:Generator_RowChangingName="PurReqdetailRowChanging" msprop:Generator_RowEvHandlerName="PurReqdetailRowChangeEventHandler" msprop:Generator_RowDeletedName="PurReqdetailRowDeleted" msprop:Generator_RowClassName="PurReqdetailRow" msprop:Generator_UserTableName="PurReqdetail" msprop:Generator_RowEvArgName="PurReqdetailRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Itmcode" msprop:Generator_ColumnVarNameInTable="columnItmcode" msprop:Generator_ColumnPropNameInRow="Itmcode" msprop:Generator_ColumnPropNameInTable="ItmcodeColumn" msprop:Generator_UserColumnName="Itmcode" type="xs:string" minOccurs="0" />
+              <xs:element name="itemdesc" msprop:Generator_ColumnVarNameInTable="columnitemdesc" msprop:Generator_ColumnPropNameInRow="itemdesc" msprop:Generator_ColumnPropNameInTable="itemdescColumn" msprop:Generator_UserColumnName="itemdesc" type="xs:string" minOccurs="0" />
+              <xs:element name="Qty" msprop:Generator_ColumnVarNameInTable="columnQty" msprop:Generator_ColumnPropNameInRow="Qty" msprop:Generator_ColumnPropNameInTable="QtyColumn" msprop:Generator_UserColumnName="Qty" type="xs:string" minOccurs="0" />
+              <xs:element name="Deldate" msprop:Generator_ColumnVarNameInTable="columnDeldate" msprop:Generator_ColumnPropNameInRow="Deldate" msprop:Generator_ColumnPropNameInTable="DeldateColumn" msprop:Generator_UserColumnName="Deldate" type="xs:string" minOccurs="0" />
+              <xs:element name="prefvendor" msprop:Generator_ColumnVarNameInTable="columnprefvendor" msprop:Generator_ColumnPropNameInRow="prefvendor" msprop:Generator_ColumnPropNameInTable="prefvendorColumn" msprop:Generator_UserColumnName="prefvendor" type="xs:string" minOccurs="0" />
+              <xs:element name="sloc" msprop:Generator_ColumnVarNameInTable="columnsloc" msprop:Generator_ColumnPropNameInRow="sloc" msprop:Generator_ColumnPropNameInTable="slocColumn" msprop:Generator_UserColumnName="sloc" type="xs:string" minOccurs="0" />
+              <xs:element name="rate" msprop:Generator_ColumnVarNameInTable="columnrate" msprop:Generator_ColumnPropNameInRow="rate" msprop:Generator_ColumnPropNameInTable="rateColumn" msprop:Generator_UserColumnName="rate" type="xs:string" minOccurs="0" />
+              <xs:element name="purreqid" msprop:Generator_ColumnVarNameInTable="columnpurreqid" msprop:Generator_ColumnPropNameInRow="purreqid" msprop:Generator_ColumnPropNameInTable="purreqidColumn" msprop:Generator_UserColumnName="purreqid" type="xs:string" minOccurs="0" />
+              <xs:element name="purdetailid" msprop:Generator_ColumnVarNameInTable="columnpurdetailid" msprop:Generator_ColumnPropNameInRow="purdetailid" msprop:Generator_ColumnPropNameInTable="purdetailidColumn" msprop:Generator_UserColumnName="purdetailid" type="xs:string" minOccurs="0" />
+              <xs:element name="user_description" msprop:Generator_ColumnVarNameInTable="columnuser_description" msprop:Generator_ColumnPropNameInRow="user_description" msprop:Generator_ColumnPropNameInTable="user_descriptionColumn" msprop:Generator_UserColumnName="user_description" type="xs:string" minOccurs="0" />
+              <xs:element name="UOM_NAME" msprop:Generator_ColumnVarNameInTable="columnUOM_NAME" msprop:Generator_ColumnPropNameInRow="UOM_NAME" msprop:Generator_ColumnPropNameInTable="UOM_NAMEColumn" msprop:Generator_UserColumnName="UOM_NAME" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:annotation>
+    <xs:appinfo>
+      <msdata:Relationship name="PurReq_PurReq1" msdata:parent="PurReq" msdata:child="PurReqdetail" msdata:parentkey="purreqid" msdata:childkey="purreqid" msprop:Generator_UserChildTable="PurReqdetail" msprop:Generator_ChildPropName="GetPurReqdetailRows" msprop:Generator_UserRelationName="PurReq_PurReq1" msprop:Generator_RelationVarName="relationPurReq_PurReq1" msprop:Generator_UserParentTable="PurReq" msprop:Generator_ParentPropName="PurReqRow" />
+    </xs:appinfo>
+  </xs:annotation>
+</xs:schema>

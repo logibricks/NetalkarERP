@@ -1,0 +1,35 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<accounts_report_vm>("Editing")
+                .Datasource(ds => ds.URL(Url.Action("GetAccountsData", "AccountsReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date).Adaptor(AdaptorType.UrlAdaptor))
+                .AllowPaging().PageSettings(a => a.PageSize(20))
+                .AllowFiltering()
+                .FilterSettings(X => X.FilterType(FilterType.Excel))
+                .ShowColumnChooser()
+                .AllowSorting()
+                .AllowScrolling()
+                .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "AccountsReport", new { ctrlname = "TrialBalance" })))
+
+                .ToolbarSettings(toolbar =>
+                {
+                toolbar.ShowToolbar().ToolbarItems(items =>
+                {
+                items.AddTool(ToolBarItems.Search);
+                items.AddTool(ToolBarItems.ExcelExport);
+                items.AddTool(ToolBarItems.PrintGrid);
+                });
+                })
+        .Columns(co =>
+        {
+            co.Field("gl_ledger_code").Width("10%").HeaderText("GL Code").Add();
+            co.Field("gl_ledger_name").Width("10%").HeaderText("Description").Add();
+            co.Field("Opening_Bal").Width("10%").Width("10%").HeaderText("Op.Balance").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+            co.Field("dr").Width("10%").Width("10%").HeaderText("Dr.").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+            co.Field("cr").Width("10%").Width("10%").HeaderText("Cr.").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+            co.Field("Closing_Bal").Width("10%").Width("10%").HeaderText("Cl. Balance").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+        })
+ .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicka"); })
+   ).Render();}
+@Html.EJ().ScriptManager()
+
+

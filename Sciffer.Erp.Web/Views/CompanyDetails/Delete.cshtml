@@ -1,0 +1,146 @@
+﻿@model Sciffer.Erp.Domain.Model.REF_COMPANY
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>REF_COMPANY</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.COMPANY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.COMPANY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.COMPANY_DISPLAY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.COMPANY_DISPLAY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REGISTERED_ADDRESS)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REGISTERED_ADDRESS)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REGISTERED_CITY)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REGISTERED_CITY)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REGISTERED_STATE_ID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REGISTERED_STATE_ID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REGISTERED_TELEPHONE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REGISTERED_TELEPHONE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REGISTERED_MOBILE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REGISTERED_MOBILE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REGISTERED_EMAIL)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REGISTERED_EMAIL)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CORPORATE_ADDRESS)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CORPORATE_ADDRESS)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CORPORATE_CITY)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CORPORATE_CITY)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CORPORATE_STATE_ID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CORPORATE_STATE_ID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CORPORATE_TELEPHONE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CORPORATE_TELEPHONE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CORPORATE_MOBILE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CORPORATE_MOBILE)
+        </dd>
+
+        
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WEBSITE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WEBSITE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LOGO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LOGO)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

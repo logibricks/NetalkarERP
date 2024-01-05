@@ -1,0 +1,230 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.Ref_permit_template_VM
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Permit Template</h2>
+
+<div class="loading">Loading &#8230;</div>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        <div class="modal-body">
+            <div id="PermitTemplateHidden"></div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <label class="control-label col-md-4">
+                        Permit Template No<span class="required"> *</span>
+                    </label>
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.permit_template_no, new { htmlAttributes = new { @class = "form-control num validinput", @required = true } })
+                        @Html.ValidationMessageFor(model => model.permit_template_no, "", new { @class = "text-danger" })
+                       
+
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <label class="control-label col-md-4">
+                        Permit Category<span class="required"> *</span>
+                    </label>
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.permit_category, new { htmlAttributes = new { @class = "form-control validinput", @required = true } })
+                        @Html.ValidationMessageFor(model => model.permit_category, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <br/>
+
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <button type="button" class="btn btn-primary" id="open_modal" style="float:right" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span>Add Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                        <thead>
+                            <tr>
+                                <th hidden>ID</th>
+                                <th><label>Sr. No.</label></th>
+                                <th><label>Check Points</label></th>
+                                <th><label>Ideal Scenario</label></th>
+                                <th><label>Action</label></th>
+                            </tr>
+                        </thead>
+
+                    </table>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" id="create" data-controller="PermitTemplate" name="create" class="btn btn-success" onclick="TabletoJeson(); " style="float:right" />
+                </div>
+            </div>
+            <br />
+
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Permit Details</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Checkpoints<span class="required"> *</span>
+                        </label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control" name="checkpoints" id="checkpoints" />
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Ideal Scenario<span class="required"> *</span>
+                        </label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control" name="Idealscenario" id="ideal_scenario" />
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+
+                <div class="modal-footer">
+                    <input type="hidden" id="srno" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                    <button type="button" class="add btn btn-primary">Add </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript"> 
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                        { sname: "a", bVisible: false },
+                        { sname: "b" },
+                        { sname: "e" },
+                        { sname: "f" },
+
+                        {
+                            sname: "o", sWidth: "8%",
+                            bSortable: false,
+                            mRender: function (data, type, full) {
+                                return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" onclick="editRow(' + full[1] + ');" /><img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete" onclick="deleteRow(' + full[1] + ');" />';
+                            }
+                        }]
+
+        });
+
+
+        $('#open_modal').click(function () {
+            clearmodel();
+        });
+        $(".add").on("click", function (event) {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var checkpoints = $("#checkpoints").val();
+            var ideal_scenario = $("#ideal_scenario").val();
+
+
+            if (checkpoints == '') {
+                swal("", "Please Select Checkpoint.", "error");
+                return false;
+            }
+
+
+            if (ideal_scenario == '') {
+                swal("", "Please Enter Ideal Scenario .", "error");
+                return false;
+            }
+
+            if ($("#srno").val() == "") {
+                t.fnAddData(['0', rowCount + 1, checkpoints, ideal_scenario, ''
+                ]);
+            }
+            else {
+                var cc = $("#srno").val();
+                cc = parseInt(cc) - 1;
+                t.fnUpdate(['0', cc + 1, checkpoints, ideal_scenario, ''], cc)
+            }
+
+            clearmodel();
+            return true;
+        });
+        function clearmodel() {
+            $("#checkpoints").val('');
+            $("#ideal_scenario").val('');
+
+
+        }
+        function editRow() {
+            $('#myModal').modal('show');
+            var t = $('#ContactGrid').DataTable()
+            var cc = parseInt(arguments[0]) - 1;
+            $("#srno").val(t.fnGetData(cc)[1]);
+            $("#checkpoint_id").val(t.fnGetData(cc)[0]);
+            $("#checkpoints").val(t.fnGetData(cc)[2]);
+            $('#ideal_scenario').val(t.fnGetData(cc)[3]);
+        }
+
+        function TabletoJeson() {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            $("#PermitTemplateHidden").empty();
+            for (i = 0; i < rowCount; i++) {
+
+                $("#PermitTemplateHidden").append('<input type="hidden" id="checkpoint_id' + i + '" name="checkpoint_id">');
+                $("#PermitTemplateHidden").append('<input type="hidden" id="checkpoints' + i + '" name="checkpoints">');
+                $("#PermitTemplateHidden").append('<input type="hidden" id="ideal_scenario' + i + '" name="ideal_scenario">');
+
+                $("#checkpoint_id" + i).val(t.fnGetData(i)[0]);
+                $("#checkpoints" + i).val(t.fnGetData(i)[2]);
+                $("#ideal_scenario" + i).val(t.fnGetData(i)[3]);
+            }
+        }
+    </script>
+}

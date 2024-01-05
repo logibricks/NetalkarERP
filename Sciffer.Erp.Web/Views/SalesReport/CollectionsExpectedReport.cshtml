@@ -1,0 +1,149 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+@{
+    ViewBag.Title = "CollectionsExpectedReport";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".loading").hide();
+        $('.mickey').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            maxHeight: '200',
+            enableCaseInsensitiveFiltering: true,
+            allowClear: true,
+            maximumResultsForSearch: 1,
+            numberDisplayed: 0,
+        });
+    });
+</script>
+<div class="loading">Loading &#8230;</div>
+<div class="form-horizontal">
+    <div class=row>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">From Date</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <input type="date" name="fromDate" id="fromDate" class="form-control" required="required">
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">To Date</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <input type="date" name="toDate" id="toDate" class="form-control radius" required="required">
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Customer Category</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("customer_category_id", (System.Web.Mvc.SelectList)ViewBag.customer_category_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class=row>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Plant</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plant_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Business Unit</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("business_unit_id", (System.Web.Mvc.SelectList)ViewBag.business_list, htmlAttributes: new { @class = "form-control mickey ", multiple = "multiple" })
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12"></label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <button class="searchbutton searchButton" id="search" onclick="DateCheck()"> &nbsp; Run Report </button>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div id="searchresult">
+            @*@Html.Partial("Partial_CollectionsExpected", (object)ViewBag)*@
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function DateCheck() {
+        var StartDate = document.getElementById('fromDate').value;
+        var EndDate = document.getElementById('toDate').value;
+        var eDate = new Date(EndDate);
+        var sDate = new Date(StartDate);
+        if (StartDate != '' && StartDate != '' && sDate > eDate) {
+            sweetAlert("", "Please ensure that the From Date is less than or equal to the To Date.", "error");
+            return false;
+        }
+    }
+    $(function () {
+        $("#plant_id").multiselect('selectAll', false);
+        $('#plant_id').multiselect('updateButtonText');
+        $("#business_unit_id").multiselect('selectAll', false);
+        $('#business_unit_id').multiselect('updateButtonText');
+        $("#customer_category_id").multiselect('selectAll', false);
+        $('#customer_category_id').multiselect('updateButtonText');
+       
+    });
+
+   $("#search").click(function () {
+        AdvanceSearch();
+    });
+    document.getElementById('fromDate').valueAsDate = new Date();
+    document.getElementById('toDate').valueAsDate = new Date();
+    function AdvanceSearch() {
+        var fromDate = $("#fromDate").val();
+        var toDate = $("#toDate").val();
+        var customer_category = $("#customer_category_id").val();
+        var plant = $("#plant_id").val();
+        var business_unit = $("#business_unit_id").val();
+
+        if ($('#customer_category_id :selected').length > 0) {
+            var selectedCustomeCategory = [];
+            $('#customer_category_id :selected').each(function (i, selected) {
+                selectedCustomeCategory[i] = $(selected).val();
+            });
+            var cus_category = selectedCustomeCategory + "";
+        }
+        if ($('#plant_id :selected').length > 0) {
+            var selectedPlant = [];
+            $('#plant_id :selected').each(function (i, selected) {
+                selectedPlant[i] = $(selected).val();
+            });
+            var Plants = selectedPlant + "";
+        }
+        if ($('#business_unit_id :selected').length > 0) {
+            var selectedBusinessUnit = [];
+            $('#business_unit_id :selected').each(function (i, selected) {
+                selectedBusinessUnit[i] = $(selected).val();
+            });
+            var BusinessUnits = selectedBusinessUnit + "";
+        }
+
+        $(".loading").show();
+        $.ajax({
+            url: "@Url.Action("Sales_Order_Report", "SalesReport")",
+            method: "Post",
+        cache: false,
+        data: {
+            entity: "get_collection_expected_customer_report",
+            customer_category_id: cus_category, business_unit_id: BusinessUnits, from_date: fromDate, to_date: toDate, plant_id: Plants
+
+        },
+        success: function (data) {
+            $(".loading").hide();
+            $('#searchresult').empty().append(data);
+        },
+        error: function (http) {
+            console.log(XMLHttpRequest);
+        }
+    });
+    }
+</script>
+<div class="modal"><!-- Place at bottom of page --></div>

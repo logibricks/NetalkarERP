@@ -1,0 +1,69 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_shifts
+
+@{
+    ViewBag.Title = "Detail";
+}
+
+<h2>Detail</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.shift_id)
+
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.plant_id, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10 col-sm-10 col-xs-10">
+                        @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plant_list, "---Select---", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.plant_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.shift_code, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.shift_code, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.shift_code, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.from_time, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10 col-sm-10 col-xs-10">
+                        @Html.EditorFor(model => model.from_time, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.from_time, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.to_time, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.to_time, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.to_time, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $("#form0 :input").prop("disabled", true);
+    </script>
+}

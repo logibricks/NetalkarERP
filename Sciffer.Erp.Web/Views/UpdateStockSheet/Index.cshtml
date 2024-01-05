@@ -1,0 +1,88 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<br /><br /><br />
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<update_stock_count_vm>("Searching")
+          .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "UpdateStockSheet" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+         .PageSettings(p => { p.PageSize(10); })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "UpdateStockSheet" })))
+        .AllowSorting()
+        .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("update_stock_count_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Add();
+            col.Field("doc_number").Width("15%").HeaderText("Document No").Visible(true).Add();
+            col.Field("document_date1").Width("15%").HeaderText("Document Date").Add();
+            col.Field("posting_date1").Width("15%").HeaderText("Posting Date").Add();            
+            col.Field("plant_name").Width("15%").HeaderText("Plant").Add();
+            col.Field("sloc_name").Width("15%").HeaderText("Storage").Add();
+            col.Field("bucket_name").Width("15%").HeaderText("Bucket Name").Add();
+            col.Field("status_name").Width("15%").HeaderText("Status").Add();
+            col.Field("ref_1").Width("15%").HeaderText("Ref 1").Add();
+        }).ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+<script>
+
+    var flag = true;
+    function complete(args)
+    {
+
+        if (args.requestType == "beginedit")
+        {
+            location.href = "@Url.Action("Edit", "UpdateStockSheet")?id=" + args.rowData.update_stock_count_id;
+        }
+        if (args.requestType == "add") {
+            location.href = "@Url.Action("Create", "UpdateStockSheet")";
+        }
+    }
+    function EndProcess() {
+        var gridObj = $("#Searching").ejGrid("instance");
+        //console.log(gridObj);
+        gridObj.refreshContent();
+    }
+
+    $(document).ready(function () {
+        var num = '@Html.ViewBag.num';
+        console.log(num);
+        if (num != '')
+        {
+            if (num != undefined)
+            {
+                sweetAlert("", num + " Saved successfully.", "success");
+            }
+        }
+    });
+
+</script>

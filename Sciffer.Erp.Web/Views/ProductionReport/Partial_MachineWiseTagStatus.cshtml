@@ -1,0 +1,51 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<report_production_vm>("Editing")
+        .Datasource(ds => ds.URL(Url.Action("Get_report_production", "ProductionReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&item_id=" + ViewBag.item_id + " &machine_id=" + ViewBag.machine_id + "&process_id=" + ViewBag.process_id + "&shift_id=" + ViewBag.shift_id).Adaptor(AdaptorType.UrlAdaptor))
+        .AllowPaging().PageSettings(a => a.PageSize(20))
+        .AllowFiltering()
+        .FilterSettings(X => X.FilterType(FilterType.Excel))
+        .ShowColumnChooser()
+        .AllowSorting()
+        .AllowScrolling()
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "ProductionReport", new { ctrlname = "MachineWiseTagStatus" })))
+        .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+    .ToolbarSettings(toolbar =>
+    {
+        toolbar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Search);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        });
+    })
+    .Columns(col =>
+    {
+        col.Field("tag_no").Width("15%").HeaderText("Tag Number ").Add();
+        col.Field("in_item_desc").Width("15%").HeaderText("Item Name").Add();
+        col.Field("status_name").Width("15%").HeaderText("Status").Add();
+        col.Field("user_code").Width("15%").HeaderText("Operator").Add();
+        col.Field("DatePart").Width("15%").HeaderText("Date").Add();
+        col.Field("task_time_report").Width("15%").HeaderText("Task Time").Add();
+        col.Field("machine_desc").Width("15%").HeaderText("Machine Desc").Add();
+    })
+    .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick"); })
+    ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+<script type="text/javascript">
+    function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1) {
+
+            this.model["from_date"] = $("#fromDate").val();
+            this.model["to_date"] = $("#toDate").val();
+            this.model["machine_id"] = $("#machine_id").val();
+            this.model["item_id"] = $("#item_id").val();
+            this.model["process_id"] = $("#process_id").val();
+            this.model["shift_id"] = $("#shift_id").val();
+        }
+
+    }
+</script>
+
+

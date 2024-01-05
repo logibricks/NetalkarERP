@@ -1,0 +1,80 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<REF_ITEM_CATEGORYVM>("Searching")
+          .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "ItemCategory" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Add);
+                items.AddTool(ToolBarItems.Edit);
+                items.AddTool(ToolBarItems.Update);
+                items.AddTool(ToolBarItems.Cancel);
+                items.AddTool(ToolBarItems.ExcelExport);
+                items.AddTool(ToolBarItems.PrintGrid);
+            });
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "ItemCategory" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "ItemCategory" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "ItemCategory" })))
+        .AllowSorting()
+      .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("ITEM_CATEGORY_ID").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("ITEM_CATEGORY_NAME").Width("15%").HeaderText("Item Category Code").ValidationRules(x => x.AddRule("required", true)).Add();
+            col.Field("ITEM_CATEGORY_DESCRIPTION").Width("15%").HeaderText("Item Category Description").ValidationRules(x => x.AddRule("required", true)).Add();
+            col.Field("item_type_name").Width("15%").HeaderText("Item Type").Visible(true).Add();
+            col.Field("is_blocked").Width("15%").HeaderText("Blocked").Visible(false).Add();
+        })
+        .ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+
+</div>
+
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit") {
+            location.href = "@Url.Action("Edit", "ItemCategory")?id="+ args.rowData.ITEM_CATEGORY_ID;
+        }
+        if (args.requestType == "add") {
+            location.href = "@Url.Action("Create", "ItemCategory")";
+        }
+    }
+    function rightClick(args) {
+        location.href = "@Url.Action("Details", "ItemCategory")?id="+ args.data.ITEM_CATEGORY_ID;
+    }
+</script>

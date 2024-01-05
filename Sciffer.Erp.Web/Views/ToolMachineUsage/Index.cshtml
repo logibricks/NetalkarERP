@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.ViewModel.ref_tool_machine_usage_VM>
+@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<ref_tool_machine_usage_VM>("Searching")
+        // .Datasource(ds => ds.URL(Url.Action("GetItems", "Items")).RemoveURL(Url.Action("InlineDelete", "Items")).Adaptor(AdaptorType.RemoteSaveAdaptor))
+
+        .Datasource(ds => { ds.Json((IEnumerable<object>)ViewBag.DataSource).RemoveURL(Url.Action("Delete", "ToolMachineUsage")).Adaptor(AdaptorType.RemoteSaveAdaptor); })
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(12); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Search);
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+
+        }))
+
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("tool_machine_usage_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).ShowInColumnChooser(false).Add();
+            col.Field("tool_id").Width("15%").Visible(false).ShowInColumnChooser(false).HeaderText("Tool Id").Add();
+            col.Field("tool_name").Width("15%").HeaderText("Tool Name").Add();
+            col.Field("machine_id").Width("15%").Visible(false).ShowInColumnChooser(false).HeaderText("Machine Id").Add();
+            col.Field("machine_name").Width("15%").HeaderText("Machine Name").Add();
+            col.Field("tool_renew_type_id").Width("15%").Visible(false).ShowInColumnChooser(false).HeaderText("Tool Renew Type Id").Add();
+            col.Field("tool_renew_type_name").Width("15%").HeaderText("Tool Renew Type").Add();
+            col.Field("current_life_percentage").Width("15%").HeaderText("Current Life").Add();
+            col.Field("start_date_time").Width("15%").HeaderText("Start Time").Add();
+            col.Field("in_use").Width("15%").HeaderText("In Use").Add();
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit") {
+            location.href = "@Url.Action("Edit", "ToolMachineUsage")?id=" + args.rowData.tool_machine_usage_id;
+        }
+        if (args.requestType == "add") {
+            location.href = "@Url.Action("Create", "ToolMachineUsage")";
+        }
+    }
+    @*function rightClick(args) {
+        location.href = "@Url.Action("Details", "QualityControlParameter")?id="+ args.data.ITEM_ID;
+    }*@
+    $(document).ready(function () {
+        var doc_no = '@ViewBag.num';
+        if (doc_no != '') {
+            if (doc_no != 0) {
+                sweetAlert("", "New Tool Created Successfully!", "success");
+            }
+        }
+    });
+</script>

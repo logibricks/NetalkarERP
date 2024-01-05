@@ -1,0 +1,97 @@
+﻿<div class="panel panel-default">
+    <div class="panel-body">
+        @using (Html.BeginForm("Edit", "CostCenter"))
+        {
+            @Html.AntiForgeryToken()
+            <br />
+            <div class="col-sm-1">
+            </div>
+            <div class="col-sm-10">
+                <div class="form-horizontal">
+                    <input type="hidden" name="cost_center_id" id="cost_center_id" />
+                    <div class="row">
+                        <label for="cost_center_code" class="col-sm-4 control-label">Cost Center Code</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" name="cost_center_code" id="cost_center_code" class="form-control num validinput" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <label for="cost_center_description" class="col-sm-4 control-label">Cost Center Description</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" name="cost_center_description" id="cost_center_description" class="form-control validinput" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <label for="parent_code" class="col-sm-4 control-label">Cost Center Parent</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("parent_code", (System.Web.Mvc.SelectList)ViewBag.parentlist, new { @class = "form-control validinput", @onchange = "FillGlParentLedger(this.value)" })
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <label for="head_parent" class="col-sm-4 control-label">Head/Account</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("head_parent", new List<SelectListItem>
+                            {
+                            new SelectListItem{ Text="---Select---", Value = "0" },
+                            new SelectListItem{ Text="Head", Value = "1" },
+                            new SelectListItem{ Text="Account", Value = "2" }
+                            }, new { @class = "form-control validinput" })
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <label for="is_blocked" class="col-sm-4 control-label">Blocked</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <div class="checkbox">
+                                <input type="checkbox" name="is_blocked" id="is_blocked" />
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Update" id="create" data-controller="CostCenter" @*data-id="@ViewBag.costCenter.cost_center_id"*@ class="btn btn-success" style="float:right" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script src="~/Scripts/requirevalidation.js"></script>
+<script>
+
+    $('#is_blocked').checkboxpicker();
+    $('#create').attr('data-id', @ViewBag.costCenter.cost_center_id);
+    $('#cost_center_id').val(@ViewBag.costCenter.cost_center_id);
+    $('#cost_center_code').val('@ViewBag.costCenter.cost_center_code');
+    $('#cost_center_description').val('@ViewBag.costCenter.cost_center_description');
+    $('#parent_code').val("@ViewBag.costCenter.parent_code");    
+    $('#head_parent').val('@ViewBag.costCenter.head_parent');
+    var is_blocked = '@ViewBag.costCenter.is_blocked';
+    if(is_blocked == 'False'){
+        $("#is_blocked").prop('checked', false); 
+    }
+    else{            
+        $("#is_blocked").prop('checked', true);          
+    }
+    $('#is_blocked').checkboxpicker();
+    $("#parent_code").select2({
+        maximumSelectionLength: 4,
+        placeholder: "Select GL Parent Code",
+        allowClear: true
+    });
+    $('#is_blocked').checkboxpicker().on('change', function() { 
+        if($(this).prop('checked')){
+            $('#is_blocked').val('True');
+        }
+        else{
+            $('#is_blocked').val('False');
+        }
+        console.log($('#is_blocked').val()); 
+    });
+</script>

@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="InterPlantTransfer" targetNamespace="http://tempuri.org/InterPlantTransfer.xsd" xmlns:mstns="http://tempuri.org/InterPlantTransfer.xsd" xmlns="http://tempuri.org/InterPlantTransfer.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="InterPlantTransfer" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="InterPlantTransfer" msprop:Generator_UserDSName="InterPlantTransfer">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="InterPlantTransfer" msprop:Generator_TableClassName="InterPlantTransferDataTable" msprop:Generator_TableVarName="tableInterPlantTransfer" msprop:Generator_RowChangedName="InterPlantTransferRowChanged" msprop:Generator_TablePropName="_InterPlantTransfer" msprop:Generator_RowDeletingName="InterPlantTransferRowDeleting" msprop:Generator_RowChangingName="InterPlantTransferRowChanging" msprop:Generator_RowEvHandlerName="InterPlantTransferRowChangeEventHandler" msprop:Generator_RowDeletedName="InterPlantTransferRowDeleted" msprop:Generator_RowClassName="InterPlantTransferRow" msprop:Generator_UserTableName="InterPlantTransfer" msprop:Generator_RowEvArgName="InterPlantTransferRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="pla_transfer_id" msprop:Generator_ColumnVarNameInTable="columnpla_transfer_id" msprop:Generator_ColumnPropNameInRow="pla_transfer_id" msprop:Generator_ColumnPropNameInTable="pla_transfer_idColumn" msprop:Generator_UserColumnName="pla_transfer_id" type="xs:string" minOccurs="0" />
+              <xs:element name="sender_name" msprop:Generator_ColumnVarNameInTable="columnsender_name" msprop:Generator_ColumnPropNameInRow="sender_name" msprop:Generator_ColumnPropNameInTable="sender_nameColumn" msprop:Generator_UserColumnName="sender_name" type="xs:string" minOccurs="0" />
+              <xs:element name="sender_address" msprop:Generator_ColumnVarNameInTable="columnsender_address" msprop:Generator_ColumnPropNameInRow="sender_address" msprop:Generator_ColumnPropNameInTable="sender_addressColumn" msprop:Generator_UserColumnName="sender_address" type="xs:string" minOccurs="0" />
+              <xs:element name="reciver_name" msprop:Generator_ColumnVarNameInTable="columnreciver_name" msprop:Generator_ColumnPropNameInRow="reciver_name" msprop:Generator_ColumnPropNameInTable="reciver_nameColumn" msprop:Generator_UserColumnName="reciver_name" type="xs:string" minOccurs="0" />
+              <xs:element name="reciver_address" msprop:Generator_ColumnVarNameInTable="columnreciver_address" msprop:Generator_ColumnPropNameInRow="reciver_address" msprop:Generator_ColumnPropNameInTable="reciver_addressColumn" msprop:Generator_UserColumnName="reciver_address" type="xs:string" minOccurs="0" />
+              <xs:element name="gst_number" msprop:Generator_ColumnVarNameInTable="columngst_number" msprop:Generator_ColumnPropNameInRow="gst_number" msprop:Generator_ColumnPropNameInTable="gst_numberColumn" msprop:Generator_UserColumnName="gst_number" type="xs:string" minOccurs="0" />
+              <xs:element name="pla_transfer_number" msprop:Generator_ColumnVarNameInTable="columnpla_transfer_number" msprop:Generator_ColumnPropNameInRow="pla_transfer_number" msprop:Generator_ColumnPropNameInTable="pla_transfer_numberColumn" msprop:Generator_UserColumnName="pla_transfer_number" type="xs:string" minOccurs="0" />
+              <xs:element name="posting_date" msprop:Generator_ColumnVarNameInTable="columnposting_date" msprop:Generator_ColumnPropNameInRow="posting_date" msprop:Generator_ColumnPropNameInTable="posting_dateColumn" msprop:Generator_UserColumnName="posting_date" type="xs:string" minOccurs="0" />
+              <xs:element name="ITEM_NAME" msprop:Generator_ColumnVarNameInTable="columnITEM_NAME" msprop:Generator_ColumnPropNameInRow="ITEM_NAME" msprop:Generator_ColumnPropNameInTable="ITEM_NAMEColumn" msprop:Generator_UserColumnName="ITEM_NAME" type="xs:string" minOccurs="0" />
+              <xs:element name="plant_qty" msprop:Generator_ColumnVarNameInTable="columnplant_qty" msprop:Generator_ColumnPropNameInRow="plant_qty" msprop:Generator_ColumnPropNameInTable="plant_qtyColumn" msprop:Generator_UserColumnName="plant_qty" type="xs:string" minOccurs="0" />
+              <xs:element name="remarks_on_document" msprop:Generator_ColumnVarNameInTable="columnremarks_on_document" msprop:Generator_ColumnPropNameInRow="remarks_on_document" msprop:Generator_ColumnPropNameInTable="remarks_on_documentColumn" msprop:Generator_UserColumnName="remarks_on_document" type="xs:string" minOccurs="0" />
+              <xs:element name="PLANT_MOBILE" msprop:Generator_ColumnVarNameInTable="columnPLANT_MOBILE" msprop:Generator_ColumnPropNameInRow="PLANT_MOBILE" msprop:Generator_ColumnPropNameInTable="PLANT_MOBILEColumn" msprop:Generator_UserColumnName="PLANT_MOBILE" type="xs:string" minOccurs="0" />
+              <xs:element name="total_quantity" msprop:Generator_ColumnVarNameInTable="columntotal_quantity" msprop:Generator_ColumnPropNameInRow="total_quantity" msprop:Generator_ColumnPropNameInTable="total_quantityColumn" msprop:Generator_UserColumnName="total_quantity" type="xs:string" minOccurs="0" />
+              <xs:element name="cst_number" msprop:Generator_ColumnVarNameInTable="columncst_number" msprop:Generator_ColumnPropNameInRow="cst_number" msprop:Generator_ColumnPropNameInTable="cst_numberColumn" msprop:Generator_UserColumnName="cst_number" type="xs:string" minOccurs="0" />
+              <xs:element name="plant_mobile" msprop:Generator_ColumnVarNameInTable="columnplant_mobile" msprop:Generator_ColumnPropNameInRow="plant_mobile" msprop:Generator_ColumnPropNameInTable="plant_mobileColumn" msprop:Generator_UserColumnName="plant_mobile" type="xs:string" minOccurs="0" />
+              <xs:element name="plant_email" msprop:Generator_ColumnVarNameInTable="columnplant_email" msprop:Generator_ColumnPropNameInRow="plant_email" msprop:Generator_ColumnPropNameInTable="plant_emailColumn" msprop:Generator_UserColumnName="plant_email" type="xs:string" minOccurs="0" />
+              <xs:element name="state_name" msprop:Generator_ColumnVarNameInTable="columnstate_name" msprop:Generator_ColumnPropNameInRow="state_name" msprop:Generator_ColumnPropNameInTable="state_nameColumn" msprop:Generator_UserColumnName="state_name" type="xs:string" minOccurs="0" />
+              <xs:element name="plant_name" msprop:Generator_ColumnVarNameInTable="columnplant_name" msprop:Generator_ColumnPropNameInRow="plant_name" msprop:Generator_ColumnPropNameInTable="plant_nameColumn" msprop:Generator_UserColumnName="plant_name" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="InterPlantTransferDetail" msprop:Generator_TableClassName="InterPlantTransferDetailDataTable" msprop:Generator_TableVarName="tableInterPlantTransferDetail" msprop:Generator_TablePropName="InterPlantTransferDetail" msprop:Generator_RowDeletingName="InterPlantTransferDetailRowDeleting" msprop:Generator_RowChangingName="InterPlantTransferDetailRowChanging" msprop:Generator_RowEvHandlerName="InterPlantTransferDetailRowChangeEventHandler" msprop:Generator_RowDeletedName="InterPlantTransferDetailRowDeleted" msprop:Generator_UserTableName="InterPlantTransferDetail" msprop:Generator_RowChangedName="InterPlantTransferDetailRowChanged" msprop:Generator_RowEvArgName="InterPlantTransferDetailRowChangeEvent" msprop:Generator_RowClassName="InterPlantTransferDetailRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="pla_transfer_id" msprop:Generator_ColumnVarNameInTable="columnpla_transfer_id" msprop:Generator_ColumnPropNameInRow="pla_transfer_id" msprop:Generator_ColumnPropNameInTable="pla_transfer_idColumn" msprop:Generator_UserColumnName="pla_transfer_id" type="xs:string" minOccurs="0" />
+              <xs:element name="ITEM_NAME" msprop:Generator_ColumnVarNameInTable="columnITEM_NAME" msprop:Generator_ColumnPropNameInRow="ITEM_NAME" msprop:Generator_ColumnPropNameInTable="ITEM_NAMEColumn" msprop:Generator_UserColumnName="ITEM_NAME" type="xs:string" minOccurs="0" />
+              <xs:element name="plant_qty" msprop:Generator_ColumnVarNameInTable="columnplant_qty" msprop:Generator_ColumnPropNameInRow="plant_qty" msprop:Generator_ColumnPropNameInTable="plant_qtyColumn" msprop:Generator_UserColumnName="plant_qty" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:annotation>
+    <xs:appinfo>
+      <msdata:Relationship name="InterPlantTransferDetail_InterPlantTransfer" msdata:parent="InterPlantTransferDetail" msdata:child="InterPlantTransfer" msdata:parentkey="pla_transfer_id" msdata:childkey="pla_transfer_id" msprop:Generator_UserChildTable="InterPlantTransfer" msprop:Generator_ChildPropName="GetInterPlantTransferRows" msprop:Generator_UserRelationName="InterPlantTransferDetail_InterPlantTransfer" msprop:Generator_RelationVarName="relationInterPlantTransferDetail_InterPlantTransfer" msprop:Generator_UserParentTable="InterPlantTransferDetail" msprop:Generator_ParentPropName="InterPlantTransferDetailRow" />
+    </xs:appinfo>
+  </xs:annotation>
+</xs:schema>

@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="JobWork_Rejection_Chalan" targetNamespace="http://tempuri.org/JobWork_Rejection_Chalan.xsd" xmlns:mstns="http://tempuri.org/JobWork_Rejection_Chalan.xsd" xmlns="http://tempuri.org/JobWork_Rejection_Chalan.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="JobWork_Rejection_Chalan" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="JobWork_Rejection_Chalan" msprop:Generator_UserDSName="JobWork_Rejection_Chalan">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="JWR" msprop:Generator_TableClassName="JWRDataTable" msprop:Generator_TableVarName="tableJWR" msprop:Generator_RowChangedName="JWRRowChanged" msprop:Generator_TablePropName="JWR" msprop:Generator_RowDeletingName="JWRRowDeleting" msprop:Generator_RowChangingName="JWRRowChanging" msprop:Generator_RowEvHandlerName="JWRRowChangeEventHandler" msprop:Generator_RowDeletedName="JWRRowDeleted" msprop:Generator_RowClassName="JWRRow" msprop:Generator_UserTableName="JWR" msprop:Generator_RowEvArgName="JWRRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="bill_to_party_name" msprop:Generator_ColumnVarNameInTable="columnbill_to_party_name" msprop:Generator_ColumnPropNameInRow="bill_to_party_name" msprop:Generator_ColumnPropNameInTable="bill_to_party_nameColumn" msprop:Generator_UserColumnName="bill_to_party_name" type="xs:string" minOccurs="0" />
+              <xs:element name="billing_address" msprop:Generator_ColumnVarNameInTable="columnbilling_address" msprop:Generator_ColumnPropNameInRow="billing_address" msprop:Generator_ColumnPropNameInTable="billing_addressColumn" msprop:Generator_UserColumnName="billing_address" type="xs:string" minOccurs="0" />
+              <xs:element name="gst_number" msprop:Generator_ColumnVarNameInTable="columngst_number" msprop:Generator_ColumnPropNameInRow="gst_number" msprop:Generator_ColumnPropNameInTable="gst_numberColumn" msprop:Generator_UserColumnName="gst_number" type="xs:string" minOccurs="0" />
+              <xs:element name="customer_chalan_no" msprop:Generator_ColumnVarNameInTable="columncustomer_chalan_no" msprop:Generator_ColumnPropNameInRow="customer_chalan_no" msprop:Generator_ColumnPropNameInTable="customer_chalan_noColumn" msprop:Generator_UserColumnName="customer_chalan_no" type="xs:string" minOccurs="0" />
+              <xs:element name="quantity" msprop:Generator_ColumnVarNameInTable="columnquantity" msprop:Generator_ColumnPropNameInRow="quantity" msprop:Generator_ColumnPropNameInTable="quantityColumn" msprop:Generator_UserColumnName="quantity" type="xs:string" minOccurs="0" />
+              <xs:element name="uom_name" msprop:Generator_ColumnVarNameInTable="columnuom_name" msprop:Generator_ColumnPropNameInRow="uom_name" msprop:Generator_ColumnPropNameInTable="uom_nameColumn" msprop:Generator_UserColumnName="uom_name" type="xs:string" minOccurs="0" />
+              <xs:element name="sr_no" msprop:Generator_ColumnVarNameInTable="columnsr_no" msprop:Generator_ColumnPropNameInRow="sr_no" msprop:Generator_ColumnPropNameInTable="sr_noColumn" msprop:Generator_UserColumnName="sr_no" type="xs:string" minOccurs="0" />
+              <xs:element name="doc_number" msprop:Generator_ColumnVarNameInTable="columndoc_number" msprop:Generator_ColumnPropNameInRow="doc_number" msprop:Generator_ColumnPropNameInTable="doc_numberColumn" msprop:Generator_UserColumnName="doc_number" type="xs:string" minOccurs="0" />
+              <xs:element name="dispatch_qty" msprop:Generator_ColumnVarNameInTable="columndispatch_qty" msprop:Generator_ColumnPropNameInRow="dispatch_qty" msprop:Generator_ColumnPropNameInTable="dispatch_qtyColumn" msprop:Generator_UserColumnName="dispatch_qty" type="xs:string" minOccurs="0" />
+              <xs:element name="item_name" msprop:Generator_ColumnVarNameInTable="columnitem_name" msprop:Generator_ColumnPropNameInRow="item_name" msprop:Generator_ColumnPropNameInTable="item_nameColumn" msprop:Generator_UserColumnName="item_name" type="xs:string" minOccurs="0" />
+              <xs:element name="balanace_qty" msprop:Generator_ColumnVarNameInTable="columnbalanace_qty" msprop:Generator_ColumnPropNameInRow="balanace_qty" msprop:Generator_ColumnPropNameInTable="balanace_qtyColumn" msprop:Generator_UserColumnName="balanace_qty" type="xs:string" minOccurs="0" />
+              <xs:element name="plant_name" msprop:Generator_ColumnVarNameInTable="columnplant_name" msprop:Generator_ColumnPropNameInRow="plant_name" msprop:Generator_ColumnPropNameInTable="plant_nameColumn" msprop:Generator_UserColumnName="plant_name" type="xs:string" minOccurs="0" />
+              <xs:element name="registered_city" msprop:Generator_ColumnVarNameInTable="columnregistered_city" msprop:Generator_ColumnPropNameInRow="registered_city" msprop:Generator_ColumnPropNameInTable="registered_cityColumn" msprop:Generator_UserColumnName="registered_city" type="xs:string" minOccurs="0" />
+              <xs:element name="company_name" msprop:Generator_ColumnVarNameInTable="columncompany_name" msprop:Generator_ColumnPropNameInRow="company_name" msprop:Generator_ColumnPropNameInTable="company_nameColumn" msprop:Generator_UserColumnName="company_name" type="xs:string" minOccurs="0" />
+              <xs:element name="plant_address" msprop:Generator_ColumnVarNameInTable="columnplant_address" msprop:Generator_ColumnPropNameInRow="plant_address" msprop:Generator_ColumnPropNameInTable="plant_addressColumn" msprop:Generator_UserColumnName="plant_address" type="xs:string" minOccurs="0" />
+              <xs:element name="plant_gst" msprop:Generator_ColumnVarNameInTable="columnplant_gst" msprop:Generator_ColumnPropNameInRow="plant_gst" msprop:Generator_ColumnPropNameInTable="plant_gstColumn" msprop:Generator_UserColumnName="plant_gst" type="xs:string" minOccurs="0" />
+              <xs:element name="batch_date" msprop:Generator_ColumnVarNameInTable="columnbatch_date" msprop:Generator_ColumnPropNameInRow="batch_date" msprop:Generator_ColumnPropNameInTable="batch_dateColumn" msprop:Generator_UserColumnName="batch_date" type="xs:string" minOccurs="0" />
+              <xs:element name="reason" msprop:Generator_ColumnVarNameInTable="columnreason" msprop:Generator_ColumnPropNameInRow="reason" msprop:Generator_ColumnPropNameInTable="reasonColumn" msprop:Generator_UserColumnName="reason" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,590 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.fin_ledgerVM
+
+@{
+    ViewBag.Title = "Create";
+}
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div id="fin_ledger_detail" hidden></div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.categorylist, new { @class = "form-control category validinput",  @onchange = "GetDocumentNumber(this.value);" })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12" hidden>
+                            @Html.EditorFor(model => model.document_no, new { htmlAttributes = new { @class = "form-control removedisabled",@disabled="dasibled" } })
+                            @Html.ValidationMessageFor(model => model.document_no, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ledger_date, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.ledger_date, new { htmlAttributes = new { @class = "form-control validinput postingdate postingdocumentdate" } })
+                            @Html.ValidationMessageFor(model => model.ledger_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ref1, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.ref1, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ref1, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.document_date, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.document_date, new { htmlAttributes = new { @class = "form-control validinput" } })
+                            @Html.ValidationMessageFor(model => model.document_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ref2, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.ref2, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ref2, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.due_date, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.due_date, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.due_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="productdetail" name="productdetail" />
+                <input type="hidden" id="deleteids" name="deleteids" />
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ref3, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.ref3, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ref3, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.currency_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                           @Html.DropDownList("currency_id", (System.Web.Mvc.SelectList)ViewBag.currency_list, new { @class = "form-control",})
+                            @Html.ValidationMessageFor(model => model.currency_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.narration, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.narration, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.narration, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active">
+                    <a data-toggle="tab" href="#sectionA">Item Details</a>
+                </li>
+
+
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade  in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <button type="button" class="btn btn-primary" id="open_modal" style="float:right" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span>Add Item</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                                <thead>
+                                    <tr>
+                                        <th hidden> <label>ID</label></th>
+                                        <th><label>Sr No.</label></th>
+                                        <th><label>Party</label></th> 
+                                        <th hidden><label>Party ID</label></th>
+                                        <th><label>Description</label></th>
+                                        <th hidden><label>Description ID</label></th>
+                                        <th><label>Dr Amount(INR)</label></th>
+                                        <th><label>Cr Amount(INR)</label></th>
+                                        <th hidden><label>Dr_Cr ID</label></th>
+                                        <th><label>Cost Center</label></th>
+                                        <th hidden><label>Cost Center ID</label></th>
+                                        <th><label>Line Remarks</label></th>
+                                        <th><label>Action</label></th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th hidden></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th hidden></th>
+
+                                        <th>
+                                            <label>Total</label>
+                                        </th>
+                                        <th hidden></th>
+                                        <th>
+                                           
+                                            <label class="lbl_dr"></label>
+                                        </th>
+                                        <th>
+                                            
+                                            <label class="lbl_cr"></label>
+                                        </th>
+                                        <th ></th>
+                                        <th></th>
+                                        <th hidden></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <input type="submit" value="Create" id="create" data-controller="JournalEntry" class="btn btn-success" onclick="TabletoJeson();" style="float:right" />
+            </div>
+        </div>
+
+    </div>
+
+
+}
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Items Detail</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Party Type <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                           @Html.DropDownList("entity_type_id",(SelectList)ViewBag._entityTypeService,"--Select--",new {@class="form-control"})
+                        </div>
+                    </div>
+                </div>
+                <br />
+
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Description <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                           @Html.DropDownList("txtDescription", Enumerable.Empty<SelectListItem>(),new { @class="form-control"})
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="first-name">
+                            Amount  <span class="required">*</span>
+                        </label>
+                        <div class="col-md-4">
+                            <input type="number" name="amount" class="form-control col-md-7 col-xs-12" id="amount">
+                        </div>
+                        <div class="col-md-3">
+                            @Html.DropDownList("dr_cr",new List<SelectListItem> { new SelectListItem {Text="DR.",Value="1"}, new SelectListItem { Text = "CR.", Value = "2" } }, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="first-name">
+                            Cost Center
+                        </label>
+                        <div class="col-md-7">
+                            @Html.DropDownList("cost_center_id", (System.Web.Mvc.SelectList)ViewBag.cost_list,"---Select---", new { @class = "form-control", })
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="first-name">
+                            Line Remarks  <span class="required"></span>
+                        </label>
+                        <div class="col-md-7">
+                            <textarea name="line_remarks" class="form-control col-md-7 col-xs-12" id="line_remarks"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <input type="hidden" id="srno" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                    <button type="button" class="add btn btn-primary">Add Item</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+<script src="~/Scripts/requirevalidation.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var error=@Html.Raw(Json.Encode(ViewBag.error));
+            if(error !="")
+            {
+                sweetAlert("",error,"error");
+            }
+            $("#txtDescription").select2({
+                placeholder: "Select Description",
+                allowClear: true
+            });
+        });
+        document.getElementById('ledger_date').valueAsDate = new Date();
+        document.getElementById('document_date').valueAsDate = new Date();
+        document.getElementById('due_date').valueAsDate = new Date();
+        $('#open_modal').click(function () {
+            clearmodel();
+        });
+        GetDocumentNumber($('#category_id').val());
+        function GetDocumentNumber(id) {
+            if (id != '') {
+                $.ajax({
+                    type: 'GET',
+                    url: "@Url.Action("GetDocumentNumbering", "Generic")",
+                    data: { id: id },
+                    success: function (ITEM) {
+                        $('#document_no').val(ITEM);
+                    },
+                    error: function (emp) {
+                        $('#document_no').val('');
+                    }
+                });
+            }
+            else {
+                $('#document_no').val('');
+            }
+        }
+        //calculate dr cr and total
+        function calculate() {
+            var t = $('#ContactGrid').DataTable();
+            var len = t.fnGetData().length;
+            var dr = 0;
+            var cr = 0;
+            var dr_total = 0;
+            var cr_total = 0;
+            for (var a = 0; a <= len - 1 ; a++)
+            {
+                    if (t.fnGetData(a)[8] == 1)
+                    {
+                        dr = dr + parseFloat(t.fnGetData(a)[6]);
+                    }
+                    else
+                    {
+                        cr = cr + parseFloat(t.fnGetData(a)[7]);
+                    }
+                }
+
+            $('.lbl_dr').text(parseFloat(dr).toFixed(2));
+            $('.lbl_cr').text(parseFloat(cr).toFixed(2));
+            $('#ledger_amount').val(parseFloat(dr).toFixed(2));
+        }
+
+        $(".add").on("click", function (event) {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length - 1;
+            var sr_no = t.fnGetData().length + 1;
+            var cc = parseInt(arguments[0]) - 1;
+            var party_id = $("#entity_type_id").val();
+            var party_name = $("#entity_type_id option:selected").text();
+            var item_description_id = $("#txtDescription").val();
+            var item_description_name = $("#txtDescription option:selected").text();
+            var amount = $('#amount').val();
+            var cost_center = $('#cost_center_id option:selected').text();
+            var cost_center_id = $('#cost_center_id').val();
+            var line_remarks = $('#line_remarks').val();
+            var dr_cr_id = $("#dr_cr").val();
+            var dr_amount = 0;
+            var cr_amount = 0;
+            if (dr_cr_id == 1) {
+                dr_amount = amount;
+            }
+            else {
+                cr_amount = amount;
+            }
+            if (party_id == '') {
+                swal("", "Please Select Party Type.", "error");
+                return false;
+            }
+            if (item_description_id == '') {
+                swal("", "Please Select Description.", "error");
+                return false;
+            }
+            if (amount == '') {
+                swal("", "Please Select Amount.", "error");
+                return false;
+            }
+            if (dr_cr_id == '') {
+                swal("", "Please Select DR./CR.", "error");
+                return false;
+            }
+            if (cost_center_id == '') {
+                cost_center_id = 0;
+            }
+
+
+            if ($("#srno").val() == "")
+            {
+                t.fnAddData(['', sr_no, party_name, party_id, item_description_name, item_description_id, parseFloat(dr_amount).toFixed(2), parseFloat(cr_amount).toFixed(2),dr_cr_id,cost_center,cost_center_id,line_remarks,''
+                ]);
+                rowCount + 1;
+                sr_no + 1;
+            }
+            else
+            {
+                var cc = $("#srno").val();
+                cc = parseInt(cc) - 1;
+                t.fnUpdate(['', cc + 1, party_name, party_id, item_description_name, item_description_id, parseFloat(dr_amount).toFixed(2), parseFloat(cr_amount).toFixed(2), dr_cr_id, cost_center, cost_center_id, line_remarks, ''], cc)
+            }
+            clearmodel();
+            calculate();
+            return true;
+        });
+        function clearmodel() {
+            $("#entity_type_id").val('');
+            $("#srno").val('')
+            $("#txtDescription").val("").trigger("change");
+            $("#amount").val('');
+            $("#dr_cr").val('1');
+            $("#cost_center_id").val('');
+            $("#line_remarks").val('');
+        }
+
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: false },
+                     { sname: "b", },
+                     { sname: "c", },
+                     { sname: "d", bVisible: false },
+                     { sname: "e", sWidth: "20%", },
+                     { sname: "f", bVisible: false },
+                     { sname: "g",sClass:'right' },
+                     { sname: "h",sClass:'right' },
+                     { sname: "i", bVisible: false },
+                     { sname: "j"},
+                     { sname: "k", bVisible: false },
+                     { sname: "l", },
+                     {
+                         sname: "m", sWidth: "8%",
+                         bSortable: false,
+                         mRender: function (data, type, full) {
+                             return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" /><img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete"  />';
+                         }
+                     }]
+
+        });
+
+
+        $('#ContactGrid').on('click', '.edit', function () {
+            var t = $('#ContactGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            $('#myModal').modal('show');
+            $("#srno").val(t.fnGetData(id)[1]);
+            $("#entity_type_id").val(t.fnGetData(id)[3]);
+            FillDescription(t.fnGetData(id)[2]);
+            if (t.fnGetData(id)[8] == 1)
+            {
+                $("#dr_cr").val('1');
+                $('#amount').val($('.lbl_dr').text());
+            }
+            else
+            {
+                $("#dr_cr").val('2');
+                $('#amount').val($('.lbl_cr').text());
+            }
+            $('#cost_center_id').val(t.fnGetData(id)[10]);
+            $('#line_remarks').val(t.fnGetData(id)[11]);
+            var des = t.fnGetData(id)[5];
+            $('#txtDescription').val(des).trigger("change");
+        });
+
+        $('#ContactGrid').on('click', '.delete', function () {
+
+            var t = $('#ContactGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+
+
+            var deleteids = t.fnGetData(id)[1];
+            swal({
+                title: "Are you sure?",
+
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            },
+     function (isConfirm) {
+         if (isConfirm) {
+
+             $("#deleteids").val(deleteids + "~");
+             t.fnDeleteRow(id);
+             var len = t.fnGetData().length;
+             var i = 1;
+             var row = 0;
+             if (len > 0) {
+                 $('#ContactGrid tbody tr').each(function () {
+                     t.fnUpdate(i, row, 1);
+                     i++;
+                     row++;
+                 });
+             }
+             calculate();
+         }
+     });
+
+        });
+
+        function TabletoJeson() {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var str;
+            var str1;
+            $("#fin_ledger_detail").empty();
+            for (i = 0; i < rowCount; i++) {
+                $("#fin_ledger_detail").append('<input type="hidden" id="fin_ledger_detail_id' + i + '" name="fin_ledger_detail_id" value=' + t.fnGetData(i)[0] + ' >');
+                $("#fin_ledger_detail").append('<input type="hidden" id="entity_type_id' + i + '" name="entity_type_id" value=' + t.fnGetData(i)[3] + ' >');
+                $("#fin_ledger_detail").append('<input type="hidden" id="gl_ledger_id' + i + '" name="gl_ledger_id" value=' + t.fnGetData(i)[5] + ' >');
+                $("#fin_ledger_detail").append('<input type="hidden" id="dr_amount' + i + '" name="dr_amount" value=' + t.fnGetData(i)[6] + ' >');
+                $("#fin_ledger_detail").append('<input type="hidden" id="cr_amount' + i + '" name="cr_amount" value=' + t.fnGetData(i)[7] + ' >');
+                $("#fin_ledger_detail").append('<input type="hidden" id="cost_center_id' + i + '" name="cost_center_id" value=' + t.fnGetData(i)[10] + ' >');
+                $("#fin_ledger_detail").append('<input type="hidden" id="line_remarks' + i + '" name="line_remarks" value=' + t.fnGetData(i)[11] + ' >');
+               }
+
+        }
+
+
+        $('#txt_dr').keyup(function () {
+            var dr = $(this).val();
+            $('#txt_cr').val(dr);
+        });
+        $('#txt_cr').keyup(function () {
+            var cr = $(this).val();
+            $('#txt_dr').val(cr);
+        });
+
+        $('#txt_dr').focusin(function () {
+            $('#txt_cr').val('');
+            $(this).attr('readonly', false);
+            $('#txt_cr').attr('readonly', true);
+        });
+        $('#txt_cr').focusin(function () {
+            $('#txt_dr').val('');
+            $(this).attr('readonly', false);
+            $('#txt_dr').attr('readonly', true);
+        });
+
+
+        function FillDescription(txt) {
+            if (txt != '') {
+                $.ajax({
+                    url: "@Url.Action("GetEntityType", "Generic")?name="+ txt,
+                    method: 'get',
+                    async: false,
+                    success: function (data) {
+                        $('#txtDescription').empty();
+                        $.each(data, function (index, dt) {
+                            $('#txtDescription').append('<option value=' + dt.id + '>' + dt.code + ' - ' + dt.name + '</option>');
+                        });
+                    }
+                });
+            }
+            else {
+                $('#txtDescription').empty();
+            }
+        }
+        $('#entity_type_id').change(function () {
+            var txt = $('#entity_type_id option:selected').text();
+            FillDescription(txt);
+        });
+
+        $('#ledger_amount').attr('disabled', true);
+
+    </script>
+}
+
+
+

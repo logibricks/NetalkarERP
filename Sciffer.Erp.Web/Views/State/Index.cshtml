@@ -1,0 +1,151 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.Model.REF_STATE>
+@using Sciffer.Erp.Domain.Model
+@{
+    ViewBag.Title = "Index";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<br /><br /><br />
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<state_vm>("Grid")
+        .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.Datasource).RemoveURL(Url.Action("InlineDelete", "State")).InsertURL(Url.Action("InlineInsert", "State")).UpdateURL(Url.Action("InlineInsert", "State"))
+                       .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(10); })
+        .EnableAltRow()
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Add);
+                items.AddTool(ToolBarItems.Edit);
+                // items.AddTool(ToolBarItems.Delete);
+                items.AddTool(ToolBarItems.Update);
+                items.AddTool(ToolBarItems.Cancel);
+                items.AddTool(ToolBarItems.ExcelExport);
+                items.AddTool(ToolBarItems.PrintGrid);
+            });
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "State" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "State" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "State" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+         .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("state_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("state_name").Width("15%").HeaderText("State Name").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("country_name").Width("15%").HeaderText("Country Name").Add();
+            col.Field("state_ut_code").Width("15%").HeaderText("State / UT Code").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("Country_id").Width("15%").HeaderText("Country").Visible(false).ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("is_blocked").Width("15%").HeaderText("Blocked").Visible(false).Add();
+        })
+        .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+</div>
+<script id="template" type="text/template">
+
+    <div>
+        <div class="row">
+
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="hidden" id="state_id" name="state_id" value="{{: state_id}}" class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                State<span >*</span> 
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="text" id="state_name" name="state_name" value="{{: state_name}}" class="form-control" />
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Country<span>*</span>
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                @Html.DropDownList("Country_id", (new System.Web.Mvc.SelectList(ViewBag.Countries, "COUNTRY_ID", "COUNTRY_NAME")), "--select--", htmlAttributes: new { @class = "form-control" })
+
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                State / UT Code<span>*</span>
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="text" id="state_ut_code" name="state_ut_code" value="{{: state_ut_code}}" class="form-control" />
+
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Blocked
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                <input type="checkbox" name="is_blocked" value="{{:is_blocked}}" class="form-control" id="is_blocked">
+            </div>           
+        </div>
+
+
+
+    </div>
+</script>
+
+
+<script type="text/javascript">
+    var flag = true;
+    function complete(args) {
+       
+        if (args.requestType == "beginedit") {
+            document.getElementById('state_name').setAttribute('disabled', 'disabled');
+
+            if (args.rowData.is_blocked == true) {
+                document.getElementById("is_blocked").setAttribute('checked', 'checked');
+            }
+
+            else {
+                document.getElementById("is_blocked").removeAttribute('checked');
+            }
+            $("#is_blocked").checkboxpicker();
+            $("#Country_id").val(args.rowData.Country_id).setAttribute('disabled', 'disabled');
+           
+        }
+        if (args.requestType == "add") {
+            $("#is_blocked").checkboxpicker();
+        }
+        if (args.requestType == "save") {
+            $("#is_blocked").checkboxpicker();
+            if (args.data.text == 'duplicate') {
+                sweetAlert("", "State name already exists!", "error");
+                if (args.model.dataSource.dataSource.json[0].state_id == null) {
+                    args.model.dataSource.dataSource.json = args.model.dataSource.dataSource.json.splice(1, args.model.dataSource.dataSource.json.length);
+                }
+            }
+            var gridObj = $("#Grid").ejGrid("instance");
+            gridObj.refreshContent();
+        }
+    }
+
+    function EndProcess() {
+        var gridObj = $("#Grid").ejGrid("instance");
+        //console.log(gridObj);
+        gridObj.refreshContent();
+    }
+</script>
+
+
+
+
+

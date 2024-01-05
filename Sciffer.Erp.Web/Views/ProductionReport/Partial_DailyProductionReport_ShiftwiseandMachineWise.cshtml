@@ -1,0 +1,78 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<report_production_vm>("Editing")
+                                                                    .Datasource(ds => ds.URL(Url.Action("Get_report_production", "ProductionReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + " &to_date=" + ViewBag.to_date + " &machine_id=" + ViewBag.machine_id + " &item_id=" + ViewBag.item_id + "&is_qc_remark=" + ViewBag.is_qc_remark).Adaptor(AdaptorType.UrlAdaptor))
+                                                   .AllowPaging().PageSettings(a => a.PageSize(20))
+                                                                        .AllowFiltering()
+                                                                            .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                                        .ShowColumnChooser()
+                                                                        .AllowSorting()
+                                                                        .AllowScrolling()
+                                                                        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "ProductionReport", new { ctrlname = "DailyProductionReport_ShiftwiseandMachineWise" })))
+                                                                        .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                                                    .ToolbarSettings(toolbar =>
+                                                                    {
+                                                                        toolbar.ShowToolbar().ToolbarItems(items =>
+                                                                        {
+                                                                            items.AddTool(ToolBarItems.Search);
+                                                                            items.AddTool(ToolBarItems.ExcelExport);
+                                                                            items.AddTool(ToolBarItems.PrintGrid);
+                                                                        });
+                                                                    })
+                                                            .Columns(col =>
+                                                            {
+                                                              // col.Field("machine_id").Width("15%").HeaderText("Machine Id").Add();
+                                                              //col.Field("Operation").Width("15%").Visible(false).HeaderText("Operation").Add();
+                                                              col.Field("machine_code").Width("15%").HeaderText("Machine Code").Add();
+                                                                col.Field("machine_name").Width("15%").HeaderText("Machine Description").Add();
+                                                              //col.Field("item_code").Width("15%").HeaderText("Item Code").Add();
+                                                              col.Field("item_name").Width("15%").HeaderText("Item Description").Add();
+                                                                col.Field("task_time").Width("15%").HeaderText("Date").Format("{0:dd/MM/yyyy}").Add();
+                                                                col.Field("shift_a_ok_qty").Width("15%").HeaderText("Shift A OK Qty").Add();
+                                                                col.Field("shift_a_reject_qty").Width("15%").HeaderText("Rejected Qty").Add();
+                                                                col.Field("shift_a_total").Width("15%").HeaderText("Total").Add();
+                                                                col.Field("shift_b_ok_qty").Width("15%").HeaderText("Shift B OK Qty").Add();
+                                                                col.Field("shift_b_reject_qty").Width("15%").HeaderText("Rejected Qty").Add();
+                                                                col.Field("shift_b_total").Width("15%").HeaderText("Total").Add();
+                                                                col.Field("shift_c_ok_qty").Width("15%").HeaderText("Shift C OK Qty").Add();
+                                                                col.Field("shift_c_reject_qty").Width("15%").HeaderText("Rejected Qty").Add();
+                                                                col.Field("shift_c_total").Width("15%").HeaderText("Total").Add();
+                                                                col.Field("OK_Qty").Width("15%").HeaderText("Total OK Qty").Template("{{:shift_a_ok_qty+shift_b_ok_qty+shift_c_ok_qty}}").Add();
+                                                                col.Field("Rejected_Qty").Width("15%").HeaderText("Rejected Qty").Template("{{:shift_a_reject_qty+shift_b_reject_qty+shift_c_reject_qty}}").Add();
+                                                              //col.Field("Total_Qty").Width("15%").HeaderText("Total").Template("{{:shift_a_ok_qty+shift_b_ok_qty+shift_c_ok_qty-shift_a_reject_qty+shift_b_reject_qty+shift_c_reject_qty}}").Add();
+
+
+                                                          })
+                                                            .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick"); })
+                                ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+    function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1) {
+            if ($('#machine_id :selected').length > 0) {
+                var selectedmachineid = [];
+                $('#machine_id :selected').each(function (i, selected) {
+                    selectedmachineid[i] = $(selected).val();
+                });
+                var machineid = selectedmachineid + "";
+            }
+            if ($('#item_id :selected').length > 0) {
+                var selecteditemid = [];
+                $('#item_id :selected').each(function (i, selected) {
+                    selecteditemid[i] = $(selected).val();
+                });
+                var item = selecteditemid + "";
+            }
+            this.model["machine_id"] = machineid;
+            this.model["item_id"] = item;
+            this.model["from_date"] = $("#fromDate").val();
+            this.model["to_date"] = $("#toDate").val();
+
+        }
+
+    }
+</script>
+
+

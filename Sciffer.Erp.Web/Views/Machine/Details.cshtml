@@ -1,0 +1,346 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_machine
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ref_machine</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_BUSINESS_UNIT.BUSINESS_UNIT_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_BUSINESS_UNIT.BUSINESS_UNIT_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ref_cost_center.cost_center_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ref_cost_center.cost_center_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_COUNTRY.COUNTRY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_COUNTRY.COUNTRY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_PLANT.PLANT_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_PLANT.PLANT_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_PRIORITY.PRIORITY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_PRIORITY.PRIORITY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ref_status.status_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ref_status.status_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_UOM.UOM_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_UOM.UOM_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_UOM1.UOM_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_UOM1.UOM_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_UOM2.UOM_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_UOM2.UOM_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_UOM3.UOM_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_UOM3.UOM_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_VENDOR.VENDOR_CODE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_VENDOR.VENDOR_CODE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_VENDOR1.VENDOR_CODE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_VENDOR1.VENDOR_CODE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_VENDOR2.VENDOR_CODE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_VENDOR2.VENDOR_CODE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.machine_category_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.machine_category_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.machine_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.machine_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.machine_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.machine_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.machine_parent_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.machine_parent_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.acquisition_value)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.acquisition_value)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.purchase_order_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.purchase_order_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.manufacturer)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.manufacturer)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.manufacturer_part_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.manufacturer_part_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.acquisition_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.acquisition_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.model_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.model_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.manufacturing_serial_number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.manufacturing_serial_number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.manufacturing_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.manufacturing_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_blocked)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_blocked)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.asset_code_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.asset_code_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.asset_tag_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.asset_tag_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.warranty_applicable)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.warranty_applicable)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.warranty_start_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.warranty_start_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.warranty_end_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.warranty_end_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.guarantee_applicable)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.guarantee_applicable)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.guarantee_start_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.guarantee_start_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.guarantee_end_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.guarantee_end_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.remarks)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.remarks)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.attachement)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.attachement)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_active)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.length)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.length)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.breadth)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.breadth)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.height)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.height)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.weight)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.weight)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.machine_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

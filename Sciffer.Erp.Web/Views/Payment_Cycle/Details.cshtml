@@ -1,0 +1,33 @@
+﻿@model Sciffer.Erp.Domain.Model.REF_PAYMENT_CYCLE
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_PAYMENT_CYCLE_TYPE.PAYMENT_CYCLE_TYPE_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_PAYMENT_CYCLE_TYPE.PAYMENT_CYCLE_TYPE_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PAYMENT_CYCLE_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PAYMENT_CYCLE_NAME)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.PAYMENT_CYCLE_ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,915 @@
+﻿
+@model IEnumerable<Sciffer.Erp.Domain.ViewModel.ref_skill_matrix_vm>
+@using Sciffer.Erp.Domain.ViewModel
+<br />
+<br />
+<br />
+<br />
+<div class="col-md-12">
+    @*<ul class="nav nav-pills navtab-bg nav-justified" id="tabs">
+            <li class="nav-item">
+                <a href="#sectionA" data-toggle="tab" aria-expanded="false" class="nav-link active">
+                    Level Master
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#sectionB" data-toggle="tab" aria-expanded="true" class="nav-link ">
+                    Operator Level Mapping
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#sectionC" data-toggle="tab" aria-expanded="true" class="nav-link ">
+                    Machine Level Mapping
+                </a>
+            </li>
+
+        </ul>*@
+    <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+        <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+            <li class="active"><a data-toggle="tab" href="#sectionA">Level Master</a></li>
+            <li><a data-toggle="tab" href="#sectionB">Operator Level Mapping</a></li>
+            <li><a data-toggle="tab" href="#sectionC">Machine Level Mapping</a></li>
+
+        </ul>
+    </div>
+    <br />
+    <div class="tab-content">
+        <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+            <div>
+                @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+                @(Html.EJ().Grid<ref_skill_matrix_vm>("Grid")
+        //.Datasource(ds => ds.URL(Url.Action("GetData", "SkillMatrix") + "?entity=level_index"  + "&id=0").RemoveURL(Url.Action("InlineDelete", "SalesRM")).Adaptor(AdaptorType.UrlAdaptor))
+        .Datasource(ds => { ds.Json((IEnumerable<object>)ViewBag.level_index).RemoveURL(Url.Action("Delete", "ProcessMaster")).Adaptor(AdaptorType.RemoteSaveAdaptor); })
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(12); })
+        .EnableAltRow()
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Add);
+                items.AddTool(ToolBarItems.Edit);
+                items.AddTool(ToolBarItems.Update);
+                items.AddTool(ToolBarItems.Cancel);
+                items.AddTool(ToolBarItems.ExcelExport);
+                items.AddTool(ToolBarItems.PrintGrid);
+            });
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "SalesRM" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("level_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("level_code").Width("15%").HeaderText("Level Code").Add();
+            col.Field("level_desc").Width("15%").HeaderText("Level Description").Add();
+            col.Field("color_code").Width("15%").HeaderText("Color Code").Add();
+            col.Field("percentage").Width("15%").HeaderText("Percentage").Add();
+            col.Field("is_blocked1").Width("15%").HeaderText("Blocked").Visible(true).Add();
+
+        })
+        .ClientSideEvents(eve => {
+            eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess");
+        })
+    )
+            </div>
+            <script id="template" type="text/template">
+                <div>
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-xs-12">
+                            <input type="hidden" id="level_id" name="level_id" value="{{: level_id}}" class="form-control" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em">
+                            Level Code *
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-xs-12">
+                            <input type="text" id="level_code" name="level_code" value="{{: level_code}}" class="form-control" />
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em">
+                            Level Description  *
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-xs-12">
+                            <input type="text" id="level_desc" required name="level_desc" value="{{: level_desc}}" class="form-control" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em">
+                            Color
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-xs-12">
+                            <input type="text" id="color_code" name="color_code" value="{{: color_code}}" class="form-control" />
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em">
+                            Percentage
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-xs-12">
+                            <input type="text" id="percentage" required name="percentage" value="{{: percentage}}" class="form-control" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row" id="Active1">
+                        <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em">
+                            Blocked
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <input type="checkbox" id="is_active1" name="is_active1">
+                        </div>
+                    </div>
+                </div>
+            </script>
+        </div>
+
+        <div id="sectionB" class="tab-pane fade" style="margin-top:10px;">
+            <div>
+                @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+                @(Html.EJ().Grid<ref_skill_matrix_vm>("Grid1")
+          .Datasource(ds => { ds.Json((IEnumerable<object>)ViewBag.DataSource).RemoveURL(Url.Action("Delete", "ProcessMaster")).Adaptor(AdaptorType.RemoteSaveAdaptor); })
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template1").ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(12); })
+        .EnableAltRow()
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Add);
+                items.AddTool(ToolBarItems.Edit);
+                items.AddTool(ToolBarItems.Update);
+                items.AddTool(ToolBarItems.Cancel);
+                items.AddTool(ToolBarItems.ExcelExport);
+                items.AddTool(ToolBarItems.PrintGrid);
+            });
+        })
+        .ContextMenuSettings(contextMenu =>
+        {
+            contextMenu.EnableContextMenu();
+            contextMenu.DisableDefaultItems();
+            contextMenu.CustomContextMenuItems(new List<Syncfusion.JavaScript.Models.CustomContexMenuItems>()
+             {
+                 new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu", Text = "Print Report" },
+                 //new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu1", Text = "Print Subsidiary Report" },
+                 //new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu2", Text = "Print Other Sales Invoice" },
+                 //new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu3", Text = "Print Delivery Challan" }
+             });
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "SalesRM" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("operator_level_mapping_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("level_id").Width("15%").HeaderText("Level id").Visible(false).Add();
+            col.Field("level_code").Width("15%").HeaderText("Level").Add();
+            col.Field("supervisor_id").Width("15%").HeaderText("Operator id").Visible(false).Add();
+            col.Field("supervisor_code").Width("15%").HeaderText("Operator").Add();
+            col.Field("machine_id").Width("15%").HeaderText("Machine id").Visible(false).Add();
+            col.Field("machine_code").Width("15%").HeaderText("Machine").Visible(true).Add();
+            col.Field("is_blocked2").Width("15%").HeaderText("Blocked").Add();
+            col.Field("MappingId").Width("15%").HeaderText("MappingId").Visible(false).Add();
+
+        })
+        .ClientSideEvents(eve => { eve.ActionComplete("complete1").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess");
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+            eve.ContextClick("contextclick");
+        })
+    )
+            </div>
+            <script id="template1" type="text/template1">
+                <div style="width: auto; height: 260px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-xs-12">
+                            <input type="hidden" id="operator_level_mapping_id" name="operator_level_mapping_id" value="{{: operator_level_mapping_id}}" class="form-control" />
+                            <input type="hidden" id="machine_id_list" name="machine_id_list" value="{{: machine_id_list}}" class="form-control" />
+                             <input type="hidden" id="MappingId" name="MappingId" value="{{: MappingId}}" class="form-control" />
+                            @*<input type="hidden" id="requerstType" name="machineid" class="form-control" />*@
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em">
+                            Operator *
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-xs-12" id="supervisor_ids">
+                            @Html.DropDownList("supervisor_id", (System.Web.Mvc.SelectList)ViewBag.operator_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12", @onchange = "GetMachineList(this.value)" })
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12" id="supervisor_names">
+                            <input type="text" id="supervisor_name" name="supervisor_name" value="{{: supervisor_name}}" class="form-control" />
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em">
+                            Level *
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-xs-12" id="level_ids">
+                            @Html.DropDownList("level_id1", (System.Web.Mvc.SelectList)ViewBag.level_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12" })
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12" id="level_names">
+                            <input type="text" id="level_name" name="level_name" value="{{: level_name}}" class="form-control" />
+                        </div>
+
+                        @*<div class="col-lg-2 col-md-2 col-xs-12" id="machine_ids">
+                            @Html.DropDownList("machine_id", Enumerable.Empty<SelectListItem>(), "---Select---", new { @class = "form-control col-md-7 col-xs-12 mickey" ,  multiple = "multiple" })
+                        </div>*@
+
+                        <div class="col-lg-2 col-md-2 col-xs-12" id="machine_names">
+                            <input type="text" id="machine_name" name="machine_name" value="{{: machine_name}}" class="form-control" />
+                        </div>
+
+                    </div>
+                    <br />
+                    <div class="row">
+                    <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em">
+                          Machine *
+                     </div>
+                     <div class="col-lg-4 col-md-4 col-xs-12">
+                                <div class="form-group">
+                                        @Html.DropDownList("machine_id", Enumerable.Empty<SelectListItem>(),  new { @class = "form-control validinput multiselect ", @multiple = "multiple", @required = true , @onchange = "changevalue(this.value)" })
+                                </div>
+                            </div>
+                     <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em">
+                            Effective From *
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-xs-12">
+                            <input type="date" id="fromDate" class="form-control" required="required">
+                        </div>
+                     </div>
+
+                    <br />
+                    <div class="row">
+
+                        @*<div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em" >
+                            Effective To *
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-xs-12">
+                            <input type="date" id="toDate" class="form-control" required="required">
+                        </div>*@
+                    </div>
+                    <br />
+                    <br />
+                    <div class="row" id="Active2">
+                        <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em">
+                            Blocked
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <input type="checkbox" id="is_active2" name="is_active2">
+                        </div>
+                    </div>
+                </div>
+            </script>
+        </div>
+
+        <div id="sectionC" class="tab-pane fade" style="margin-top:10px;">
+            <div>
+                @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+                @(Html.EJ().Grid<ref_skill_matrix_vm>("Grid2")
+        //.Datasource(ds => ds.URL(Url.Action("GetData", "SkillMatrix") + "?entity=machine_level_index" + "&id=0").RemoveURL(Url.Action("InlineDelete", "SalesRM")).Adaptor(AdaptorType.UrlAdaptor))
+        .Datasource(ds => { ds.Json((IEnumerable<object>)ViewBag.machine_level_index).RemoveURL(Url.Action("Delete", "ProcessMaster")).Adaptor(AdaptorType.RemoteSaveAdaptor); })
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template2").ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(12); })
+        .EnableAltRow()
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Add);
+                items.AddTool(ToolBarItems.Edit);
+                items.AddTool(ToolBarItems.Update);
+                items.AddTool(ToolBarItems.Cancel);
+                items.AddTool(ToolBarItems.ExcelExport);
+                items.AddTool(ToolBarItems.PrintGrid);
+            });
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "SalesRM" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("machine_level_mapping_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("level_id2").Width("15%").HeaderText("Level id").Visible(false).Add();
+            col.Field("level_code2").Width("15%").HeaderText("Level").Add();
+            col.Field("machine_id2").Width("15%").HeaderText("Machine id").Visible(false).Add();
+            col.Field("machine_code2").Width("15%").HeaderText("Machine").Add();
+            col.Field("is_blocked3").Width("15%").HeaderText("Blocked").Add();
+
+        })
+        .ClientSideEvents(eve => { eve.ActionComplete("complete2").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+            </div>
+            <script id="template2" type="text/template1">
+                <div>
+                    <div class="row">
+
+                        <div class="col-lg-6 col-md-6 col-xs-12">
+                            <input type="hidden" id="machine_level_mapping_id" name="machine_level_mapping_id" value="{{: machine_level_mapping_id}}" class="form-control" />
+                             @*<input type="hidden" id="machine_id_list" name="machine_id_list" value="{{: machine_id_list}}" class="form-control" />*@
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em">
+                            Machine *
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12"id="machine_ids2">
+                            @Html.DropDownList("machine_id2", (System.Web.Mvc.SelectList)ViewBag.machine_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12" })
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12" id="machine_names2">
+                            <input type="text" id="machine_name2" name="machine_name2" value="{{: machine_name2}}" class="form-control" />
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em">
+                            Level *
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12"id="level_ids2">
+                            @Html.DropDownList("level_id2", (System.Web.Mvc.SelectList)ViewBag.level_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12" })
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12" id="level_names2">
+                            <input type="text" id="level_name2" name="level_name2" value="{{: level_name2}}" class="form-control" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em">
+                            Effective From *
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12">
+                            <input type="date" id="fromDate2" class="form-control" required="required">
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em">
+                            Effective To *
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-xs-12">
+                            <input type="date" id="toDate2" class="form-control" required="required">
+                        </div>
+
+                    </div>
+                    <br />
+                    <div class="row"id="Active3">
+                        <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em">
+                            Blocked
+                        </div>
+                        <div class="col-md-2 col-sm-2 col-xs-12">
+                            <input type="checkbox" id="is_active3" name="is_active3">
+                        </div>
+                    </div>
+                </div>
+            </script>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".multiselect").multiselect({
+                includeSelectAllOption: true,
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: false,
+                numberDisplayed: 1,
+                maxHeight: 300,
+                maxWidth: 200,
+            });
+        })
+
+        // $('#div_slide').hide();
+        $("#machine_id").on('change', function () {
+            alert("test");
+        });
+
+    var flag = true;
+    function complete(args) {
+
+
+        if (args.requestType == "add") {
+            $('#is_active1').checkboxpicker();
+            $('#Active1').hide();
+
+
+        }
+        if (args.requestType == "beginedit") {
+
+            $('#Active1').show();
+            $("#level_code").attr('disabled', true);
+            if (args.rowData.is_active1 == false) {
+                //Check
+                document.getElementById('is_active1').setAttribute('checked', 'checked');
+            }
+            else {
+                //UnCheck
+                document.getElementById('is_active1').removeAttribute('checked');
+            }
+            $('#is_active1').checkboxpicker();
+        }
+
+        //if ($("#fromDate").val() != '' && $("#fromDate").val() != undefined && $("#toDate").val() != undefined && $("#toDate").val() != '') {
+            if (args.requestType == "save" && flag) {
+                flag = true;
+                var record = args.data;
+                args.cancel = true;
+                //send ajax post
+                $.ajax({
+                    url: '@Url.Action("SaveLevel", "SkillMatrix")',
+                    type: "POST",
+                    //dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify({ value: record }),
+                    success: function (data) {
+
+                        if (typeof (data) === "boolean") {
+                            var i;                  //display the message when value has duplicate
+                            if (data == false) {
+                                var str = "";
+                                swal("", "Duplicate Level Code Found!", "error");
+
+
+                                //$('#ErrorList').html("<table>" + str + "</table>");
+                                //$('#ErrorList').ejDialog("open");
+                                flag = true;
+                            }
+                            //save the records if values are not duplicate
+                            else {
+
+                                var gridObj = $("#Grid").ejGrid("instance");
+                                gridObj.refreshContent();   //endEdit method called to save records
+                                flag = false;
+                                swal("", "Saved Sussessfully!!", "success");
+                            }
+
+                        }
+                        else {
+                            swal("", "AuthorizeFailed!! Sorry you are not Authorized to Perform this Action", "warning");
+
+                        }
+
+
+                    },
+                    error: function (e) {
+                        args.cancel = true;
+                    }
+                });
+            }
+
+        //else {
+        //    swal("", "Please enter Effective To Date!!", "error");
+        //}
+
+        if (flag == false)
+            flag = true;
+
+
+        }
+        function changevalue(val) {
+            $("#machine_id_list").val("");
+            $("#machine_id_list").val($("#machine_id").val());
+        };
+        var mac_list = [];
+        function complete1(args) {
+
+            $("#requerstType").val(args.requestType);
+
+            //$("#machine_id").select2({
+            //    placeholder: "Select Machine",
+            //    allowClear: true
+            //});
+
+            $("#supervisor_id").select2({
+                placeholder: "Select Operator",
+                allowClear: true
+            });
+
+
+            $("#level_id1").select2({
+                placeholder: "Select Level",
+                allowClear: true
+            });
+        if (args.requestType == "add") {
+            $('#is_active2').checkboxpicker();
+            $('#Active2').show();
+            $('#level_names').hide();
+            $('#level_ids').show();
+            $('#machine_names').hide();
+            //$('#machine_ids').show();
+            $('#supervisor_names').hide();
+            $('#supervisor_ids').show();
+        }
+        if (args.requestType == "beginedit") {
+            $('#Active2').show();
+            $('#level_names').hide();
+            $('#level_ids').show();
+            $('#machine_names').hide();
+            //$('#machine_ids').hide();
+            $('#supervisor_names').show();
+            $('#supervisor_ids').hide();
+            $("#supervisor_id").attr('disabled', true);
+            //$("#level_id1").attr('disabled', true);
+            $("#machine_id").attr('disabled', true);
+            //$("#fromDate").attr('disabled', true);
+            //$("#toDate").attr('disabled', true);
+            $("#level_name").attr('disabled', true);
+            $("#machine_name").attr('disabled', true);
+            $("#supervisor_name").attr('disabled', true);
+            $("#level_id1").val(args.rowData.level_id).trigger('change');
+            $("#machine_id").val(args.rowData.machine_id).trigger('change');
+            $("#supervisor_id").val(args.rowData.supervisor_id).trigger('change');
+            //$("#fromDate").val(convert(args.rowData.fromDate));
+            if ('1970-01-01' == convert(args.rowData.toDate)) {
+                $("#toDate").val();
+            }
+            else {
+                $("#toDate").val(convert(args.rowData.toDate));
+            }
+            $("#level_name").val(args.rowData.level_code);
+            $("#machine_name").val(args.rowData.machine_code);
+            $("#supervisor_name").val(args.rowData.supervisor_code);
+            $("#machine_id_list").val(args.rowData.machine_id_list);
+            $("#MappingId").val(args.rowData.MappingId);
+            var Id = $("#supervisor_id").val();
+            var primaryId = $("#operator_level_mapping_id").val();
+            var level_id = $("#level_id1").val();
+            if (args.rowData.is_active2 == false) {
+                //Check
+                document.getElementById('is_active2').setAttribute('checked', 'checked');
+            }
+            else {
+                //UnCheck
+                document.getElementById('is_active2').removeAttribute('checked');
+            }
+            $('#is_active2').checkboxpicker();
+
+           $.ajax({
+                url: "@Url.Action("GetMachineListWithOperationAndUser1", "skillmatrix")",
+                type: "GET",
+                dataType: "JSON",
+                data: { id: primaryId},
+                cache:false,
+                success: function (machine_List) {
+                    if (machine_List != null) {
+                        for (i = 0; i < machine_List.length; i++) {
+                            mac_list.length = 0;
+                            mac_list.push({ machine_id: machine_List[i].machine_id, machine_code: machine_List[i].machine_name })
+                        }
+
+                        $.ajax({
+                            url: "@Url.Action("GetMachineListWithOperationAndUser", "Generic")",
+                            type: "GET",
+                            dataType: "JSON",
+                            data: { id: Id },
+                            cache:false,
+                            success: function (machineList) {
+
+                                    $("#machine_id").html(""); // clear before appending new list
+                                    $.each(machineList, function (i, cycle) {
+                                    $("#machine_id").append(
+                                    $('<option></option>').val(cycle.machine_id).html(cycle.machine_name));
+                                    });
+                                    //$("#machine_id").val()D;
+                                    $("#machine_id").append('</select>');
+                                    $("#machine_id").multiselect({
+                                        maxHeight: 200,
+                                        buttonWidth: "300",
+                                        enableFiltering: true,
+                                        enableCaseInsensitiveFiltering: true,
+                                        includeSelectAllOption: true,
+                                    });
+
+
+                                    $("#machine_id").multiselect('rebuild').trigger('change');
+                                    var ids = "";
+                                    for (var i = 0; mac_list.length > i; i++) {
+                                        ids = ids + mac_list[i].machine_id + ",";
+                                    }
+                                    array1 = ids.split(',');
+                                    $("#machine_id").val(array1);
+                                    $("#machine_id").multiselect("refresh");
+                                    $("#machine_id_list").val("");
+                                    $("#machine_id_list").val(ids);
+                                    // $("#machine_id option[value='1']").remove();
+                            }
+                        });
+                    }
+                }
+
+            });
+        }
+
+        if (args.requestType == "save" && flag) {
+            flag = true;
+            var gridData = [];
+            //console.log(itemId);
+            var record = args.data;
+
+            let text = record.machine_id_list.toString();
+            if (text.includes(",")) {
+
+                var machineArray = record.machine_id_list.split(',').length;
+                var machineArray1 = record.machine_id_list.split(',');
+                for (var i = 0; i < machineArray; i++) {
+                    if (machineArray1[i] != "") {
+                        var objid = {};
+                        objid.fromDate = record.fromDate;
+                        objid.is_active2 = record.is_active2;
+                        objid.level_id1 = record.level_id1;
+                        objid.operator = record.operator;
+                        objid.machine_id = machineArray1[i];
+                        objid.operator_level_mapping_id = record.operator_level_mapping_id;
+                        objid.supervisor_id = record.supervisor_id;
+                        objid.toDate = record.toDate;
+                        objid.machine_id_list = record.machine_id_list;
+                        objid.MappingId = record.MappingId;
+
+                        gridData.push(objid);
+                    }
+                }
+            }
+            else {
+                for (var i = 0; i < 1; i++) {
+                    var objid = {};
+                    objid.fromDate = record.fromDate;
+                    objid.is_active2 = record.is_active2;
+                    objid.level_id1 = record.level_id1;
+                    objid.operator = record.operator;
+                    objid.machine_id = text;
+                    objid.operator_level_mapping_id = record.operator_level_mapping_id;
+                    objid.supervisor_id = record.supervisor_id;
+                    objid.toDate = record.toDate;
+                    objid.machine_id_list = record.machine_id_list;
+                    objid.MappingId = record.MappingId;
+
+                    gridData.push(objid);
+                }
+            }
+
+
+
+            args.cancel = true;
+            //send ajax post
+            $.ajax({
+                url: '@Url.Action("SaveOperatorLevel", "SkillMatrix")',
+                type: "POST",
+                //dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ value: gridData }),
+                success: function (data) {
+                    if (typeof (data) === "boolean") {
+                        var i;                  //display the message when value has duplicate
+                        if (data == false) {
+                            var str = "";
+                            swal("", "Value contains Duplicate!", "error");
+                            window.location.href =  "@Url.Action("Index", "SkillMatrix")";
+
+
+                            //$('#ErrorList').html("<table>" + str + "</table>");
+                            //$('#ErrorList').ejDialog("open");
+                            flag = true;
+                        }
+                        //save the records if values are not duplicate
+                        else {
+
+                            var gridObj = $("#Grid1").ejGrid("instance");
+                            gridObj.refreshContent();   //endEdit method called to save records
+                            flag = false;
+                            swal("", "Saved Sussessfully!!", "success");
+                            window.location.href =  "@Url.Action("Index", "SkillMatrix")";
+
+                        }
+                    }
+                    else {
+                        swal("", "AuthorizeFailed!! Sorry you are not Authorized to Perform this Action", "warning");
+
+                    }
+                },
+                error: function (e) {
+                    args.cancel = true;
+                }
+            });
+        }
+        if (flag == false)
+            flag = true;
+
+
+        }
+
+        function contextclick(args) {
+            if (args.text == "Print Report") {
+                var url = '@Url.Action("Pdf", "SkillMatrix")?userId=' + this.getSelectedRecords()[0].supervisor_id;
+                window.open(url);
+                //alert(this.getSelectedRecords()[0].MappingId);
+            }
+        };
+
+        function complete2(args) {
+
+            $("#machine_id2").select2({
+                placeholder: "Select Machine",
+                allowClear: true
+            });
+
+            $("#level_id2").select2({
+                placeholder: "Select Level",
+                allowClear: true
+            });
+        if (args.requestType == "add") {
+            $('#is_active3').checkboxpicker();
+            $('#Active3').hide();
+            $('#level_names2').hide();
+            $('#level_ids2').show();
+            $('#machine_names2').hide();
+            $('#machine_ids2').show();
+        }
+        if (args.requestType == "beginedit") {
+            $('#Active3').show();
+            $('#level_names2').hide();
+            $('#level_ids2').show();
+            $('#machine_names2').show();
+            $('#machine_ids2').hide();
+            $("#level_id2").attr('disabled', false);
+            $("#machine_id2").attr('disabled', true);
+            $("#level_name2").attr('disabled', true);
+            $("#machine_name2").attr('disabled', true);
+            $("#level_id2").val(args.rowData.level_id2).trigger('change');
+            $("#machine_id2").val(args.rowData.machine_id2).trigger('change');
+            $("#fromDate2").val(convert(args.rowData.fromDate2));
+            $("#toDate2").val(convert(args.rowData.toDate2));
+            $("#level_name2").val(args.rowData.level_code2);
+            $("#machine_name2").val(args.rowData.machine_code2);
+
+            if (args.rowData.is_active3 == false) {
+                //Check
+                document.getElementById('is_active3').setAttribute('checked', 'checked');
+            }
+            else {
+                //UnCheck
+                document.getElementById('is_active3').removeAttribute('checked');
+            }
+            $('#is_active3').checkboxpicker();
+        }
+
+        if (args.requestType == "save" && flag) {
+            flag = true;
+            var record = args.data;
+            args.cancel = true;
+            //send ajax post
+            $.ajax({
+                url: '@Url.Action("SaveMachineLevel", "SkillMatrix")',
+                type: "POST",
+                //dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ value: record }),
+                success: function (data) {
+                    if (typeof (data) === "boolean") {
+                        var i;                  //display the message when value has duplicate
+                        if (data == false) {
+                            var str = "";
+                            swal("", "Value contains Duplicate!", "error");
+
+
+                            //$('#ErrorList').html("<table>" + str + "</table>");
+                            //$('#ErrorList').ejDialog("open");
+                            flag = true;
+                        }
+                        //save the records if values are not duplicate
+                        else {
+
+                            var gridObj = $("#Grid2").ejGrid("instance");
+                            gridObj.refreshContent();   //endEdit method called to save records
+                            flag = false;
+                            swal("", "Saved Sussessfully!!", "success");
+                            window.location.href =  "@Url.Action("Index", "SkillMatrix")";
+
+                        }
+                    }
+                    else {
+                        swal("", "AuthorizeFailed!! Sorry you are not Authorized to Perform this Action", "warning");
+
+                    }
+                },
+                error: function (e) {
+                    args.cancel = true;
+                }
+            });
+        }
+        if (flag == false)
+            flag = true;
+
+
+        }
+
+    function EndProcess() {
+                var gridObj = $("#Grid").ejGrid("instance");
+                //console.log(gridObj);
+                gridObj.refreshContent();
+            }
+
+        //$(document).ready(function () {
+        //    $('#toDate').val(new Date().toDateInputValue());
+        //});
+        $(document).ready(function () {
+            var now = new Date();
+            var month = (now.getMonth() + 1);
+            var day = now.getDate();
+            if (month < 10)
+                month = "0" + month;
+            if (day < 10)
+                day = "0" + day;
+            var today = month + '-' + day + '-' + now.getFullYear();
+            $('#toDate').val(today);
+        });
+    function convert(str) {
+        var date = new Date(str),
+            mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+            day = ("0" + date.getDate()).slice(-2);
+        return [date.getFullYear(), mnth, day].join("-");
+        }
+
+        //$("#machine_id").change(function () {
+        //    $("#machine_id_list").val("");
+        //    $("#machine_id_list").val($("#machine_id").val());
+        //});
+    function GetMachineList(Id) {
+        if (Id=="") {
+            Id = 0;
+        }
+                         $.ajax({
+                            url: "@Url.Action("GetMachineListWithOperationAndUser", "Generic")",
+                            type: "GET",
+                            dataType: "JSON",
+                            data: { id: Id },
+                            cache:false,
+                            success: function (machineList) {
+
+                                    $("#machine_id").html(""); // clear before appending new list
+                                    $.each(machineList, function (i, cycle) {
+                                    $("#machine_id").append(
+                                    $('<option></option>').val(cycle.machine_id).html(cycle.machine_name));
+                                    });
+                                    $("#machine_id").val();
+                                    $("#machine_id").append('</select>');
+                                    $("#machine_id").multiselect({
+                                        maxHeight: 200,
+                                        buttonWidth: "300",
+                                        enableFiltering: true,
+                                        enableCaseInsensitiveFiltering: true,
+                                        includeSelectAllOption: true,
+                                    });
+
+
+                                //    $("#machine_id").multiselect('rebuild').trigger('change');
+                                //    var ids = "";
+                                //    for (var i = 0; machineList.length > i; i++) {
+                                //        ids = ids + machineList[i].machine_id + ",";
+                                //}
+                                //    var array1 = "";
+                                //    array1 = ids.split(',');
+                                //    $("#machine_id").val(array1);
+                                //    $("#machine_id").multiselect("refresh");
+                                //    $("#machine_id_list").val("");
+                                //    $("#machine_id_list").val(ids);
+                                //    $("#machine_id option[value='1']").remove();
+                            }
+                        });
+        }
+
+        //$("#supervisor_id").change(function () {
+        //    var operatorId = $("#supervisor_id").val();
+        //    GetMachineList(operatorId);
+        //});
+
+        //$("#supervisor_id").change(function () {
+        //    alert("test");
+        //});
+
+        //$(function () {
+        //    $("#supervisor_id").change(function () {
+        //        alert($('option:selected', this).text());
+        //    });
+        //});
+
+    </script>
+}
+
+

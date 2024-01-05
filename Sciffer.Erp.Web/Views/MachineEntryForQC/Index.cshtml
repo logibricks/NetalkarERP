@@ -1,0 +1,984 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+    body.modal-open-noscroll {
+        margin-right: 0 !important;
+        overflow: hidden;
+    }
+
+    .modal-open-noscroll .navbar-fixed-top, .modal-open .navbar-fixed-bottom {
+        margin-right: 0 !important;
+    }
+
+
+    ul.bar_tabs > li.active {
+        border-right: 6px solid #ff0000;
+        border-top: 0;
+        margin-top: -15px;
+    }
+
+
+    .nav-tabs > li.active > a, .nav-tabs > li.active > a:focus, .nav-tabs > li.active > a:hover {
+        color: #fff;
+        cursor: default;
+        background-color: #284480 !important;
+        border: 1px solid #ddd;
+        border-bottom-color: transparent;
+    }
+
+    .SearchBar {
+        height: 50px;
+        font-size: 30px !important;
+    }
+
+    .taskgrid {
+        text-align: center;
+        font-size: 18px;
+    }
+
+        .taskgrid > thead {
+            text-align: center;
+            font-size: 15px;
+        }
+
+    .scrollit {
+        overflow: scroll;
+        height: 500px;
+    }
+
+    .pending_status {
+        padding: 8px;
+        width: 135px;
+        background: #bee1da;
+        border-radius: 3px;
+        color: #000;
+        border: none;
+        font-size: 18px;
+        top: 10px;
+        float: right;
+        position: absolute;
+        overflow: hidden;
+        right: 60px;
+    }
+
+    .quality_ok {
+        font-size: 16px;
+        color: rgb(112, 196, 105);
+        font-weight: 600;
+    }
+
+    .quality_notok {
+        font-size: 16px;
+        color: #ED5565;
+        font-weight: 600;
+    }
+
+    #sidebar-menu {
+        display: none;
+    }
+
+    .dataTables_filter > label {
+        font-weight: bold !important;
+        font-size: 20px !important;
+    }
+
+        .dataTables_filter > label > input {
+            width: 75%;
+        }
+
+    .input_box_font {
+        font-size: 30px !important;
+        width: 100px !important;
+    }
+</style>
+
+<div class="col-md-12 col-sm-12 col-xs-12">
+
+    <br />
+    <br />
+    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+        <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#tab_content1" style="font-size: 20px;" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Under QC</a>
+            </li>
+            <li role="presentation" class="">
+                <a href="#tab_content2" style="font-size: 20px;" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Approved</a>
+            </li>
+            <li role="presentation" class="">
+                <a href="#tab_content3" style="font-size: 20px;" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">Rejected</a>
+            </li>
+            <li role="presentation" class="">
+                <a href="#tab_content4" style="font-size: 20px;" role="tab" id="profile-tab3" data-toggle="tab" aria-expanded="false">Machine Status</a>
+            </li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+
+                <input type="hidden" value="" id="machine_id">
+                <input type="hidden" value="0" id="isPaused">
+                <div id="result">
+
+                </div>
+
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
+                <div id="resultApproved">
+                    <br />
+                    <span class="pending_status" id="approved_count"></span>
+                    <div class="table-responsive scrollit">
+                        <table class="table table-responsive table-bordered table-striped jambo_table taskgrid" id="QCApprovedGrid"></table>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="tab_content3" aria-labelledby="profile-tab">
+                <div id="resultRejected">
+                    <br />
+                    <span class="pending_status" id="rejected_count"></span>
+                    <div class="table-responsive scrollit">
+                        <table class="table table-responsive table-bordered table-striped jambo_table taskgrid" id="QCRejectedGrid"></table>
+                    </div>
+                </div>
+            </div>
+
+            <div role="tabpanel" class="tab-pane fade" id="tab_content4" aria-labelledby="profile-tab">
+                <div id="resultMachineStatus">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal1" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="align-content:center;">
+            <div class="modal-header">
+                <h4 class="modal-title">Enter Quality Parameters</h4>
+            </div>
+            <div class="modal-body">
+                <br />
+                <div class="table-responsive">
+                    <table class="table table-striped jambo_table bulk_action" style="font-size:20px;">
+                        <thead>
+                            <tr class="headings">
+                                <th hidden class="column-title">Id</th>
+                                <th class="column-title">Sr. No</th>
+                                <th class="column-title">Parameter</th>
+                                <th class="column-title">UOM</th>
+                                <th class="column-title">Start Range</th>
+                                <th class="column-title">End Range</th>
+                                <th class="column-title hidden">Is Numeric</th>
+                                <th class="column-title">Enter Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="parametertable"></tbody>
+                    </table>
+                </div>
+                <hr />
+                <div class="row col-lg-12 col-md-12 col-xs-12" id="supervisor_check_div">
+                    <input type="hidden" value="" id="reasonId">
+                    <div class="col-lg-2 col-md-2 col-xs-12">
+                        <label class="control-label" style="font-size:1.6em!important;font-weight:bold!important">Select Supervisor *</label>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-xs-12">
+                        @Html.DropDownList("supervisor_id", (System.Web.Mvc.SelectList)ViewBag.supervisor_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12" })
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-xs-12">
+                        <label class="control-label" style="font-size:1.6em!important;font-weight:bold!important">Supervisor Remarks *</label>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-xs-12">
+                        <input type="text" id="supervisor_remarks" class="form-control" />
+                    </div>
+                </div>
+                <br />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-lg btn-primary" id="dummy">Please Press Enter to submit</button>
+                @*<input type="button" value="Submit" class="btn btn-lg btn-primary" onclick="SaveQuality()" id="saveQuality" />*@
+                <button type="button" class="btn btn-lg btn-secondary" data-dismiss="modal" id="closemodal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="nc_status_modal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="align-content:center;">
+            <div class="modal-body">
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <h4 class="modal-title">Change Non-Conforming Status</h4><hr />
+                            <div class="form-group">
+                                <label class="control-label col-md-4 col-sm-4 col-xs-12">Non-Conforming Status</label>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("nc_status_id", (System.Web.Mvc.SelectList)ViewBag.nc_status_list, "--Select--", new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <h4 class="modal-title">WHY-WHY ANALYSIS</h4><hr />
+                            <div class="form-group">
+                                <label class="control-label col-md-2 col-sm-2 col-xs-12">WHY1</label>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <input id="why1" type="text" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-4 col-sm-4 col-xs-12">Non-Conforming Description</label>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <input id="nc_details" type="text" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-2 col-sm-2 col-xs-12">WHY2</label>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <input id="why2" type="text" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-2 col-sm-2 col-xs-12">WHY3</label>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <input id="why3" type="text" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-2 col-sm-2 col-xs-12">WHY4</label>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <input id="why4" type="text" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-2 col-sm-2 col-xs-12">WHY5</label>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <input id="why5" type="text" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-12 col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label col-md-2 col-sm-2 col-xs-12">Root Cause</label>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <input id="root_cause" type="text" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-12 col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label col-md-2 col-sm-2 col-xs-12">Action Plan</label>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <input id="action_plan" type="text" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-12 col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label col-md-2 col-sm-2 col-xs-12">Remarks</label>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <input id="nc_detail_remarks" type="text" class="form-control" />
+                                    <input id="nc_machine_task_quality_id" type="hidden" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-lg-12 col-sm-12">
+                            <div class="form-group">
+                                <label class="control-label col-md-2 col-sm-2 col-xs-12">NC Tag Number<span style="color:red">*</span></label>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <input id="nc_tag_number" type="text" class="form-control" required />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Submit" class="btn btn-lg btn-primary" onclick="saverejectiondetails()" id="saverejectiondetails" />
+                <button type="button" class="btn btn-lg btn-secondary" data-dismiss="modal" id="closemodal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="nc_tracker_grid_modal" role="dialog">
+    <div class="modal-dialog modal-lg" style="width:85%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Non-Conforming Track</h4>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive scrollit">
+                    <table class="table table-responsive table-bordered table-striped jambo_table taskgrid" id="nc_tracker_grid"></table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-lg btn-secondary" data-dismiss="modal" id="closemodal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript">
+
+       // var validation_flag = 0;
+
+        $(document).ready(function () {
+
+            $("#nc_status_id").select2({
+                placeholder: "Select Non-Conforming Status",
+                allowClear: true
+            });
+
+            $("#supervisor_id").select2({
+                placeholder: "Select Supervisor",
+                allowClear: true
+            });
+
+            $('.modal').on('show.bs.modal', function () {
+                if ($(document).height() > $(window).height()) {
+                    // no-scroll
+                    $('body').addClass("modal-open-noscroll");
+                }
+                else {
+                    $('body').removeClass("modal-open-noscroll");
+                }
+            });
+            $('.modal').on('hide.bs.modal', function () {
+                $('body').removeClass("modal-open-noscroll");
+            });
+
+            $(document).keypress(function (e) {
+                if (e.which == 13) {
+                    if ($('#myModal1').is(':visible')) {
+
+                        var parid = [];
+                        var parvalue = [];
+
+                        $(".parametervalue").focus();
+
+                        $('input[name = mfg_op_qc_parameter_id]').each(function () {
+                            parid.push($(this).val());
+                        })
+
+                        $('input[name = parametervalue]').each(function () {
+                            if ($(this).val() == '') {
+                                swal({
+                                    title: '',
+                                    text: 'Please Enter Parameter Values',
+                                    timer: '1500',
+                                });
+                                $("#parametervalue-0").focus();
+
+                                //$('input[name = parametervalue]').focus();
+                                flag = 1;
+                                return false;
+                            }
+                            else {
+                                parvalue.push($(this).val());
+                            }
+                            $("#isPaused").val(0);
+                        })
+
+
+                        SaveQuality();
+                        //$("#saveQuality").trigger("click");
+                    }
+                }
+            });
+
+            $("#menu_toggle").trigger("click");
+            $("#menu_toggle").css("display", "none");
+
+            RealtimeUpdate();
+            RealtimeMachineStatus();
+            RealtimeUpdateApproved();
+            RealtimeUpdateRejected();
+        });
+
+
+        $("#closemodal").click(function () {
+            $("#isPaused").val(0);
+        });
+
+
+        // -------------- UPDATE DATA EVERY 10 SECONDS -----------------------//
+        setInterval(RealtimeUpdate, 20000);
+        function RealtimeUpdate() {
+
+            if ($("#isPaused").val() == 0) {
+                $.ajax({
+                    url: '@Url.Action("RealtimeUpdate", "MachineEntryForQC")',
+                    type: "POST",
+                    cache: false,
+                    data: { status_id: 4 },
+                    success: function (data) {
+
+                        $('#result').html(data);
+
+                    }
+                });
+            }
+        }
+
+        //setInterval(RealtimeUpdateApproved, 20000machineentryforqc
+        function RealtimeUpdateApproved() {
+
+            if ($("#isPaused").val() == 0) {
+                $.ajax({
+                    url: '@Url.Action("RealtimeUpdateApproved", "MachineEntryForQC")',
+                    type: "POST",
+                    cache: false,
+                    data: { status_id: 5 },
+                    success: function (data) {
+                        //$('#resultApproved').html(data);
+
+                        $("#approved_count").html('Count : ' + data.length);
+
+                        var t2 = $('#QCApprovedGrid').DataTable();
+                        t2.fnClearTable();
+                        t2.fnAddData(data);
+                    }
+                });
+            }
+        }
+
+
+        //setInterval(RealtimeUpdateRejected, 20000);
+        function RealtimeUpdateRejected() {
+
+            if ($("#isPaused").val() == 0) {
+                $.ajax({
+                    url: '@Url.Action("RealtimeUpdateRejected", "MachineEntryForQC")',
+                    type: "POST",
+                    cache: false,
+                    data: { status_id: 6 },
+                    success: function (data) {
+                        //$('#resultRejected').html(data);
+                        $("#rejected_count").html('Count : ' + data.length);
+
+                        var t3 = $('#QCRejectedGrid').DataTable();
+                        t3.fnClearTable();
+                        t3.fnAddData(data);
+
+                    }
+                });
+            }
+        }
+
+        setInterval(RealtimeMachineStatus, 20000);
+        function RealtimeMachineStatus() {
+
+            if ($("#isPaused").val() == 0) {
+                $.ajax({
+                    url: '@Url.Action("RealtimeMachineStatus", "MachineEntryForQC")',
+                    type: "POST",
+                    cache: false,
+                    success: function (data) {
+                        $('#resultMachineStatus').html(data);
+
+                    }
+                });
+            }
+        }
+
+        function GetParameters(Item_Id, Machine_Id) {
+
+            $.ajax({
+                url: '@Url.Action("GetAllParameters", "MachineEntryForQC")',
+                type: "POST",
+                cache: false,
+                async: true,
+                data: { item_id: Item_Id, machine_id: Machine_Id },
+                success: function (data) {
+
+                    var count = 0;
+                    $("#parametertable").empty();
+                    for (var i = 0; i < data.length; i++) {
+
+                        count++;
+                        $("#parametertable").append(
+                            '<tr>' +
+                                '<td hidden>' +
+                                   '<lable><input type="hidden" class="form-control" id="mfg_qc_qc_parameter_id-' + i + '" name="mfg_qc_qc_parameter_id" value="' + data[i].mfg_qc_qc_parameter_list_id + '"></label>' +
+                                '</td>' +
+                                '<td>' +
+                                   '<lable>' + count + '</label>' +
+                                '</td>' +
+
+                                '<td>' +
+                                     '<lable>' + data[i].parameter_name + '</label>' +
+                                '</td>' +
+
+                                 '<td>' +
+                                     '<lable>' + data[i].parameter_uom + '</label>' +
+                                '</td>' +
+
+                                 '<td>' +
+                                     '<lable>' + data[i].std_range_start + '</label>' +
+                                '</td>' +
+
+                                '<td>' +
+                                     '<lable>' + data[i].std_range_end + '</label>' +
+                                '</td>' +
+
+                                '<td hidden>' +
+                                     '<lable>' + data[i].is_numeric + '</label>' +
+                                '</td>' +
+
+                                '<td>' +
+                                '<lable> <input type="text" class="form-control input_box_font parametervalue" onchange="ParameterFunctn(this.value,' + data[i].is_numeric + ',' + data[i].std_range_start + ',' + data[i].std_range_end + ',' + i + ')"  name="parametervalue" id="parametervalue-' + i + '"> </label>' +
+                                '</td>' +
+
+                            '</tr>'
+                        );
+                    }
+                    //$("#parametervalue-0").focus();
+                },
+            });
+        }
+
+        function ParameterFunctn(data, is_numeric, std_range_start, std_range_end, i) {
+            if (buttonText == 'statusok') {
+                if (is_numeric == true) {
+                    if (isNaN(parseFloat(data)) == false) {
+                        if (parseFloat(data) > parseFloat(std_range_end) || parseFloat(data) < parseFloat(std_range_start) || data.includes("-")) {
+                            swal("", "Value must be between " + parseFloat(std_range_start) + " and " + parseFloat(std_range_end), "error");
+                            $("#parametervalue-" + i).val('')
+                        }
+                    }
+                    else {
+                        swal("", "Value must be between " + parseFloat(std_range_start) + " and " + parseFloat(std_range_end), "error");
+                        $("#parametervalue-" + i).val('')
+                    }
+
+
+                }
+            }
+
+        }
+
+        var statusparameters;
+        var buttonText = '';
+        function UpdateStatus(args) {
+            statusarray = $("#" + args.id).val().split(':');
+            var text = args.id.split("-");
+            buttonText = text[0];
+            GetParameters(statusarray[2], statusarray[3]);
+            $("#reasonId").val(statusarray[4]);
+
+            $("#supervisor_check_div").css("display", "none");
+            if ($("#reasonId").val() == 4 || $("#reasonId").val() == 5) {
+                $("#supervisor_check_div").css("display", "block");
+            }
+
+            $("#supervisor_remarks").val("");
+            $("#myModal1").modal('show');
+            $("#isPaused").val(1);
+
+        }
+
+        function SaveQuality() {
+
+            var flag = 0;
+            var parameterid = [];
+
+            if ($("#reasonId").val() == 4 || $("#reasonId").val() == 5) {
+                if ($("#supervisor_id").val() == 0) {
+                    swal("Please Select Supervisor", "", "error");
+                    return false;
+                }
+                else if ($("#supervisor_remarks").val() == "") {
+                    swal("Please Fill Supervisor Remark", "", "error");
+                    return false;
+                }
+            }
+
+            $('input[name = mfg_qc_qc_parameter_id]').each(function () {
+                parameterid.push($(this).val());
+            })
+            //parameterid = parameterid.toString();
+
+            var parametervalue = [];
+            $('input[name = parametervalue]').each(function () {
+                if ($(this).val() == '') {
+                    swal({
+                        title: '',
+                        text: 'Enter Parameter Values',
+                        timer: '1500',
+                    });
+                    $("#parametervalue-0").focus();
+
+                    //$('input[name = parametervalue]').focus();
+                    flag = 1;
+                    return false;
+                }
+                else {
+                	parametervalue.push($(this).val());
+                }
+                $("#isPaused").val(0);
+            })
+
+            if (parametervalue == []) {
+                swal({
+                    title: '',
+                    text: 'Please => Enter Parameter Values',
+                    timer: '1500',
+                });
+                $("#parametervalue-0").focus();
+            }
+
+            if (flag == 0) {
+
+            $.ajax({
+                url: '@Url.Action("UpdateItemStatus", "MachineEntryForQC")',
+                type: "POST",
+                cache: false,
+                data: { status: statusarray[0], machine_task_qc_qc_id: statusarray[1], machine_id: statusarray[3], parametervalue: parametervalue, parameterid: parameterid },
+                success: function (data) {
+                    if (data.text == "true") {
+                        swal("", "Tag number already sent", "error");
+                        $("#isPaused").val(0);
+                    }
+                    else if (data.text == "false") {
+                        swal("Parameter", "Please Enter Parameter Values", "error");
+                    }
+                    else {
+                        $('#myModal1').modal('hide');
+                        $('body').removeClass('modal-open');
+                        $('.modal-backdrop').remove();
+
+                        $('#result').html(data);
+                        $("#isPaused").val(0);
+                    }
+                    RealtimeUpdate();
+                    RealtimeMachineStatus();
+                    RealtimeUpdateApproved();
+                    RealtimeUpdateRejected();
+                }
+            });
+            }
+            else {
+                return false;
+            }
+        }
+
+        //$(function () {
+        //    $(document).keydown(function (e) {
+        //        switch (e.which) {
+        //            case 13: // up key
+        //                if ($('#myModal1').is(':visible')) {
+        //                    $("#saveQuality").trigger("click");
+        //                }
+        //                break;
+        //        }
+
+        //    });
+        //});
+
+        $('#QCApprovedGrid').DataTable({
+
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": true,
+            "bSort": false,
+            "columns": [
+               { "data": "machine_task_qc_qc_id", bVisible: false, "title": "Machine Task Qc Id" },
+                { "data": "machine_task_qc_qc_no", bVisible: false, "title": "Machine Task Qc No" },
+                { "data": "machine_task_id", bVisible: false, "title": "Machine Task Id" },
+                { "data": "prod_order_id", bVisible: false, "title": "Prod Order Id" },
+                { "data": "prod_order_no", bVisible: true, "title": "Production Order" },
+                { "data": "prod_order_detail_id", bVisible: false, "title": "Prod Order Detail Id" },
+                { "data": "in_item_id", bVisible: false, "title": "Item Id" },
+                { "data": "in_item_desc", bVisible: true, "title": "Item" },
+                { "data": "item_batch_id", bVisible: false, "title": "Batch Id" },
+                { "data": "item_batch_no", bVisible: true, "title": "Batch" },
+                { "data": "tag_id", bVisible: false, "title": "Tag Id" },
+                { "data": "tag_no", bVisible: true, "title": "Tag No." },
+                { "data": "current_status_id", bVisible: false, "title": "Status Id" },
+                { "data": "current_status", bVisible: true, "title": "Status" },
+                { "data": "machine_id", bVisible: false, "title": "Machine Id" },
+                { "data": "machine_desc", bVisible: true, "title": "Machine" },
+                {
+                    "data": "machine_task_qc_qc_id", bVisible: true, "title": "Non-Coforming Tracker", width: "8%",
+                    mRender: function (data, type, full) {
+                        return '<button type="button" id="rejection_detail-' + data + '" onclick="viewconformingtrack(' + data + ');" class="btn btn-primary">View</button>';
+                    }
+                },
+            ],
+
+        });
+
+        $('#QCRejectedGrid').DataTable({
+
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": true,
+            "bSort": false,
+            "columns": [
+               { "data": "machine_task_qc_qc_id", bVisible: false, "title": "Machine Task Qc Id" },
+                { "data": "machine_task_qc_qc_no", bVisible: false, "title": "Machine Task Qc No" },
+                { "data": "machine_task_id", bVisible: false, "title": "Machine Task Id" },
+                { "data": "prod_order_id", bVisible: false, "title": "Prod Order Id" },
+                { "data": "prod_order_no", bVisible: true, "title": "Production Order" },
+                { "data": "prod_order_detail_id", bVisible: false, "title": "Prod Order Detail Id" },
+                { "data": "in_item_id", bVisible: false, "title": "Item Id" },
+                { "data": "in_item_desc", bVisible: true, "title": "Item" },
+                { "data": "item_batch_id", bVisible: false, "title": "Batch Id" },
+                { "data": "item_batch_no", bVisible: false, "title": "Batch" },
+                { "data": "tag_id", bVisible: false, "title": "Tag Id" },
+                { "data": "tag_no", bVisible: true, "title": "Tag No." },
+                { "data": "current_status_id", bVisible: false, "title": "Status Id" },
+                { "data": "current_status", bVisible: true, "title": "Status" },
+                { "data": "machine_id", bVisible: false, "title": "Machine Id" },
+                { "data": "machine_desc", bVisible: true, "title": "Machine" },
+                {
+                    "data": "machine_task_qc_qc_id", bVisible: true, "title": "Non-Coforming Tracker", width: "8%",
+                    mRender: function (data, type, full) {
+                        return '<button type="button" id="rejection_detail-' + data + '" onclick="viewconformingtrack(' + data + ');" class="btn btn-primary">View</button>';
+                    }
+                },
+                {
+                    "data": "machine_task_qc_qc_id", bVisible: true, "title": "Change Status", width: "8%",
+                    mRender: function (data, type, full) {
+                        return '<button type="button" id="nc_action-' + data + '" onclick="savenonconforming(' + data + ');" class="btn btn-danger"><span class="glyphicon glyphicon-new-window"></span></button>';
+                    }
+                }
+            ],
+        });
+
+        $('#nc_tracker_grid').DataTable({
+
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": true,
+            "bSort": false,
+            "columns": [
+                { "data": "nc_status_id", bVisible: false, "title": "Non-conforming Status Id" },
+                { "data": "nc_status_desc", bVisible: true, "title": "Non-conforming Status" },
+                { "data": "nc_details", bVisible: true, "title": "Non-conforimg Description" },
+                { "data": "action_plan", bVisible: true, "title": "Action Plan" },
+                { "data": "root_cause_details", bVisible: true, "title": "Root Cause" },
+                { "data": "create_ts_str", bVisible: true, "title": "Created On" },
+                { "data": "remarks", bVisible: true, "title": "Remarks" },
+                { "data": "machine_name", bVisible: true, "title": "Machine" },
+                { "data": "operator_name", bVisible: true, "title": "User" },
+                { "data": "rejected_onmachine_by", bVisible: true, "title": "Rejected on Machine by" },
+            ],
+        });
+
+        function savenonconforming(data) {
+            $("#nc_status_modal").modal('toggle');
+            $("#nc_machine_task_quality_id").val(data);
+        }
+
+        $("#nc_status_id").change(function () {
+
+            if ($("#nc_status_id :selected").text() == "REJECTED") {
+                swal("APPLY RED COLOUR ON CRANKSHAFT", "", "warning")
+            }
+            if ($("#nc_status_id :selected").text() == "REWORK") {
+                swal("PUT YELLOW TAG & APPLY YELLOW COLOUR ON CRANKSHAFT", "", "warning")
+            }
+
+        })
+
+        function clearmodal() {
+
+            $("#root_cause").val('');
+            $("#nc_details").val('');
+            $("#action_plan").val('');
+            $("#why1").val('');
+            $("#why2").val('');
+            $("#why3").val('');
+            $("#why4").val('');
+            $("#why5").val('');
+            $("#nc_detail_remarks").val('');
+            $("#nc_tag_number").val('');
+        }
+
+        function saverejectiondetails() {
+
+            if ($("#nc_status_id").val() == 0) {
+                $("#nc_status_id").focus();
+                swal("", "Select NC Status", "error");
+                return false;
+            }
+            if ($("#root_cause").val() == '') {
+                $("#root_cause").focus();
+                swal("", "Enter Root Cause", "error");
+                return false;
+            }
+            if ($("#nc_details").val() == '') {
+                $("#nc_details").focus();
+                swal("", "Enter NC Details", "error");
+                return false;
+            }
+            if ($("#action_plan").val() == '') {
+                $("#action_plan").focus();
+                swal("", "Enter Action Plan", "error");
+                return false;
+            }
+
+            if ($("#why1").val() == '') {
+                $("#why1").focus();
+                swal("", "Enter WHY-WHY Analysis", "error");
+                return false;
+            }
+            if ($("#why2").val() == '') {
+                $("#why2").focus();
+                swal("", "Enter WHY-WHY Analysis", "error");
+                return false;
+            }
+            if ($("#why3").val() == '') {
+                $("#why3").focus();
+                swal("", "Enter WHY-WHY Analysis", "error");
+                return false;
+            }
+            if ($("#why4").val() == '') {
+                $("#why4").focus();
+                swal("", "Enter WHY-WHY Analysis", "error");
+                return false;
+            }
+            if ($("#why5").val() == '') {
+                $("#why5").focus();
+                swal("", "Enter WHY-WHY Analysis", "error");
+                return false;
+            }
+            if ($("#nc_tag_number").val() == '') {
+                $("#nc_tag_number").focus();
+                swal("", "Enter NC Tag Number", "error");
+                return false;
+            }
+
+            var nc_machine_task_quality_id = $("#nc_machine_task_quality_id").val();
+            var nc_status_id = $("#nc_status_id").val();
+            var root_cause = $("#root_cause").val();
+            var nc_details = $("#nc_details").val();
+            var action_plan = $("#action_plan").val();
+            var nc_detail_remarks = $("#nc_detail_remarks").val();
+            var nc_tag_number = $("#nc_tag_number").val();
+
+            //why-why analysis
+            var why1 = $("#why1").val();
+            var why2 = $("#why2").val();
+            var why3 = $("#why3").val();
+            var why4 = $("#why4").val();
+            var why5 = $("#why5").val();
+
+            var why_why_analysis = [5];
+            why_why_analysis[0] = why1;
+            why_why_analysis[1] = why2;
+            why_why_analysis[2] = why3;
+            why_why_analysis[3] = why4;
+            why_why_analysis[4] = why5;
+
+            $.ajax({
+                url: '@Url.Action("SaveRejectionDetail", "MachineEntryForQC")',
+                type: "POST",
+                cache: false,
+                data: { machine_task_qc_qc_id: nc_machine_task_quality_id, nc_status_id: nc_status_id, root_cause: root_cause, nc_details: nc_details, action_plan: action_plan, remarks: nc_detail_remarks, why_why_analysis: why_why_analysis, nc_tag_number: nc_tag_number },
+                success: function (data) {
+                    if (data == "Saved") {
+                        swal("", "Status Updated Successfully", "success");
+                    }
+                    else {
+                        swal(data);
+                    }
+                    $("#isPaused").val(0);
+                    RealtimeUpdate();
+                    RealtimeMachineStatus();
+                    RealtimeUpdateApproved();
+                    RealtimeUpdateRejected();
+                    clearmodal();
+                    $("#nc_status_modal").modal('hide');
+                }
+            });
+        }
+
+        function viewconformingtrack(data) {
+            $("#nc_tracker_grid_modal").modal('toggle');
+            $.ajax({
+                url: '@Url.Action("GetNonConformingTrack", "MachineEntryForQC")',
+                type: "POST",
+                cache: false,
+                data: { machine_task_qc_qc_id: data },
+                success: function (data) {
+                    var nc_tracker_grid = $('#nc_tracker_grid').DataTable();
+                    nc_tracker_grid.fnClearTable();
+                    nc_tracker_grid.fnAddData(data);
+                }
+            });
+        }
+
+    </script>
+
+}
+
+
+
+

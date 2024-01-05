@@ -1,0 +1,88 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+@{(Html.EJ().Grid<Report_InventoryledgerDetailed_vm>("Editing")
+                                                      .Datasource(ds => ds.URL(Url.Action("Get_report_production", "ProductionReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&plant_id=" + ViewBag.plant_id + "&machine_id=" + ViewBag.machine_id + "&process_id=" + ViewBag.process_id).Adaptor(AdaptorType.UrlAdaptor))
+                                                          .AllowPaging().PageSettings(a => a.PageSize(20))
+                                                              .AllowFiltering()
+                                                                  .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                              .ShowColumnChooser()
+                                                              .AllowSorting()
+                                                              .AllowScrolling()
+                                                              .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "ProductionReport", new { ctrlname = "OperationMachinewiseSkillMatrix" })))
+                                                              .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                                          .ToolbarSettings(toolbar =>
+                                                          {
+                                                              toolbar.ShowToolbar().ToolbarItems(items =>
+                                                              {
+                                                                  items.AddTool(ToolBarItems.Search);
+                                                                  items.AddTool(ToolBarItems.ExcelExport);
+                                                                  items.AddTool(ToolBarItems.PrintGrid);
+                                                              });
+                                                          })
+                                                  .Columns(col =>
+                                                  {
+
+                                                      col.Field("From_date").Width("15%").HeaderText("From Date").Format("{0:dd/MMM/yyyy}").Add();
+                                                      col.Field("To_date").Width("15%").HeaderText("To Date").Format("{0:dd/MMM/yyyy}").Add();
+                                                      col.Field("operator_name").Width("15%").HeaderText("Operator Name ").Add();
+                                                      col.Field("Operation").Width("15%").HeaderText("Operation").Add();
+                                                      col.Field("machine_code").Width("15%").HeaderText("Machine").Add();
+                                                      col.Field("Level").Width("15%").HeaderText("Level").Add();
+                                                      col.Field("Active_inactive_user").Width("15%").HeaderText("Active/Inactive User").Add();
+                                            //col.Field("plant_id").Width("15%").Visible(false).HeaderText("plant_id").Add();
+                                            //col.Field("machine_id").Width("15%").Visible(false).HeaderText("machine_id").Add();
+                                            //col.Field("process_id").Width("15%").Visible(false).HeaderText("process_id").Add();
+                                            //col.Field("bucket_name").Width("15%").Visible(ViewBag.reason_code_id == "2" ? false : true).HeaderText("Bucket").Add();
+                                            //col.Field("item_quantity").Width("15%").HeaderText("Qty").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                            //col.Field("plant_id").Width("15%").HeaderText("plant_id").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                            //col.Field("value").Width("15%").HeaderText("Value").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+
+                                        })
+                                                      .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick"); })
+                                                                                          ).Render();
+    }
+
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+    function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1) {
+            if ($('#plant_id :selected').length > 0) {
+                var selectedplantid = [];
+                $('#plant_id :selected').each(function (i, selected) {
+                    selectedplantid[i] = $(selected).val();
+                });
+                var plantid = selectedplantid + "";
+            }
+            if ($('#machine_id :selected').length > 0) {
+                var selectedmachineid = [];
+                $('#machine_id :selected').each(function (i, selected) {
+                    selectedmachineid[i] = $(selected).val();
+                });
+                var machineid = selectedmachineid + "";
+            }
+            //if ($('#item_id :selected').length > 0) {
+            //    var selecteditemid = [];
+            //    $('#item_id :selected').each(function (i, selected) {
+            //        selecteditemid[i] = $(selected).val();
+            //    });
+            //    var itemid = selecteditemid + "";
+            //}
+            if ($('#process_id :selected').length > 0) {
+                var selectedprocess_id = [];
+                $('#process_id :selected').each(function (i, selected) {
+                    selectedprocess_id[i] = $(selected).val();
+                });
+                var processid = selectedprocess_id + "";
+            }
+            this.model["process_id"] = processid;
+            this.model["plant_id"] = plantid;
+            this.model["machine_id"] = machineid;
+
+        }
+
+    }
+</script>

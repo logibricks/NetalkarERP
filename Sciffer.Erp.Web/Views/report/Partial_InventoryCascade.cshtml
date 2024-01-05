@@ -1,0 +1,53 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+
+
+
+@{(Html.EJ().Grid<Report_Inventory_Report_CascadeReport_vm>("Editing")
+                      .Datasource((IEnumerable<object>)ViewBag.datasource)
+                      .AllowFiltering()
+                          .FilterSettings(X => X.FilterType(FilterType.Excel))
+                      .ShowColumnChooser()
+                      .AllowSorting()
+                      .AllowScrolling()
+                      .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelForReport", "Generic", new { ctrlname = "ReportCascadeReport" }))
+                      .ExportToPdfAction(Url.Action("ExportToPdfForReport", "Generic", new { ctrlname = "ReportCascadeReport" })))
+                       .ScrollSettings(scroll => { scroll.Width("100%").Height("50%"); })
+
+                  .ToolbarSettings(toolbar =>
+                  {
+                      toolbar.ShowToolbar().ToolbarItems(items =>
+                      {
+                          items.AddTool(ToolBarItems.Search);
+                          items.AddTool(ToolBarItems.ExcelExport);
+                          items.AddTool(ToolBarItems.PrintGrid);
+                      });
+                  })
+          .Columns(col =>
+          {
+              col.Field("item_code").Width("10%").HeaderText("Item Code").Add();
+              col.Field("ITEM_NAME").Width("10%").HeaderText("Item Description").Add();
+              col.Field("PLANT_CODE").Width("10%").HeaderText("Plant Code").Add();
+              col.Field("PLANT_NAME").Width("10%").HeaderText("Plant Description").Visible(false).Add();
+              col.Field("storage_location_name").Width("10%").HeaderText("SLoc").Visible(false).Add();
+              col.Field("bucket_name").Width("10%").HeaderText("Bucket").Visible(false).Add();
+              col.Field("batch_number").Width("10%").HeaderText("Batch").Visible(false).Add();
+              col.Field("Qty").Width("10%").HeaderText("Qty").Format("{0:n2}").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(false).Add();
+              col.Field("UOM_NAME").Width("10%").HeaderText("UoM").Visible(false).Add();
+
+          })
+          .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+          ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+ 
+
+</script>
+
+
+
+

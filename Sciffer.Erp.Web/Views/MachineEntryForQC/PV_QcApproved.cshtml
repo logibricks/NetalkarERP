@@ -1,0 +1,132 @@
+﻿<style>
+    .results2 tr[visible='false'],
+    .no-result {
+        display: none;
+    }
+
+    .results2 tr[visible='true'] {
+        display: table-row;
+    }
+</style>
+<div class="scrollit">
+    <div class="table-responsive">
+        <div class="row">
+            <div class="col-md-6">
+      
+            </div>
+            <div class="col-md-4">
+                <input type="search" id="search2" class="SearchBar search form-control" placeholder="Search for item here....">
+            </div>
+        </div>
+       
+        <br />
+        <span class="pending_status">Count :  @ViewBag.QcApproved.Count</span>
+        <table class="table table-responsive table-bordered table-striped jambo_table results2 taskgrid" id="resultQcApproved">
+            <thead>
+                <tr class="e-textwrapper">
+                    <th hidden><label>Machine Task Qc Id</label></th>
+                    <th hidden><label>Machine Task Qc No</label></th>
+                    <th hidden><label>Machine Task Id</label></th>
+                    <th hidden><label>Prod Order Id</label></th>
+                    <th><label>Production Order No. </label></th>
+                    <th hidden><label>Prod Order Detail Id </label></th>
+                    <th hidden><label>Item Id </label></th>
+                    <th><label>Item Name</label></th>
+                    <th hidden><label>Batch Id</label></th>
+                    <th><label>Batch Number</label></th>
+                    <th hidden><label>Tag Id</label></th>
+                    <th><label>Tag No.</label></th>
+                    @*<th><label>Select Status</label></th>*@
+                    <th hidden><label>Status Id</label></th>
+                    <th><label>Status</label></th>
+                    <th hidden><label>Machine Id</label></th>
+                    <th><label>Machine Name</label></th>
+                </tr>
+            </thead>
+
+            <tbody class="scrollit">
+                @{
+                    int count = 0;
+                    foreach (var item in ViewBag.QcApproved)
+                    {
+                        <tr>
+                            <td hidden>@item.machine_task_qc_qc_id</td>
+                            <td hidden>@item.machine_task_qc_qc_no</td>
+                            <td hidden>@item.machine_task_id</td>
+                            <td hidden>@item.prod_order_id</td>
+                            <td>@item.prod_order_no</td>
+                            <td hidden>@item.prod_order_detail_id</td>
+                            <td hidden>@item.in_item_id</td>
+                            <td>@item.in_item_desc</td>
+                            <td hidden>@item.item_batch_id</td>
+                            <td>@item.item_batch_no</td>
+                            <td hidden>@item.tag_id</td>
+                            <td>@item.tag_no</td>
+                            @*<td>
+                                <select class="task_status form-control" id="status-@count" onchange="UpdateStatus(this)">
+                                    <option value="0">--Select--</option>
+                                    @foreach (var xx in ViewBag.AllStatus)
+                                    {
+                                        <option value="@xx.machine_task_status_id:@item.machine_task_qc_qc_id">@xx.machine_task_status_name</option>
+                                    }
+                                </select>
+                            </td>*@
+                            <td hidden>@item.current_status_id</td>
+                            <td>@item.current_status</td>
+                            <td hidden>@item.machine_id</td>
+                            <td>@item.machine_desc</td>
+                        </tr>
+                        count++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+        $("#search2").keyup(function () {
+            var searchTerm = $("#search2").val();
+            var listItem = $('.results2 tbody').children('tr');
+            var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
+
+            $.extend($.expr[':'], {
+                'containsi': function (elem, i, match, array) {
+                    return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+                }
+            });
+
+            $(".results2 tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
+                $(this).attr('visible', 'false');
+            });
+
+            $(".results2 tbody tr:containsi('" + searchSplit + "')").each(function (e) {
+                $(this).attr('visible', 'true');
+            });
+
+            var jobCount = $('.results2 tbody tr[visible="true"]').length;
+            $('.counter').text(jobCount + ' item');
+
+            if (jobCount == '0') { $('.no-result').show(); }
+            else { $('.no-result').hide(); }
+        });
+
+    });
+
+    // -----------FOCUS ON SELECT LIST-----------------------//
+    $("#search2").focus(function () {
+        $("#isPaused").val(1);
+    })
+    $("#search2").focusout(function () {
+        $("#isPaused").val(0);
+    })
+
+    // -----------FOCUS ON SELECT LIST-----------------------//
+
+
+</script>
+
+

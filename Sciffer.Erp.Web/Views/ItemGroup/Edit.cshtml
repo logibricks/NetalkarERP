@@ -1,0 +1,71 @@
+﻿@model Sciffer.Erp.Domain.Model.REF_ITEM_GROUP
+
+@{
+    ViewBag.Title = "Edit";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.ITEM_GROUP_ID)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ITEM_GROUP_NAME, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ITEM_GROUP_NAME, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ITEM_GROUP_NAME, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ITEM_GROUP_DESCRIPTION, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ITEM_GROUP_DESCRIPTION, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ITEM_GROUP_DESCRIPTION, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-success" id="create" name="create" style="float:right" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+                $("#create").click(function (e) {
+                    e.preventDefault();
+                    var ItemCategory = $('#ITEM_GROUP_NAME').val();
+                    var id = $('#ITEM_GROUP_ID').val();
+                    if (ItemCategory == "") {
+                        sweetAlert("", "Item Group is required!", "error");
+                    }
+                    else {
+                        $.ajax({
+                            url: "@Url.Action("CheckDuplicate", "ItemGroup")",
+                            type: "GET",
+                            dataType: "JSON",
+                            asynch: true,
+                            data: { st: ItemCategory, id: id },
+                            success: function (output) {
+                                if (output != 0) {
+                                    sweetAlert("", ItemCategory + " is already present in databse!", "error");
+                                }
+                                else {
+                                    document.forms[0].submit();
+                                }
+                            }
+                        });
+                    }
+                });
+    </script>
+}

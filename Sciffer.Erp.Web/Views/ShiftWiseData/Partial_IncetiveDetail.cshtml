@@ -1,0 +1,83 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+<style>
+    .e-grid .e-groupdroparea {
+        display: none !important;
+    }
+</style>
+@{
+    (Html.EJ().Grid<Report_incentive_vm>("Editing")
+    .Datasource(ds => ds.URL(Url.Action("ComputeIncentive", "ShiftWiseData") + "?start_date_shift_id=" + ViewBag.start_date_shift_id + "&end_date_shift_id=" + ViewBag.end_date_shift_id + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&plant_id=" + ViewBag.plant_id).Adaptor(AdaptorType.UrlAdaptor))
+
+    .AllowPaging().PageSettings(a => a.PageSize(50))
+    .AllowFiltering()
+    .FilterSettings(X => X.FilterType(FilterType.Excel))
+    .ShowColumnChooser()
+    .AllowScrolling()
+    .AllowResizing()
+
+    // .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelIncentive", "ProductionReport", new { ctrlname = "ProductionReportIncentive" })))
+    .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+    .ToolbarSettings(toolbar =>
+    {
+        toolbar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Search);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        });
+    })
+
+    .Columns(col =>
+    {
+        col.Field("user_name").HeaderText("User Code").Add();
+        col.Field("operator_name").HeaderText("Operator Name").Add();
+        col.Field("date").HeaderText("Date").Format("{0:dd-MMMM-yyyy}").Add();
+        col.Field("shift_code").HeaderText("Shift Code").Add();
+        col.Field("login_time1").HeaderText("LoginTime").Add();
+        col.Field("logout_time1").HeaderText("LogoutTime").Add();
+        col.Field("process_description").HeaderText("OP Name").Add();
+        col.Field("machine_code").HeaderText("Machine Code").Add();
+        col.Field("machine_name").HeaderText("Machine").Add();
+        col.Field("item_name").HeaderText("Item Name").Add();
+        col.Field("prod_qty1").HeaderText("Production Quantity").Add();
+        col.Field("reporting_quantity").HeaderText("Benchmark Quantity").Add();
+        col.Field("diff_qty").HeaderText("Excess Quantity").Add();
+        col.Field("incentive").HeaderText("Incentive Rate").Add();
+        col.Field("amount").HeaderText("Incentive Amount").Add();
+        col.Field("incentive_applicability").HeaderText("Incentive Applicability").Add();
+        col.Field("is_multi_machine1").HeaderText("Multi machining").Add();
+
+    })
+    .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick"); })
+    )
+    .Render();
+}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1) {
+            var plantList = '';
+            if ($('#plant_id :selected').length > 0) {
+                var selectedPlant = [];
+                $('#plant_id :selected').each(function (i, selected) {
+                    selectedPlant[i] = $(selected).val();
+                });
+                plantList = selectedPlant + "";
+            }
+
+            this.model["shift_id"] = $("#shift_id").val();
+            this.model["shift_id1"] = $("#shift_id1").val();
+            this.model["from_date"] = $("#fromDate").val();
+            this.model["to_date"] = $("#toDate").val();
+            this.model["plant_id"] = plantList;
+        }
+    }
+
+</script>
+
+
+

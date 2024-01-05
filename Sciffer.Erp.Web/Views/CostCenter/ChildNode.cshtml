@@ -1,0 +1,31 @@
+﻿
+@model IEnumerable<Sciffer.Erp.Domain.Model.TreeViewNodeCostCenter>
+
+@foreach (var treeNode in Model)
+{
+    var x = treeNode.cost_center_level - 1;
+    <ul class="list-group-item">
+        @if (treeNode != null)
+        {
+            if (@treeNode.head_parent == 1)
+            {
+                <li class="" id="@treeNode.cost_center_id">
+                    @* <div class="col-sm-@x"></div>*@
+                    <div class="Head" id="@treeNode.cost_center_id">@treeNode.NodeName</div>
+                </li>
+            }
+            else
+            {
+                <li class="" id="@treeNode.cost_center_id">
+                    @*<div class="col-sm-@x"></div>*@
+                    <div class="Account" id="@treeNode.cost_center_id">@treeNode.NodeName</div>
+                </li>
+            }
+        }
+        @if (treeNode.ChildNode.Count > 0)
+        {
+            @Html.Partial("ChildNode", treeNode.ChildNode);
+        }
+    </ul>
+
+}

@@ -1,0 +1,345 @@
+﻿
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit Quality Control Parameter</h2>
+<hr />
+
+@using (Html.BeginForm("UpdateQualityParameter", "QualityControlParameter", FormMethod.Post))
+{
+
+    <div id="ParameterData"></div>
+    <div class="row form-group">
+        <div class="col-md-4">
+            <div class="col-md-4">
+                <label class="control-label">Item Code</label>
+            </div>
+            <div class="col-md-8">
+                @Html.DropDownList("item_code", (new System.Web.Mvc.SelectList(ViewBag.item, "ITEM_ID", "ITEM_CODE")), "--select--", htmlAttributes: new { @class = "form-control", required = "required" })
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="col-md-4">
+                Machine Code
+            </div>
+            <div class="col-md-8">
+                @Html.DropDownList("machine_code", (new System.Web.Mvc.SelectList(ViewBag.Machine, "machine_id", "machine_code")), "--select--", htmlAttributes: new { @class = "form-control", required = "required" })
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="col-md-4">
+                Frequency
+            </div>
+            <div class="col-md-6">
+                <input type="text" id="frequency" name="frequency" class="form-control" />
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading"></div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4 col-xs-12">Parameter Name</label>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <input type="text" class="form-control" id="parameter_name" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-sm-5">
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4 col-xs-12">Parameter UOM</label>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <input type="text" class="form-control" id="parameter_uom" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4 col-xs-12">Standatrd Range From </label>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <input type="text" class="form-control" id="parameter_range_from" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-sm-5">
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4 col-xs-12">Standard Range To</label>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <input type="text" class="form-control" id="parameter_range_to" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1 col-sm-1">
+                        <div class="form-group">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <button type="button" class="btn btn-primary" id="add_parameter">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="srno3" />
+
+                </div>
+                <br />
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-responsive table-bordered table-striped" id="ParameterGrid">
+                            <thead>
+                                <tr>
+                                    <th><label>QC Parameter Id</label></th>
+                                    <th><label>Sr. No.</label></th>
+                                    <th><label>Parameter Name</label></th>
+                                    <th><label>Parameter UOM</label></th>
+                                    <th><label>Range from</label></th>
+                                    <th><label>Range to</label></th>
+                                    <th><label>Action</label></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" id="mfg_qc_id" name="mfg_qc_id" />
+        <input type="hidden" id="deleteids" name="deleteids" />
+        <input type="hidden" id="parameterdetail" name="parameterdetail" />
+
+
+        <div class="row">
+            <div class="col-lg12 col-sm-12">
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <input type="button" value="Back" id="back" class="btn btn-danger" style="float:left" />
+                        <input type="submit" value="Update" id="create" data-controller="ItemMaster" class="btn btn-success" onclick="DataTableToForm();" style="float:right" />
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+
+            $("#item_code").select2({
+                placeholder: "Select Item",
+                allowClear: true
+            });
+
+            $("#machine_code").select2({
+                placeholder: "Select Machine",
+                allowClear: true
+            });
+            codeaddress();
+        })
+
+        function codeaddress() {
+            var data = @Html.Raw(Json.Encode(ViewBag.result));
+            console.log(data);
+
+            $("#mfg_qc_id").val(data.mfg_qc_id);
+            $("#item_code").val(data.item_code);
+            $("#machine_code").val(data.machine_code);
+            $("#frequency").val(data.frequency);
+
+            var tp = $("#ParameterGrid").DataTable();
+            var sr_no3 = tp.fnGetData().length+1;
+           @*// var tp_detail = @Html.Raw(JsonConvert.SerializeObject(this.Model));*@          
+            var j=1;
+            $.each(data.mfg_qc_vm , function(key, value){
+                tp.fnAddData(['',sr_no3,value.parameter_name,value.parameter_uom, value.std_range_start, value.std_range_end,'']);
+                j=j+1;
+                sr_no3++;
+            });
+        }
+
+        $("#back").click(function () {
+            window.location.href = '@Url.Action("Index", "QualityControlParameter")';
+        });
+
+        $('#add_parameter').click(function () {
+
+            if($("#item_code").val() == 0)
+            {
+                swal("", "Please Select Item code", "error");
+                return false;
+            }
+
+            if($("#machine_code").val() == 0)
+            {
+                swal("", "Please Select Machine code", "error");
+                return false;
+            }
+            
+            if($("#frequency").val() == 0)
+            {
+                swal("", "Please Enter Frequency", "error");
+                return false;
+            }
+
+
+            var t3 = $('#ParameterGrid').DataTable()
+            var rowCount = t3.fnGetData().length;
+            var parm_name = $('#parameter_name').val();
+            var parm_range_from = $('#parameter_range_from').val();
+            var parm_range_to = $('#parameter_range_to').val();
+            var parm_range_uom = $('#parameter_uom').val();
+
+            if (parm_name == '') {
+                swal("", "Please Enter Parameter Name", "error");
+                return false;
+            }
+            if (parm_range_from == '') {
+                swal("", "Please Enter Parameter Range From", "error");
+                return false;
+            }
+            if (parm_range_to == '') {
+                swal("", "Please Enter Parameter Range To", "error");
+                return false;
+            }
+            if (parm_range_uom == '') {
+                swal("", "Please Enter Parameter UOM", "error");
+                return false;
+            }
+
+            if ($("#srno3").val() == "") {
+                for (var k = 0; k <= rowCount - 1; k++) {
+                    if (t3.fnGetData(k)[2] == parm_name) {
+                        swal("", "Parameter details are already added.", "error");
+                        return false;
+                    }
+                }
+                t3.fnAddData(['', rowCount + 1, parm_name, parm_range_uom, parm_range_from, parm_range_to, ''
+                ]);
+            }
+            else {
+                //for (var k = 0; k <= rowCount - 1; k++) {
+                //    if (t3.fnGetData(k)[2] == parm_name) {
+                //        swal("", "Parameter details are already added.", "error");
+                //        return false;
+                //    }
+                //}
+                var cc = parseInt($("#srno3").val());
+                t3.fnUpdate(['', cc + 1, parm_name, parm_range_uom, parm_range_from, parm_range_to, ''], cc)
+            }
+            clearmodel1();
+        });
+
+        function clearmodel1() {
+            $("#parameter_name").val('');
+            $("#parameter_range_from").val('');
+            $("#parameter_range_to").val('');
+            $("#parameter_uom").val('');
+            $('#srno3').val('');
+        }
+
+        $('#ParameterGrid').on('click', '.edit', function () {
+            var t = $('#ParameterGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            $('#srno3').val(id);
+            $("#parameter_name").val(t.fnGetData(id)[2]);
+            $("#parameter_uom").val(t.fnGetData(id)[3]);
+            $("#parameter_range_from").val(t.fnGetData(id)[4]);
+            $("#parameter_range_to").val(t.fnGetData(id)[5]);
+        });
+
+        //$('#ParameterGrid').on('click', '.delete', function () {
+        //    var t = $('#ParameterGrid').DataTable();
+        //    var id = $(this).parent('td').parent('tr').index();
+        //    var deleteids = t.fnGetData(id)[0];
+
+        //    swal({
+        //        title: "Are you sure?",
+
+        //        type: "warning",
+        //        showCancelButton: true,
+        //        confirmButtonClass: "btn-danger",
+        //        confirmButtonText: "Yes, delete it!",
+        //        closeOnConfirm: true
+        //    },
+        //     function (isConfirm) {
+        //         if (isConfirm) {
+
+        //             $("#deleteids").val(deleteids + "~");
+        //             t.fnDeleteRow(id);
+        //             var i = 1;
+        //             var row = 0;
+        //             var len = t.fnGetData().length;
+        //             if (len > 0) {
+        //                 $('#ParameterGrid tbody tr').each(function () {
+        //                     t.fnDeleteRow(id);
+        //                     i++;
+        //                     row++;
+        //                 });
+        //             }
+        //         }
+        //     });
+        //});
+
+        $('#ParameterGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "q", bVisible: false },
+                     { sname: "a", bVisible: true },
+                     { sname: "b", bVisible: true },
+                     { sname: "c", bVisible: true },
+                     { sname: "d", bVisible: true },
+                     { sname: "e", bVisible: true },
+                     {
+                         sname: "f", sWidth: "8%",
+                         bSortable: false,
+                         mRender: function (data, type, full) {
+                             return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" />'
+                                 //<img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete" />';
+                         }
+                     }]
+
+        });
+
+        function DataTableToForm() {
+
+            var t = $('#ParameterGrid').dataTable();
+
+            var rowCount = t.fnGetData().length;
+
+            for (i = 0; i < rowCount; i++) {
+
+                $("#ParameterData").append('<input type="hidden" id="para_id' + i + '" name="para_id">');
+                $("#ParameterData").append('<input type="hidden" id="para_name' + i + '" name="para_name">');
+                $("#ParameterData").append('<input type="hidden" id="para_uom' + i + '" name="para_uom">');
+                $("#ParameterData").append('<input type="hidden" id="para_from' + i + '" name="para_from">');
+                $("#ParameterData").append('<input type="hidden" id="para_to' + i + '" name="para_to">');
+
+                $("#para_id" + i).val(t.fnGetData(i)[0]);
+                $("#para_name" + i).val(t.fnGetData(i)[2]);
+                $("#para_uom" + i).val(t.fnGetData(i)[3]);
+                $("#para_from" + i).val(t.fnGetData(i)[4]);
+                $("#para_to" + i).val(t.fnGetData(i)[5]);
+
+            }
+        }
+    </script>
+}

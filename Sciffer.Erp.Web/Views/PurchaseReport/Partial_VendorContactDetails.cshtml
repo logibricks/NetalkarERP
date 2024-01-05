@@ -1,0 +1,42 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<purchase_order_report_vm>("Editing")
+                                                                            .Datasource(ds => ds.URL(Url.Action("Get_Purchase_Order_Report", "PurchaseReport") + "?entity=" + ViewBag.entity + "&vendor_category_id=" + ViewBag.vendor_category_id).Adaptor(AdaptorType.UrlAdaptor))
+                                                                              .AllowPaging().PageSettings(a => a.PageSize(20))
+                                                                              .AllowFiltering()
+                                                                                  .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                                              .ShowColumnChooser()
+                                                                              .AllowSorting()
+                                                                              .AllowScrolling()
+                                                                              .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "PurchaseReport", new { ctrlname = "VendorContactDetail" })))
+                                                                              .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                                                          .ToolbarSettings(toolbar =>
+                                                                          {
+                                                                              toolbar.ShowToolbar().ToolbarItems(items =>
+                                                                              {
+                                                                                  items.AddTool(ToolBarItems.Search);
+                                                                                  items.AddTool(ToolBarItems.ExcelExport);
+                                                                                  items.AddTool(ToolBarItems.PrintGrid);
+                                                                              });
+                                                                          })
+                                                                  .Columns(col =>
+                                                                  {
+                                                                      col.Field("vendor_category_name").Width("10%").HeaderText("Vendor Category").Add();
+                                                                      col.Field("vendor_code").Width("10%").HeaderText("Vendor Code").Add();
+                                                                      col.Field("vendor_name").Width("10%").HeaderText("Vendor Name").Add();
+                                                                      col.Field("email_id_primary").Width("10%").HeaderText("Email").Visible(true).Add();
+                                                                      col.Field("telephone_primary").Width("10%").HeaderText("Phone").TextAlign(TextAlign.Right).Visible(true).Add();
+                                                                      col.Field("contact_name").Width("10%").HeaderText("Name").Visible(false).Add();
+                                                                      col.Field("designation").Width("10%").HeaderText("Designation").Visible(false).Add();
+                                                                      col.Field("mobile_no").Width("10%").HeaderText("Mobile").Visible(false).Add();
+                                                                      col.Field("telephone_secondary").Width("10%").HeaderText("Phone Number").Visible(false).Add();
+                                                                      col.Field("email_id_secondary").Width("10%").HeaderText("Email").Visible(false).Add();
+
+                                                                  })
+                                                                   .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickp"); })
+                                                                                        ).Render();}
+@Html.EJ().ScriptManager()
+
+
+

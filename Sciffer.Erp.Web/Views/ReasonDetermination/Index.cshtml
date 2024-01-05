@@ -1,0 +1,185 @@
+﻿@using Sciffer.Erp.Domain.Model
+@{
+    ViewBag.Title = "Index";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<br /><br /><br />
+<style>
+    .e-ejinputtext {
+    height:20px;
+    }
+</style>
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<reasonvm>("Grid")
+         .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.Datasource).RemoveURL(Url.Action("InlineDelete", "ReasonDetermination")).InsertURL(Url.Action("InlineInsert", "ReasonDetermination")).UpdateURL(Url.Action("InlineInsert", "ReasonDetermination"))
+                       .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        //.EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing(); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(12); })
+        .EnableAltRow()
+
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+               
+                items.AddTool(ToolBarItems.ExcelExport);
+
+                items.AddTool(ToolBarItems.PrintGrid);
+                items.AddTool(ToolBarItems.Search);
+
+            });
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "ReasonDetermination" })))
+
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+          .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("REASON_DETERMINATION_ID").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Width(80).Add();
+            col.Field("REASON_DETERMINATION_NAME").Width("15%").HeaderText("Reason Type").ValidationRules(v => v.AddRule("required", true)).Add();
+            col.Field("REASON_DETERMINATION_TYPE_NAME").Width("15%").HeaderText("Category").Add();
+            col.Field("is_blocked").Width("15%").HeaderText("Blocked").Visible(false).Add();
+            col.Field("REASON_DETERMINATION_TYPE").Width("15%").HeaderText("Category").Visible(false).ValidationRules(v => v.AddRule("required", true)).Add();
+
+        })
+        .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+
+    )
+</div>
+
+
+<script id="template" type="text/template">
+
+    <div>
+        <div class="row">
+
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="hidden" id="REASON_DETERMINATION_ID" name="REASON_DETERMINATION_ID" value="{{: REASON_DETERMINATION_ID}}" class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Category *
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                @Html.DropDownList("REASON_DETERMINATION_TYPE", new List<SelectListItem>
+                 {
+                    new SelectListItem{ Text="Stock Increase", Value = "1" },
+                    new SelectListItem{ Text="Stock Decrease", Value = "2" }
+                 }, new { @class = "form-control" })
+
+                @*<input type="text" id="REASON_DETERMINATION_TYPE" name="REASON_DETERMINATION_TYPE" value="{{: REASON_DETERMINATION_TYPE}}" class="form-control" />*@
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Reason Type *
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="text" id="REASON_DETERMINATION_NAME" name="REASON_DETERMINATION_NAME" value="{{: REASON_DETERMINATION_NAME}}" class="form-control" />
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Blocked
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <input type="checkbox" id="is_blocked" name="is_blocked">
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+    var flag = true;
+    function complete(args) {
+
+        if (args.requestType == "add") {
+
+            $('#is_blocked').checkboxpicker();
+
+        }
+        if (args.requestType == "beginedit") {
+            $("#REASON_DETERMINATION_TYPE").val(args.rowData.REASON_DETERMINATION_TYPE);
+            document.getElementById('REASON_DETERMINATION_NAME').setAttribute('disabled', 'disabled');
+            document.getElementById('REASON_DETERMINATION_TYPE').setAttribute('disabled', 'disabled');
+            if (args.rowData.is_blocked == true) {
+                //Check
+                document.getElementById('is_blocked').setAttribute('checked', 'checked');
+            }
+            else {
+                //UnCheck
+                document.getElementById('is_blocked').removeAttribute('checked');
+            }
+            $('#is_blocked').checkboxpicker();
+
+        }
+
+        if (args.requestType == "save") {
+            if (args.data.text == 'duplicate') {
+                sweetAlert("", "Reason type already exists!", "error");
+                if (args.model.dataSource.dataSource.json[0].REASON_DETERMINATION_ID == null) {
+                    args.model.dataSource.dataSource.json = args.model.dataSource.dataSource.json.splice(1, args.model.dataSource.dataSource.json.length);
+                }
+            }
+            var gridObj = $("#Grid").ejGrid("instance");
+            gridObj.refreshContent();
+        }
+    }
+
+    function EndProcess() {
+        var gridObj = $("#Grid").ejGrid("instance");
+        //console.log(gridObj);
+        gridObj.refreshContent();
+    }
+</script>
+@*<style>
+        .e-editedrow {
+            display: none;
+        }
+    </style>
+
+    <script type="text/javascript">
+
+        function actionBegin(args) {
+            if (args.requestType == "beginedit")
+            {
+                location.href = "ReasonDetermination/Edit/" + args.rowData.REASON_DETERMINATION_ID;
+            }
+        }
+        function rightClick(args) {
+            location.href = "ReasonDetermination/Details/" + args.data.REASON_DETERMINATION_ID;
+        }
+    </script>*@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

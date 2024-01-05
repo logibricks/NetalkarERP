@@ -1,0 +1,26 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_party_type
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+   
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.party_type_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.party_type_name)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.party_type_id },new {@class="btn btn-success" }) 
+    @Html.ActionLink("Back to List", "Index",null,new {@class="btn btn-primary" })
+</p>

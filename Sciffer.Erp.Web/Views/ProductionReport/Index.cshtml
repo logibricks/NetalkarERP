@@ -1,0 +1,281 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+@*<input type="search" class="search form-control" placeholder="Search Production Report" id="s" ; style="width:23.5%;">*@
+<br />
+<div id="hide">
+    <div class="row display-flex">
+        @*<div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;">
+                    WIP Summary Report
+                </div>
+                <div class="panel-body">
+                    <p>WIP Report Summary</p>
+                </div>
+                <a href="@Url.Action("WIPReportSummary", "ProductionReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;">
+                    WIP Detailed Report
+                </div>
+                <div class="panel-body">
+                    <p>WIP Report Detailed </p>
+                </div>
+                <a href="@Url.Action("WIPReportDetailed", "ProductionReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;">
+                    WIP Ageing Report 
+                </div>
+                <div class="panel-body">
+                    <p>WIP Report Ageing Report Summary</p>
+                </div>
+                <a href="@Url.Action("WIPReportAgeingReportSummary", "ProductionReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color: #337ab7;color: #fff;">
+                    User Wise Production Report
+                </div>
+                <div class="panel-body">
+                    <p>User Wise Production Report</p>
+                </div>
+                <a href="@Url.Action("Userwiseproductionreport", "ProductionReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;">
+                    Production Summary Report
+                </div>
+                <div class="panel-body">
+                    <p>Production report Summary </p>
+                </div>
+                <a href="@Url.Action("ProductionreportSummary", "ProductionReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;">
+                    Daily Production Shift & Machine Wise
+                </div>
+                <div class="panel-body">
+                    <p>Daily Production Report - Shiftwise and Machine Wise</p>
+                </div>
+                <a href="@Url.Action("DailyProductionReport_ShiftwiseandMachineWise", "ProductionReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;">
+                    Daily Production Shift  & Item Wise
+                </div>
+                <div class="panel-body">
+                    <p>Daily Production Report - Shiftwise and Item Wise</p>
+                </div>
+                <a href="@Url.Action("DailyProductionReport_ShiftwiseandItemWise", "ProductionReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color: #337ab7;color: #fff;">
+                    Final FG Output Report
+                </div>
+                <div class="panel-body">
+                    <p>Final FG Output Report</p>
+                </div>
+                <a href="@Url.Action("FinalFGOutputReport", "ProductionReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;">
+                    Variable Pay Report
+                </div>
+                <div class="panel-body">
+                    <p>Variable Pay Report </p>
+                </div>
+                <a href="@Url.Action("IncentiveReport", "ProductionReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;">
+                    Tag History Report
+                </div>
+                <div class="panel-body">
+                    <p>Tag History Report </p>
+                </div>
+                <a href="@Url.Action("TagHistoryReport", "ProductionReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;">
+                    QC Paramaters Status
+                </div>
+                <div class="panel-body">
+                    <p>QC Paramaters Status </p>
+                </div>
+                <a href="@Url.Action("QCParamatersStatus", "ProductionReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color: #337ab7;color: #fff;">
+                    Tag Number Available For Production Recipt
+                </div>
+                <div class="panel-body">
+                    <p> Tag Number Available For Production Recipt</p>
+                </div>
+                <a href="@Url.Action("TagNumberAvailableForProductionRecipt", "ProductionReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;">
+                    Tag Number Ready For Sale
+                </div>
+                <div class="panel-body">
+                    <p>Tag Number Ready For Sale</p>
+                </div>
+                <a href="@Url.Action("TagNumberReadyForSale", "ProductionReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;">
+                    NC Rejection Report
+                </div>
+                <div class="panel-body">
+                    <p>Non Conforming Tag Numbers </p>
+                </div>
+                <a href="@Url.Action("DailyRejectionNCReport", "ProductionReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>*@
+    </div>
+</div>
+<script src="~/Scripts/requirevalidation.js"></script>
+<script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+            $(document).ready(function () {
+                $("#s").on("keyup click input", function () {
+                    if (this.value.length > 0) {
+                        $(".col-lg-3").show().filter(function () {
+                            return $(this).find('.name').text().toLowerCase().indexOf($("#s").val().toLowerCase()) == -1;
+                        }).hide();
+                    }
+                    else {
+                        $(".col-lg-3").show();
+                    }
+                });
+
+            });
+    </script>
+    <style>
+        .row.display-flex {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+            .row.display-flex > [class*='col-'] {
+                display: flex;
+                flex-direction: column;
+            }
+
+        .panel {
+            height: 100%;
+            width: 100%;
+        }
+
+        .name {
+            font-size: 15px;
+            background-color: #5cb85c;
+            color: #fff;
+        }
+
+        .panel-heading {
+            height: 38px;
+        }
+
+        .panel-body {
+            height: 90px;
+        }
+
+        p {
+            font-size: 13px;
+        }
+
+        .panel-footer {
+            font-size: 15px;
+            color: #000;
+            height: 40px;
+        }
+
+        }
+    

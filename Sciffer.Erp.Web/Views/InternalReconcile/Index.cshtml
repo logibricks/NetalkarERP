@@ -1,0 +1,98 @@
+﻿
+
+@using Sciffer.Erp.Domain.ViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<fin_internal_reconcile_vm>("Searching")
+        .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "InternalReconcile" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+          .ContextMenuSettings(contextMenu =>
+          {
+              contextMenu.EnableContextMenu();
+              contextMenu.DisableDefaultItems();
+              contextMenu.CustomContextMenuItems(new List<Syncfusion.JavaScript.Models.CustomContexMenuItems>() { new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu", Text = "Print Report" } }); // CustomContext menu items
+          })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "InternalReconcile" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "InternalReconcile" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "InternalReconcile" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+         .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("internal_reconcile_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Add();
+            col.Field("document_no").Width("15%").HeaderText("Number").Add();
+            col.Field("category_name").Width("15%").HeaderText("Category").Add();
+            col.Field("posting_date").Width("15%").HeaderText("Reconciale Date").Add();
+            col.Field("entity_type_name").Width("15%").HeaderText("Entity Type").Add();
+            col.Field("entity_name").Width("15%").HeaderText("Entity Name").Add();
+            col.Field("entity_code").Width("15%").HeaderText("Entity Code").Add();
+            col.Field("status_name").Width("15%").HeaderText("Status").Add();
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+            eve.ContextClick("contextclick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit") {
+            location.href = "@Url.Action("Edit", "InternalReconcile")?id=" + args.rowData.internal_reconcile_id;
+        }
+        if (args.requestType == "add") {
+            location.href = "@Url.Action("Create", "InternalReconcile")";
+        }
+        if (args.requestType == "delete") {
+            location.href = "@Url.Action("Delete", "InternalReconcile")?id=" + args.rowData.internal_reconcile_id;
+        }
+    }
+    function contextclick(args) {
+        if (args.text == "Print Report") {
+            var url = "@Url.Action("Pdf", "InternalReconcile")?id=" + this.getSelectedRecords()[0].internal_reconcile_id;
+            window.open(url);
+        }
+
+    };
+    $(document).ready(function () {
+        var doc_no = '@ViewBag.doc';
+        if (doc_no != '') {
+            if (doc_no != 0) {
+                sweetAlert("", doc_no + " Saved successfully!", "success");
+            }
+        }
+    });
+</script>
+

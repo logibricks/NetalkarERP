@@ -1,0 +1,146 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.Model.ref_tool_renew_type>
+
+@using Sciffer.Erp.Domain.Model
+
+@{
+    ViewBag.Title = "ToolRenewType";
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<br /><br /><br />
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<ref_tool_renew_type>("Grid")
+       .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.Datasource).RemoveURL(Url.Action("InlineDelete", "ToolRenewType")).InsertURL(Url.Action("InlineInsert", "ToolRenewType")).UpdateURL(Url.Action("InlineInsert", "ToolRenewType"))
+                       .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(10); })
+        .EnableAltRow()
+
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Add);
+                items.AddTool(ToolBarItems.Edit);
+                items.AddTool(ToolBarItems.Update);
+                items.AddTool(ToolBarItems.Delete);
+                items.AddTool(ToolBarItems.Cancel);
+                items.AddTool(ToolBarItems.ExcelExport);
+                items.AddTool(ToolBarItems.PrintGrid);
+            });
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "ToolRenewType" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "ToolRenewType" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "ToolRenewType" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("tool_renew_type_id").HeaderText("ID").IsPrimaryKey(true).ShowInColumnChooser(false).Width(80).Visible(false).Add();
+            col.Field("tool_renew_type_name").HeaderText("Tool Name").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("is_blocked").HeaderText("Blocked").Visible(false).Add();
+
+        })
+        .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+</div>
+
+<script id="template" type="text/template">
+
+    <div>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="hidden" id="tool_renew_type_id" name="tool_renew_type_id" value="{{: tool_renew_type_id}}" class="form-control" />
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Tool Renew Type Name *
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="text" id="tool_renew_type_name" name="tool_renew_type_name" value="{{: tool_renew_type_name}}" class="form-control" />
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Blocked
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <input type="checkbox" id="is_blocked" name="is_blocked">
+            </div>
+        </div>
+    </div>
+</script>
+
+
+
+<script type="text/javascript">
+    $(function () {
+        var specialChars = "<>@@!#$%^&*()_+[]{}?:;|'\"\\,./~`-="
+        var check = function (string) {
+            for (i = 0; i < specialChars.length; i++) {
+                if (string.indexOf(specialChars[i]) > -1) {
+                    return true
+                }
+            }
+            return false;
+        }
+
+        $.validator.addMethod("customddlcheck", function (value, element, params) {
+            alert(element.value);
+            return check(element.value);
+        }, "+ sign is requered");
+
+        $.validator.addMethod("customendcheck", function (value, element, params) {
+            var a = new Date($('#START_WEEK_ID :selected').text());
+            var b = new Date($('#END_WEEK_ID :selected').text());
+            return b >= a;
+
+            }, "Start Date can not be greater then End Date");
+
+    });
+    var flag = true;
+    function complete(args) {
+        if (args.requestType == "add") {
+            $('#is_blocked').checkboxpicker();
+        }
+        if (args.requestType == "beginedit") {
+
+            $("#tool_renew_type_name").attr('disabled', true);
+
+            if (args.rowData.is_blocked == true) {
+                //Check
+                document.getElementById('is_blocked').setAttribute('checked', 'checked');
+            }
+            else {
+                //UnCheck
+                document.getElementById('is_blocked').removeAttribute('checked');
+            }
+             $('#is_blocked').checkboxpicker();
+        }
+        if (args.requestType == "save") {
+            if (args.data.text == 'duplicate') {
+                sweetAlert("", "Tool type already exists!", "error");
+                if (args.model.dataSource.dataSource.json[0].tool_renew_type_id == null) {
+                    args.model.dataSource.dataSource.json = args.model.dataSource.dataSource.json.splice(1, args.model.dataSource.dataSource.json.length);
+                }
+            }
+            var gridObj = $("#Grid").ejGrid("instance");
+            gridObj.refreshContent();
+        }
+    }
+
+    function EndProcess() {
+        var gridObj = $("#Grid").ejGrid("instance");
+        gridObj.refreshContent();
+    }
+</script>

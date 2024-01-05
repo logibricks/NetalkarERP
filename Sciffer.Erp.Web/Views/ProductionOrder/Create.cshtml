@@ -1,0 +1,1265 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.mfg_prod_order_VM
+@using Newtonsoft.Json
+
+@{
+    ViewBag.Title = "Create Production Order";
+}
+
+<br />
+<br />
+<br />
+
+<div class="" role="tabpanel" data-example-id="togglable-tabs">
+    <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+        <li role="presentation" class="active">
+            <a href="#tab_content1" id="home-tab" role="tab" data-toggle="tab" aria-expanded="true">Production Order</a>
+        </li>
+        <li role="presentation" class="">
+            <a href="#tab_content2" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">Operation Sequence</a>
+        </li>
+    </ul>
+    <div id="myTabContent" class="tab-content">
+        <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+
+            @using (Html.BeginForm("Create", "ProductionOrder", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div id="bomdiv"></div>
+                @Html.AntiForgeryToken()
+                <div class="area">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-3">
+                                Category
+                            </div>
+                            <div class="col-md-9">
+                                @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.categorylist, htmlAttributes: new { @class = "form-control item setPlant", required = "required" })
+                            </div>
+                            <div class="col-md-3">
+                                @*<input type="text" style="display:none;" class="form-control" id="prod_order_no" name="prod_order_no" disabled="disabled">*@
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-3">
+                                Order Date
+                            </div>
+                            <div class="col-md-9">
+                                <input type="date" id="prod_order_date" name="prod_order_date" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-3">
+                                Select Shift
+                            </div>
+                            <div class="col-md-9">
+                                @Html.DropDownList("shift_id", (System.Web.Mvc.SelectList)ViewBag.SHIFT, "--Select--", htmlAttributes: new { @class = "form-control validinput", @required = true })
+
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-3">
+                                Select Plant
+                            </div>
+                            <div class="col-md-9">
+                                @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.PLANT, "--Select--", htmlAttributes: new { @class = "form-control validinput selectedbycategory", @required = true })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-3">
+                                Child SLoc
+                            </div>
+                            <div class="col-md-9">
+                                @Html.DropDownList("child_sloc_id", Enumerable.Empty<SelectListItem>(), "--Select--", htmlAttributes: new { @class = "form-control validinput removedisabled", @required = true, @disabled = "disabled" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-3">
+                                Parent Sloc
+                            </div>
+                            <div class="col-md-9">
+                                @Html.DropDownList("parent_sloc_id", Enumerable.Empty<SelectListItem>(), "--Select--", htmlAttributes: new { @class = "form-control validinput removedisabled", @required = true, @disabled = "disabled" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-3">
+                                Out Item Description
+                            </div>
+                            <div class="col-md-9">
+                                @Html.DropDownList("out_item_id", (System.Web.Mvc.SelectList)ViewBag.ITEM, "--Select Item--", htmlAttributes: new { @class = "form-control validinput", @required = true, @onchange = "GetUnit(this.value)" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-3">
+                                Process Sequence
+                            </div>
+                            <div class="col-md-9">
+                                @Html.DropDownList("process_seq_alt_id", Enumerable.Empty<SelectListItem>(), "--Select--", htmlAttributes: new { @class = "form-control validinput", @required = true })
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-3">
+                                Select BOM
+                            </div>
+                            <div class="col-md-9">
+                                @Html.DropDownList("mfg_bom_id", Enumerable.Empty<SelectListItem>(), "--Select--", htmlAttributes: new { @class = "form-control validinput", @required = true })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-md-3">
+                                Enter Quantity
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" class="form-control" id="quantity" name="quantity">
+                            </div>
+                            <div class="col-md-3">
+                                @Html.DropDownList("uom_id", (System.Web.Mvc.SelectList)ViewBag.Uom_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12", @disabled = "disabled" })
+                            </div>
+                        </div>
+
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="col-md-3">
+                                Remarks
+                            </div>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" id="remarks" name="remarks" />
+                            </div>
+                        </div>
+                        <input type="hidden" name="machine_seq" id="machine_seq" />
+                    </div>
+
+                    <hr />
+                    <div class="row">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">BOM List</div>
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-responsive table-bordered table-striped" id="BOMGrid">
+                                        <thead>
+                                            <tr>
+                                                <th><label>ProdOrderDetailId</label></th>
+                                                <th><label>Sr. No.</label></th>
+                                                <th><label>Item Id</label></th>
+                                                <th><label>In Item Description</label></th>
+                                                <th><label>Quantity</label></th>
+                                                <th><label>UOM Id</label></th>
+                                                <th><label>UoM</label></th>
+                                                <th><label>Batch Id</label></th>
+                                                <th><label>Batch Number</label></th>
+                                                <th><label>Batch Detail Id</label></th>
+                                                <th><label>Action</label></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg12 col-sm-12">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <input type="hidden" id="sr_no" />
+                                    <input type="button" class="btn btn-success" value="Create" style="float:right" id="buttncreate" />
+                                    <input type="submit" value="Create" data-controller="ProductionController" class="btn btn-success" onclick="TabletoJeson();" style="float:right" id="create" name="create" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <div>
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
+            <style>
+                /*.machines_name_label {
+                    border: 5px double #fff;
+                    padding: 5px 5px 5px 5px;
+                    background-color: #2e6196;
+                    color: white;
+                    font-size: 1.5em !important;
+                }*/
+
+                .machines_span {
+                    border: double 5px;
+                    font-size: 2.0em !important;
+                    margin: 0px 15px 10px 0px;
+                    background-color: #147ab5;
+                    color: #ffffff;
+                }
+
+                .machines_name_label {
+                    font-size: 0.8em !important;
+                    font-weight: bold !important;
+                    padding: 0px 0px 10px 10px;
+                }
+
+
+                .close_machine_name {
+                    top: -14px;
+                    left: 20px;
+                    color: red;
+                    cursor: pointer;
+                    border-radius: 50%;
+                    background-color: #f5f7fa;
+                }
+
+                .select-style {
+                    border: 1px solid #ccc;
+                    width: 120px;
+                    border-radius: 3px;
+                    overflow: hidden;
+                }
+
+                    .select-style select {
+                        padding: 5px 8px;
+                        width: 130%;
+                        border: none;
+                        box-shadow: none;
+                        background: transparent;
+                        background-image: none;
+                        -webkit-appearance: none;
+                    }
+
+                        .select-style select:focus {
+                            outline: none;
+                        }
+            </style>
+            <div class="col-md-12">
+                <div id="operation_sequence_div" style="height:500px; overflow: scroll;">
+
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <input type="button" value="Save Process Sequence" class="btn btn-success" style="float:right" id="save_process_sequence" name="save_process_sequence" />
+                                <h4>Operation Sequence</h4>
+                                <hr />
+                            </div>
+                        </div>
+                    </div>
+                    <div id="operation_sequence">
+
+                    </div>
+                    <br />
+                </div>
+            </div>
+            <br /><br />
+
+        </div>
+        <br /><br />
+    </div>
+</div>
+
+<script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+<script src="~/Scripts/requirevalidation.js"></script>
+
+@*-------------------------Modal Content------------------------------------*@
+<div class="modal" id="SelectBatch" data-toggle="modal" data-dismiss="modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Item Details</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="batch_detail_id" />
+                <input type="hidden" id="batch_sloc_id" />
+                <input type="hidden" id="batch_plant_id" />
+                <div class="row">
+                    <label class="control-label col-md-2">
+                        Item *
+                    </label>
+                    <div class="col-md-6">
+                        @Html.DropDownList("batch_item_id", (System.Web.Mvc.SelectList)ViewBag.ITEM, "---Select---", new { @class = "form-control ", @disabled = "disabled" })
+                    </div>
+                    <label class="control-label col-md-2">
+                        Order Qty
+                    </label>
+                    <div class="col-sm-2">
+                        <input type="text" id="qty" class="form-control" readonly="readonly" />
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="BatchGrid">
+                                <thead>
+                                    <tr>
+                                        <th><label>BatchID</label></th>
+                                        <th><label>BatchDetail Id</label></th>
+                                        <th><label>Sr. No.</label></th>
+                                        <th><label>Batch</label></th>
+                                        <th><label>Expiry Date</label></th>
+                                        <th><label>Batch Qty</label></th>
+                                        <th><label>Balance Qty</label></th>
+                                        <th><labl>Use</labl></th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="addBatchTotal btn btn-primary" data-dismiss="modal">Close </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            document.getElementById("prod_order_date").valueAsDate = new Date();
+            $("#create").css({ "display": "none" });
+
+            //GetDocumentNumber($("#category_id").val());
+
+            $("#shift_id").select2({
+                placeholder: "Select Shift",
+                allowClear: true
+            });
+
+            $("#plant_id").select2({
+                placeholder: "Select Plant",
+                allowClear: true
+            });
+
+            $("#out_item_id").select2({
+                placeholder: "Select Item",
+                allowClear: true
+            });
+            var error=@Html.Raw(Json.Encode(ViewBag.error));
+            if(error !="")
+            {
+                sweetAlert("",error,"error");
+            }
+
+        })
+
+        function GetUnit(id) {
+            if (id != '') {
+
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetUnitofItem", "Generic")',
+                    data: { id: id },
+                    success: function (ITEM) {
+                        $('#uom_id').val(ITEM.item);
+                    },
+                    error: function (emp) {
+                        $('#uom_id').val('');
+                    }
+                });
+            }
+            else {
+                $('#uom_id').val('');
+            }
+
+        }
+
+        $("#plant_id").change(function () {
+            $.ajax({
+                url: "@Url.Action("GetStorageLocation", "Generic")",
+                method: "POST",
+                cache: false,
+                data: { id: $(this).val() },
+                success: function (data) {
+                    // console.log(data);
+                    $("#child_sloc_id").empty();
+                    for (var i = 0; i < data.length; i++) {
+                        if(i==0)
+                        {
+                            $("#child_sloc_id").append('<option value="' + data[i].storage_location_id + '">' + data[i].storage_location_name + '</option>');
+                        }
+
+                    }
+                    $("#parent_sloc_id").empty();
+                    for (var i = 0; i < data.length; i++) {
+                        if(i==0)
+                        {
+                            $("#parent_sloc_id").append('<option value="' + data[i].storage_location_id + '">' + data[i].storage_location_name + '</option>');
+                        }
+                    }
+
+                    $("#child_sloc_id").select2({
+                        placeholder: "Select SLoc",
+                        allowClear: true
+                    });
+
+                    $("#parent_sloc_id").select2({
+                        placeholder: "Select SLoc",
+                        allowClear: true
+                    });
+
+                }
+            })
+        })
+
+
+        @*function GetDocumentNumber(id) {
+            if (id != '') {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetDocumentNumbering", "Generic")',
+                    data: { id: id },
+                    success: function (ITEM) {
+                        $('#prod_order_no').val(ITEM);
+                    },
+                    error: function (emp) {
+                        $('#prod_order_no').val('');
+                    }
+                });
+            }
+            else {
+                $('#prod_order_no').val('');
+            }
+        }*@
+
+        $("#out_item_id").change(function () {
+            var item = $("#out_item_id").val();
+            if (item != "") {
+                $.ajax({
+                    url: "@Url.Action("GetBOMForItem", "ProductionOrder")",
+                    method: "POST",
+                    cache: false,
+                    data: { out_item_id: item },
+                    success: function (data) {
+                        $("#mfg_bom_id").empty();
+                        for (var i = 0; i < data.length; i++) {
+                            $("#mfg_bom_id").append('<option value="' + data[i].Value + '">' + data[i].Text + '</option>');
+                        }
+                        $("#mfg_bom_id").select2({
+                            placeholder: "Select Item",
+                            allowClear: true
+                        });
+                    }
+                })
+
+                $.ajax({
+                    url: "@Url.Action("Getprocess_seq", "ProductionOrder")",
+                    method: "POST",
+                    cache: false,
+                    data: { item: item },
+                    success: function (data) {
+                        $("#process_seq_alt_id").empty();
+                        $("#process_seq_alt_id").append('<option value="">-- Select --</option>');
+                        for (var i = 0; i < data.length; i++) {
+                            $("#process_seq_alt_id").append('<option value="' + data[i].Value + '">' + data[i].Text + '</option>');
+                        }
+                        $("#process_seq_alt_id").select2({
+                            placeholder: "Select Process Sequence",
+                            allowClear: true
+                        });
+
+                    }
+
+                })
+            }
+
+        });
+
+        $("#quantity").change(function () {
+            if ($("#mfg_bom_id").val() != 0) {
+                $.ajax({
+                    url: "@Url.Action("GetBOMGridData", "ProductionOrder")",
+                    method: "POST",
+                    cache: false,
+                    data: { bom_id: $("#mfg_bom_id").val(), itemquantity: $("#quantity").val() },
+                    success: function (data) {
+
+                        var t = $('#BOMGrid').DataTable();
+                        t.fnClearTable();
+                        var rowCount = t.fnGetData().length;
+                        for (var i = 0; i < data.length; i++) {
+                            rowCount = rowCount + 1;
+                            if ($("#sr_no").val() == "") {
+                                t.fnAddData(['0',rowCount, data[i].in_item_id, data[i].in_item_code, data[i].calculated_qty, data[i].in_uom_id, data[i].in_uom_name, '', '', '', '']);
+
+                            }
+                        }
+
+                    }
+                })
+            } else {
+                $("#quantity").val('');
+                $("#mfg_bom_id").focus();
+                swal("", "Please Select BOM", "error");
+            }
+
+        });
+
+        function validateForBatch() {
+
+            if ($("#plant_id").val() == 0) {
+                $("#plant_id").focus();
+                swal("", "Please Select Plant", "error");
+                return false;
+            }
+
+            if ($("#child_sloc_id").val() == 0) {
+                $("#child_sloc_id").focus();
+                swal("", "Please Select Child SLoc", "error");
+                return false;
+            }
+
+            else {
+                return true;
+            }
+        }
+
+        $(document).on('click', '.batchClass', function () {
+            if (validateForBatch()) {
+                var t = $('#BOMGrid').DataTable();
+                var id = $(this).parent('td').parent('tr').index();
+                var i = 0;
+
+                var batch_item_id = t.fnGetData(id)[2];
+                var batch_quantity = t.fnGetData(id)[4];
+                var uom_id = t.fnGetData(id)[5];
+                var batch_sloc_id = $("#child_sloc_id").val();
+                var batch_plant_id = $("#plant_id").val();
+
+                $("#batch_item_id").val(batch_item_id);
+                $("#qty").val(batch_quantity);
+                $("#batch_sloc_id").val(batch_sloc_id);
+                $("#batch_plant_id").val(batch_plant_id);
+
+                var t1 = $('#BatchGrid').DataTable();
+                t1.fnClearTable();
+                var rowCount = t1.fnGetData().length;
+
+                $('#SelectBatch').modal();
+                $.ajax({
+                    url: '@Url.Action("BatchListWithQuantity", "Generic")',
+                    type: "GET",
+                    dataType: "JSON",
+                    async: false,
+                    data: { item_id: batch_item_id, plant_id: batch_plant_id, sloc_id: batch_sloc_id, entity: 'getbatchlistforproductionorder' },
+                    cache: false,
+                    //processData: false,
+                    success: function (batch) {
+
+                        $.each(batch, function (key, cycle) {
+                            if (cycle.expirary_date != null) {
+                                var dateString = cycle.expirary_date;
+                                var substringedDate = dateString.substring(6);
+                                var parsedIntDate = parseInt(substringedDate);
+                                var date = new Date(parsedIntDate);
+                                var month = date.getMonth();
+                                if (month < 10) {
+                                    month = '0' + month;
+                                }
+                                var day = date.getDate();
+                                if (day < 10) {
+                                    day = '0' + date;
+                                }
+                                var year = date.getFullYear();
+                                expdate = day + "-" + month + "-" + year;
+                            }
+                            else {
+                                expdate = cycle.expirary_date;
+                            }
+
+                            t1.fnAddData([cycle.item_batch_id, cycle.item_batch_detail_id, i + 1, cycle.batch_number, expdate, cycle.qty,
+                            cycle.balance_qty, '<input type="checkbox" id="batchselect' + i + '" onchange="addbatchdetails(' + i + ',' + id + ')" class="price form-control"/>'
+                            ]);
+
+                            i = i + 1;
+                        });
+
+                    }
+                });
+
+                $("#batch_item_id").select2({
+                    placeholder: "Select Item",
+                    allowClear: true
+                });
+
+
+            }
+
+        });
+
+        function addbatchdetails(i, bomid) {
+            var t = $("#BatchGrid").DataTable();
+            var rowCount = t.fnGetData().length;
+            for (var k = 0; k < rowCount; k++) {
+                if (i != k) {
+                    $("#batchselect" + k).removeAttr('checked');
+                }
+            }
+            var item_batch_id = t.fnGetData(i)[0];
+            var item_batch_detail_id = t.fnGetData(i)[1];
+            var batch_number = t.fnGetData(i)[3];
+            var balance_qty = t.fnGetData(i)[6];
+            var orderqty = $("#qty").val();
+
+            if (balance_qty < orderqty) {
+                swal("Balance quantity is less than order quantity", "Please select another batch or update order quantity", "warning");
+            }
+            else {
+                var t1 = $("#BOMGrid").DataTable();
+
+                var item_id = t1.fnGetData(bomid)[2];
+                var item_description = t1.fnGetData(bomid)[3];
+                var quantity = t1.fnGetData(bomid)[4];
+                var uomid = t1.fnGetData(bomid)[5];
+                var uom = t1.fnGetData(bomid)[6];
+
+                var rowCount = t1.fnGetData().length;
+
+                t1.fnUpdate(['0', bomid + 1, item_id, item_description, quantity, uomid, uom, item_batch_id, batch_number, item_batch_detail_id, ''], bomid);
+                $("#SelectBatch").modal('hide');
+            }
+        }
+
+        function validateDiv() {
+            var validate_batch_id = "";
+            var t = $("#BOMGrid").DataTable();
+            var rowCount = t.fnGetData().length;
+
+            for (var k = 0; k < rowCount; k++) {
+                valideate_batch_id = t.fnGetData(k)[7];
+                if (valideate_batch_id == "") {
+                    $(".batchClass").focus();
+                    swal("", "Please select batch for item", "error");
+                    return false;
+                }
+            }
+
+            if ($("#category_id").val() == 0) {
+                $("#category_id").focus();
+                swal("", "Some mandatory feilds are missing", "error")
+                return false;
+            }
+            if ($("#prod_order_date").val() == 0) {
+                $("#prod_order_date").focus();
+                swal("", "Some mandatory feilds are missing", "error")
+                return false;
+            }
+            if ($("#shift_id").val() == 0) {
+                $("#shift_id").focus();
+                swal("", "Some mandatory feilds are missing", "error")
+                return false;
+            }
+            if ($("#plant_id").val() == 0) {
+                $("#plant_id").focus();
+                swal("", "Some mandatory feilds are missing", "error")
+                return false;
+            }
+            if ($("#out_item_id").val() == 0) {
+                $("#out_item_id").focus();
+                swal("", "Some mandatory feilds are missing", "error")
+                return false;
+            }
+            if ($("#process_seq_alt_id").val() == 0) {
+                $("#process_seq_alt_id").focus();
+                swal("", "Some mandatory feilds are missing", "error")
+                return false;
+            }
+            if ($("#mfg_bom_id").val() == 0) {
+                $("#mfg_bom_id").focus();
+                swal("", "Some mandatory feilds are missing", "error")
+                return false;
+            }
+            if ($("#quantity").val() == 0) {
+                $("#quantity").focus();
+                swal("", "Some mandatory feilds are missing", "error")
+                return false;
+            }
+            if ($("#child_sloc_id").val() == 0) {
+                $("#child_sloc_id").focus();
+                swal("", "Some mandatory feilds are missing", "error")
+                return false;
+            }
+            if ($("#parent_sloc_id").val() == 0) {
+                $("#parent_sloc_id").focus();
+                swal("", "Some mandatory feilds are missing", "error")
+                return false;
+            }
+
+            if($("#machine_seq").val() == ""){
+                swal("Operation Sequence Is Not Created, Please create sequence for this production order in operation sequence tab", "","error")
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+        $("#buttncreate").click(function () {
+            if (validateDiv()) {
+                $("#create").trigger('click');
+            }
+        })
+
+
+        var machine_sequence = [];
+        function TabletoJeson() {
+            $("#uom_id").prop("disabled", false);
+
+            var t = $("#BOMGrid").DataTable();
+            var rowCount = t.fnGetData().length;
+
+            for (var i = 0; i < rowCount; i++) {
+                $("#bomdiv").append('<input type="hidden" id="prod_order_detail_id' + i + '" name="prod_order_detail_id">');
+                $("#bomdiv").append('<input type="hidden" id="batch_in_item_id' + i + '" name="batch_in_item_id">');
+                $("#bomdiv").append('<input type="hidden" id="batch_quantity' + i + '" name="batch_quantity">');
+                $("#bomdiv").append('<input type="hidden" id="batch_in_uom_id' + i + '" name="batch_in_uom_id">');
+                $("#bomdiv").append('<input type="hidden" id="item_batch_id' + i + '" name="item_batch_id">');
+                $("#bomdiv").append('<input type="hidden" id="item_batch_detail_id' + i + '" name="item_batch_detail_id">');
+
+                $("#prod_order_detail_id" + i).val(t.fnGetData(i)[0]);
+                $("#batch_in_item_id" + i).val(t.fnGetData(i)[2]);
+                $("#batch_quantity" + i).val(t.fnGetData(i)[4]);
+                $("#batch_in_uom_id" + i).val(t.fnGetData(i)[5]);
+                $("#item_batch_id" + i).val(t.fnGetData(i)[7]);
+                $("#item_batch_detail_id" + i).val(t.fnGetData(i)[9]);
+            }
+
+            return true;
+        }
+
+
+        $('#BatchGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: false },
+                     { sname: "b", bVisible: false },
+                     { sname: "c", bVisible: true },
+                     { sname: "d" },
+                     { sname: "e", bVisible: true },
+                     { sname: "f" },
+                     { sname: "g", bVisible: true },
+                     { sname: "h", bVisible: true },
+            ]
+        });
+
+        $('#BOMGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "p", bVisible: false },
+                     { sname: "a" },
+                     { sname: "b", bVisible: false },
+                     { sname: "c" },
+                     { sname: "d" },
+                     { sname: "e", bVisible: false },
+                     { sname: "f" },
+                     { sname: "g", bVisible: false },
+                     { sname: "h" },
+                     { sname: "i", bVisible: false },
+                     {
+                         sname: "m", sWidth: "8%",
+                         bSortable: false,
+                         mRender: function (data, type, full) {
+                             return '<button type="button" class="btn btn-primary batchClass"><span class="glyphicon glyphicon-plus"></span></button>';
+                         }
+                     }]
+        });
+
+        //--------------------------Process sequence--------------------------//
+        var process_count = 0;
+        $("#process_seq_alt_id").change(function(){
+            if($("#tab_content1").hasClass("active in")){
+                $("#profile-tab").click();
+
+                $.ajax({
+                    url: "@Url.Action("GetOperationsByOperationSequenceId", "ProductionOrder")",
+                    method: "POST",
+                    cache: false,
+                    data: { process_seq_alt_id: $("#process_seq_alt_id").val() },
+                    success: function (data) {
+
+                        process_count = data.length;
+                        //Create divs for operation names and machine names
+                        $("#operation_sequence").empty();
+                        for(var i=0; i < data.length;i++){
+
+                            $("#operation_sequence").append(
+                                '<div class="col-md-12" style="margin-bottom: 15px;padding: 20px;border:5px double #7F8C8D">'+
+                                    '<div id="operation_dropdown_div-'+i+'" class="operation_dropdown_div col-md-3" style="border:3px solid #544343;padding: 0px 0px 0px 0px;border-radius: 8px;">'+
+                                        '<select id=process_id-'+i+' class="form-control process_id_class" style="font-size:1.5em!important;height:10%">'+
+
+                                        '</select>'+
+                                    '</div>'+
+                                    '<div id="machine_names-'+i+'" class="machine_names col-md-9">'+
+
+                                    '</div>'+
+                                '</div>'
+                            )
+
+                            //for(var j = 0; j < data[i].machine_id.length; j++){
+                            //    $("#machine_names-"+i).append(
+                            //       '<span class="machines_span">'+
+                            //            '<label class="machines_name_label">'+
+                            //           '<input type="hidden" value="'+data[i].machine_id[j]+'" /> '+data[i].machine_name[j]+'</label>'+
+                            //           '<button type="button" class="close_machine_name divremovebutton btn btn-default glyphicon glyphicon-remove"/>'+
+                            //        '</span>'
+                            //   )
+                            //}
+                        }
+
+                        //Append operations in dropdown
+                        for(var j = 0; j < data.length; j++){
+                            $('#process_id-'+j).find('option').remove().end();
+
+                            if(data[j].process_id == 0 || data[j].process_id == null){
+                                for(var k = 0; k < data[j].GetOperationSequenceWithMachineList.length; k++){
+                                    $('#process_id-'+j).append($('<option>', {
+                                        value: data[j].GetOperationSequenceWithMachineList[k].process_id,
+                                        text : data[j].GetOperationSequenceWithMachineList[k].process_name
+                                    }));
+                                    $('#process_id-'+j).css("background-color","#34495e");
+                                    $('#process_id-'+j).css("color","#fff");
+                                }
+                            }
+                            else{
+                                $('#process_id-'+j).append($('<option>', {
+                                    value: data[j].process_id,
+                                    text : data[j].process_name
+                                }));
+                            }
+                            GetMappedMachinesByProcessId($('#process_id-'+j).val(),j);
+                        }
+
+                        $(".process_id_class").change(function(){
+                            var process_id = $(this).val();
+                            var select_list_id = this.id.split('-');
+                            var object_id = select_list_id[1];
+
+                            $.ajax({
+                                url: "@Url.Action("GetMappedMachinesByProcessId", "ProductionOrder")",
+                                method: "POST",
+                                cache: false,
+                                data: { process_id: process_id},
+                                success: function (data) {
+
+                                    //Append machines for mapped operations
+                                    $('#machine_names-'+object_id).empty();
+                                    for(var i = 0; i < data.length; i++){
+                                        $('#machine_names-'+object_id).append(
+                                            '<span class="machines_span">'+
+                                                '<label class="machines_name_label">'+
+                                                '<input type="hidden" value="'+data[i].machine_id+'" /> '+data[i].machine_name+'</label>'+
+                                                '<button type="button" id="removebutton-"'+object_id+' class="close_machine_name divremovebutton btn btn-default glyphicon glyphicon-remove"/>'+
+                                            '</span>'
+                                        )
+                                    }
+
+                                    //Remove machine name label
+                                    $(function() {
+                                        $(" removebutton").click(function(){
+                                            var div = $(this).parent('span').parent('.machine_names');
+                                            var length = div.children().length;
+                                            alert(length);
+                                            if (length >= 2) {
+                                                div.remove();
+                                            }
+                                            else {
+                                                alert('Sorry You Cannot Remove Machine');
+                                            }
+                                        });
+                                    });
+                                }
+                            })
+                        })
+                    }
+                })
+            }
+        })
+        var countforclick = 0;
+        var existingDivId = null;
+        //Append machines respective to selected operations
+        function GetMappedMachinesByProcessId(process_id,j){
+            $.ajax({
+                url: "@Url.Action("GetMappedMachinesByProcessId", "ProductionOrder")",
+                method: "POST",
+                cache: false,
+                data: { process_id: process_id},
+                success: function (data) {
+
+                    //Append machines for mapped operations
+                    $('#machine_names-'+j).empty();
+                    for(var i = 0; i < data.length; i++){
+                        $('#machine_names-'+j).append(
+                            '<span class="machines_span">'+
+                                '<label class="machines_name_label">'+
+                                '<input type="hidden" value="'+data[i].machine_id+'" /> '+data[i].machine_name+'</label>'+
+                                '<button type="button" id="removebutton-"'+j+' class="close_machine_name divremovebutton btn btn-default glyphicon glyphicon-remove"/>'+
+                            '</span>'
+                        )
+                    }
+
+                    //Remove machine name label
+                    $(function() {
+                        $(".divremovebutton").click(function () {
+                            var divId = $(this).parent('span').parent('.machine_names').attr('id');
+                            if (divId != undefined && existingDivId != divId) {
+                                var div = $(this).parent('span').parent('.machine_names');
+                                var div1 = $(this).parent('span');
+                                var length = div.children().length;
+                                if (length != 0) {
+                                    if (length > 1) {
+                                        div1.remove();
+                                        return true;
+                                    }
+                                    else {
+                                        //if (countforclick == 0) {
+                                        swal("Sorry You Cannot Remove Machine", "", "error");
+                                        existingDivId = divId;
+                                            return false;
+                                        //}
+                                    }
+                                }
+                            }
+                        });
+                    });
+                }
+            })
+        }
+
+        $("#save_process_sequence").click(function(){
+            var operation_sequence = [];
+            var flag = 1;
+            $(".machine_names").each(function(i){
+                var machine_ids = [];
+                $(this).find('label').children().each(function(){
+                    var mid = $(this).val();
+                    machine_ids.push(mid);
+                });
+
+                machine_ids = machine_ids.join('/');
+                //machine_ids = machine_ids.filter(function(entry) { return entry.trim() != ''; });
+                //if(machine_ids.length > 1){
+                //    flag = 0;
+                //}
+                operation_sequence.push(machine_ids);
+            })
+            operation_sequence = operation_sequence.filter(function(entry) { return entry.trim() != ''; })
+            operation_sequence = operation_sequence.join(',');
+            $("#machine_seq").val(operation_sequence);
+            console.log($("#machine_seq").val());
+            swal("Operation Sequence Created","","success");
+
+        })
+
+    </script>
+}
+
+
+@*//----------------------------Old JavaScript Code---------------------------------------------*@
+@*$("#process_seq_alt_id").change(function(){
+        if($("#tab_content1").hasClass("active in")){
+            $("#profile-tab").click();
+
+            $.ajax({
+                url: "@Url.Action("GetProcessSequenceByProcessSequenceId", "ProductionOrder")",
+                method: "POST",
+                cache: false,
+                data: { process_sequence_id: $("#process_seq_alt_id").val()},
+                success: function (data) {
+
+                    var machine_list = @Html.Raw(JsonConvert.SerializeObject(ViewBag.machine_list));
+                    var operations_count = data.length;
+
+                    $("#new_sequence_created").empty();
+                    $("#new_sequence_created").append(
+                        '<h4>Operation Sequence</h4><hr />'
+                      )
+                    //Outer Loop
+                    for(var i=0;i<operations_count;i++){ $("#new_sequence_created").append(
+                                                         '<div id="sorted_new_sequence-' +i+'" class="sorted_new_sequence sortable connectedSortable" name="sorted_new_sequence">
+    '+
+    '<button class="divaddbutton btn btn-sm glyphicon glyphicon-plus"></button>&nbsp;'+
+    '</div>'
+    )
+    //Inner Machine List Loop
+    for (var j=0; j<machine_list.length;j++) {
+                                             var machines=machine_list[j];
+                                             if(parseInt(data[i])= =machines.machine_id){
+                                             $("#sorted_new_sequence-"+i).append(
+                                             '<span class="ui-state-highlight ui-sortable-handle"><input type="hidden" value="' +machines.machine_id+'" />'+machines.machine_code+'</span>&nbsp;'
+    );
+    }
+    else{
+    var machines_split = data[i].split('/');
+    for(var k=0; k<machines_split.length; k++){
+                                          if(machines_split[k]= =machines.machine_id){
+                                          $("#sorted_new_sequence-"+i).append(
+                                          '<span class="ui-state-highlight ui-sortable-handle"><input type="hidden" value="' +machines.machine_id+'" />'+machines.machine_code+'</span>&nbsp;'
+    );
+    }
+    }
+    }
+    }
+    }
+    //Draggable and Sortable initialization
+    $(function() {
+    $( ".sortable").sortable({
+    connectWith: ".connectedSortable",
+    placeholder: "ui-state-highlight",
+    }).disableSelection();
+
+    $( ".draggble" ).draggable({
+    connectToSortable: ".connectedSortable",
+    helper: "clone",
+    revert: "invalid",
+    }).disableSelection();
+
+    $( "#droppable" ).droppable({
+    drop: function(event, ui) {
+    $( this )
+    .addClass( "ui-state-highlight" )
+    ui.draggable.remove();
+    }
+    });
+
+    var drpOptions = {
+    drop: function(event, ui) {
+    console.log(ui);
+    $(this).append(
+    ui.draggable.clone().html());
+    }
+    };
+
+    $(".divaddbutton").click(function(){
+    var div = $(this).parent('div');
+    $('<div class="sorted_new_sequence sortable connectedSortable" name="sorted_new_sequence"></div>')
+    .sortable({connectWith: ".connectedSortable",placeholder: "ui-state-highlight",}).disableSelection().insertAfter(div);
+    });
+
+    $(".divclosebutton").click(function(){
+    var div = $(this).parent('div');
+    div.remove();
+    });
+
+    $( "#new_sequence_created" ).sortable();
+    $( "#new_sequence_created" ).disableSelection();
+
+    $(function () {
+    $('#operation_list_div').scroll(function () {
+    $('#new_sequence_created').scrollTop($(this).scrollTop());
+    });
+    $('#new_sequence_created').scroll(function () {
+    $('#operation_list_div').scrollTop($(this).scrollTop());
+    });
+    });
+
+    });
+    }
+    })
+    }
+    else {
+    return false;
+    }
+    })
+    //Update process sequence
+    $("#update_sequence").click(function(){
+    var flag = 1;
+    var process_sequence = [];
+
+    $(".sorted_new_sequence").each(function(i){
+    var machine_ids = [];
+    $(this).find('span').children().each(function(){
+
+    var mid = $(this).val();
+    machine_ids.push(mid);
+    });
+    if(machine_ids.length > 1){
+    flag = 0;
+    return false;
+    }
+    machine_ids = machine_ids.join('/');
+    process_sequence.push(machine_ids);
+    })
+
+    if(flag == 1){
+    process_sequence = process_sequence.filter(function(entry) { return entry.trim() != ''; });
+    process_sequence = process_sequence.join(',');
+
+    $.ajax({
+    url: "@Url.Action("UpdateProcessSequenceById", "ProductionOrder")",
+    method: "POST",
+    cache: false,
+    data: { process_sequence_id: $("#process_seq_alt_id").val(), process_sequence: process_sequence },
+    success: function (data) {
+    if(data == 'success'){
+    swal("","Process Sequence Updated For This Item","success");
+    }
+    else{
+    swal("","Something went wrong","error");
+    }
+    }
+    })
+    }
+    else{
+    swal("Incorrect Sequence Detected","You can select only one Machine per Operation","error");
+    }
+    });*@
+
+@*-------------------------HTML CODE--------------------------------------------------*@
+
+@*<div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
+        <style>
+            #droppable {
+                width: 60px;
+                margin: 10px;
+                color: #ffffff;
+                padding: 10px;
+                background-color: #bd0a0a;
+            }
+
+            .sortable {
+                border: 5px double #fff;
+                width: 100%;
+                min-height: 50px;
+                padding: 5px 0px 10px 5px;
+                float: left;
+                margin-right: 10px;
+                overflow: hidden;
+                background-color: #5a84af;
+            }
+
+                .sortable span {
+                    border: 2px solid;
+                    font-weight: bold;
+                    font-size: 1.8em;
+                    padding: 0px 5px 5px 5px;
+                    cursor: pointer;
+                    background-color: #ffffff;
+                    color: black;
+                }
+
+            #draggable1 {
+                border: 5px groove #f5f7fa;
+                min-height: 50px;
+                padding: 5px 0px 10px 5px;
+                float: left;
+                overflow: hidden;
+            }
+
+                #draggable1 div span {
+                    border: 1px solid #000000;
+                    margin: 0px 5px 0px 0px;
+                    font-weight: bold;
+                    font-size: 1.8em;
+                    padding: 0px 12px 0px 10px;
+                    cursor: pointer;
+                    background-color: #402a54;
+                    color: #ffffff;
+                }
+
+            .divaddbutton {
+                float: right;
+                background-color: #ffffff;
+                color: green;
+            }
+
+            #new_sequence_created {
+                border: 5px groove #f5f7fa;
+            }
+
+            .divclosebutton {
+                float: right;
+                background-color: #ffffff;
+                color: red;
+            }
+
+            #operation_list_div {
+                border: 5px double #f5f7fa;
+            }
+
+            .operation_name_div {
+                border: 5px double #fff;
+                width: 100%;
+                min-height: 70px;
+                padding: 5px 0px 10px 5px;
+                float: left;
+                margin-right: 10px;
+                overflow: hidden;
+                background-color: #5a84af;
+            }
+
+                .operation_name_div span {
+                    border: 1px solid #dad55e;
+                    font-weight: bold;
+                    margin: 5px 5px 5px 0px;
+                    font-size: 1.8em;
+                    padding: 0px 5px 0px 5px;
+                    cursor: pointer;
+                    background: #fff;
+                    color: black;
+                }
+        </style>
+
+        <div class="col-md-12">
+
+            <div id="draggable1" class="col-md-4" style="height:450px; overflow: scroll;">
+                <h4>Machine List</h4><hr />
+                @foreach (var item in ViewBag.machine_list)
+                {
+                <div>
+                    <span class="draggble ui-state-highlight ui-sortable-handle">
+                        <input type="hidden" value="@item.machine_id" /> @item.machine_code
+                    </span>
+                </div>
+                <br />
+                }
+            </div>
+            <div id="new_sequence_created" class="col-md-7" style="height:450px; overflow-y: scroll; overflow-x:hidden">
+
+            </div>
+            <div id="droppable" class="col-md-1 btn btn-lg glyphicon glyphicon-trash sortable connectedSortable ui-widget-header">
+
+            </div>
+        </div>
+        <br /><br />
+        <div class="row">
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <input type="button" value="Update Sequecnce" class="btn btn-success" style="float:right" id="update_sequence" name="update_sequence" />
+                </div>
+            </div>
+        </div>
+    </div>*@

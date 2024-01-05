@@ -1,0 +1,108 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.ViewModel.operator_change_req_vm>
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+<div class="loading">Loading &#8230;</div>
+
+<br />
+<div id="searchresult" class="row">
+    @(Html.EJ().Grid<object>("Grid")
+       .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.DataSource).UpdateURL(Url.Action("ChangeApprovedStatus", "OperatorChangeRequest"))
+                       .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .FilterSettings(filter => { filter.FilterType(FilterType.Menu); })
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing(); })
+        .EnableAltRow()
+        .AllowPaging().PageSettings(a => a.PageSize(20))
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+
+                items.AddTool(ToolBarItems.Edit);
+                items.AddTool(ToolBarItems.Update);
+                items.AddTool(ToolBarItems.Cancel);
+            });
+        }).ContextMenuSettings(contextMenu =>
+        {
+            contextMenu.EnableContextMenu();
+            contextMenu.DisableDefaultItems();
+            contextMenu.CustomContextMenuItems(new List<Syncfusion.JavaScript.Models.CustomContexMenuItems>() { new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu", Text = "Print" } });
+        })
+        .AllowSorting()
+
+        .IsResponsive()
+        .AllowFiltering()
+        .AllowReordering()
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("operator_change_request_detail_id").HeaderText("ID").IsPrimaryKey(true).Width(100).Visible(false).AllowEditing(false).Add();
+            col.Field("category").HeaderText("Category").IsPrimaryKey(true).Width("5%").Add();
+            col.Field("document_no").HeaderText("Document No.").IsPrimaryKey(true).Width(100).Add();
+            col.Field("posting_date").HeaderText("Posting Date").Width(100).Format("{0:dd/MM/yyyy}").AllowEditing(false).Add();
+            col.Field("operator_id").Width("10%").HeaderText("Operator id").Visible(false).AllowEditing(false).Add();
+            col.Field("operator_name").Width("15%").HeaderText("Operator").AllowEditing(false).Add();
+            col.Field("machine_id").Width("10%").HeaderText("Machine id").AllowEditing(false).Visible(false).Add();
+            col.Field("machine_name").Width("15%").HeaderText("Machine").AllowEditing(false).Add();
+            col.Field("current_level_id").Width("10%").HeaderText("Level id").AllowEditing(false).Visible(false).Add();
+            col.Field("current_level_code").Width("10%").HeaderText("Current Level").AllowEditing(false).Add();
+            col.Field("new_level_id").Width("10%").HeaderText("Level id").AllowEditing(false).Visible(false).Add();
+            col.Field("new_level_code").Width("10%").HeaderText("New Level").AllowEditing(false).Add();
+            col.Field("approval_status_id").Width("10%").HeaderText("Status").ForeignKeyField("approval_status_id")
+            .ForeignKeyValue("approval_status_name").DataSource((IEnumerable<object>)ViewBag.status_list).AllowEditing(true)
+            .TextAlign(TextAlign.Left).Add();
+            col.Field("approval_comments").HeaderText("Comments").Width("15%").Add();
+        })
+        .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess");
+            eve.ContextClick("contextclick");
+        })
+    )
+</div>
+<br />
+<br>
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+<script>
+
+    function EndProcess()
+    {
+        var gridObj = $("#Grid").ejGrid("instance");
+        gridObj.refreshContent();
+    }
+    $('#approval_status').val("0");
+    $("#search").click(function () {
+        AdvanceSearch();
+    });
+    function AdvanceSearch()
+    {
+        var id = $("#approval_status").val();
+        $(".loading").show();
+        $.ajax({
+            url: "@Url.Action("GetApprovedStatus", "OperatorChangeRequest")",
+            method: "Post",
+        cache: false,
+        data: {id:id},
+        success: function (data) {
+            console.log(data);
+            $(".loading").hide();
+            $('#searchresult').empty().append(data);
+        },
+        error: function (http) {
+            console.log(XMLHttpRequest);
+        }
+    });
+    }
+    function contextclick(args) {
+
+        if (args.text == "Print") {
+            var url = '@Url.Action("Pdf", "OperatorChangeRequest")?id=' + this.getSelectedRecords()[0].po_id + '&type=' + 1;
+            window.open(url);
+        }
+
+
+    };
+</script>
+

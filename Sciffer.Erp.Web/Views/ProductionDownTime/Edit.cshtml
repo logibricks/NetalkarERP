@@ -1,0 +1,521 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm("Create", "ProductionDownTime", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form_main", @id = "form_main" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        <div>@Html.ValidationSummary(true, "", new { @class = "text-danger" })</div>
+
+        <div class="form-group">
+            <div class="row">
+                <label class="control-label col-md-1">
+                    Date <span class="required">*</span>
+                </label>
+                <div class="col-md-3">
+                    <input type="date" class="form-control col-md-7 col-xs-12" id="prod_date" disabled>
+                </div>
+            </div>
+            <br />
+            <br />
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table table-responsive table-bordered table-striped" id="upload">
+                        <thead>
+                            <tr>
+                                <th hidden><label>id</label></th>
+                                <th hidden><label>planid</label></th>
+                                <th><label>Sr.No.</label></th>                             
+                                <th hidden><label>machine_id</label></th>
+                                <th><label>Machine Code</label></th>
+                                <th hidden><label>item_id</label></th>
+                                <th><label>Item Code</label></th>                           
+                                <th hidden><label>shift_id</label></th>
+                                <th><label>Shift Code</label></th>
+                           
+                                <th><label>M/C BREAKDOWN</label></th>
+                                <th><label>PM</label></th>
+                                <th><label>NO POWER </label></th>
+                                <th><label>NO OPERATOR </label></th>
+                                <th><label>NO LOAD </label></th>
+                                <th><label>SETUP </label></th>
+                                <th><label>RESTART </label></th>
+                                <th><label>TOOL CHANGE </label></th>
+                                <th><label>QUALITY CHECK </label></th>
+                                <th><label>NO PLAN </label></th>
+                                <th><label>TRAINING </label></th>
+                                <th><label>JH </label></th>
+                                <th><label>REMARKS </label></th>                               
+                                <th><label>Action</label></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg12 col-sm-12">
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <input type="button" value="Update" data-controller="ProductionDownTime" class="btn btn-success pull-right" id="create" name="create" onclick="TabletoJeson();" />
+                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary pull-left" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" onclick="clearmodel();">&times;</button>
+                    <h4 class="modal-title">Details</h4>
+                </div>
+                <div class="modal-body" style="max-height:500px;overflow:auto">
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                Machine <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                @Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.machine_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12", @style = "width: 100%;",@disabled = "disabled" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                Item <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.item_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12", @style = "width: 100%;", @disabled = "disabled" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />         
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                Shift
+                            </label>
+                            <div class="col-md-7">
+                                @Html.DropDownList("shift_id", (System.Web.Mvc.SelectList)ViewBag.shift_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12", @style = "width: 100%;", @disabled = "disabled" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                M/C BREAKDOWN <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="mac_breakdown" style="text-align:right">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                PM <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="pm" style="text-align:right">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                NO POWER <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="no_power" style="text-align:right">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                NO OPERATOR <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="no_operator" style="text-align:right">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                NO LOAD <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="no_load" style="text-align:right">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                SETUP <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="setup" style="text-align:right">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                RESTART <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="restart" style="text-align:right">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                TOOL CHANGE <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="tool_change" style="text-align:right">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                QUALITY CHECK <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="quality_check" style="text-align:right">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                NO PLAN <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="no_plan" style="text-align:right">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                TRAINING <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="training" style="text-align:right">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                JH <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="jh" style="text-align:right">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                REMARKS <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="remarks" style="text-align:right">
+                            </div>
+                        </div>
+                    </div>
+                    <br />               
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <input type="hidden" id="srno" />
+                    <input type="hidden" id="datehidden" />
+                    <input type="hidden" id="prod_plan_detail_id" />
+                    <input type="hidden" id="prod_downtime_id" />
+                    <input type="hidden" id="id" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                    <button type="button" class="add btn btn-primary">Add</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+
+        var upload = @Html.Raw(JsonConvert.SerializeObject(ViewBag.details));
+
+        $("#item_id").select2({
+            placeholder: "Select Item",
+            allowClear: true
+        });
+
+        $("#machine_id").select2({
+            placeholder: "Select Machine",
+            allowClear: true
+        });
+
+        $("#shift_id").select2({
+            placeholder: "Select Shift",
+            allowClear: true
+        });
+
+        $("#supervisor_id").select2({
+            placeholder: "Select Supervisor",
+            allowClear: true
+        });
+
+        function clearmodel() {
+            $("#item_id").val('').trigger("change");
+            $("#quantity").val('');
+            $("#machine_id").val('').trigger("change");
+
+        }
+
+        $('#upload').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", sWidth: "15%",bVisible: false },
+                     { sname: "a1", sWidth: "1%",bVisible: false },
+                     //{ sname: "b", sWidth: "5%",bVisible: true },
+                     { sname: "c", sWidth: "5%",bVisible: true },
+                     { sname: "d", sWidth: "15%",bVisible: false },
+                     { sname: "e", sWidth: "20%" ,bVisible: true},
+                     { sname: "f", sWidth: "15%", bVisible: false},
+                     { sname: "g", sWidth: "25%",bVisible: true },
+                     { sname: "h", sWidth: "15%",bVisible: false },
+                      { sname: "i", sWidth: "20%" ,bVisible: true},
+                    
+                    { sname: "j", sWidth: "15%",bVisible: true,"sClass":"numericCol" },                 
+                    { sname: "l", sWidth: "15%" ,bVisible: true,"sClass":"numericCol"},
+                    { sname: "m", sWidth: "15%" ,bVisible: true,"sClass":"numericCol"},
+                    { sname: "n", sWidth: "15%" ,bVisible: true,"sClass":"numericCol"},
+                    { sname: "o", sWidth: "15%" ,bVisible: true,"sClass":"numericCol"},
+                    { sname: "p", sWidth: "15%" ,bVisible: true,"sClass":"numericCol"},
+                    { sname: "q", sWidth: "15%" ,bVisible: true,"sClass":"numericCol"},
+                    { sname: "r", sWidth: "15%" ,bVisible: true,"sClass":"numericCol"},
+                    { sname: "s", sWidth: "15%" ,bVisible: true,"sClass":"numericCol"},
+                    { sname: "t", sWidth: "15%" ,bVisible: true,"sClass":"numericCol"},
+                    { sname: "u", sWidth: "15%" ,bVisible: true,"sClass":"numericCol"},
+                    { sname: "v", sWidth: "15%" ,bVisible: true,"sClass":"numericCol"},
+                    { sname: "w", sWidth: "15%" ,bVisible: true,"sClass":"numericCol"},
+                   
+                     {
+                        sname: "z", sWidth: "1%",
+                        bSortable: false,
+                        mRender: function (data, type, full) {
+                        return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit"  />';
+                     }
+
+                     },
+
+            ]
+
+        });
+
+
+        $(document).ready(function () {
+
+        var t1 = $('#upload').DataTable();
+        var rowCount = t1.fnGetData().length - 1;
+
+        $.each(upload,function(key,value){
+
+            if(value.shift_id == null)
+            {
+                value.shift_id = 0;
+            }
+            if(value.shift_code == null)
+            {
+                value.shift_id = "";
+            }
+
+            t1.fnAddData([value.prod_downtime_id,value.prod_plan_detail_id,key + 1,value.machine_id,value.machine_code,value.item_id,value.item_name
+                ,value.shift_id,value.shift_code,parseFloat(value.mac_breakdown).toFixed(2),parseFloat(value.pm).toFixed(2),parseFloat(value.no_power).toFixed(2)
+                ,parseFloat(value.no_operator).toFixed(2),parseFloat(value.no_load).toFixed(2),parseFloat(value.setup).toFixed(2)
+                ,parseFloat(value.restart).toFixed(2),parseFloat(value.tool_change).toFixed(2),parseFloat(value.quality_check).toFixed(2)
+                ,parseFloat(value.no_plan).toFixed(2),parseFloat(value.training).toFixed(2),parseFloat(value.jh).toFixed(2),parseFloat(value.remarks).toFixed(2),'']);
+            rowCount + 1;
+
+
+            $("#prod_date").val(value.prod_dates);
+
+        });
+
+        });
+
+
+
+        $('#upload').on('click', '.edit', function () {
+
+            var t = $('#upload').dataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            $('#myModal').modal('show');
+            $("#srno").val(t.fnGetData(id)[2]);           
+            $("#item_id").val(t.fnGetData(id)[5]).trigger('change');
+            $("#machine_id").val(t.fnGetData(id)[3]).trigger('change');
+            $("#shift_id").val(t.fnGetData(id)[7]).trigger('change');
+            $("#prod_downtime_id").val(t.fnGetData(id)[0]).trigger('change');
+            $("#prod_plan_detail_id").val(t.fnGetData(id)[1]).trigger('change');
+            $('#mac_breakdown').val(t.fnGetData(id)[9]);
+            $('#pm').val(t.fnGetData(id)[10]);
+            $('#no_power').val(t.fnGetData(id)[11]);
+            $('#no_operator').val(t.fnGetData(id)[12]);
+            $('#no_load').val(t.fnGetData(id)[13]);
+            $('#setup').val(t.fnGetData(id)[14]);
+            $('#restart').val(t.fnGetData(id)[15]);
+            $('#tool_change').val(t.fnGetData(id)[16]);
+            $('#quality_check').val(t.fnGetData(id)[17]);
+            $('#no_plan').val(t.fnGetData(id)[18]);
+            $('#training').val(t.fnGetData(id)[19]);
+            $('#jh').val(t.fnGetData(id)[20]);
+            $('#remarks').val(t.fnGetData(id)[21]);
+
+        });
+
+        $(".add").on("click", function (event) {
+
+            var st = $('#upload').dataTable();
+            var rowCount = st.fnGetData().length;
+            var item_id = $("#item_id").val();
+            var item_name = $("#item_id").find("option:selected").text();
+            var machine_id = $("#machine_id").val();
+            var machine_name = $("#machine_id").find("option:selected").text();        
+            var prod_plan_detail_id = $("#prod_plan_detail_id").val();
+            var shift_id = $("#shift_id").val();
+            var shift_code = $("#shift_id").find("option:selected").text();
+            var mac_breakdown = $("#mac_breakdown").val();
+            var pm = $("#pm").val();
+            var no_power = $("#no_power").val();
+            var no_operator = $("#no_operator").val();
+            var no_load = $("#no_load").val();
+            var setup = $("#setup").val();
+            var restart = $("#restart").val();
+            var tool_change = $("#tool_change").val();
+            var quality_check = $("#quality_check").val();    
+            var no_plan = $("#no_plan").val();
+            var training = $("#training").val();
+            var jh = $("#jh").val();
+            var remarks = $("#remarks").val();
+            var prod_downtime_id = $("#prod_downtime_id").val();
+            if(item_id == "")
+            {
+                swal("", "Select Item", "error");
+                return false;
+            }
+            if(machine_id == "")
+            {
+                swal("", "Select Machine", "error");
+                return false;
+            }
+            if(shift_id == "")
+            {
+                swal("", "Select Shift", "error");
+                return false;
+            }
+          
+         
+            var sr = $("#srno").val();
+                var cc = $("#srno").val();
+                cc = parseInt(cc) - 1;
+                st.fnUpdate([prod_downtime_id,prod_plan_detail_id,sr, machine_id,machine_name,item_id,item_name,shift_id,shift_code,parseFloat(mac_breakdown).toFixed(2),parseFloat(pm).toFixed(2),parseFloat(no_power).toFixed(2)
+                ,parseFloat(no_operator).toFixed(2),parseFloat(no_load).toFixed(2),parseFloat(setup).toFixed(2)
+                ,parseFloat(restart).toFixed(2),parseFloat(tool_change).toFixed(2),parseFloat(quality_check).toFixed(2)
+                ,parseFloat(no_plan).toFixed(2),parseFloat(training).toFixed(2),parseFloat(jh).toFixed(2),parseFloat(remarks).toFixed(2),''], cc)
+               $('#myModal').modal('hide');
+
+        });
+
+//Update*********************************************************************************************************************************************************
+
+        function TabletoJeson() {
+            var DepParaArr = [];
+            var t = $('#upload').DataTable()
+            var rowCount = t.fnGetData().length;
+
+            for (i = 0; i < rowCount; i++) {
+
+                DepParaArr.push({
+                    prod_downtime_id : t.fnGetData(i)[0],
+                    prod_plan_detail_id : t.fnGetData(i)[1],
+                    prod_dates: $("#prod_date").val(),
+                    mac_breakdown:  t.fnGetData(i)[9],
+                    pm: t.fnGetData(i)[10],
+                    no_power : t.fnGetData(i)[11],
+                    no_operator: t.fnGetData(i)[12],
+                    no_load: t.fnGetData(i)[13],
+                    setup:t.fnGetData(i)[14],
+                    restart: t.fnGetData(i)[15],
+                    tool_change: t.fnGetData(i)[16],
+                    quality_check: t.fnGetData(i)[17],
+                    no_plan: t.fnGetData(i)[18],
+                    training: t.fnGetData(i)[19],
+                    jh: t.fnGetData(i)[20],
+                    remarks: t.fnGetData(i)[21],
+                });
+
+            }
+
+            $.ajax({
+                url: '@Url.Action("Save", "ProductionDownTime")',
+                method: "Post",
+                cache: false,
+                async: false,
+                data: { proddt:null,DepParaArr: DepParaArr },
+                success: function(data) {
+
+                    location.href = '@Url.Action("Index", "ProductionDownTime")';
+
+                },
+            });
+
+        }
+    </script>
+}
+<style>
+    .numericCol {
+        text-align: right;
+    }
+</style>

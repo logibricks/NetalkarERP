@@ -1,0 +1,695 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.ref_asset_class_vm
+@using Sciffer.Erp.Domain.Model;
+@{
+    ViewBag.Title = "Create";
+}
+<div class="loading">Loading &#8230;</div>
+@using (Html.BeginForm("Create", "AssetClass", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <!-----------Start Header-------------><br /><br /><br />
+        <div id="FINANCIAL_MAPPING_DETAIL" hidden></div>
+        <div id="DEPRECIATION_DETAIL" hidden></div>
+        <input type="hidden" id="deleteids" name="deleteids" />
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.asset_class_code, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.asset_class_code, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.asset_class_code, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.asset_class_des, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.asset_class_des, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.asset_class_des, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.asset_type_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-lg-8 col-md-8 col-xs-12">
+                        @Html.DropDownList("asset_type_id", new List<SelectListItem>
+                                        {
+                                        new SelectListItem { Text = "TANGIBLE", Value = "1" },
+                                        new SelectListItem { Text = "INTANGIBLE", Value = "2" }
+                                        }, "--Select--", new { @class = "form-control selectedbycategory dropdownClass" })
+                        @*, @onchange = "GetDepFre(this.value);"*@
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-----------End Header------------->
+        <!------------Start-Tab-Panel------------------->
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">FINANCIAL MAPPING</a></li>
+                <li><a data-toggle="tab" href="#sectionB">DEPRECIATION</a></li>
+            </ul>
+        </div>
+        <div class="tab-content">
+            <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-responsive table-bordered table-striped" id="FINANCIAL_MAPPING">
+                            <thead>
+                                <tr>
+                                    <th><label>Sr. No.</label></th>
+                                    <th hidden><label>ID</label></th>
+                                    <th><label>ACCOUNT TYPE</label></th>
+                                    <th hidden><label>Ledger Code *</label></th>
+                                    <th><label>GL</label></th>
+                                    <th><label>pk id</label></th>
+                                    <th><label>Action</label></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="sectionB" class="tab-pane fade" style="margin-top:10px;">
+                <div class="row">
+                    <div class="col-lg-12 col-sm-12">
+                        <div class="form-group">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <button type="button" class="btn btn-primary" style="float:right" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span>Add</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-responsive table-bordered table-striped" id="DEPRECIATION">
+                            <thead>
+                                <tr>
+                                    <th><label>Sr. No.</label></th>
+                                    <th hidden><label>ID</label></th>
+                                    <th><label>DEPRECIATION AREA</label></th>
+                                    <th hidden><label>dep type ID</label></th>
+                                    <th><label>DEPRECIATION CODE & DESCRIPTION</label></th>
+                                    <th><label>DEPRECIATION FREQUENCY</label></th>
+                                    <th><label>USEFUL LIFE ( MONTHS)</label></th>
+                                    <th><label>RATE</label></th>
+                                    <th><label>pk id</label></th>
+                                    <th><label>Action</label></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--------------End-Tab-Panel---------------->
+        <!--------------Start Save data Button---------------->
+        <div class="row">
+            <div class="form-group">
+                <div class="col-lg-2 col-sm-2">
+                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                </div>
+                <div class="col-lg-10 col-sm-10">
+                    <input type="button" value="Create" class="btn btn-success" onclick="TabletoJeson();" style="float:right" />
+                </div>
+            </div>
+        </div>
+        <!--------------End Save data Button---------------->
+    </div>
+
+    <div class="modal fade" id="myModal_Item" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">GL Account</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" id="gllable" name="gllabel"></label>
+                            <div class="col-md-7">
+                                @Html.DropDownList("glid", (System.Web.Mvc.SelectList)ViewBag.generalleder, "---Select---", new { @class = "form-control col-md-7 col-xs-12", })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="modal-footer">
+                        <input type="hidden" id="srno1" />
+                        <input type="hidden" id="ledger_account_type_id" />
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="addgl" data-dismiss="modal" onclick="UpdateGL();" name="addgl">Add</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Depreciation Details</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                DEPRECIATION AREA <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                @Html.DropDownList("dep_area_id", (System.Web.Mvc.SelectList)ViewBag.deparea, "", new { @class = "form-control", @onchange = "GETDEPRECIATIONAREA(this.value);" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                DEPRECIATION TYPE CODE  <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                @Html.DropDownList("dep_type_id", Enumerable.Empty<SelectListItem>(), "---Select---", new { @class = "form-control removedisabled", @onchange = "GETDEPRECIATIONTYPE(this.value);" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                DEPRECIATION FREQUENCY <span class="required"></span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control col-md-7 col-xs-12" id="dep_frequency" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                USEFUL LIFE ( MONTHS) <span class="required"></span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="useful_life" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                RATE <span class="required"></span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="rate" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <input type="hidden" id="srno" />
+                    <input type="hidden" id="quotationdetailid" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                    <button type="button" class="add btn btn-primary">Add Item</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+<!--------------Start Back to List---------------->
+<!--------------End Back to List---------------->
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        $("#asset_type_id").select2({
+                placeholder: "Select Asset Type",
+                allowClear: true
+        });
+        $("#glid").select2({
+            placeholder: "Select GL",
+            allowClear: true
+        });
+        $("#dep_type_id").select2({
+            placeholder: "Select Dep Type",
+            allowClear: true
+        });
+        $("#dep_area_id").select2({
+            placeholder: "Select Dep Area",
+            allowClear: true
+        });
+
+        var role=@Html.Raw(Json.Encode(ViewBag.role));
+
+        //-------------------------------------------Get Financial mapping Details--------------------------------------------------------------------
+
+
+        $('#FINANCIAL_MAPPING').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", sWidth: "7%" },
+                     { sname: "b", bVisible: false },
+                     { sname: "c", sWidth: "20%" },
+                     { sname: "d", bVisible: false },
+                     { sname: "e" },
+                     { sname: "g", bVisible: false },
+                     {
+                         sname: "f", sWidth: "8%",
+                         bSortable: false,
+                         mRender: function (data, type, full) {
+                             return '<img class="edit1" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" />';
+                         }
+                     }]
+
+        });
+        GetLedgerAccountType();
+        function GetLedgerAccountType() {
+            var t = $('#FINANCIAL_MAPPING').DataTable();
+            $.ajax({
+                url: "@Url.Action("GetLedgerAccountTypeName", "assetclass")",
+                type: "GET",
+            dataType: "JSON",
+            data: {},
+            success: function (Payment_Cycle) {
+                t.fnClearTable();
+                var sr_no = t.fnGetData().length + 1;
+                $.each(Payment_Cycle, function (i, cycle) {
+                    t.fnAddData([sr_no, cycle.ledger_account_type_id, cycle.ledger_account_type_name, cycle.gl_ledger_id, '<label class="ledger_grid" id="ledger_name' + sr_no + '">' + cycle.gl_ledger_code + "-" + cycle.gl_ledger_name + '</label>',0, ''
+                    ]);
+                    sr_no++;
+                });
+            }
+        });
+        }
+
+        $('#FINANCIAL_MAPPING').on('click', '.edit1', function () {
+            var t = $('#FINANCIAL_MAPPING').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            $('#myModal_Item').modal('show');
+
+            $("#gllable").text(t.fnGetData(id)[2]);
+            $("#srno1").val(t.fnGetData(id)[0]);
+            var tx = t.fnGetData(id)[3];
+            var txx = $(tx).text();
+            $("#glid").val(txx).trigger('change');
+            $("#ledger_account_type_id").val(t.fnGetData(id)[1]);
+        });
+
+        function UpdateGL() {
+            var gl = $("#glid").val();
+            var ledger_account_type_name = $("#gllable").text();
+            if (gl == "") {
+                sweetAlert("", "Please select Account!", "error");
+            }
+            else {
+                var t = $('#FINANCIAL_MAPPING').DataTable();
+                var rowCount = t.fnGetData().length;
+                var srno = parseInt($("#srno1").val());
+                var gl_name = $("#glid").find("option:selected").text();
+                var gl_code = $("#glid").val();
+                var ledger_account_type_id = $("#ledger_account_type_id").val();
+                var cc = parseInt($("#srno").val());
+                t.fnUpdate([srno, ledger_account_type_id, ledger_account_type_name,  gl_code , '<label class="ledger_grid" id="ledger_name' + srno + '">' + gl_name + '</label>',0, ''], srno - 1)
+
+            }
+        }
+
+        //-----------------------------------------------------------------------------------------------------------------------
+        $('#DEPRECIATION').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", sWidth: "2%" },
+                     { sname: "b", bVisible: false },
+                     { sname: "c", sWidth: "15%" },
+                     { sname: "d", bVisible: false },
+                     { sname: "e", sWidth: "15%" },
+                     { sname: "f", sWidth: "10%" },
+                     { sname: "g", sWidth: "5%" },
+                     { sname: "h", sWidth: "5%" },
+                     { sname: "j", bVisible: false },
+                     {
+                         sname: "r", sWidth: "8%",//  <th><label>Action</label></th>
+                         bSortable: false,
+                         mRender: function (data, type, full) {
+                             return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" onclick="editRow(' + full[1] + ');" /><img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete" onclick="deleteRow(' + full[1] + ');" />';
+                         }
+                     }
+            ]
+
+        });
+      //  GETDEPRECIATIONAREA();
+        function GETDEPRECIATIONAREA(id) {
+            $('#dep_frequency').val('');
+            $('#useful_life').val('');
+            $('#rate').val('');
+            $("#dep_type_id").empty();
+            $("#dep_type_id").append('<option></option>');
+            $("#dep_type_id").trigger("change");
+            $.ajax({
+                url: "@Url.Action("GETDEPRECIATIONAREA", "assetclass")",
+                type: "GET",
+            dataType: "JSON",
+            data: {},
+            success: function (Payment_Cycle) {
+                var t = $('#DEPRECIATION').DataTable();
+                var rowCount = t.fnGetData().length;
+                for (j = 0; j < rowCount; j++) {
+
+                    var x = t.fnGetData(j)[1];
+                    if(id == x)
+                    {
+                        swal("", "Depreciation Area already exist!!", "error");
+                        $('#dep_area_id').val('').trigger('change');
+                        return false;
+                    }
+                }
+                var dep = Payment_Cycle.filter(a=>a.dep_area_id == id)
+                var dep_type = _.uniq(dep,a=>a.dep_type_code);
+
+                $.each(dep_type, function (index, dt) {
+                    $('#dep_type_id').append('<option value=' + dt.dep_type_id + '>' + dt.dep_type_code + '</option>');
+                });
+
+                //t.fnClearTable();
+                //var sr_no = t.fnGetData().length + 1;
+                //$.each(Payment_Cycle, function (i, cycle) {
+                //    t.fnAddData([sr_no, cycle.dep_area_id, cycle.dep_area_code,cycle.dep_type_id,cycle.dep_type_code,cycle.dep_type_frquency,cycle.useful_value,cycle.rate_value,0
+                //    ]);
+                //    sr_no++;
+                //});
+            }
+        });
+        }
+        function GETDEPRECIATIONTYPE(id) {
+            // var t = $('#DEPRECIATION').DataTable();
+            $.ajax({
+                url: "@Url.Action("GETDEPRECIATIONAREA", "assetclass")",
+                type: "GET",
+            dataType: "JSON",
+            data: {},
+            success: function (Payment_Cycle) {
+                var dep = Payment_Cycle.filter(a=>a.dep_type_id == id)
+                if(dep.length > 0)
+                {
+                    $('#dep_frequency').val(dep[0].dep_type_frquency);
+                    $('#useful_life').val(dep[0].useful_value);
+                    $('#rate').val(dep[0].rate_value);
+                }
+
+
+            }
+        });
+        }
+
+
+        $(".add").on("click", function (event) {
+            var t = $('#DEPRECIATION').DataTable()
+            var rowCount = t.fnGetData().length - 1;
+            var sr_no = t.fnGetData().length + 1;
+            var cc = parseInt(arguments[0]) - 1;
+            var dep_area_id = $("#dep_area_id").val();
+            var dep_type_id = $("#dep_type_id").val();
+            var dep_area = $('#dep_area_id option:selected').text();
+            var dep_type = $('#dep_type_id option:selected').text();
+            var dep_frequency = $("#dep_frequency").val();
+            var useful_life = $('#useful_life').val();
+            var rate = $('#rate').val();
+
+
+            if(dep_area=='')
+            {
+                swal("", "Please Select Depreciation Area!!", "error");
+                return false;
+            }
+            if(dep_area_id==0)
+            {
+                swal("", "Please Select Depreciation Area!!", "error");
+                return false;
+            }
+            if(dep_type=='')
+            {
+                swal("", "Please Select Depreciation Area!!", "error");
+                return false;
+            }
+            if(dep_type_id==0)
+            {
+                swal("", "Please Select Depreciation Area!!", "error");
+                return false;
+            }
+
+
+            if ($("#srno").val() == "") {
+
+                t.fnAddData([sr_no, dep_area_id, dep_area,dep_type_id,dep_type,dep_frequency,useful_life,rate,0,'' ]);
+                rowCount + 1;
+                sr_no + 1;
+            }
+            //else {
+            //    var cc = $("#srno").val();
+            //    cc = parseInt(cc) - 1;
+            //    t.fnUpdate([0, cc + 1, item_type_id,item_type_name, gl_id, gl_name,hsn_id,hsn_code,description, parseFloat(amount).toFixed(2), tax_id, tax_name,tax_rate, cost_center_id, cost_center,exclusive_inclusive1,exclusive_inclusive, ''], cc)
+            //}
+
+            clearmodel();
+
+            return true;
+        });
+
+
+        function  clearmodel()
+        {
+            $("#dep_area_id").val("").trigger("change");
+            $("#dep_type_id").val("");
+            $("#dep_frequency").val("");
+            $("#useful_life").val("");
+            $("#rate").val("");
+
+        }
+
+        $('#DEPRECIATION').on('click', '.delete', function () {
+            var t = $('#DEPRECIATION').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            var deleteids = t.fnGetData(id)[1];
+            swal({
+                title: "Are you sure?",
+
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            },
+     function (isConfirm) {
+         if (isConfirm) {
+
+             $("#deleteids").val(deleteids + "~");
+             t.fnDeleteRow(id);
+             var i = 1;
+             var row = 0;
+             var len = t.fnGetData().length;
+             if (len > 0) {
+                 $('#DEPRECIATION tbody tr').each(function () {
+                     t.fnDeleteRow(id);
+                     i++;
+                     row++;
+                 });
+             }
+         }
+     });
+        });
+
+
+        function TabletoJeson()
+        {
+            //var t = $('#FINANCIAL_MAPPING').DataTable()
+            //var rowCount = t.fnGetData().length;
+            //var str;
+            //var str1;
+
+            //var str2;
+            //var str3;
+            //$( "#FINANCIAL_MAPPING_DETAIL" ).empty();
+            //for (i = 0; i < rowCount; i++)
+            //{
+            //    $("#FINANCIAL_MAPPING_DETAIL").append('<input type="hidden" id="asset_class_gl_id' + i + '" name="asset_class_gl_id" value=' + t.fnGetData(i)[5] + ' >');
+            //    $("#FINANCIAL_MAPPING_DETAIL").append('<input type="hidden" id="ledger_account_type_id' + i + '" name="ledger_account_type_id" value=' + t.fnGetData(i)[1] + ' >');
+            //    $("#FINANCIAL_MAPPING_DETAIL").append('<input type="hidden" id="gl_id' + i + '" name="gl_id" value=' + t.fnGetData(i)[3] + ' >');
+            //}
+
+            //var t1 = $('#DEPRECIATION').DataTable()
+            //var rowCount1 = t1.fnGetData().length;
+            //var str1;
+            //var str2;
+
+            //var str3;
+            //var str4;
+            //$( "#DEPRECIATION_DETAIL" ).empty();
+            //for (i = 0; i < rowCount1; i++)
+            //{
+
+            //    $("#DEPRECIATION_DETAIL").append('<input type="hidden" id="dep_area_id' + i + '" name="dep_area_id" value=' + t1.fnGetData(i)[1] + ' >');
+            //    $("#DEPRECIATION_DETAIL").append('<input type="hidden" id="dep_type_id' + i + '" name="dep_type_id" value=' + t1.fnGetData(i)[3] + ' >');
+            //    $("#DEPRECIATION_DETAIL").append('<input type="hidden" id="dep_type_frquency_id' + i + '" name="dep_type_frquency_id" value=' + t1.fnGetData(i)[5] + ' >');
+            //    $("#DEPRECIATION_DETAIL").append('<input type="hidden" id="useful_life_months' + i + '" name="useful_life_months" value=' + t1.fnGetData(i)[6] + ' >');
+            //    $("#DEPRECIATION_DETAIL").append('<input type="hidden" id="useful_life_rate' + i + '" name="useful_life_rate" value=' + t1.fnGetData(i)[7] + ' >');
+            //    $("#DEPRECIATION_DETAIL").append('<input type="hidden" id="is_blocked' + i + '" name="is_blocked" value=' + t1.fnGetData(i)[8] + ' >');
+            //    $("#DEPRECIATION_DETAIL").append('<input type="hidden" id="asset_class_dep_id' + i + '" name="asset_class_dep_id" value=' + t1.fnGetData(i)[9] + ' >');
+            //}
+            if($("#asset_class_code").val()==""){
+                sweetAlert("", "Please Insert Asset Class Code!", "error");
+                return false;
+            }
+            if($("#asset_class_des").val()==""){
+                sweetAlert("", "Please Insert Asset Class Description!", "error");
+                return false;
+            }
+            if($("#asset_type_id").val()==""){
+                sweetAlert("", "Please Select Asset Type!", "error");
+                return false;
+            }
+            var tableFin = [];
+            var t = $('#FINANCIAL_MAPPING').DataTable();
+            var rowCount = t.fnGetData().length;
+            if (rowCount != 0) {
+                for (i = 0; i < rowCount; i++) {
+                    tableFin.push({
+                        asset_class_gl_id: t.fnGetData(i)[5],
+                        ledger_account_type_id: t.fnGetData(i)[1],
+                        gl_id: t.fnGetData(i)[3],
+                    });
+                }
+            }
+
+            var glid = tableFin.filter(x => x.gl_id == 0).length;
+            if (glid == rowCount) {
+                sweetAlert("", "Please Add GL In FINANCIAL MAPPING!", "error");
+                return false;
+            }
+
+            var tableArr = [];
+            var t1 = $('#DEPRECIATION').DataTable();
+            var rowCount1 = t1.fnGetData().length;
+            if (rowCount1 != 0) {
+                for (i = 0; i < rowCount1; i++) {
+                    var chk;
+                    var frquency = 0;
+                    if($("#is_blocked"+i).prop('checked') == false){
+                        chk = false;
+                    }
+                    else
+                    {
+                        chk = true;
+                    }
+                    if(t1.fnGetData(i)[5] == "MONTHLY"){
+                        frquency = 1;
+                    }
+                    else{
+                        frquency = 2;
+                    }
+                    if($("#useful_life_months"+i).val()==""){
+                        sweetAlert("", "Please Insert Useful Life Months!", "error");
+                        return false;
+                    }
+                    if($("#useful_life_rate"+i).val()==""){
+                        sweetAlert("", "Please Insert Useful Life Rate!", "error");
+                        return false;
+                    }
+                    tableArr.push({
+                        dep_area_id: t1.fnGetData(i)[1],
+                        dep_type_id: t1.fnGetData(i)[3],
+                        dep_type_frquency_id: frquency,
+                        useful_life_months: t1.fnGetData(i)[6],
+                        useful_life_rate: t1.fnGetData(i)[7],
+                        asset_class_dep_id: t1.fnGetData(i)[8],
+                    });
+                }
+            }
+
+            if (tableArr.length == 0) {
+                sweetAlert("", "Please Add DEPRECIATION AREA..!", "error");
+                return false;
+            }
+
+            var fin_map = {};
+            fin_map.asset_class_code = $('#asset_class_code').val();
+            fin_map.asset_class_des = $('#asset_class_des').val();
+            fin_map.asset_type_id = $('#asset_type_id').val();
+
+
+            $.ajax({
+                url: '@Url.Action("Create", "AssetClass")',
+                method: 'post',
+                cache: false,
+                async: false,
+                data: { fin_map: fin_map, fin_detail: tableFin, dip_detail: tableArr },
+                success: function (data) {
+                    if (data.includes("already")) {
+                        sweetAlert("", data, "error");
+                        return false;
+                    }
+                    else if (data.includes("Saved")) {
+                        swal({
+                        title: "",
+                        text: "Saved Successfully!",
+                        type: "success"
+                    }, function() {
+                        location.href = '@Url.Action("Index", "AssetClass")';
+                    });
+                        @*sweetAlert("", data, "success");
+                        location.href = '@Url.Action("Index", "AssetClass")';
+                        return true;*@
+                    }
+
+                },
+            });
+
+
+
+                @*.then(function (data) {
+                if(data.includes('Saved')){
+
+                    location.href = '@Url.Action("index", "AssetClass")';
+                }
+                else{
+                    console.log(data);
+                }
+            });*@
+
+        }
+
+
+    </script>
+}

@@ -1,0 +1,476 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.fin_contra_entry_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+@using (Html.BeginForm("Create", "ContraEntry", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(x => x.contra_entry_id)
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.document_list, new { @class = "form-control validinput removedisabled", @disabled = "disabled", @required = true })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.EditorFor(model => model.document_no, new { htmlAttributes = new { @class = "form-control validinput removedisabled", @disabled = "disabled", @required = true } })
+                            @Html.ValidationMessageFor(model => model.document_no, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.posting_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control validinput postingdocumentdate postingdate" } })
+                            @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ref_doc_no, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.ref_doc_no, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ref_doc_no, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.document_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.document_date, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.document_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.transfer_funds_from, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            @Html.DropDownList("from_cash_bank", new List<SelectListItem>
+                                 {
+                                    new SelectListItem{ Text="Bank", Value = "2" },
+                                    new SelectListItem{ Text="Cash", Value = "1" }
+                                 }, new { @class = "form-control validinput removedisabled", @disabled = "disabled", @onchange = "GetBankAccountByBank(this.value,this.name);" })
+                            @Html.ValidationMessageFor(model => model.from_cash_bank, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-5 col-sm-5 col-xs-12">
+                            @Html.EditorFor(model => model.transfer_funds_from_name, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.transfer_funds_from_name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.current_balance_from, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.current_balance_from, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.current_balance_from, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.transfer_funds_to, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            @Html.DropDownList("to_cash_bank", new List<SelectListItem>
+                                 {
+                               new SelectListItem{ Text="Cash", Value = "1" },
+                               new SelectListItem{ Text="Bank", Value = "2" }
+                                 }, new { @class = "form-control validinput removedisabled", @disabled = "disabled", @onchange = "GetBankAccountByBank(this.value,this.name);" })
+                            @Html.ValidationMessageFor(model => model.to_cash_bank, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-5 col-sm-5 col-xs-12">
+                            @Html.EditorFor(model => model.transfer_funds_to_name, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.transfer_funds_to_name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.current_balance_to, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.current_balance_to, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.current_balance_to, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.transfer_amount, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-5 col-sm-5 col-xs-12">
+                            @Html.EditorFor(model => model.transfer_amount, new { htmlAttributes = new { @class = "form-control validinput removedisabled", @disabled = "disabled", @required = true, @type = "number" } })
+                            @Html.ValidationMessageFor(model => model.transfer_amount, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            @Html.DropDownList("curreny_id", (System.Web.Mvc.SelectList)ViewBag.currency_list, new { @class = "form-control removedisabled", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.curreny_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.reamrks, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.reamrks, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.reamrks, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.created_by, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("created_by", (System.Web.Mvc.SelectList)ViewBag.user_list, "---Select---", new { @class = "form-control removedisabled", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.created_by, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.created_ts, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.created_ts, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.created_ts, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.modify_by, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("modify_by", (System.Web.Mvc.SelectList)ViewBag.user_list, "---Select---", new { @class = "form-control removedisabled", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.modify_by, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.modify_ts, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.modify_ts, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.modify_ts, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row cancel">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.cancelled_by, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("cancelled_by", (System.Web.Mvc.SelectList)ViewBag.user_list, "---Select---", new { @class = "form-control removedisabled", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.cancelled_by, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.cancelled_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.cancelled_date, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.cancelled_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row cancel">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.cancellation_remarks, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.cancellation_remarks, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.cancellation_remarks, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg12 col-sm-12">
+            <div class="form-group">
+                <div class="col-md-5 col-sm-5 col-xs-5">
+                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-2">
+                    <input type="button" value="Cancel Contra Entry" class="btn btn-danger" data-toggle="modal" data-target="#myModal" style="float:right" id="cancel_pi" onclick="canclearmodel();" />
+                </div>
+                <div class="col-md-5 col-sm-5 col-xs-5">
+                    <button type="submit" value="Update" class="btn btn-success" style="float:right" id="create" name="create" data-controller="Receipt">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" onclick="canclearmodel();">&times;</button>
+                    <h3 class="modal-title" style="text-align:center"><span style="color:red">Are you sure you want to cancel this Contra Entry? You will not be able to reverse this action. </span></h3>
+                </div>
+                <div class="modal-body">
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Cancellation Reason <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                @Html.DropDownList("reason_id", (System.Web.Mvc.SelectList)ViewBag.cancellationreasonlist, "---Select---", new { @class = "form-control col-md-7 col-xs-12" })
+                                @*@Html.EditorFor(model => model.cancellation_remarks, new { htmlAttributes = new { @class = "form-control" } })*@
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Remarks
+                            </label>
+                            <div class="col-md-7">
+                                <textarea id="cancel_remarks" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <input type="hidden" id="srno" />
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="canclearmodel();">No</button>
+                    <button type="button" class="btn btn-success" id="Cancelled" name="Cancelled" onclick="Cancel_Contra();">Yes</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".cancel").hide();
+            var pi_detail = @Html.Raw(JsonConvert.SerializeObject(this.Model));
+            console.log(pi_detail);
+            if(pi_detail.ref_status!=null)
+            {
+                if(pi_detail.ref_status.status_name=="Cancelled")
+                {
+                    $(".cancel").show();
+                    $("#cancel_pi").hide();
+                    $("#create").hide();
+                }
+            }
+            $("#transfer_funds_from").select2({
+                placeholder: "Select Bank Account",
+                allowClear: true
+            });
+            $("#transfer_funds_to").select2({
+                placeholder: "Select Cash Account",
+                allowClear: true
+            });
+
+        });
+        function GetBankAccountByBank(id, nme) {
+            if (id == "") {
+                id = 2;
+            }
+            $.ajax({
+                url: '@Url.Action("GetGLOrBankAccount", "Generic")',
+                type: "GET",
+                dataType: "JSON",
+                data: { id: id },
+                success: function (result)
+                {
+                    //console.log(result);
+                    if (nme == "from_cash_bank")
+                    {
+                        $("#transfer_funds_from").val("").trigger("change");
+                        $("#transfer_funds_from").html(""); // clear before appending new list
+                        $("#transfer_funds_from").append($('<option></option>').val("").html(""));
+                        if (id == 2) {
+                            $("#transfer_funds_from").select2({
+                                placeholder: "Select Bank Account",
+                                allowClear: true
+                            });
+                            $.each(result, function (i, cycle) {
+                                $("#transfer_funds_from").append(
+                                    $('<option></option>').val(cycle.bank_account_id).html(cycle.bank_account_code));
+                            });
+                        }
+                        else
+                        {
+                            $("#transfer_funds_from").select2({
+                                placeholder: "Select Cash Account",
+                                allowClear: true
+                            });
+                            $.each(result, function (i, cycle) {
+                                $("#transfer_funds_from").append(
+                                    $('<option></option>').val(cycle.cash_account_id).html(cycle.cash_account_desc));
+                            });
+                        }
+                    }
+                    else
+                    {
+                        $("#transfer_funds_to").val("").trigger("change");
+                        $("#transfer_funds_to").html(""); // clear before appending new list
+                        $("#transfer_funds_to").append($('<option></option>').val("").html(""));
+                        if (id == 2) {
+                            $("#transfer_funds_to").select2({
+                                placeholder: "Select Bank Account",
+                                allowClear: true
+                            });
+                            $.each(result, function (i, cycle) {
+                                $("#transfer_funds_to").append(
+                                    $('<option></option>').val(cycle.bank_account_id).html(cycle.bank_account_code));
+                            });
+                        }
+                        else {
+                            $("#transfer_funds_to").select2({
+                                placeholder: "Select Cash Account",
+                                allowClear: true
+                            });
+                            $.each(result, function (i, cycle) {
+                                $("#transfer_funds_to").append(
+                                    $('<option></option>').val(cycle.cash_account_id).html(cycle.cash_account_desc));
+                            });
+                        }
+                    }
+                }
+            });
+        }
+        function GetCurrentBalance(entity_id,nme)
+        {
+            var from_cash_bank = $("#from_cash_bank").val();
+            var to_cash_bank = $("#to_cash_bank").val();
+            var entity_type_id = 0;
+            if (nme == "transfer_funds_from")
+            {
+                $("#current_balance_from").val("")
+                if (from_cash_bank == 1)
+                {
+                    entity_type_id = 10;
+                }
+                else
+                {
+                    entity_type_id = 8;
+                }
+                if (entity_id != "")
+                {
+                    $.ajax({
+                        url: '@Url.Action("GetCurrenctBalance", "Generic")',
+                        type: "GET",
+                        dataType: "JSON",
+                        async: false,
+                        data: { entity_type_id: entity_type_id, entity_id: entity_id },
+                        success: function (result) {
+                            $("#current_balance_from").val(result.cu_balance);
+                        }
+                    });
+                }
+
+            }
+            else
+            {
+                $("#current_balance_to").val("")
+                if (to_cash_bank == 1)
+                {
+                    entity_type_id = 10;
+                }
+                else
+                {
+                    entity_type_id = 8;
+                }
+                if (entity_id != "") {
+                    $.ajax({
+                        url: '@Url.Action("GetCurrenctBalance", "Generic")',
+                        type: "GET",
+                        dataType: "JSON",
+                        async: false,
+                        data: { entity_type_id: entity_type_id, entity_id: entity_id },
+                        success: function (result) {
+                            $("#current_balance_to").val(result.cu_balance);
+                        }
+                    });
+                }
+            }
+        }
+        function Cancel_Contra() {
+            if($("#reason_id :selected").text()=="Others")
+            {
+                if($("#cancel_remarks").val()=="")
+                {
+                    swal("Error!", "Please enter the reason for cancellation", "error")
+                    return false;
+                }
+            }
+            if ($("#reason_id").val() == "") {
+                swal("Error!", "Please select the reason for cancellation", "error")
+                return false;
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("DeleteConfirmed", "ContraEntry")',
+                    type: "POST",
+                    dataType: "JSON",
+                    async: false,
+                    data: { id: $("#contra_entry_id").val(), cancellation_remarks: $("#cancel_remarks").val(), cancellation_reason_id: $("#reason_id").val() },
+                    success: function (id) {
+                        if (id == "Cancelled") {
+
+                            swal({
+                                title: "Cancelled",
+                                text: "Your Contra Entry " + $("#document_no").val() + " has been cancelled.",
+                                type: "success",
+                                showCancelButton: false,
+                                closeOnConfirm: false,
+                                showLoaderOnConfirm: false
+                            }, function () {
+                                location.href = '@Url.Action("Index", "ContraEntry")'
+                            });
+                        }
+                        else {
+                            swal("Error", id, "error");
+                        }
+
+                    }
+                });
+            }
+        }
+        function canclearmodel() {
+            $("#reason_id").val("");
+            $("#cancel_remarks").val("");
+        }
+    </script>
+}

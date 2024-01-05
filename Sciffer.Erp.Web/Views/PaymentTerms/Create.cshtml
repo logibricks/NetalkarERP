@@ -1,0 +1,96 @@
+﻿@model Sciffer.Erp.Domain.Model.REF_PAYMENT_TERMS
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+      
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.payment_terms_code, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.payment_terms_code, new { htmlAttributes = new { @class = "form-control data-reverse"} })
+                    @Html.ValidationMessageFor(model => model.payment_terms_code, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.payment_terms_description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.payment_terms_description, new { htmlAttributes = new { @class = "form-control data-reverse"} })
+                    @Html.ValidationMessageFor(model => model.payment_terms_description, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.payment_terms_days, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.payment_terms_days, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.payment_terms_days, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.payment_terms_due_date_id, "Due Date based On", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("PAYMENT_TERMS_DUE_DATE_ID", (System.Web.Mvc.SelectList)ViewBag.DueDateNames, "---Select---", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.payment_terms_due_date_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-success" id="create" name="create" style="float:right" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+@Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript">
+               $("#create").click(function (e) {
+                    e.preventDefault();
+                    var p = $('#PAYMENT_TERMS_CODE').val();
+                    if (p == "") {
+                        sweetAlert("", "Payment terms code is required!", "error");
+                    }
+                    else if ($('#PAYMENT_TERMS_DAYS').val() == "") {
+                        sweetAlert("", "Payment terms days is required!", "error");
+                    }
+                    else if ($('#PAYMENT_TERMS_DUE_DATE_ID').val() == "") {
+                        sweetAlert("", "Payment terms due date based on is required!", "error");
+                    }
+                    else {
+                        $.ajax({
+                            url: "@Url.Action("CheckDuplicate", "Payment_Terms")",
+                            type: "GET",
+                            dataType: "JSON",
+                            asynch: true,
+                            data: { st: p, id: 0 },
+                            success: function (output) {
+                                if (output != 0) {
+                                    sweetAlert("", p + " is already present in databse!", "error");
+                                }
+                                else {
+                                    document.forms[0].submit();
+                                }
+                            }
+                        });
+                    }
+                });
+</script>        
+}

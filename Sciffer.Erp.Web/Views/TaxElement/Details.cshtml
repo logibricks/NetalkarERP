@@ -1,0 +1,307 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.tax_elementVM
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(a => a.tax_element_id)
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.tax_element_code, new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
+                            @Html.EditorFor(model => model.tax_element_code, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.tax_element_code, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.tax_element_description, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.tax_element_description, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.tax_element_description, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.purchase_gl, htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
+                            @Html.DropDownList("purchase_gl", (System.Web.Mvc.SelectList)ViewBag.sales_gl, "---Select---", new { @class = "form-control", @required = true })
+                            @Html.ValidationMessageFor(model => model.purchase_gl, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.sales_gl, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.DropDownList("sales_gl", (System.Web.Mvc.SelectList)ViewBag.sales_gl, "---Select---", new { @class = "form-control", @required = true })
+                            @Html.ValidationMessageFor(model => model.sales_gl, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.tax_type_id, htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
+                            @Html.DropDownList("tax_type_id", (System.Web.Mvc.SelectList)ViewBag.tax_type_list, "---Select---", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.tax_type_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.is_blocked, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.is_blocked, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.is_blocked, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="productdetail" name="productdetail" />
+                <input type="hidden" id="deleteids" name="deleteids" />
+            </div>
+        </div>
+
+
+
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active">
+                    <a data-toggle="tab" href="#sectionA">Item Details</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade  in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+
+                            </div>
+                        </div>
+                     
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                                <thead>
+                                    <tr>
+                                        <th hidden> <label>ID</label></th>
+                                        <th><label>SR No.</label></th>
+                                        <th><label>Effective From</label></th>
+                                        <th><label>Effective To</label></th>
+                                        <th><label>Rate %</label></th>
+                                        <th><label>No Setoff %</label></th>
+                                        <th><label>No Setoff GL</label></th>
+                                        <th hidden><label>gl ID</label></th>
+                                        <th><label>Delete</label></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+}
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Items Detail</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Effective From <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            <input id="effective_from" type="date" class="form-control col-md-7 col-xs-12" name="effective_from" />
+                        </div>
+                    </div>
+                </div>
+                <br />
+
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Effective To <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            <input id="effective_to" type="date" class="form-control col-md-7 col-xs-12" name="effective_to" />
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="first-name">
+                            Rate % <span class="required"></span>
+                        </label>
+                        <div class="col-md-7">
+                            <input type="number" name="rate" class="form-control col-md-7 col-xs-12" id="rate">
+                        </div>
+                    </div>
+                </div>
+                <br />
+
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="first-name">
+                            No Setoff % <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            <input type="number" name="no_setoff" class="form-control col-md-7 col-xs-12" id="no_setoff">
+                        </div>
+                    </div>
+                </div>
+                <br />
+
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="first-name">
+                            No Setoff GL <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            @Html.DropDownList("no_setoff_gl", new List<SelectListItem> { new SelectListItem { Text = "NoSetoffGL1", Value = "1" }, new SelectListItem { Text = "NoSetoffGL2", Value = "2" } }, "--Select--", new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <input type="hidden" id="srno" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                    <button type="button" class="add btn btn-primary">Add Item</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        function codeAddress() {
+            var t = $('#ContactGrid').DataTable();
+            var sr_no = t.fnGetData().length+1;
+            var pl_detail = @Html.Raw(JsonConvert.SerializeObject(this.Model.ref_tax_element_detail));
+            $.each(pl_detail, function(key, value) {
+                var input = value.effective_from;
+                var result = input.substring(0, 10);
+                var input1 = value.effective_to;
+                var result1 = input1.substring(0, 10);
+                var GL = "";
+                if(value.no_setoff_gl==1){GL="NoSetoffGL1";}
+                if(value.no_setoff_gl==2){GL="NoSetoffGL2";}
+                t.fnAddData([value.tax_element_detail_id,sr_no,result,result1,value.rate,value.no_setoff,GL,value.no_setoff_gl,''
+                ]);
+                sr_no++;
+            });
+        }
+        window.onload = codeAddress;
+
+        $('#is_blocked').checkboxpicker();
+       
+
+   
+
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: false },
+                     { sname: "b", },
+                     { sname: "c", },
+                     { sname: "d" },
+                     { sname: "e",},
+                     { sname: "f", },
+                     { sname: "g",},
+                     { sname: "h", bVisible: false },
+                     {
+                         sname: "i", sWidth: "8%",
+                         bSortable: false,
+                         mRender: function (data, type, full) {
+                             return '<img class="edit" src="../../images/writing_file.png" height="20px" width="25px" alt="Edit" onclick="editRow(' + full[1] + ');" /><img class="delete" src="../../images/remove.png" height="20px" width="25px" alt="Delete" onclick="deleteRow(' + full[1] + ');" />';
+                         }
+                     }]
+
+        });
+
+
+       
+
+   
+        function TabletoJeson() {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var str;
+            var str1;
+            for (i = 0; i < rowCount; i++) {
+                str1 = t.fnGetData(i)[0] + ",";
+                str1 = str1 + t.fnGetData(i)[1] + ",";
+                str1 = str1 + t.fnGetData(i)[2] + ",";
+                str1 = str1 + t.fnGetData(i)[3] + ",";
+                str1 = str1 + t.fnGetData(i)[4] + ",";
+                str1 = str1 + t.fnGetData(i)[5] + ",";
+                str1 = str1 + t.fnGetData(i)[6] + ",";
+                str1 = str1 + t.fnGetData(i)[7] + ",";
+                str1 = str1 + t.fnGetData(i)[8] + ",";
+                if (i == 0) {
+                    str = str1 + "~"
+                }
+                else {
+                    str = str + str1 + "~";
+                }
+            }
+
+
+            document.getElementsByName("productdetail")[0].value = str;
+        }
+       
+        $("#form0 :input").prop("disabled", true);
+
+
+
+
+    </script>
+}
+
+
+

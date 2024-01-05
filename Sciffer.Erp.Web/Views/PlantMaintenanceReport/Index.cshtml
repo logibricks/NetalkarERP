@@ -1,0 +1,252 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<input type="search" class="search form-control" placeholder="Search Plant Maintenance Report" id="s"; style="width:23.5%;">
+<br />
+<div id="hide">
+    <div class="row display-flex">
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;">
+                    Maintenance Plan Cycle & Frequency Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides details of maintenance plan with cycel and frequency </p>
+                </div>
+                <a href="@Url.Action("Get_Maintenance_Plan_Cycle_and_Frequencyreport", "PlantMaintenanceReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;">
+                    Maintenance Plan Schedule Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides schedule of orders that will be created in maintenance plan </p>
+                </div>
+                <a href="@Url.Action("Maintenance_Plan_Schedule_Report", "PlantMaintenanceReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;">
+                    Maintenance Plan Parameter Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides paramters defined in the maintenance plan that will be populated in the orders </p>
+                </div>
+                <a href="@Url.Action("Maintenance_Plan_Parameter_Report", "PlantMaintenanceReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color: #337ab7;color: #fff;">
+                    Maintenance Plan Components Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides components defined in the maintenance plan that are defined to be used in orders</p>
+                </div>
+                <a href="@Url.Action("Maintenance_Plan_Components_Report", "PlantMaintenanceReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;">
+                    Maintenance order Header Level Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides header level date for all types of maintenance orders created </p>
+                </div>
+                <a href="@Url.Action("Maintenance_order_Header_Level_Report", "PlantMaintenanceReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;">
+                    Open Maintenance Order Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides detals of orders open as of a Particular date </p>
+                </div>
+                <a href="@Url.Action("Open_Maintenance_Order_Report", "PlantMaintenanceReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;">
+                    Maintenance order - Parameter Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides details of paramaters and their results in maintenance orders</p>
+                </div>
+                <a href="@Url.Action("Maintenance_order_Parameter_Report", "PlantMaintenanceReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color: #337ab7;color: #fff;">
+                    Maintenance order - Cost
+                </div>
+                <div class="panel-body">
+                    <p>Provies details of cost incurred per order</p>
+                </div>
+                <a href="@Url.Action("Maintenance_order_Cost", "PlantMaintenanceReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;">
+                    Malfunction Notification Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides details of malfunction notifications created </p>
+                </div>
+                <a href="@Url.Action("MalfunctionNotificationReport", "PlantMaintenanceReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;">
+                    Malfunction Time Summary Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides summary of malfunction time per machine in selected period</p>
+                </div>
+                <a href="@Url.Action("MalfunctionTimeSummaryReport", "PlantMaintenanceReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;">
+                    Breakdown Time Summary Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides summary of breakdown time per machine in selected period</p>
+                </div>
+                <a href="@Url.Action("BreakdownTimeSummaryReport", "PlantMaintenanceReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color: #337ab7;color: #fff;">
+                    Open Notification Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides detals of notifications open as of a Particular date </p>
+                </div>
+                <a href="@Url.Action("OPENNotificationReport", "PlantMaintenanceReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/requirevalidation.js"></script>
+<script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+            $(document).ready(function () {
+                $("#s").on("keyup click input", function () {
+                    if (this.value.length > 0) {
+                        $(".col-lg-3").show().filter(function () {
+                            return $(this).find('.name').text().toLowerCase().indexOf($("#s").val().toLowerCase()) == -1;
+                        }).hide();
+                    }
+                    else {
+                        $(".col-lg-3").show();
+                    }
+                });
+
+            });
+    </script>
+    <style>
+        .row.display-flex {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+            .row.display-flex > [class*='col-'] {
+                display: flex;
+                flex-direction: column;
+            }
+
+        .panel {
+            height: 100%;
+            width: 100%;
+        }
+
+        .name {
+            font-size: 15px;
+            background-color: #5cb85c;
+            color: #fff;
+        }
+        .panel-heading {
+            height: 38px;
+        }
+        .panel-body {
+            height: 90px;
+        }
+
+        p {
+            font-size: 13px;
+        }
+
+        .panel-footer {
+            font-size: 15px;
+            color: #000;
+            height: 40px;
+        }
+    
+}
+
+
+
+

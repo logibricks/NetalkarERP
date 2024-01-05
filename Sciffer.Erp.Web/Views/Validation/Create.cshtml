@@ -1,0 +1,372 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_validation
+
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">      
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <br />
+        <br />
+        <br />
+        <br />
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">Accounts</a></li>
+                <li><a data-toggle="tab" href="#sectionB">Sales</a></li>
+                <li><a data-toggle="tab" href="#sectionC">Purchase</a></li>
+                <li><a data-toggle="tab" href="#sectionD">Production</a></li>
+                <li><a data-toggle="tab" href="#sectionE">QA</a></li>
+                <li><a data-toggle="tab" href="#sectionF">Plant Maintenance</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="LedgerGrid">
+                                <thead>
+                                    <tr>
+                                        <th><label>Sr. No.</label></th>
+                                        <th hidden><label>ID</label></th>
+                                        <th><label>GL Account Type</label></th>
+                                        <th hidden><label>Ledger Id *</label></th>
+                                        <th><label>GL Account *</label></th>
+                                        <th><label>Action</label></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.allow_negative_cash, htmlAttributes: new { @class = "control-label col-md-6 col-sm-6 col-xs-12" })
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @Html.EditorFor(model => model.allow_negative_cash, new { htmlAttributes = new { @class = "form-control chk" } })
+                                    @Html.ValidationMessageFor(model => model.allow_negative_cash, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.allow_negative_bank, htmlAttributes: new { @class = "control-label col-md-6 col-sm-6 col-xs-12" })
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @Html.EditorFor(model => model.allow_negative_bank, new { htmlAttributes = new { @class = "form-control chk" } })
+                                    @Html.ValidationMessageFor(model => model.allow_negative_bank, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.round_off_values, htmlAttributes: new { @class = "control-label col-md-6 col-sm-6 col-xs-12" })
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @Html.EditorFor(model => model.round_off_values, new { htmlAttributes = new { @class = "form-control validinput" } })
+                                    @Html.ValidationMessageFor(model => model.round_off_values, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                          
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionB" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.so_mandatory_for_si, htmlAttributes: new { @class = "control-label col-md-6 col-sm-6 col-xs-12" })
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @Html.EditorFor(model => model.so_mandatory_for_si, new { htmlAttributes = new { @class = "form-control chk" } })
+                                    @Html.ValidationMessageFor(model => model.so_mandatory_for_si, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.rate_change_at_si, htmlAttributes: new { @class = "control-label col-md-6 col-sm-6 col-xs-12" })
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @Html.EditorFor(model => model.rate_change_at_si, new { htmlAttributes = new { @class = "form-control chk" } })
+                                    @Html.ValidationMessageFor(model => model.rate_change_at_si, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionC" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.pr_mandatory_for_po, htmlAttributes: new { @class = "control-label col-md-6 col-sm-6 col-xs-12" })
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @Html.EditorFor(model => model.pr_mandatory_for_po, new { htmlAttributes = new { @class = "form-control chk" } })
+                                    @Html.ValidationMessageFor(model => model.pr_mandatory_for_po, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.po_mandatory_for_grn, htmlAttributes: new { @class = "control-label col-md-6 col-sm-6 col-xs-12" })
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @Html.EditorFor(model => model.po_mandatory_for_grn, new { htmlAttributes = new { @class = "form-control chk" } })
+                                    @Html.ValidationMessageFor(model => model.po_mandatory_for_grn, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.po_mandatory_for_pi, htmlAttributes: new { @class = "control-label col-md-6 col-sm-6 col-xs-12" })
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @Html.EditorFor(model => model.po_mandatory_for_pi, new { htmlAttributes = new { @class = "form-control chk" } })
+                                    @Html.ValidationMessageFor(model => model.po_mandatory_for_pi, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                         
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionD" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.allow_to_change_bom, htmlAttributes: new { @class = "control-label col-md-6 col-sm-6 col-xs-12" })
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @Html.EditorFor(model => model.allow_to_change_bom, new { htmlAttributes = new { @class = "form-control chk" } })
+                                    @Html.ValidationMessageFor(model => model.allow_to_change_bom, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionE" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.grn_for_qa, htmlAttributes: new { @class = "control-label col-md-6 col-sm-6 col-xs-12" })
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @Html.EditorFor(model => model.grn_for_qa, new { htmlAttributes = new { @class = "form-control chk" } })
+                                    @Html.ValidationMessageFor(model => model.grn_for_qa, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.goods_receipt_for_qa, htmlAttributes: new { @class = "control-label col-md-6 col-sm-6 col-xs-12" })
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @Html.EditorFor(model => model.goods_receipt_for_qa, new { htmlAttributes = new { @class = "form-control chk" } })
+                                    @Html.ValidationMessageFor(model => model.goods_receipt_for_qa, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.production_receipt_for_qa, htmlAttributes: new { @class = "control-label col-md-6 col-sm-6 col-xs-12" })
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @Html.EditorFor(model => model.production_receipt_for_qa, new { htmlAttributes = new { @class = "form-control chk" } })
+                                    @Html.ValidationMessageFor(model => model.production_receipt_for_qa, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.inventory_adjustment, htmlAttributes: new { @class = "control-label col-md-6 col-sm-6 col-xs-12" })
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @Html.EditorFor(model => model.inventory_adjustment, new { htmlAttributes = new { @class = "form-control chk" } })
+                                    @Html.ValidationMessageFor(model => model.inventory_adjustment, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionF" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.order_creation_date_for_next_month, htmlAttributes: new { @class = "control-label col-md-6 col-sm-6 col-xs-12" })
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @Html.EditorFor(model => model.order_creation_date_for_next_month, new { htmlAttributes = new { @class = "form-control validinput" } })
+                                    @Html.ValidationMessageFor(model => model.order_creation_date_for_next_month, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                           
+                        </div>
+                    </div>
+                </div>               
+            </div>
+        </div>      
+            
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="hidden" id="ledgeraccounttype" name="ledgeraccounttype" />
+                    <input type="submit" value="Create" data-controller="Validation" class="btn btn-success" style="float:right" onclick="TabletoJeson();" />
+                </div>
+            </div>
+        </div>
+}
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">GL Account</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" id="gllable" name="gllabel"></label>
+                        <div class="col-md-7">
+                            @Html.DropDownList("gl_ledger_id", (System.Web.Mvc.SelectList)ViewBag.generalleder, "---Select---", new { @class = "form-control", @required = true })
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <input type="hidden" id="srno1" />
+                    <input type="hidden" id="ledger_account_type_id" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel1();">Close</button>
+                    <button type="button" class="btn btn-primary" id="addgl" onclick="UpdateGL();" name="addgl">Add</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+<script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+<script src="~/Scripts/requirevalidation.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.chk').checkboxpicker();
+        GetLedgerAccountType();
+        $("#gl_ledger_id").select2({
+            maximumSelectionLength: 4,
+            placeholder: "Select General Ledger",
+            allowClear: true
+
+        });
+    });
+    $('#LedgerGrid').DataTable({
+        "bPaginate": false,
+        "ordering": false,
+        "bfooter": false,
+        "info": false,
+        "bLengthChange": false,
+        "bAutoWidth": false,
+        "bFilter": false,
+        "bSort": false,
+        aoColumns: [
+                 { sname: "a", sWidth: "7%" },
+                 { sname: "b", bVisible: false },
+                 { sname: "c" },
+                 { sname: "d", bVisible: false },
+                 { sname: "e" },
+                 {
+                     sname: "f", sWidth: "8%",
+                     bSortable: false,
+                     mRender: function (data, type, full) {
+                         return '<img class="edit1" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" />';
+                     }
+                 }]
+
+    });
+    $('#LedgerGrid').on('click', '.edit1', function () {
+        var t = $('#LedgerGrid').DataTable();
+        var id = $(this).parent('td').parent('tr').index();
+        $('#myModal').modal('show');
+        $("#gllable").text(t.fnGetData(id)[2]);
+        $("#srno1").val(t.fnGetData(id)[0]);
+        var tx = t.fnGetData(id)[3];
+        var txx = $(tx).text();
+        if (txx == "") {
+            $("#gl_ledger_id").val("");
+        }
+        else {
+            $("#gl_ledger_id").val(txx).trigger("change");
+        }
+
+        $("#ledger_account_type_id").val(t.fnGetData(id)[1]);
+    });
+    function UpdateGL() {
+        var gl = $("#gl_ledger_id").val();
+        var ledger_account_type_name = $("#gllable").text();
+        if (gl == "-") {
+            sweetAlert("", "Please select Account!", "error");
+        }
+        else if (gl == "") {
+            sweetAlert("", "Please select Account!", "error");
+        }
+        else {
+            var t = $('#LedgerGrid').DataTable();
+            var rowCount = t.fnGetData().length;
+            var srno = parseInt($("#srno1").val());
+            var gl_id = gl;
+            var gl_code = $("#gl_ledger_id :selected").text();
+            var ledger_account_type_id = $("#ledger_account_type_id").val();
+            var cc = parseInt($("#srno").val());
+            t.fnUpdate([srno, ledger_account_type_id, ledger_account_type_name, '<label class="ledger_grid" id="ledger_name' + srno + '">' + gl_id + '</label>', '<label class="ledger_grid" id="ledger_code' + srno + '">' + gl_code + '</label>', ''], srno - 1)
+            $("#gl_ledger_id").val("").trigger("change");
+            $('#myModal').modal('hide');
+        }
+    }
+    function GetLedgerAccountType() {
+        $.ajax({
+            url: '@Url.Action("GetLedgerAccountType", "Generic")',
+            type: "GET",
+            dataType: "JSON",
+            data: { entity_type_id: 9, entity_id: 0 },
+            success: function (Payment_Cycle) {
+                var t = $('#LedgerGrid').DataTable();
+                t.fnClearTable();
+                var sr_no = t.fnGetData().length + 1;
+
+                $.each(Payment_Cycle, function (i, cycle) {
+                    t.fnAddData([sr_no, cycle.ledger_account_type_id, cycle.ledger_account_type_name, '<label class="ledger_grid" id="ledger_code' + sr_no + '">' + cycle.gl_ledger_code + '</label>', '<label class="ledger_grid" id="ledger_name' + sr_no + '">' + cycle.gl_ledger_name + '</label>', ''
+                    ]);
+                    sr_no++;
+                });
+            }
+        });
+    }
+    function TabletoJeson() {
+        var t1 = $('#LedgerGrid').DataTable()
+        var rowCount1 = t1.fnGetData().length;
+        var str2;
+        var str3;
+        for (i = 0; i < rowCount1; i++) {
+            str3 = t1.fnGetData(i)[1] + ",";
+            var tx = t1.fnGetData(i)[3];
+            var txx = $(tx).text();
+            str3 = str3 + txx + ",";
+            if (i == 0) {
+                str2 = str3 + "~"
+            }
+            else {
+                str2 = str2 + str3 + "~";
+            }
+        }
+        document.getElementsByName("ledgeraccounttype")[0].value = str2;
+    }
+    </script>
+    }

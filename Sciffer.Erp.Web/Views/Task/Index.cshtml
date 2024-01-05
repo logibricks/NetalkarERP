@@ -1,0 +1,92 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Production Order";
+}
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<mfg_prod_order_VM>("Searching")
+        .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "Task" }))
+         .EnableCaching()
+        .CachingPageSize(2)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "Task" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("task_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).ShowInColumnChooser(false).Add();
+            col.Field("task_type").Width("15%").HeaderText("Task Type").Add();
+            col.Field("document_no").Width("15%").HeaderText("Task No").Add();
+            col.Field("task_name").Width("15%").HeaderText("Task Name").Add();
+            col.Field("created_ts").Width("15%").HeaderText("Task Created on ").Format("{0:dd MMMM yyyy}").Add();
+
+            col.Field("doer").Width("15%").HeaderText("Task Doer").Add();
+            col.Field("reviewer").Width("15%").HeaderText("Task Reviewer").Add();
+            col.Field("due_date").Width("15%").HeaderText("Due Date").Format("{0:dd MMMM yyyy}").Add();
+            col.Field("modified_ts").Width("15%").HeaderText("Task Closed Date").Format("{0:dd MMMM yyyy}").Add();
+            col.Field("status").Visible(true).Width("15%").HeaderText("Current Status").Add();
+            //col.Field("recurring").Width("15%").HeaderText("Plant Name").Add();
+            //col.Field("periodicity_name").Width("15%").HeaderText("Plant Name").Add();
+            //col.Field("remind_before_days").Width("15%").HeaderText("Child SLoc").Add();
+            //col.Field("first_escalation_days").Visible(true).Width("15%").HeaderText("Child SLoc").Add();
+            //col.Field("second_escalation_days").Visible(true).Width("15%").HeaderText("Parent SLoc").Add();
+            // col.Field("task_details").Visible(true).Width("15%").HeaderText("in_item_id").Add();
+
+            //col.Field("challan_no").Visible(true).Width("15%").HeaderText("Batch No.").Add();
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit") {
+            location.href = "@Url.Action("Edit", "Task")?id=" + args.rowData.task_id;
+        }
+        if (args.requestType == "add") {
+            location.href = "@Url.Action("Create", "Task")";
+        }
+    }
+    @*function rightClick(args) {
+        location.href = "@Url.Action("Details", "QualityControlParameter")?id="+ args.data.ITEM_ID;
+    }*@
+    $(document).ready(function () {
+        var doc_no = '@ViewBag.doc';
+        if (doc_no != '') {
+            if (doc_no != 0) {
+                sweetAlert("", doc_no, "success");
+            }
+        }
+    });
+
+</script>

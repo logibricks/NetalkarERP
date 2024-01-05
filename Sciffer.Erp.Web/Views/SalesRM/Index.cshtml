@@ -1,0 +1,159 @@
+﻿
+@model IEnumerable<Sciffer.Erp.Domain.Model.Sales_RM_VM>
+@using Sciffer.Erp.Domain.Model
+<br /><br /><br /><br /><br />
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<Sales_RM_VM>("Grid")
+        .Datasource(ds => ds.URL(Url.Action("GetSalesRM", "SalesRM")).RemoveURL(Url.Action("InlineDelete", "SalesRM")).Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(12); })
+        .EnableAltRow()
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Add);
+                items.AddTool(ToolBarItems.Edit);               
+                items.AddTool(ToolBarItems.Update);
+                items.AddTool(ToolBarItems.Cancel);
+                items.AddTool(ToolBarItems.ExcelExport);               
+                items.AddTool(ToolBarItems.PrintGrid);
+            });
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "SalesRM" })))  
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("sales_rm_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("employee_id").Width("15%").HeaderText("Employee id").Visible(false).Add();
+            col.Field("employee_code").Width("15%").HeaderText("Employee Code").Add();
+            col.Field("employee_name").Width("15%").HeaderText("Employee Name").Add();
+            col.Field("is_blocked").Width("15%").HeaderText("Blocked").Visible(false).Add();
+
+        })
+        .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+</div>
+<script id="template" type="text/template">
+    <div>
+        <div class="row">
+
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="hidden" id="sales_rm_id" name="sales_rm_id" value="{{: sales_rm_id}}" class="form-control" />
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Employee *
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                @Html.DropDownList("employee_id", (new System.Web.Mvc.SelectList(ViewBag.employee_list, "employee_id", "employee_name")), "--select--", htmlAttributes: new { @class = "form-control" })
+
+            </div>
+        </div>
+        <br />
+      
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Blocked
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <input type="checkbox" id="is_blocked" name="is_blocked">
+            </div>
+        </div>
+    </div>
+</script>
+
+
+@section Scripts {
+@Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript">
+
+    var flag = true;
+    function complete(args) {
+        $("#employee_id").select2({
+            placeholder: "Select Employee",
+            allowClear: true
+        });
+
+        if (args.requestType == "add") {
+            $('#is_blocked').checkboxpicker();
+        }
+        if (args.requestType == "beginedit") {
+            $("#employee_id").val(args.rowData.employee_id).trigger('change');
+            $("#employee_id").attr('disabled',true);
+            if (args.rowData.is_blocked == true) {
+                //Check
+                document.getElementById('is_blocked').setAttribute('checked', 'checked');
+            }
+            else {
+                //UnCheck
+                document.getElementById('is_blocked').removeAttribute('checked');
+            }
+            $('#is_blocked').checkboxpicker();
+        }
+
+       if (args.requestType == "save" && flag) {
+            flag = true;
+            var record = args.data;
+            args.cancel = true;
+            //send ajax post
+            $.ajax({
+                url: '@Url.Action("Data", "SalesRM")',
+                type: "POST",
+                //dataType: "json",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ value: record }),
+                success: function (data) {
+                    var i;                  //display the message when value has duplicate
+                    if (data==false) {
+                        var str = "";
+                        swal("", "Value contains Duplicate!", "error");
+
+
+                        //$('#ErrorList').html("<table>" + str + "</table>");
+                        //$('#ErrorList').ejDialog("open");
+                        flag = true;
+                    }
+                        //save the records if values are not duplicate
+                    else {
+
+                        var gridObj = $("#Grid").ejGrid("instance");
+                        gridObj.refreshContent();   //endEdit method called to save records
+                        flag = false;
+                    }
+                },
+                error: function (e) {
+                    args.cancel = true;
+                }
+            });
+        }
+        if (flag == false)
+            flag = true;
+
+
+    }
+
+    function EndProcess() {
+        var gridObj = $("#Grid").ejGrid("instance");
+        //console.log(gridObj);
+        gridObj.refreshContent();
+    }
+
+
+
+</script>
+    }
+
+

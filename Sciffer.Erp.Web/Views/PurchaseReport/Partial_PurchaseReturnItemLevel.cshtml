@@ -1,0 +1,50 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<purchase_order_report_vm>("Editing")
+               .Datasource(ds => ds. URL(Url.Action("Get_Purchase_Order_Report", "PurchaseReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&vendor_category_id=" + ViewBag.vendor_category_id + "&vendor_priority_id=" + ViewBag.vendor_priority_id +"&currency_id="+ ViewBag.currency_id +"&plant_id="+ ViewBag.plant_id +"&business_unit_id="+ ViewBag.business_unit_id +"&vendor_id="+ ViewBag.vendor_id).Adaptor(AdaptorType.UrlAdaptor))
+                .AllowPaging().PageSettings(a => a.PageSize(20))
+                .AllowFiltering()
+                    .FilterSettings(X => X.FilterType(FilterType.Excel))
+                .ShowColumnChooser()
+                .AllowSorting()
+                .AllowScrolling()
+                .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "PurchaseReport", new { ctrlname = "PurchaseReturnItemLevelReport" })))
+                .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+            .ToolbarSettings(toolbar =>
+            {
+                toolbar.ShowToolbar().ToolbarItems(items =>
+                {
+                    items.AddTool(ToolBarItems.Search);
+                    items.AddTool(ToolBarItems.ExcelExport);
+                    items.AddTool(ToolBarItems.PrintGrid);
+                });
+            })
+    .Columns(col =>
+    {
+        col.Field("category").Width("15%").HeaderText("Doc Category").Add();
+        col.Field("document_no").Width("15%").HeaderText("Doc Number").Add();
+        col.Field("posting_date").Width("15%").HeaderText("Doc Date").Format("{0:dd/MMM/yyyy}").Add();
+        col.Field("vendor_code").Width("15%").HeaderText("Vendor Code").Visible(true).Add();
+        col.Field("vendor_name").Width("15%").HeaderText("vendor Description").Visible(true).Add();
+        col.Field("plant_name").Width("15%").HeaderText("Plant").Visible(true).Add();
+        col.Field("item_code").Width("15%").HeaderText("Item Code").Visible(true).Add();
+        col.Field("item_name").Width("15%").HeaderText("Item Description").Visible(true).Add();
+        col.Field("user_description").Width("15%").HeaderText("User Description").Visible(true).Add();
+        col.Field("storage_location_name").Width("15%").HeaderText("SLOC").Visible(true).Add();
+        col.Field("delivery_date").Width("15%").HeaderText("Delivery Date").Visible(true).Format("{0:dd/MMM/yyyy}").Add();
+        col.Field("quantity").Width("15%").HeaderText("Qty").Visible(true).Add();
+        col.Field("uom_name").Width("15%").HeaderText("UoM").Visible(true).Add();
+        col.Field("unit_price").Width("15%").HeaderText("Unit Price").Visible(true).Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+        col.Field("discount").Width("15%").HeaderText("Discount").Visible(false).Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+        col.Field("eff_unit_price").Width("15%").HeaderText("Effective Unit Price").Visible(true).Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+        col.Field("purchase_value").Width("15%").HeaderText("Purchase Value").Visible(true).Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+        col.Field("assessable_rate").Width("15%").HeaderText("Assesaable Rate").Visible(false).Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+        col.Field("assessable_value").Width("15%").HeaderText("Assessable value").Visible(false).Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+        col.Field("tax_name").Width("15%").HeaderText("Tax Code").Visible(false).Add();
+    })
+    .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickp"); })
+    ).Render();}
+@Html.EJ().ScriptManager()
+
+
+

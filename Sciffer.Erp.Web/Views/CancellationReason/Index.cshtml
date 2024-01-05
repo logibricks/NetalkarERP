@@ -1,0 +1,154 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.Model.ref_cancellation_reason>
+@using Sciffer.Erp.Domain.Model
+@{
+    ViewBag.Title = "Index";
+}
+
+@*<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>*@
+@*<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>*@
+<br /><br /><br />
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<ref_cancellation_reason_vm>("Grid")
+        .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.Datasource).RemoveURL(Url.Action("InlineDelete", "CancellationReason")).InsertURL(Url.Action("InlineInsert", "CancellationReason")).UpdateURL(Url.Action("InlineInsert", "CancellationReason"))
+                       .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging().PageSettings(a => a.PageSize(20))
+        .PageSettings(p => { p.PageSize(10); })
+        .EnableAltRow()
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Add);
+                items.AddTool(ToolBarItems.Edit);
+                //items.AddTool(ToolBarItems.Delete);
+                items.AddTool(ToolBarItems.Update);
+                items.AddTool(ToolBarItems.Cancel);
+                items.AddTool(ToolBarItems.ExcelExport);
+                items.AddTool(ToolBarItems.PrintGrid);
+            });
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "CancellationReason" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "CancellationReason" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "CancellationReason" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20)).PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("cancellation_reason_id").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("module_form_name").HeaderText("Transaction").ValidationRules(val => val.AddRule("required", true)).Add();
+            //col.Field("module_form_id").HeaderText("Transaction").Add();
+            col.Field("cancellation_reason").HeaderText("Reason").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("is_blocked").HeaderText("Blocked").Visible(false).Add();
+        })
+        .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+
+</div>
+<div class="loading">Loading &#8230;</div>
+<script id="template" type="text/template">
+    <form name="add_form">
+        <div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <input type="hidden" id="cancellation_reason_id" name="cancellation_reason_id" value="{{: cancellation_reason_id}}" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                 Transaction*   
+                </div>
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    @Html.DropDownList("module_form_id", (System.Web.Mvc.SelectList)ViewBag.modulelist, "---Select---", new { @class = "form-control validinput", @required = true })
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                    Reason *
+                </div>
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <input type="text" id="cancellation_reason" required name="cancellation_reason" value="{{: cancellation_reason}}" class="form-control" />
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                    Blocked
+                </div>
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <input type="checkbox" name="is_blocked" id="is_blocked" />
+                </div>
+            </div>
+        </div>
+    </form>
+</script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+    <script src="~/Scripts/requirevalidation.js"></script>
+<script type="text/javascript">
+   
+    var flag = true;
+    function complete(args) {
+        if (args.requestType == "beginedit") {
+            
+
+            if (args.rowData.is_blocked == true) {
+                document.getElementById("is_blocked").setAttribute('checked', 'checked');
+            }
+            else {
+                document.getElementById("is_blocked").removeAttribute('checked', 'checked');
+            }
+            $("#is_blocked").checkboxpicker();
+            $("#module_form_id").val(args.rowData.module_form_id).prop('disabled', true);
+            $("#module_form_id").select2({
+                placeholder: "Select Transaction Name",
+                allowClear: true
+            });
+        }
+        if (args.requestType == "save") {
+            console.log(args.data.text);
+            if (args.data.text != undefined) {
+                sweetAlert("", "Cancellation Reason already exists", "error");
+                if (args.model.dataSource.dataSource.json[0].cancellation_reason_id == null) {
+                    args.model.dataSource.dataSource.json = args.model.dataSource.dataSource.json.splice(1, args.model.dataSource.dataSource.json.length);
+                }
+            }
+            else {
+                sweetAlert("", "Saved Successfully", "success");
+            }
+            var gridObj = $("#Grid").ejGrid("instance");
+            gridObj.refreshContent();
+        }
+        if (args.requestType == "add") {
+            $("#is_blocked").checkboxpicker();
+            $("#module_form_id").select2({
+                placeholder: "Select Transaction Name",
+                allowClear: true
+            });
+        }
+    }
+    $(document).ready(function () {
+        var doc_no = '@ViewBag.doc';
+        if (doc_no != '') {
+            if (doc_no != 0) {
+                sweetAlert("", doc_no, "success");
+            }
+        }
+    });
+
+    function EndProcess() {
+        var gridObj = $("#Grid").ejGrid("instance");
+        //console.log(gridObj);
+        gridObj.refreshContent();
+    }
+
+</script>
+
+}

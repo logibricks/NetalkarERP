@@ -1,0 +1,122 @@
+﻿@model Sciffer.Erp.Domain.Model.fin_receipt
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>fin_receipt</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_CURRENCY.CURRENCY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_CURRENCY.CURRENCY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_ENTITY_TYPE.ENTITY_TYPE_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_ENTITY_TYPE.ENTITY_TYPE_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.document_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.document_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.receipt_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.receipt_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.payment_method_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.payment_method_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.bank_cash)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.bank_cash)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.bank_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.bank_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.bank_gl_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.bank_gl_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.amount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.amount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.local_amount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.local_amount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.cheque_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.cheque_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.cheque_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.cheque_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.remarks)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.remarks)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.receipt_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

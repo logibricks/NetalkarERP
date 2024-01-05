@@ -1,0 +1,92 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+<style>
+    .e-grid .e-groupdroparea {
+        display: none !important;
+    }
+</style>
+@{
+    (Html.EJ().Grid<Report_incentive_vm>("Editing")
+    .Datasource(ds => ds.URL(Url.Action("GetIncentiveReport", "ProductionReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&plant_id=" + ViewBag.plant_id).Adaptor(AdaptorType.UrlAdaptor))
+    //.Datasource((IEnumerable<object>)ViewBag.datasource)
+    .AllowPaging().PageSettings(a => a.PageSize(50))
+    .AllowFiltering()
+    .FilterSettings(X => X.FilterType(FilterType.Excel))
+    .ShowColumnChooser()
+    .AllowScrolling()
+    .AllowResizing()
+    //.ShowSummary()
+    //.SummaryRow(row =>
+    //{
+    //    row.ShowTotalSummary(false).SummaryColumns(col =>
+    //    {
+    //        col.SummaryType(SummaryType.Sum)
+    //        .DisplayColumn("incentive_value")
+    //        .DataMember("incentive_value")
+    //        .Prefix("Total = Rs.")
+    //        .Add();
+    //    }).Add();
+    //})
+    //.AllowGrouping()
+    //.GroupSettings(group => { group.GroupedColumns(col => { col.Add("user_name"); }); })
+    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelIncentive", "ProductionReport", new { ctrlname = "ProductionReportIncentive" })))
+    .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+    .ToolbarSettings(toolbar =>
+    {
+        toolbar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Search);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        });
+    })
+
+    .Columns(col =>
+    {
+        col.Field("date").HeaderText("Date").Format("{0:dd-MMMM-yyyy}").Add();
+        col.Field("shift_code").HeaderText("Shift Code").Add();
+        col.Field("user_name").HeaderText("User Code").Add();
+        col.Field("operator_name").HeaderText("Operator Name").Add();
+        col.Field("incentive_applicability").HeaderText("Incentive Applicability").Add();
+        col.Field("plant_id").HeaderText("Plant Id").Add();
+        col.Field("login_time").HeaderText("LoginTime").Add();
+        col.Field("logout_time").HeaderText("LogoutTime").Add();
+        col.Field("shift_hours").HeaderText("Shift Hours").Add();
+        col.Field("item_code").HeaderText("Item Code").Add();
+        col.Field("item_name").HeaderText("Item Name").Add();
+        col.Field("machine_code").HeaderText("Machine Code").Add();
+        col.Field("machine_name").HeaderText("Machine").Add();
+        col.Field("process_desc").HeaderText("OP Code").Add();
+        col.Field("process_description").HeaderText("OP Name").Add();
+        col.Field("prod_qty").HeaderText("Production Quantity").Add();
+    })
+    .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick"); })
+    )
+    .Render();
+}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1) {
+            var plantList = '';
+            if ($('#plant_id :selected').length > 0) {
+                var selectedPlant = [];
+                $('#plant_id :selected').each(function (i, selected) {
+                    selectedPlant[i] = $(selected).val();
+                });
+                plantList = selectedPlant + "";
+            }
+
+            this.model["from_date"] = $("#fromDate").val();
+            this.model["to_date"] = $("#toDate").val();
+            this.model["plant_id"] = plantList;
+        }
+    }
+
+</script>
+
+
+

@@ -1,0 +1,64 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="form-horizontal">
+            <br />
+            <div class=row>
+                <div class="col-md-4 col-lg-4 col-xs-12">
+                    <label class="control-label col-md-5 col-lg-5 col-xs-12">Vendor Category</label>
+                    <div class="col-md-7 col-lg-7 col-xs-12">
+                        @Html.DropDownList("vendor_category_id", (System.Web.Mvc.SelectList)ViewBag.vendor_category_list, htmlAttributes: new { @class = "form-control mickey vendor_category_id", multiple = "multiple" })
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4 col-xs-12">
+                    <label class="control-label col-md-5 col-lg-5 col-xs-12">Item Group </label>
+                    <div class="col-md-7 col-lg-7 col-xs-12">
+                        @Html.DropDownList("item_group", (System.Web.Mvc.SelectList)ViewBag.item_group_list, htmlAttributes: new { @class = "form-control mickey item_group_id", multiple = "multiple" })
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4 col-xs-12">
+                    <label class="control-label col-md-5 col-lg-5 col-xs-12">Vendor Priority</label>
+                    <div class="col-md-7 col-lg-7 col-xs-12">
+                        @Html.DropDownList("vendor_priority_id", (System.Web.Mvc.SelectList)ViewBag.vendor_priority_list, htmlAttributes: new { @class = "form-control mickey vendor_priority_id", multiple = "multiple" })
+                    </div>
+                </div>
+            </div>
+            <br />
+
+            <div class=row>
+                <div class="col-md-4 col-lg-4 col-xs-12">
+                    <label class="control-label col-md-5 col-lg-5 col-xs-12">Item Priority</label>
+                    <div class="col-md-7 col-lg-7 col-xs-12">
+                        @Html.DropDownList("item_priority_id", (System.Web.Mvc.SelectList)ViewBag.item_priority_list, htmlAttributes: new { @class = "form-control mickey item_priority_id", multiple = "multiple" })
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4 col-xs-12">
+                    <div class="col-md-5 col-lg-5 col-xs-12">
+                        <label></label>
+                    </div>
+                    <div class="col-md-7 col-lg-7 col-xs-12">
+                        <input type="hidden" id="entity" value="get_vendor_purchase_price_list_report" />
+                        <input type="hidden" id="partial" value="Partial_PurchasePriceList" />
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4 col-xs-12">
+                    <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                    </div>
+                    <div class="col-md-7 col-lg-7 col-xs-12">
+                        <button class="searchbutton searchButton" id="search" onclick="DateCheckp();"> &nbsp; Run Report </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+
+        <div id="searchresult">
+            @Html.Partial("Partial_PurchasePriceList", (object)ViewBag)
+        </div>
+    </div>
+</div>
+

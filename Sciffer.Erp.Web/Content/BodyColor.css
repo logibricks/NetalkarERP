@@ -1,0 +1,104 @@
+﻿ input:focus, textarea:focus, ul:focus a:focus, li:focus, checkbox:focus {
+            border-bottom: 2px solid;
+            border-bottom-color: red !important;
+        }
+
+        select:focus {
+            border-bottom: 2px solid !important;
+            border-bottom-color: red !important;
+        }
+
+        button:focus {
+            border: 1px solid !important;
+            border-color: orangered !important;
+        }
+
+        input[type=submit]:focus {
+            border: 1px solid !important;
+            border-color: orangered !important;
+        }
+
+        .btn:focus {
+            border: 1px solid !important;
+            border-color: orangered !important;
+        }
+        .right{
+           text-align:right !important;
+       }
+         .center{
+           text-align:center !important;
+       }
+       .txtxtxt{
+           padding: 1px !important;
+       }
+        label {
+            font-weight:normal !important;
+             font-family:"Segoe UI" !important;
+    font-size: 11px !important;
+        }
+        body {
+            font-weight:normal !important;
+             font-family:"Segoe UI" !important;
+    font-size: 11px;
+        }
+        .e-grid .e-headercelldiv {
+             font-weight:normal !important;
+           font-family:"Segoe UI" !important;
+    font-size: 11px !important;
+        }
+        .e-grid .e-inlineform-titlebar {
+             font-weight:normal !important;
+            font-family:"Segoe UI" !important;
+    font-size: 11px !important;
+        }
+.form-control {
+      font-weight:normal !important;
+            font-family:"Segoe UI" !important;
+    font-size: 11px !important;
+    color:#000000
+}
+select {
+     font-weight:normal !important;
+            font-family:"Segoe UI" !important;
+    font-size: 11px !important;
+}
+option {
+     font-weight:normal !important;
+            font-family:"Segoe UI" !important;
+    font-size: 11px !important;
+}
+.e-inlineform-titlebar{
+    display:none;
+}
+    .e-hhandle.e-box.e-pinch.e-h-line.e-icon {
+    background: #bfbfbf;
+}
+
+
+
+
+      .searchbutton {
+    width: 70%;
+    background: #27ae60;
+    padding: 7px;
+    font-size: 14px;
+    border-radius: 3px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.4s;
+    color: #FFF;
+    border: none;
+    border-radius: 5px;
+}
+.e-rowcell {
+    font-size:11px !important
+}
+.e-grid .e-rowcell {
+    line-height:2px !important
+}
+.e-scrollbar .e-vhandle, .e-scrollbar .e-hhandle {
+     background: #bfbfbf;
+}
+.e-scrollbar .e-vhandle, .e-scrollbar .e-hhandle:hover {
+     background: #bfbfbf !important
+}

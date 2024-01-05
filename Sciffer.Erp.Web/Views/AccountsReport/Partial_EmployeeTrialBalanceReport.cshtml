@@ -1,0 +1,39 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+@{(Html.EJ().Grid<Report_TrialBalance_vm>("Editing")
+                            .Datasource(ds => ds.URL(Url.Action("GetAccountsData", "AccountsReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date).Adaptor(AdaptorType.UrlAdaptor))
+                            .AllowPaging()
+                            .AllowFiltering()
+                            .FilterSettings(X => X.FilterType(FilterType.Excel))
+                            .ShowColumnChooser()
+                            .AllowSorting()
+                            .AllowScrolling()
+                         .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "AccountsReport", new { ctrlname = "EmployeeTrialBalanceReport" })))
+                        //.Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelForReport", "Generic", new { ctrlname = "TrialBalance" }))
+                        //.ExportToPdfAction(Url.Action("ExportToPdfForReport", "Generic", new { ctrlname = "TrialBalance" })))
+                       // .ScrollSettings(scroll => { scroll.Width("100%").Height("80%"); })
+
+                    .ToolbarSettings(toolbar =>
+                    {
+                        toolbar.ShowToolbar().ToolbarItems(items =>
+                        {
+                            items.AddTool(ToolBarItems.Search);
+                            items.AddTool(ToolBarItems.ExcelExport);
+                            items.AddTool(ToolBarItems.PrintGrid);
+                        });
+                    })
+            .Columns(col =>
+            {
+                //col.Field("ItemNo").Width("10%").HeaderText("Sr.").Add();
+                col.Field("employee_code").Width("10%").HeaderText("GL Code").Add();
+                col.Field("employee_name").Width("10%").HeaderText("Description").Add();
+                col.Field("Opening_Bal").Width("10%").Width("10%").HeaderText("Op.Balance").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                col.Field("dr").Width("10%").Width("10%").HeaderText("Dr.").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                col.Field("cr").Width("10%").Width("10%").HeaderText("Cr.").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                col.Field("Closing_Bal").Width("10%").Width("10%").HeaderText("Cl. Balance").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+
+            })
+           .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicka"); })
+            ).Render();}
+@Html.EJ().ScriptManager()

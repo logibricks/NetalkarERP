@@ -1,0 +1,455 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.ViewModel.temporary_skill_matrix_access_vm>
+@using Sciffer.Erp.Domain.ViewModel
+<br />
+<br />
+
+<h3>Temporary skill matrix access </h3>
+<hr />
+<div>
+    @(Html.EJ().Grid<temporary_skill_matrix_access_vm>("Searching")
+        // .Datasource(ds => ds.URL(Url.Action("GetItems", "Items")).RemoveURL(Url.Action("InlineDelete", "Items")).Adaptor(AdaptorType.RemoteSaveAdaptor))
+
+        .Datasource(ds => { ds.Json((IEnumerable<object>)ViewBag.DataSource).RemoveURL(Url.Action("Delete", "ProcessMaster")).Adaptor(AdaptorType.RemoteSaveAdaptor); })
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(12); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            //items.AddTool(ToolBarItems.Search);
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+
+        }))
+
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("temp_operator_level_mapping_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("OperatorName").Width("15%").HeaderText("Operator").Add();
+            col.Field("level_code").Width("15%").HeaderText("Level").Add();
+            col.Field("machine_code").Width("15%").HeaderText("Machine").Add();
+            col.Field("posting_date").Width("15%").HeaderText("Effective Date").Add();
+            col.Field("shift").Width("15%").HeaderText("Shift").Add();
+            col.Field("is_blocked1").Width("15%").HeaderText("Blocked").Visible(true).Add();
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit") {
+            location.href = "@Url.Action("Edit", "TemporaryskillmatrixAccess")?id=" + args.rowData.temp_operator_level_mapping_id;
+        }
+        if (args.requestType == "add") {
+            location.href = "@Url.Action("Create", "TemporaryskillmatrixAccess")"
+        }
+    }
+
+     $(document).ready(function () {
+        var num = '@Html.ViewBag.num';
+        if (num != '') {
+            if (num != undefined) {
+                sweetAlert("", num + " Saved successfully.", "success");
+            }
+        }
+    });
+
+</script>
+
+
+
+@*<div class="col-md-12">
+        <br />
+        <div class="tab-content">
+            <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                <div>
+                    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+                    @(Html.EJ().Grid<temporary_skill_matrix_access_vm>("Grid")
+                    .Datasource(ds => { ds.Json((IEnumerable<object>)ViewBag.DataSource)
+                    .RemoveURL(Url.Action("Delete", "ProcessMaster")).Adaptor(AdaptorType.RemoteSaveAdaptor); })
+                    .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing()
+                    .EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true); })
+                    .EnableAltRow().AllowPaging()
+                    .PageSettings(p => { p.PageSize(12); })
+                    .EnableAltRow()
+                    .ToolbarSettings(toolbar =>
+                    {
+                        toolbar.ShowToolbar().ToolbarItems(items =>
+                        {
+                            items.AddTool(ToolBarItems.Add);
+                            items.AddTool(ToolBarItems.Edit);
+                            items.AddTool(ToolBarItems.Update);
+                            items.AddTool(ToolBarItems.Cancel);
+                            items.AddTool(ToolBarItems.ExcelExport);
+                            items.AddTool(ToolBarItems.PrintGrid);
+                        });
+                    })
+            .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "SalesRM" })))
+            .AllowSorting()
+            .AllowPaging()
+            .IsResponsive()
+            .AllowFiltering()
+            .ShowColumnChooser()
+            .AllowReordering()
+            .AllowScrolling()
+            .ScrollSettings(col => { col.Width("100%"); })
+            .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+            .Columns(col =>
+            {
+                col.Field("temp_operator_level_mapping_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+                col.Field("OperatorName").Width("15%").HeaderText("Operator").Add();
+                col.Field("level_code").Width("15%").HeaderText("Level").Add();
+                col.Field("machine_code").Width("15%").HeaderText("Machine").Add();
+                col.Field("posting_date").Width("15%").HeaderText("Effective Date").Add();
+                col.Field("shift").Width("15%").HeaderText("Shift").Add();
+                col.Field("is_blocked1").Width("15%").HeaderText("Blocked").Visible(true).Add();
+
+            })
+            .ClientSideEvents(eve => {
+                eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess");
+            })
+        )
+                </div>
+                <script id="template" type="text/template">
+                    <div>
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em">
+                                Operator *
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-xs-12" id="supervisor_ids">
+                                <input type="hidden" name="temp_operator_level_mapping_id" id="temp_operator_level_mapping_id" />
+                                @Html.DropDownList("operator_id", (System.Web.Mvc.SelectList)ViewBag.operator_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12", @onchange = "GetMachine(this.value)" })
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-xs-12" id="OperatorNames">
+                                <input type="text" id="OperatorName" name="OperatorName" value="{{: OperatorName}}" class="form-control" />
+                            </div>
+
+                            <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em">
+                                Level *
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-xs-12" id="level_ids">
+                                @Html.DropDownList("level_id", (System.Web.Mvc.SelectList)ViewBag.level_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+
+                            <div class="col-lg-4 col-md-4 col-xs-12" id="level_codes">
+                                <input type="text" id="level_code" name="level_code" value="{{: level_code}}" class="form-control" />
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em">
+                                Machine *
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-xs-12" id="machine_ids2">
+                                @Html.DropDownList("machine_id", Enumerable.Empty<SelectListItem>(), "---Select---", new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+
+                            <div class="col-lg-4 col-md-4 col-xs-12" id="machine_codes">
+                                <input type="text" id="machine_code" name="machine_code" value="{{: machine_code}}" class="form-control" />
+                            </div>
+
+                            <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em" id="editShift">
+                                Shift *
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-xs-12" id="createShift">
+                                <span id="lblShift" style="margin-left: -400px;"> Shift * </span>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-xs-12" id="shift_ids">
+                                @Html.DropDownList("shift_id", (System.Web.Mvc.SelectList)ViewBag.GetShiftlist, "---Select---", new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+
+                            <div class="col-lg-4 col-md-4 col-xs-12" id="shifts">
+                                <input type="text" id="shift" name="shift" value="{{: shift}}" class="form-control" />
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em">
+                                Effective Date *
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-xs-12" id="effective_date_create">
+                                <input type="date" id="effective_date" class="form-control" required="required">
+                            </div>
+
+                            <div class="col-lg-4 col-md-4 col-xs-12" id="effective_date_edit">
+                                <input type="text" id="effective_date1" class="form-control">
+                            </div>
+
+                            <div class="col-lg-2 col-md-2 col-xs-12" style="padding-left: 2em">
+                                Block
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-xs-12">
+                                <input type="checkbox" id="is_blocked">
+                            </div>
+                        </div>
+                    </div>
+                </script>
+            </div>
+
+
+
+        </div>
+    </div>
+
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+        <script src="~/Scripts/requirevalidation.js"></script>
+        <script type="text/javascript">
+            $("#operator_id").select2({
+                placeholder: "Select Operator",
+                allowClear: true
+            });
+
+            $("#machine_id").select2({
+                placeholder: "Select Machine",
+                allowClear: true
+            });
+
+
+            $("#level_id").select2({
+                placeholder: "Select Level",
+                allowClear: true
+            });
+
+            $("#shift_id").select2({
+                placeholder: "Select Level",
+                allowClear: true
+            });
+
+            var flag = true;
+
+
+            function complete(args) {
+
+            if (args.requestType == "add") {
+                //$('#OperatorName').hide();
+                //$('#operator_id').show();
+                //$('#supervisor_ids').show();
+                //$('#OperatorNames').hide();
+
+                //$('#level_code').hide();
+                //$('#level_ids').show();
+                //$('#level_id').show();
+
+                //$('#machine_code').hide();
+                //$('#machine_ids2').show();
+                //$('#machine_code').hide();
+
+                //$('#shift').hide();
+                //$('#shifts').hide();
+                //$('#shift_ids').show();
+                //$('#shift_id').show();
+                //$('#editShift').hide();
+                //$('#createShift').show();
+                //$('#shift_id').css("margin-left", "210px");
+                //$('#shift_id').css("margin-top", "-30px");
+
+                //$('#temp_operator_level_mapping_id').val(0);
+                //$('#effective_date_create').show();
+                //$('#effective_date_edit').hide();
+
+
+                window.location.href =  "@Url.Action("Create", "TemporaryskillmatrixAccess")";
+
+            }
+                if (args.requestType == "beginedit") {
+                $('#supervisor_ids').hide();
+                $('#operator_id').hide();
+                $('#OperatorNames').show();
+                $("#OperatorName").attr('disabled', true);
+                $("#OperatorName").val(args.rowData.OperatorName);
+
+                $('#level_ids').hide();
+                $('#level_id').hide();
+                $('#level_code').show();
+                $("#level_code").attr('disabled', true);
+                $("#level_code").val(args.rowData.level_code);
+
+                $('#machine_ids2').hide();
+                $('#machine_id').hide();
+                $('#machine_code').show();
+                $("#machine_code").attr('disabled', true);
+
+                $("#machine_code").val(args.rowData.machine_code);
+                $('#shift_ids').hide();
+                $('#shift_id').hide();
+                $('#shift').show();
+                    $("#shift").attr('disabled', true);
+
+                $("#shift").val(args.rowData.shift);
+                $('#effective_date_create').hide();
+                $('#effective_date_edit').show();
+
+                if (args.rowData.is_blocked1 == 'Yes') {
+                    $('#is_blocked').prop('checked', true);
+                }
+                else {
+                    $('#is_blocked').prop('checked', false);
+                }
+
+                $('#editShift').show();
+                $('#createShift').hide();
+                $('#temp_operator_level_mapping_id').val(args.rowData.temp_operator_level_mapping_id);
+
+                $("#effective_date1").attr('disabled', true);
+                    $("#effective_date1").val(args.rowData.posting_date);
+                $("#effective_date").val(convert(args.rowData.posting_date));
+            }
+
+            if (args.requestType == "save" && flag) {
+                flag = true;
+                args.cancel = true;
+                var record = args.data;
+
+                var date = new Date();
+                var create_date = date;
+                var objid = {};
+                objid.temp_operator_level_mapping_id = record.temp_operator_level_mapping_id;
+                objid.operator_id = record.operator_id;
+                objid.level_id = record.level_id;
+                objid.machine_id = record.machine_id;
+                objid.shift_id = record.shift_id;
+                objid.effective_date = record.effective_date;
+                objid.created_ts = create_date;
+                objid.modified_ts = create_date;
+                objid.is_blocked = record.is_blocked;
+
+
+
+                //send ajax post
+                $.ajax({
+                    url: '@Url.Action("InlineInsert", "TemporaryskillmatrixAccess")',
+                    method: 'POST',
+                    async: false,
+                    cache: false,
+                    //dataType: "json",
+                    //contentType: 'application/json; charset=utf-8',
+                    data: { value: objid },
+                    success: function (data) {
+                        if (typeof (data) === "boolean") {
+                            var i;                  //display the message when value has duplicate
+                            if (data == false) {
+                                var str = "";
+                                swal("", "Value contains Duplicate!", "error");
+                                window.location.href =  "@Url.Action("Index", "TemporaryskillmatrixAccess")";
+
+
+                                //$('#ErrorList').html("<table>" + str + "</table>");
+                                //$('#ErrorList').ejDialog("open");
+                                flag = true;
+                            }
+                            //save the records if values are not duplicate
+                            else {
+
+                                var gridObj = $("#Grid").ejGrid("instance");
+                                gridObj.refreshContent();   //endEdit method called to save records
+                                flag = false;
+                                swal("", "Saved Sussessfully!!", "success");
+                                window.location.href =  "@Url.Action("Index", "TemporaryskillmatrixAccess")";
+
+                            }
+                        }
+                        else {
+                            swal("", "AuthorizeFailed!! Sorry you are not Authorized to Perform this Action", "warning");
+
+                        }
+                    },
+                    error: function (e) {
+                        args.cancel = true;
+                    }
+                });
+            }
+
+            if (flag == false)
+                flag = true;
+
+
+            }
+
+            function convert(str) {
+                var date = new Date(str),
+                    mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+                    day = ("0" + date.getDate()).slice(-2);
+                return [date.getFullYear(), mnth, day].join("-");
+            }
+
+            function GetMachine(Id) {
+                //alert(Id);
+                 $.ajax({
+                        url: '@Url.Action("GetMachineListWithOperationAndUserForTemp", "Generic")',
+                        type: 'POST',
+                        data: { id: $("#operator_id").val() },
+                        success: function (data) {
+                            if (data != null) {
+
+                                var mac_list = [];
+                                $("#machine_id").empty().trigger('change');
+                                $("#machine_id").append('<select id="machine_id" class="form-control validinput" name="machine_id" multiple="multiple" >');
+                                for (var i = 0; i < data.length; i++) {
+                                    $("#machine_id").append('<option value="' + data[i].machine_id + '">' + data[i].machine_code + '</option>');
+                                }
+                                $("#machine_id").val();
+                                $("#machine_id").append('</select>');
+
+
+                                $("#machine_id").multiselect({
+                                    maxHeight: 260,
+                                    buttonWidth: "430",
+                                    enableFiltering: true,
+                                    enableCaseInsensitiveFiltering: true,
+                                    includeSelectAllOption: true,
+                                    numberDisplayed: 1,
+                                    maxWidth: 300,
+                                });
+
+
+                                $("#machine_id").multiselect('rebuild').trigger('change');
+
+                                var ids = "";
+                                for (var i = 0; mac_list.length > i; i++) {
+                                    ids = ids + mac_list[i].machine_id + ",";
+                                }
+                                array1 = ids.split(',');
+                                $("#machine_id").val(array1);
+                                $("#machine_id").multiselect("refresh");
+                                $("#machine_id_list").val("");
+                                $("#machine_id_list").val(ids);
+                                $("#machine_id option[value='1']").remove();
+                            }
+                            else {
+                                $("#machine_id").val(0);
+                            }
+                        }
+                 });
+
+            }
+        </script>
+    }*@
+
+

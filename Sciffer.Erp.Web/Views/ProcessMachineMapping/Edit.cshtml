@@ -1,0 +1,285 @@
+﻿
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Create Process Machine Mapping</h2>
+<hr />
+@using (Html.BeginForm("SaveProcessMapping", "ProcessMachineMapping", FormMethod.Post))
+{
+    <div id="ProcessMachineDetails"></div>
+    <div class="row form-group">
+        <div class="col-md-5">
+            <div class="col-md-3">
+                <label class="control-label">Select Process</label>
+            </div>
+            <div class="col-md-9">
+                <select class="process form-control" id="process_id">
+                    <option value="">-- Select Process --</option>
+                    @foreach (var item in ViewBag.Process)
+                    {
+                        <option value="@item.process_id">@item.process_name</option>
+                    }
+                </select>
+
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="col-md-3">
+                Select machine
+            </div>
+            <div class="col-md-9" style="margin-top:-10px;" id="MACHINE">
+                <select class="form-control multiselect" id="machine_id" style="margin-top:-10px;" multiple="multiple">
+                    @foreach (var item in ViewBag.Machine)
+                    {
+                        <option value="@item.machine_id">@item.machine_name</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-2 col-sm-2" style="float:right">
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <button type="button" class="btn btn-primary" id="add_sequence">Add</button>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="srno3" />
+    </div>
+
+    <hr />
+
+    <div class="row">
+        <div class="table-responsive">
+            <table class="table table-responsive table-bordered table-striped" id="ProcessMachineGrid" style="font-size:15px;">
+                <thead>
+                    <tr>
+                        <th><label>Sr. No.</label></th>
+                        <th><label>Process Id</label></th>
+                        <th><label>Process Code</label></th>
+                        <th><label>Machine Id</label></th>
+                        <th><label>Machine Code</label></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg12 col-sm-12">
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <input type="submit" value="Create" id="create" data-controller="ProcessMachineMapping" class="btn btn-success" onclick="DataTableToForm();" style="float:right" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+
+        var add = 2;
+        var xg = [];
+        var machines = [];
+        var processes = [];
+        var machine = @Html.Raw(Json.Encode(@ViewBag.Machine));
+        var process = @Html.Raw(Json.Encode(@ViewBag.Process));
+
+        $(document).ready(function () {
+
+            var data = @Html.Raw(Json.Encode(ViewBag.result));
+            console.log(data);
+
+
+            var tp = $("#ProcessMachineGrid").DataTable();
+            var sr_no3 = tp.fnGetData().length+1;
+            @*// var tp_detail = @Html.Raw(JsonConvert.SerializeObject(this.Model));*@
+            var j=1;
+
+           
+            $.each(data , function(key, value){
+                for(var i = 0; i < value.machine_id; i++){
+                    tp.fnAddData([ sr_no3, value.process_id_get, '', value.machine_id[i], '']);
+                    j=j+1;
+                    sr_no3++;
+                }
+                
+            });
+
+            for(i = 0; i < machine.length; i++)
+            {
+                machines.push(machine[i].machine_id);
+            }
+
+            for(i = 0; i < process.length; i++)
+            {
+                processes.push(process[i].process_id);
+            }
+
+            $(".multiselect").multiselect({
+                includeSelectAllOption: true,
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true,
+                numberDisplayed: 3,
+                maxHeight: 200,
+                maxWidth: 200,
+            });
+
+            //$("#process_id").select2({
+            //    placeholder: "Select Process",
+            //    allowClear: true
+            //});
+
+        })
+
+        function arraydup(val)
+        {
+            for (var q = 0; q < machines.length; q++)
+            {
+                if (machines[q] == val)
+                {
+                    machines.splice(q, 1);
+                }
+            }
+        }
+
+        function arraydup1(val)
+        {
+            for (var q = 0; q < processes.length; q++)
+            {
+                if (processes[q] == val)
+                {
+                    processes.splice(q, 1);
+                }
+            }
+        }
+
+
+        $('#add_sequence').click(function () {
+
+            var machine_name = [];
+            var t3 = $('#ProcessMachineGrid').DataTable()
+            var rowCount = t3.fnGetData().length;
+            var process_id = $("#process_id").val();
+            var process_name = $("#process_id :selected").text();
+            var machine_id = $("#machine_id").val();
+
+            $('#machine_id :selected').each(function (i, selected) {
+                machine_name[i] = $(selected).text();
+            });
+
+
+            if ($("#srno3").val() == "") {
+
+                t3.fnAddData([rowCount + 1, process_id, process_name, machine_id, machine_name
+                ]);
+            }
+
+
+            var a = [];
+            var b = [];
+            var b = 0;
+            var z = add - 1;
+
+            $("#machine_id :selected").each(function (i, selected) {
+                b = $(selected).val();
+                arraydup(b);
+            });
+
+            arraydup1($("#process_id").val());
+
+            $("#MACHINE").empty();
+            $("#MACHINE").append('<select id="machine_id" class="form-control multiselect" multiple="multiple">');
+
+            $("#process_id").empty();
+
+            for(i = 0; i < machines.length; i++)
+            {
+                for(j = 0; j < machine.length; j++)
+                {
+                    if(machines[i] == machine[j].machine_id)
+                    {
+                        $("#machine_id").append('<option value="'+machine[j].machine_id+'">'+machine[j].machine_name+'</option>');
+                    }
+                }
+            }
+
+            for(i = 0; i < processes.length; i++)
+            {
+                for(j = 0; j < process.length; j++)
+                {
+                    if(processes[i] == process[j].process_id)
+                    {
+                        $("#process_id").append('<option value="'+process[j].process_id+'">'+process[j].process_name+'</option>');
+                    }
+                }
+            }
+
+            $("#machine_id").multiselect({
+                includeSelectAllOption: true,
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: true,
+                numberDisplayed: 2,
+                maxHeight: 200,
+                maxWidth: 200,
+            });
+            $("#machine_id").multiselect("refresh");
+
+            //clearmodel1();
+        });
+
+        //function clearmodel1() {
+
+        //    $("#process_id").val('');
+        //    $("#machine_id").val('');
+        //    $("#machine_id").multiselect('refresh');
+
+        //}
+
+        $('#ProcessMachineGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "q", bVisible: true },
+                     { sname: "a", bVisible: true },
+                     { sname: "b", bVisible: true },
+                     { sname: "c", bVisible: true },
+                     { sname: "d", bVisible: true }],
+
+        });
+
+        function DataTableToForm() {
+
+            var t = $('#ProcessMachineGrid').dataTable();
+
+            var rowCount = t.fnGetData().length;
+
+            for (i = 0; i < rowCount; i++) {
+
+                $("#ProcessMachineDetails").append('<input type="hidden" id="process_id' + i + '" name="process_id">');
+                $("#ProcessMachineDetails").append('<input type="hidden" id="process_code' + i + '" name="process_code">');
+                $("#ProcessMachineDetails").append('<input type="hidden" id="machine_id' + i + '" name="machine_id">');
+                $("#ProcessMachineDetails").append('<input type="hidden" id="machine_code' + i + '" name="machine_code">');
+
+                $("#process_id" + i).val(t.fnGetData(i)[1]);
+                $("#process_code" + i).val(t.fnGetData(i)[2]);
+                $("#machine_id" + i).val(t.fnGetData(i)[3]);
+                $("#machine_code" + i).val(t.fnGetData(i)[4]);
+
+            }
+        }
+
+    </script>
+}

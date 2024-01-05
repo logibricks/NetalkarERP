@@ -1,0 +1,78 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+@{(Html.EJ().Grid<gstr_report_vm>("Editing")
+                                      .Datasource((IEnumerable<object>)ViewBag.datasource)
+                                      .AllowPaging().PageSettings(a => a.PageSize(20))
+                                      .AllowFiltering()
+                                          .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                      .ShowColumnChooser()
+                                      .AllowSorting()
+                                      .AllowScrolling()
+                                      .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "GSTRReport", new { ctrlname = ViewBag.ctrlname })))
+                                      .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                  .ToolbarSettings(toolbar =>
+                                  {
+                                      toolbar.ShowToolbar().ToolbarItems(items =>
+                                      {
+                                          items.AddTool(ToolBarItems.Search);
+                                          items.AddTool(ToolBarItems.ExcelExport);
+                                          items.AddTool(ToolBarItems.PrintGrid);
+                                      });
+                                  })
+
+                              .ShowSummary()
+
+                          .SummaryRow(row =>
+                          {
+                              row.Title("Total").SummaryColumns(col =>
+                              {
+                                  col.SummaryType(SummaryType.Sum).DisplayColumn("taxable_amount").DataMember("taxable_amount").Format("{0:n2}").Add();
+                                  col.SummaryType(SummaryType.Sum).DisplayColumn("IGST").DataMember("IGST").Format("{0:n2}").Add();
+                                  col.SummaryType(SummaryType.Sum).DisplayColumn("SGST").DataMember("SGST").Format("{0:n2}").Add();
+                                  col.SummaryType(SummaryType.Sum).DisplayColumn("CGST").DataMember("CGST").Format("{0:n2}").Add();
+                                  col.SummaryType(SummaryType.Sum).DisplayColumn("tcs_amount").DataMember("tcs_amount").Format("{0:n2}").Add();
+                              }).Add();
+                          })
+                          .Columns(col =>
+                          {
+                              col.Field("document_type").Width("15%").HeaderText("Document Type").Add();
+                              col.Field("category").Width("15%").HeaderText("Doc Category").Add();
+                              col.Field("document_no").Width("15%").HeaderText("Invoice Number").Add();
+                              col.Field("document_date").Width("15%").HeaderText("Invoice Date").Format("{0:dd/MMM/yyyy}").Add();
+                              col.Field("plant_name").Width("15%").HeaderText("Plant Name").Add();
+                              col.Field("plant_gst_number").Width("15%").HeaderText("Our GSTIN").Visible(true).Add();
+                              col.Field("entity_code").Width("15%").HeaderText("Party Code").Add();
+                              col.Field("entity_name").Width("15%").HeaderText("Party Name").Add();
+                              col.Field("gst_customer_type_name").Width("15%").HeaderText("Invoice Type").Add();
+                              col.Field("party_gstin").Width("15%").HeaderText("Party GSTIN").Add();
+                              col.Field("state_name").Width("15%").HeaderText("Place of supply").Add();
+                              col.Field("is_rcm").Width("15%").HeaderText("RCM Applicable").Add();
+                              col.Field("party_doc_no").Width("15%").HeaderText("Party Doc Number").Add();
+                              col.Field("party_doc_date").Width("15%").HeaderText("Party Doc Date").Format("{0:dd/MMM/yyyy}").Add();
+                              col.Field("shipping_bill_no").Width("15%").HeaderText("Shipping Bill No").Add();
+                              col.Field("shipping_bill_date").Width("15%").HeaderText("Shipping Bill Date").Format("{0:dd/MMM/yyyy}").Add();
+                              col.Field("shipping_port_no").Width("15%").HeaderText("Shipping Port No").Visible(ViewBag.ctrlname == "GSTR2ReportSummary" ? false : true).Add();
+                              col.Field("item_name").Width("15%").HeaderText("Item Name").Visible(ViewBag.ctrlname == "GSTR1ReportSummary" ? false : ViewBag.ctrlname == "GSTR2ReportSummary" ? false : true).Add();
+                              col.Field("sac_hsn_code").Width("15%").HeaderText("SAC/HSN Code").Visible(ViewBag.ctrlname == "GSTR1ReportSummary" ? false : ViewBag.ctrlname == "GSTR2ReportSummary" ? false : true).Add();
+                              col.Field("quantity").Width("15%").HeaderText("Quantity").Visible(ViewBag.ctrlname == "GSTR1ReportSummary" ? false : ViewBag.ctrlname == "GSTR2ReportSummary" ? false : true).Add();
+                              col.Field("tax_code").Width("15%").HeaderText("Tax Code").Add();
+                              col.Field("tax_name").Width("15%").HeaderText("Tax Name").Add();
+                              col.Field("net_amount").Width("15%").HeaderText("Net value").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(ViewBag.ctrlname == "GSTR2ReportSummary" ? false : true).Add();
+                              col.Field("taxable_amount").Width("15%").HeaderText("Taxable Value").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                              col.Field("IGST_rate").Width("15%").HeaderText("Rate").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                              col.Field("IGST").Width("15%").HeaderText("IGST").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                              col.Field("CGST").Width("15%").HeaderText("CGST").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                              col.Field("SGST").Width("15%").HeaderText("SGST").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                              col.Field("tcs_amount").Width("15%").HeaderText("TCS Amount").Visible(ViewBag.ctrlname == "GSTR1ReportSummary" ? false : ViewBag.ctrlname == "GSTR1ReportDetails" ? false : true).Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                              col.Field("gross_amount").Width("15%").HeaderText("Invoice value").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(ViewBag.ctrlname == "GSTR2ReportSummary" ? false : true).Add();
+                              col.Field("original_document_no").Width("15%").HeaderText("Orginal Doc No").Add();
+                              col.Field("original_document_date").Width("15%").HeaderText("Orginal Doc Date").Format("{0:n2}").Format("{0:dd/MMM/yyyy}").Add();
+                              col.Field("original_shipping_bill_no").Width("15%").HeaderText("Orginal Shipping Bill No").Add();
+                              col.Field("original_shipping_bill_date").Width("15%").HeaderText("Orginal Shipping Bill Date").Format("{0:dd/MMM/yyyy}").Add();
+                          })
+                              .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickg"); })
+                                                                                                                                                                                                                                                  ).Render();}
+@Html.EJ().ScriptManager()
+

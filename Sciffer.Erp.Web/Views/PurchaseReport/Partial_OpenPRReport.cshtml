@@ -1,0 +1,40 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<Report_Open_PR_Report__vm>("Editing")
+            .Datasource(ds => ds.URL(Url.Action("Get_Purchase_Order_Report", "PurchaseReport") + "?entity=" + ViewBag.entity + "&item_category=" + ViewBag.item_category + "&from_date=" + ViewBag.from_date + "&plant_id=" + ViewBag.plant_id + "&item_id=" + ViewBag.item_id).Adaptor(AdaptorType.UrlAdaptor))
+            .AllowPaging().PageSettings(a => a.PageSize(20))
+            .AllowFiltering()
+                .FilterSettings(X => X.FilterType(FilterType.Excel))
+            .ShowColumnChooser()
+            .AllowSorting()
+            .AllowScrolling()
+            .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "PurchaseReport", new { ctrlname = "OpenPRReport" })))
+            .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Search);
+                items.AddTool(ToolBarItems.ExcelExport);
+                items.AddTool(ToolBarItems.PrintGrid);
+            });
+        })
+.Columns(col =>
+{
+    col.Field("category").Width("10%").HeaderText("Doc Category").Add();
+    col.Field("pur_requisition_number").Width("10%").HeaderText("Document Number").Add();
+    col.Field("pur_requisition_date").Width("10%").HeaderText("Posting Date").Format("{0:dd/MMM/yyyy}").Visible(true).Add();
+    col.Field("plant_name").Width("10%").HeaderText("Plant").Visible(false).Add();
+    col.Field("item_code").Width("10%").HeaderText("Item Code").Visible(false).Add();
+    col.Field("item_name").Width("10%").HeaderText("Item Description").Visible(false).Add();
+    col.Field("delivery_date").Width("10%").HeaderText("Delivery Date").Format("{0:dd/MMM/yyyy}").Visible(true).Add();
+    col.Field("quantity").Width("10%").HeaderText("PR Qty").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(false).Add();
+    col.Field("Po_Qty").Width("10%").HeaderText("PO Qty").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(false).Add();
+    col.Field("Balance_Qty").Width("10%").HeaderText("Balance Qty").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(false).Add();
+})
+.ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickp"); })
+    ).Render();}
+@Html.EJ().ScriptManager()
+
+

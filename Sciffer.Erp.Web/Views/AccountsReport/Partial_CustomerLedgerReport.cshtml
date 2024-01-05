@@ -1,0 +1,60 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<accounts_report_vm>("Editing")
+                                            .Datasource(ds => ds.URL(Url.Action("GetAccountsData", "AccountsReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&entity_type_id=" + ViewBag.entity_type_id + "&entity_id=" + ViewBag.entity_id).Adaptor(AdaptorType.UrlAdaptor))
+                                             .AllowPaging().PageSettings(a => a.PageSize(20))
+                                            .AllowFiltering()
+                                             .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                            .ShowColumnChooser()
+                                            .AllowSorting()
+                                            .AllowScrolling()
+                                             .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "AccountsReport", new { ctrlname = ViewBag.ctrlname })))
+
+                                        .ToolbarSettings(toolbar =>
+                                        {
+                                            toolbar.ShowToolbar().ToolbarItems(items =>
+                                            {
+                                                items.AddTool(ToolBarItems.Search);
+                                                items.AddTool(ToolBarItems.ExcelExport);
+                                                items.AddTool(ToolBarItems.PrintGrid);
+                                            });
+                                        }) .ShowSummary()
+
+                                        .SummaryRow(row =>
+                                        {
+                                            row.Title("Total").SummaryColumns(col =>
+                                            {
+                                                col.SummaryType(SummaryType.Sum).DisplayColumn("debit").DataMember("debit").Format("{0:n2}").Add();
+                                                col.SummaryType(SummaryType.Sum).DisplayColumn("credit").DataMember("credit").Format("{0:n2}").Add();
+                                                col.SummaryType(SummaryType.Sum).DisplayColumn("debit_fr").DataMember("debit_fr").Format("{0:n2}").Add();
+                                                col.SummaryType(SummaryType.Sum).DisplayColumn("credit_fr").DataMember("credit_fr").Format("{0:n2}").Add();
+                                            }).Add();
+                                        })
+                                .Columns(col =>
+                                {
+                                    col.Field("entity_code").Width("15%").HeaderText(ViewBag.entity_code).Visible(true).Add();
+                                    col.Field("entity_name").Width("15%").HeaderText(ViewBag.entity_name).Visible(true).Add();
+                                    col.Field("pr_doc_category").Width("15%").HeaderText("Document Type ").Visible(true).Add();
+                                    col.Field("ledger_date").Width("15%").HeaderText("Posting Date").Format("{0:dd/MMM/yyyy}").Add();
+                                    col.Field("pr_doc_category").Width("15%").HeaderText("Document Type ").Visible(true).Add();
+                                    col.Field("document_date").Width("15%").HeaderText("Document Date").Format("{0:dd/MMM/yyyy}").Add();
+                                    col.Field("due_date").Width("15%").HeaderText("Due Date").Visible(true).Format("{0:dd/MMM/yyyy}").Add();
+                                    col.Field("category").Width("15%").HeaderText("Document Category ").Visible(true).Add();
+                                    col.Field("source_document_no").Width("15%").HeaderText("Document Number").Visible(true).Add();
+                                    col.Field("document_no").Width("15%").HeaderText("JE Number").Visible(true).Add();
+                                    col.Field("narration").Width("15%").HeaderText("Header Remarks ").Visible(true).Add();
+                                    col.Field("ref1").Width("15%").HeaderText("Ref1").Add();
+                                    col.Field("ref2").Width("15%").HeaderText("Ref2").Add();
+                                    col.Field("ref3").Width("15%").HeaderText("Ref3 ").Add();
+                                    col.Field("currency").Width("15%").HeaderText("Currency").Add();
+                                    col.Field("debit").Width("15%").HeaderText("Dr LC").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                                    col.Field("credit").Width("15%").HeaderText("Cr LC").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                                    col.Field("debit_fr").Width("15%").HeaderText("Dr FC").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                                    col.Field("credit_fr").Width("15%").HeaderText("Cr FC").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                                    col.Field("total").Width("15%").HeaderText("Closing Bal.").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                                    col.Field("status_name").Width("15%").HeaderText("Status").Add();
+                                })
+                                .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicka"); })
+                                                                            ).Render();}
+@Html.EJ().ScriptManager()
+

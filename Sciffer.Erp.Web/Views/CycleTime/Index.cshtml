@@ -1,0 +1,89 @@
+﻿@*@model IEnumerable<Sciffer.Erp.Domain.ViewModel.REF_CUSTOMER_VM>*@
+@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<br />
+<br />
+<br />
+
+<div>
+    @(Html.EJ().Grid<CustomerVM>("FlatGrid")
+         .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "CycleTime" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            //items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+            //  items.AddTool(ToolBarItems.Search);
+
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "CycleTime" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "CycleTime" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "CycleTime" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+
+
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("cycle_time_id").Width("15%").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Width(20).Add();
+            col.Field("item_name").Width("15%").HeaderText("Item").Add();
+            col.Field("process_name").Width("15%").HeaderText("Operation").Add();
+            col.Field("machine_name").Width("15%").HeaderText("Machine").Add();
+            col.Field("cycle_time").Width("7%").HeaderText("Cycle Time").Add();
+            col.Field("other").Width("7%").HeaderText("Other").Add();
+            col.Field("loading_unloading").Width("7%").HeaderText("Loading Unloading").Add();
+            col.Field("total_cycle_time").Width("7%").HeaderText("Total Cycle Time").Visible(true).Add();
+            col.Field("effective_date").Width("10%").HeaderText("Effective Date").Visible(false).Format("{0:dd/MM/yyyy}").Add();
+            col.Field("incentive_rate").Width("7%").HeaderText("Incentive Rate").TextAlign(TextAlign.Right).Visible(false).Add();
+        })
+        .ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+        )
+</div>
+
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = '@Url.Action("Edit", "CycleTime")?id=' + args.rowData.cycle_time_id;
+        }
+    }
+
+</script>
+
+
+
+
+
+
+
+

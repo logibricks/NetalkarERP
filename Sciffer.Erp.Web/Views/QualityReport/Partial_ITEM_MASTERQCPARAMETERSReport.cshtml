@@ -1,0 +1,38 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<report_quality_vm>("FlatGrid")
+                .Datasource(ds => ds.URL(Url.Action("Get_report_quality", "QualityReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&sloc_id=" + ViewBag.sloc_id + "&plant_id=" + ViewBag.plant_id + "&item_id=" + ViewBag.item_id).Adaptor(AdaptorType.UrlAdaptor))
+                    .AllowPaging().PageSettings(a => a.PageSize(20))
+                    .AllowFiltering()
+                        .FilterSettings(X => X.FilterType(FilterType.Excel))
+                    .ShowColumnChooser()
+                    .AllowSorting()
+                    .AllowScrolling()
+                    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "QualityReport", new { ctrlname = "ItemMasterQCParameter" })))
+                                                        .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                .ToolbarSettings(toolbar =>
+                {
+                    toolbar.ShowToolbar().ToolbarItems(items =>
+                    {
+                        items.AddTool(ToolBarItems.Search);
+                        items.AddTool(ToolBarItems.ExcelExport);
+                        items.AddTool(ToolBarItems.PrintGrid);
+                    });
+                })
+        .Columns(col =>
+        {
+            col.Field("item_code").Width("10%").HeaderText("Item Code").Add();
+            col.Field("item_name").Width("10%").HeaderText("Item Description").Add();
+            col.Field("item_type_name").Width("10%").HeaderText("Item Type").Add();
+            col.Field("item_category_name").Width("10%").HeaderText("Item Category").Add();
+            col.Field("item_group_name").Width("10%").HeaderText("Item Group").Add();
+            col.Field("parameter_name").Width("10%").HeaderText("Paramater Name").Add();
+            col.Field("parameter_range").Width("10%").HeaderText("Paramater Range").Add();
+                                                             
+
+
+        })
+    .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickq"); })
+).Render();}
+@Html.EJ().ScriptManager()

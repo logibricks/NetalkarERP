@@ -1,0 +1,114 @@
+﻿<style>
+    .results4 tr[visible='false'],
+    .no-result {
+        display: none;
+    }
+
+    .results4 tr[visible='true'] {
+        display: table-row;
+    }
+</style>
+<div class="scrollit">
+    <div class="table-responsive">
+        <div class="row">
+            <div class="col-md-6">
+
+            </div>
+            <div class="col-md-4">
+                <input type="search" id="search4" class="SearchBar search form-control" placeholder="Search for item here. . . ">
+            </div>
+        </div>
+        <br />
+        <span class="pending_status">Count :  @ViewBag.UnderQC.Count</span>
+        <table class="table table-responsive table-bordered table-striped jambo_table results4 taskgrid" id="">
+            <thead class="text-center">
+                <tr>
+                    <th hidden>Machine Task Id</th>
+                    <th hidden><label>Prod Order Id</label></th>
+                    <th>Production Order </th>
+                    <th hidden>Prod Order Detail Id</th>
+                    <th hidden>Item Id </th>
+                    <th>Item</th>
+                    <th hidden><label>Batch Id</label></th>
+                    <th>Batch</th>
+                    <th hidden>Tag Id</th>
+                    <th>Tag </th>
+                    <th hidden>Status Id</th>
+                    <th hidden>Status</th>
+                </tr>
+            </thead>
+
+            <tbody class="scrollit">
+                @{
+                    int count = 0;
+                    foreach (var item in ViewBag.UnderQC)
+                    {
+                        <tr>
+                            <td hidden>@item.machine_task_id</td>
+                            <td hidden>@item.prod_order_id</td>
+                            <td>@item.prod_order_no</td>
+                            <td hidden>@item.prod_order_detail_id</td>
+                            <td hidden>@item.in_item_id</td>
+                            <td>@item.in_item_desc</td>
+                            <td hidden>@item.item_batch_id</td>
+                            <td>@item.item_batch_no</td>
+                            <td hidden>@item.tag_id</td>
+                            <td>@item.tag_no</td>
+                            <td hidden>@item.current_status_id</td>
+                            <td hidden>@item.current_status</td>
+                        </tr>
+                        count++;
+                    }
+
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+
+        $("#search4").keyup(function () {
+            var searchTerm = $("#search4").val();
+            var listItem = $('.results4 tbody').children('tr');
+            var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
+
+            $.extend($.expr[':'], {
+                'containsi': function (elem, i, match, array) {
+                    return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+                }
+            });
+
+            $(".results4 tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
+                $(this).attr('visible', 'false');
+            });
+
+            $(".results4 tbody tr:containsi('" + searchSplit + "')").each(function (e) {
+                $(this).attr('visible', 'true');
+            });
+
+            var jobCount = $('.results1 tbody tr[visible="true"]').length;
+            $('.counter').text(jobCount + ' item');
+
+            if (jobCount == '0') { $('.no-result').show(); }
+            else { $('.no-result').hide(); }
+        });
+
+    });
+
+    // -----------FOCUS ON SELECT LIST-----------------------//
+    $("#search4").focus(function () {
+        $("#isPaused").val(1);
+    })
+    $("#search4").focusout(function () {
+        $("#isPaused").val(0);
+    })
+
+    // -----------FOCUS ON SELECT LIST-----------------------//
+
+
+
+</script>
+

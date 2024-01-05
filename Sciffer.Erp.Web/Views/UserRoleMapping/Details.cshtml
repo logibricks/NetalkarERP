@@ -1,0 +1,50 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_user_role_mapping
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ref_user_role_mapping</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ref_user_management.user_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ref_user_management.user_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ref_user_management_role.role_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ref_user_management_role.role_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_active)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_block)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_block)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.role_mapping_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

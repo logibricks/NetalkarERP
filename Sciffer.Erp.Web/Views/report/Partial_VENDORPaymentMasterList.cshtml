@@ -1,0 +1,74 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+
+
+
+@{(Html.EJ().Grid<Report_VENDOR_Payment_Master_List__vm>("Editing")
+                                                    .Datasource((IEnumerable<object>)ViewBag.datasource)
+                                                      .AllowPaging().PageSettings(a=>a.PageSize(20))
+                                                      .AllowFiltering()
+                                                          .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                      .ShowColumnChooser()
+                                                      .AllowSorting()
+                                                      .AllowScrolling()
+                                                      .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelForReport", "Generic", new { ctrlname = "SalesSummaryReport" }))
+                                                      .ExportToPdfAction(Url.Action("ExportToPdfForReport", "Generic", new { ctrlname = "SalesSummaryReport" })))
+                                                      .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                                  .ToolbarSettings(toolbar =>
+                                                  {
+                                                      toolbar.ShowToolbar().ToolbarItems(items =>
+                                                      {
+                                                          items.AddTool(ToolBarItems.Search);
+                                                          items.AddTool(ToolBarItems.ExcelExport);
+                                                          items.AddTool(ToolBarItems.PrintGrid);
+                                                      });
+                                                  })
+                                          .Columns(col =>
+                                          {
+                                              col.Field("VENDOR_code").Width("10%").HeaderText("Vendor code").Add();
+                                              col.Field("VENDOR_name").Width("10%").HeaderText("Vendor name").Add();
+                                              col.Field("Payment_Terms_Code").Width("10%").HeaderText("Payment Terms Code").Add();
+                                              col.Field("Payment_Terms_Description").Width("10%").HeaderText("Payment Terms Description").Visible(false).Add();
+                                              col.Field("Due_Date_Based_On").Width("10%").HeaderText("Due Date Based On").Visible(false).Add();
+                                              col.Field("Payment_Cycle_Type").Width("10%").HeaderText("Payment Cycle Type").Visible(false).Add();
+                                              col.Field("Payment_CYcle").Width("10%").HeaderText("Payment CYcle").Visible(false).Add();
+                                              col.Field("Bank_COde").Width("10%").HeaderText("Bank COde").Visible(false).Add();
+                                              col.Field("Bank_Name").Width("10%").HeaderText("Bank Name").Visible(false).Add();
+                                              col.Field("Branch").Width("10%").HeaderText("Branch").Visible(false).Add();
+                                              col.Field("Account_Type").Width("10%").HeaderText("Account Type").Visible(false).Add();
+                                              col.Field("IFSC_COde").Width("10%").HeaderText("IFSC COde").Visible(false).Add();
+                                              col.Field("Account_Number").Width("10%").HeaderText("Account Number").Visible(false).Add();
+
+                                          })
+                                          .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+                                          ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    @*$(function () {
+        var obj = @Html.Raw(Json.Encode(ViewBag.datasource));
+        console.log(obj);
+        $("#Editing").ejGrid({
+            dataSource: obj,
+            allowPaging: true,
+            //columns: [
+
+            //],
+            //dataBound : function(args){
+            //	for (var fld =0; fld < list.length; fld++ ) {
+            //	var column = { field: list[fld].value, headerText: list[fld].header, column: "", textAlign: "left", type: "string", visible: true, width: 75 };
+            //	this.model.columns.push(column); //add dynamic columns
+            //	}
+            //	this.columns(this.model.columns);
+            //}
+        });
+    });*@
+
+
+</script>
+
+

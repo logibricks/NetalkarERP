@@ -1,0 +1,80 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<ref_user_role_mapping_VM>("Searching")
+        .Datasource((IEnumerable<object>)ViewBag.DataSource)
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "UserRoleMapping" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("role_mapping_id").Width("15%").HeaderText("role_mapping_id").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("role_id").Width("15%").HeaderText("Role ID").Visible(false).Add();
+            col.Field("user_name").Width("15%").HeaderText("User Name").Visible(true).Add();
+            col.Field("role_name").Width("15%").HeaderText("Role").Visible(true).Add();
+            col.Field("user_id").Width("15%").HeaderText("User").Visible(false).Add();
+            col.Field("is_block").HeaderText("Block").Visible(false).TextAlign(TextAlign.Left).Width(75).EditType(EditingType.Boolean).Width(75).Add();
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = "@Url.Action("Edit", "UserRoleMapping")?id=" + args.rowData.user_id;
+        }
+        if (args.requestType == "add") {
+            location.href = "@Url.Action("Create", "UserRoleMapping")"
+        }
+    }
+    function rightClick(args) {
+        location.href = "@Url.Action("Details", "UserRoleMapping")?id=" + args.data.user_id;
+    }
+    function Click(args) {
+        $('a').css('color','red');
+    }
+
+</script>
+
+
+
+
+
+
+
+

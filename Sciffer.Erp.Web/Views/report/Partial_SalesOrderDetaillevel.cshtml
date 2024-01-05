@@ -1,0 +1,109 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+
+
+
+@{(Html.EJ().Grid<Report_sales_Order_Detail_level_vm>("Editing")
+                                        .Datasource((IEnumerable<object>)ViewBag.datasource)
+                                          .AllowPaging().PageSettings(a=>a.PageSize(20))
+                                          .AllowFiltering()
+                                              .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                          .ShowColumnChooser()
+                                          .AllowSorting()
+                                          .AllowScrolling()
+                                          .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelForReport", "Generic", new { ctrlname = "SalesSummaryReport" }))
+                                          .ExportToPdfAction(Url.Action("ExportToPdfForReport", "Generic", new { ctrlname = "SalesSummaryReport" })))
+                                          .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                      .ToolbarSettings(toolbar =>
+                                      {
+                                          toolbar.ShowToolbar().ToolbarItems(items =>
+                                          {
+                                              items.AddTool(ToolBarItems.Search);
+                                              items.AddTool(ToolBarItems.ExcelExport);
+                                              items.AddTool(ToolBarItems.PrintGrid);
+                                          });
+                                      })
+
+                                          .ShowSummary()
+
+                                      .SummaryRow(row =>
+                                      {
+                                          row.Title("Total").SummaryColumns(col =>
+                                          {
+                                              col.SummaryType(SummaryType.Sum).DisplayColumn("effective_unit_price").DataMember("effective_unit_price").Format("{0:n2}").Add();
+                                              col.SummaryType(SummaryType.Sum).DisplayColumn("sales_value").DataMember("sales_value").Format("{0:n2}").Add();
+                                              col.SummaryType(SummaryType.Sum).DisplayColumn("assesssabl_evaue").DataMember("assesssabl_evaue").Format("{0:n2}").Add();
+                                              col.SummaryType(SummaryType.Sum).DisplayColumn("tax_element_1").DataMember("tax_element_1").Format("{0:n2}").Add();
+                                              col.SummaryType(SummaryType.Sum).DisplayColumn("tax_element_2").DataMember("tax_element_2").Format("{0:n2}").Add();
+                                              col.SummaryType(SummaryType.Sum).DisplayColumn("tax_element_3").DataMember("tax_element_3").Format("{0:n2}").Add();
+                                              col.SummaryType(SummaryType.Sum).DisplayColumn("total_taxes").DataMember("total_taxes").Format("{0:n2}").Add();
+                                              col.SummaryType(SummaryType.Sum).DisplayColumn("net_total").DataMember("net_total").Format("{0:n2}").Add();
+
+                                          }).Add();
+                                      })
+                              .Columns(col =>
+                              {
+                                  col.Field("bill_to_party_description").Width("10%").HeaderText("Bill To Party Description").Add();
+                                  col.Field("billing_city").Width("10%").HeaderText("Billing City").Add();
+                                  col.Field("ship_to_party").Width("10%").HeaderText("Ship To Party").Visible(false).Add();
+                                  col.Field("ship_to_party_description").Width("10%").HeaderText("Ship To Party Description").Visible(false).Add();
+                                  col.Field("shipping_city").Width("10%").HeaderText("Shipping City").Visible(false).Add();
+                                  col.Field("Document_category").Width("10%").HeaderText("Document Category").Visible(false).Add();
+                                  col.Field("document_no").Width("10%").HeaderText("Document No").Visible(false).Add();
+                                  col.Field("posting_date").Width("10%").HeaderText("Posting Date").Visible(false).Add();
+                                  col.Field("currency").Width("10%").HeaderText("Currency").Visible(false).Add();
+                                  col.Field("customer_po_number").Width("10%").HeaderText("Customer Po Number").Visible(false).Add();
+                                  col.Field("customer_po_dat").Width("10%").HeaderText("Customer Po Dat").Visible(false).Add();
+                                  col.Field("plant").Width("10%").HeaderText("Plant").Visible(false).Add();
+                                  col.Field("Sloc").Width("10%").HeaderText("Sloc").Visible(false).Add();
+                                  col.Field("item_code").Width("10%").HeaderText("Item Code").Visible(false).Add();
+                                  col.Field("item_description").Width("10%").HeaderText("Item Description").Visible(false).Add();
+                                  col.Field("Delivery_Date").Width("10%").HeaderText("Delivery Date").Visible(false).Add();
+                                  col.Field("qty").Width("10%").HeaderText("Qty").Visible(false).Add();
+                                  col.Field("unit_price").Width("10%").HeaderText("Unit Price").Visible(false).Add();
+                                  col.Field("discount").Width("10%").HeaderText("Discount").Visible(false).Add();
+                                  col.Field("effective_unit_price").Width("10%").HeaderText("Effective Unit Price").Visible(false).Add();
+                                  col.Field("sales_value").Width("10%").HeaderText("Sales Value").Visible(false).Add();
+                                  col.Field("assessable_rate").Width("10%").HeaderText("Assessable Rate").Visible(false).Add();
+                                  col.Field("assesssabl_evaue").Width("10%").HeaderText("Assesssabl Evaue").Visible(false).Add();
+                                  col.Field("tax_code").Width("10%").HeaderText("Tax Code").Visible(false).Add();
+                                  col.Field("tax_descriptiption").Width("10%").HeaderText("Tax Descriptiption").Visible(false).Add();
+                                  col.Field("tax_element_1").Width("10%").HeaderText("Tax Element 1").Visible(false).Add();
+                                  col.Field("tax_element_2").Width("10%").HeaderText("Tax Element 2").Visible(false).Add();
+                                  col.Field("tax_element_3").Width("10%").HeaderText("Tax Element 3").Visible(false).Add();
+                                  col.Field("total_taxes").Width("10%").HeaderText("Total Taxes").Visible(false).Add();
+                                  col.Field("net_total").Width("10%").HeaderText("Net Total").Visible(false).Add();
+
+
+                              })
+                              .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+                              ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    @*$(function () {
+        var obj = @Html.Raw(Json.Encode(ViewBag.datasource));
+        console.log(obj);
+        $("#Editing").ejGrid({
+            dataSource: obj,
+            allowPaging: true,
+            //columns: [
+
+            //],
+            //dataBound : function(args){
+            //	for (var fld =0; fld < list.length; fld++ ) {
+            //	var column = { field: list[fld].value, headerText: list[fld].header, column: "", textAlign: "left", type: "string", visible: true, width: 75 };
+            //	this.model.columns.push(column); //add dynamic columns
+            //	}
+            //	this.columns(this.model.columns);
+            //}
+        });
+    });*@
+
+
+</script>
+

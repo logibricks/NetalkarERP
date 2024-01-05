@@ -1,0 +1,431 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.mfg_op_qc_parameter_VM
+@using Newtonsoft.Json
+
+<h2>Edit</h2>
+<script type="text/javascript">
+
+    $(function () {
+        $('[id*=machine_id]').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            maxHeight: '200',
+            enableCaseInsensitiveFiltering: true,
+            allowClear: true,
+            maximumResultsForSearch: 1,
+            numberDisplayed: 1,
+        });
+    });
+</script>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="row form-horizontal">
+    <div id="ParameterData"></div>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.mfg_op_qc_parameter_id)
+    <div class="col-sm-6">
+        <div class="form-group">
+            @Html.LabelFor(model => model.process_id, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.DropDownList("process_id", (System.Web.Mvc.SelectList)ViewBag.OperationList, "---Select---", htmlAttributes: new { @class = "form-control validinput removedisabled", @required = true })
+                @Html.ValidationMessageFor(model => model.process_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            @Html.LabelFor(model => model.machine_id, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @*@Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.MachineList, htmlAttributes: new { @class = "form-control machine_id", @Multiple = "Multiple" })*@
+                @Html.DropDownList("machine_id", Enumerable.Empty<SelectListItem>(), "---Select---", new { @class = "form-control validinput multiselect ", @multiple = "multiple", @required = true })
+                @*@Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.MachineList, htmlAttributes: new { @class = "form-control validinput multiselect", @required = true, multiple = "multiple" })
+        @Html.ValidationMessageFor(model => model.machine_id, "", new { @class = "text-danger" })*@
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-sm-6" hidden>
+        <div class="form-group">
+            @Html.LabelFor(model => model.machine_id_list, "", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+            <div class="col-md-8 col-sm-8 col-xs-12">
+                @Html.EditorFor(model => model.machine_id_list, new { htmlAttributes = new { @class = "form-control validinput", @required = true } })
+                @Html.ValidationMessageFor(model => model.machine_id_list, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            @Html.LabelFor(model => model.item_id, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.ItemList, "---Select---", htmlAttributes: new { @class = "form-control validinput", @required = true, })
+                @Html.ValidationMessageFor(model => model.item_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+</div>
+    <br />
+    <hr />
+
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading"></div>
+            <div class="panel-body">
+                <div class="row">
+                    <input type="hidden" class="form-control" id="mfg_op_qc_parameter_list_id" />
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+
+                            @Html.LabelFor(model => model.is_numeric, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.is_numeric, new { htmlAttribute = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.is_numeric, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4 col-xs-12">Parameter Name</label>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <input type="text" class="form-control" id="param_name" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-sm-5">
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4 col-xs-12">Parameter UOM</label>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <input type="text" class="form-control" id="param_uom" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4 col-xs-12">Standard Range Start </label>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <input type="text" class="form-control numbers" id="parameter_range_from" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-sm-5">
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4 col-xs-12">Standard Range End</label>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <input type="text" class="form-control numbers" id="parameter_range_to" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1 col-sm-1">
+                        <div class="form-group">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <button type="button" class="btn btn-primary" id="add_parameter">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="srno3" />
+
+                </div>
+                <br />
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-responsive table-bordered table-striped" id="ParameterGrid">
+                            <thead>
+                                <tr>
+                                    <th hidden><label>QC Parameter Id</label></th>
+                                    <th><label>Sr. No.</label></th>
+                                    <th><label>Parameter Name</label></th>
+                                    <th><label>Parameter UOM</label></th>
+                                    <th><label>Range from</label></th>
+                                    <th><label>Range to</label></th>
+                                    <th><label>Is Numeric</label></th>
+                                    <th><label>Action</label></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" id="deleteids" name="deleteids" />
+        <input type="hidden" id="parameterdetail" name="parameterdetail" />
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Update" class="btn btn-success" data-controller="OperatorQualityParameterController" onclick="DataTableToForm()" style="float:right" id="edit" name="edit" />
+            </div>
+        </div>
+
+    </div>
+
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+
+        var DELETE_IDS = "";
+        $(document).ready(function () {
+            $('#is_numeric').checkboxpicker();
+            //$("#item_id").select2({
+            //    placeholder: "Select Item",
+            //    allowClear: true
+            //});
+            var array1 = "";
+        var customer = @Html.Raw(JsonConvert.SerializeObject(this.Model.machine_id_list));
+        // customer = "1,"+customer;
+        var names1 = [];
+        var custlist = "";
+        //if(customer != null){
+        //    array1 = customer.split(',');
+        //    $("#machine_id").val(array1);
+        //        $("#machine_id").multiselect("refresh");
+        //}
+             var machinlist1 = @Html.Raw(JsonConvert.SerializeObject(ViewBag.MachineList));
+
+            var mac_list = [];
+            if (customer != null) {
+                array1 = customer.split(',');
+                for (a of array1) {
+
+                    var mac = machinlist1.filter(x => x.Value == a);
+                    if (mac.length != 0) {
+                        mac_list.push({ machine_id: mac[0].Value, machine_code: mac[0].Text })
+                    }                    
+                }
+
+                 $.ajax({
+                        url: '@Url.Action("GetMachineListOnProcessId", "Generic")',
+                        type: 'POST',
+                     data: { process_id: $("#process_id").val() },
+                        success: function (data) {
+                            if (data != null) {
+
+                                $("#machine_id").empty().trigger('change');
+                                $("#machine_id").append('<select id="machine_id" class="form-control validinput" name="machine_id" multiple="multiple" >');
+                                for (var i = 0; i < data.length; i++) {
+                                    $("#machine_id").append('<option value="' + data[i].machine_id + '">' + data[i].machine_code + '</option>');
+                                }
+                                $("#machine_id").val();
+                                $("#machine_id").append('</select>');
+
+                                $("#machine_id").multiselect({
+                                    maxHeight: 260,
+                                    buttonWidth: "300",
+                                    enableFiltering: true,
+                                    enableCaseInsensitiveFiltering: true,
+                                    includeSelectAllOption: true,
+                                    numberDisplayed: 1,
+                                    maxWidth: 200,
+                                });
+
+
+                                $("#machine_id").multiselect('rebuild').trigger('change');
+
+                                var ids = "";
+                                for (var i = 0; mac_list.length > i; i++) {
+                                    ids = ids + mac_list[i].machine_id + ",";
+                                }
+                                array1 = ids.split(',');
+                                $("#machine_id").val(array1);
+                                $("#machine_id").multiselect("refresh");
+                                $("#machine_id_list").val("");
+                                $("#machine_id_list").val(ids);
+                                //$("#machine_id option[value='1']").remove();
+                            }
+                            else {
+                                $("#machine_id").val(0);
+                            }
+                        },
+                    });
+
+            }
+
+            //$("#machine_id").select2({
+            //    placeholder: "Select Machine",
+            //    allowClear: true
+            //});
+            $("#machine_id").change(function () {
+                $("#machine_id_list").val("");
+                $("#machine_id_list").val($("#machine_id").val());
+            });
+            var tp = $("#ParameterGrid").DataTable();
+            var sr_no3 = tp.fnGetData().length+1;
+            var mfg_op_qc_parameter = @Html.Raw(JsonConvert.SerializeObject(this.Model));
+            var j=1;
+            $.each(mfg_op_qc_parameter.mfg_op_qc_parameter_list , function(key, value){
+                tp.fnAddData([value.mfg_op_qc_parameter_list_id, sr_no3, value.parameter_name, value.parameter_uom, value.std_range_start, value.std_range_end, value.is_numeric == true ? "Yes" : "No",'']);
+                j=j+1;
+                sr_no3++;
+            });
+
+        })
+
+
+        $('.numbers').keyup(function () {
+            if ($("#is_numeric").is(':checked') == true) {
+                this.value = this.value.replace(/[^0-9\.]/g, '');
+            }
+        });
+
+        $('#add_parameter').click(function () {
+            var t3 = $('#ParameterGrid').DataTable()
+            var mfg_op_qc_parameter_list_id = $('#mfg_op_qc_parameter_list_id').val();
+            var rowCount = t3.fnGetData().length;
+            var parm_name = $('#param_name').val();
+            var parm_range_from = $('#parameter_range_from').val();
+            var parm_range_to = $('#parameter_range_to').val();
+            var parm_range_uom = $('#param_uom').val();
+            var is_numeric = $("#is_numeric").is(':checked') == true ? "Yes" : "No";
+            if (parm_name == '') {
+                swal("", "Please Enter Parameter Name", "error");
+                return false;
+            }
+            if (parm_range_from == '') {
+                swal("", "Please Enter Parameter Range From", "error");
+                return false;
+            }
+            if (parm_range_to == '') {
+                swal("", "Please Enter Parameter Range To", "error");
+                return false;
+            }
+            if (parm_range_uom == '') {
+                swal("", "Please Enter Parameter UOM", "error");
+                return false;
+            }
+
+            if ($("#srno3").val() == "") {
+                for (var k = 0; k <= rowCount - 1; k++) {
+                    if (t3.fnGetData(k)[2] == parm_name) {
+                        swal("", "Parameter details are already added.", "error");
+                        return false;
+                    }
+                }
+                t3.fnAddData([mfg_op_qc_parameter_list_id, rowCount + 1, parm_name, parm_range_uom, parm_range_from, parm_range_to, is_numeric, ''
+                ]);
+            }
+            else {
+
+                var cc = parseInt($("#srno3").val());
+                t3.fnUpdate([mfg_op_qc_parameter_list_id, cc + 1, parm_name, parm_range_uom, parm_range_from, parm_range_to, is_numeric, ''], cc)
+            }
+            clearmodel1();
+        });
+
+        function clearmodel1() {
+            $("#param_name").val('');
+            $("#parameter_range_from").val('');
+            $("#parameter_range_to").val('');
+            $("#param_uom").val('');
+            $('#srno3').val('');
+        }
+
+        $('#ParameterGrid').on('click', '.edit', function () {
+            var t = $('#ParameterGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            $('#srno3').val(id);
+            $('#mfg_op_qc_parameter_list_id').val(t.fnGetData(id)[0]);
+            $("#param_name").val(t.fnGetData(id)[2]);
+            $("#param_uom").val(t.fnGetData(id)[3]);
+            $("#parameter_range_from").val(t.fnGetData(id)[4]);
+            $("#parameter_range_to").val(t.fnGetData(id)[5]);
+            if (t.fnGetData(id)[6] == "Yes") {
+                $('#is_numeric').prop('checked', true);
+            }
+            if (t.fnGetData(id)[6] == "No") {
+                $('#is_numeric').prop('checked', false);
+            }
+        });
+
+        $('#ParameterGrid').on('click', '.delete', function () {
+            var t = $('#ParameterGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            DELETE_IDS = DELETE_IDS + t.fnGetData(id)[0] + "~";
+            swal({
+                title: "Are you sure?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $('#deleteids').val(DELETE_IDS);
+                        t.fnDeleteRow(id);
+                    }
+                });
+        });
+
+        function DataTableToForm() {
+
+            var t = $('#ParameterGrid').dataTable();
+
+            var rowCount = t.fnGetData().length;
+
+            for (i = 0; i < rowCount; i++) {
+
+                $("#ParameterData").append('<input type="hidden" id="mfg_op_qc_parameter_list_id' + i + '" name="mfg_op_qc_parameter_list_id">');
+                $("#ParameterData").append('<input type="hidden" id="parameter_name' + i + '" name="parameter_name">');
+                $("#ParameterData").append('<input type="hidden" id="paramter_uom' + i + '" name="paramter_uom">');
+                $("#ParameterData").append('<input type="hidden" id="std_range_start' + i + '" name="std_range_start">');
+                $("#ParameterData").append('<input type="hidden" id="std_range_end' + i + '" name="std_range_end">');
+                $("#ParameterData").append('<input type="hidden" id="is_numeric1' + i + '" name="is_numeric1">');
+                $("#mfg_op_qc_parameter_list_id" + i).val(t.fnGetData(i)[0]);
+                $("#parameter_name" + i).val(t.fnGetData(i)[2]);
+                $("#paramter_uom" + i).val(t.fnGetData(i)[3]);
+                $("#std_range_start" + i).val(t.fnGetData(i)[4]);
+                $("#std_range_end" + i).val(t.fnGetData(i)[5]);
+                $("#is_numeric1" + i).val(t.fnGetData(i)[6] == "Yes" ? true : false);
+            }
+        }
+
+        $('#ParameterGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "q", bVisible: false },
+                     { sname: "a", bVisible: true },
+                     { sname: "b", bVisible: true },
+                     { sname: "c", bVisible: true },
+                     { sname: "d", bVisible: true },
+                     { sname: "e", bVisible: true },
+                     { sname: "g", bVisible: true },
+                     {
+                         sname: "f", sWidth: "8%",
+                         bSortable: false,
+                         mRender: function (data, type, full) {
+                             return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" />'+
+                             '<img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete" />';
+                         }
+                     }]
+
+        });
+
+    </script>
+}
+
+<style>
+    #ParameterGrid tr th {
+        font-weight: normal !important;
+    }
+</style>

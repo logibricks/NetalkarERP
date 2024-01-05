@@ -1,0 +1,57 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<report_plant_maintenanace>("Editing")
+                          .Datasource(ds => ds.URL(Url.Action("GetMaintenancePlanCycleandFrequencyReport", "PlantMaintenanceReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&plant_id=" + ViewBag.plant_id + "&machine_id=" + ViewBag.machine_id + "&notification_type=" + ViewBag.notification_type + "&employee_id=" + ViewBag.employee_id).Adaptor(AdaptorType.UrlAdaptor))
+                                                          .AllowPaging().PageSettings(a => a.PageSize(20))
+                                                          .AllowFiltering()
+                                                              .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                          .ShowColumnChooser()
+                                                          .AllowSorting()
+                                                          .AllowScrolling()
+                                                          .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "PlantMaintenanceReport", new { ctrlname = "MalfunctionNotificationReport" })))
+                                                          .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                                      .ToolbarSettings(toolbar =>
+                                                      {
+                                                          toolbar.ShowToolbar().ToolbarItems(items =>
+                                                          {
+                                                              items.AddTool(ToolBarItems.Search);
+                                                              items.AddTool(ToolBarItems.ExcelExport);
+                                                              items.AddTool(ToolBarItems.PrintGrid);
+                                                          });
+                                                      })
+                                              .Columns(col =>
+                                              {
+
+                                                  col.Field("doc_number").Width("15%").HeaderText("Document Number").Add();
+                                                  col.Field("notification_date").Width("15%").HeaderText("Notification Date").Format("{0:dd/MM/yyyy}").Visible(true).Add();
+                                                  col.Field("Plant").Width("15%").HeaderText("Plant").Add();
+                                                  col.Field("Notification").Width("15%").HeaderText("Notification Type").Add();
+                                                  col.Field("notification_description").Width("15%").HeaderText("Notification Description").Add();
+                                                  col.Field("Machine").Width("15%").HeaderText("Machine Name").Add();
+                                                  col.Field("Notified_By").Width("15%").HeaderText("Notified By").Add();
+                                                  col.Field("start_date").Width("15%").HeaderText("Malfunction Start Date").Format("{0:dd/MM/yyyy}").Visible(true).Add();
+                                                  col.Field("start_time").Width("15%").HeaderText("Malfunction Start Time").ValidationRules(v => v.AddRule("required", true)).Format("{0:HH:mm}").Add();
+                                                  col.Field("attending_date").Width("15%").HeaderText("Attending Date").Format("{0:dd/MM/yyyy}").Visible(true).Add();
+                                                  col.Field("attending_time").Width("15%").HeaderText("Attending Time").ValidationRules(v => v.AddRule("required", true)).Format("{0:HH:mm}").Add();
+                                                //col.Field("start_time").Width("15%").HeaderText("Shift Timings From").ValidationRules(v => v.AddRule("required", true)).Format("{0:HH:mm}").Add();
+                                                col.Field("end_date").Width("15%").HeaderText("Malfunction End Date").Format("{0:dd/MMM/yyyy}").Visible(true).Add();
+                                                  col.Field("end_time").Width("15%").HeaderText("Malfunction End Time").ValidationRules(v => v.AddRule("required", true)).Format("{0:HH:mm}").Add();
+                                                  col.Field("Total_Malfunction_Days").Width("15%").HeaderText("Total Malfunction Days").TextAlign(TextAlign.Right).Add();
+                                                  col.Field("Total_Malfunction_Hours").Width("15%").HeaderText("Total Malfunction Hours").TextAlign(TextAlign.Right).Add();
+                                                  col.Field("Total_Malfunction_minute").Width("15%").HeaderText("Total Malfunction Minute").TextAlign(TextAlign.Right).Add();
+                                                  col.Field("detail_problem").Width("15%").HeaderText("Detailed Problem").Add();
+                                                  col.Field("detail_solution").Width("15%").HeaderText("Detailed Solution").Add();
+                                                  col.Field("reviewed_by").Width("15%").HeaderText("Review By").Add();
+                                                  col.Field("attended_by").Width("15%").HeaderText("Attended By").Add();
+                                                //col.Field("breakdown_start_date").Width("15%").HeaderText("Actual Breakdown Start Date").Format("{0:dd/MM/yyyy}").Visible(true).Add();
+                                                //col.Field("breakdown_end_time").Width("15%").HeaderText("Actual Breakdown Start Time").Visible(true).Add();
+                                                // col.Field("breakdown_end_date").Width("15%").HeaderText("Actual Breakdown End Date").Format("{0:dd/MM/yyyy}").Visible(true).Add();
+                                                // col.Field("breakdown_end_time").Width("15%").HeaderText("Actual Breakdown End Time").Visible(true).Add();
+                                                //col.Field("Breakdown_Total_Days").Width("15%").HeaderText("Total Breakdown Days").TextAlign(TextAlign.Right).Add();
+                                            })
+                                      .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickplan"); })
+                                      ).Render();}
+@Html.EJ().ScriptManager()
+
+
+

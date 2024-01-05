@@ -1,0 +1,106 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.ref_tool_operation_map_VM
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ref_tool_operation_map_VM</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.process_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.process_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.process_description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.process_description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ITEM_CATEGORY_ID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ITEM_CATEGORY_ID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ITEM_NAME_CRANKSHAFT)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ITEM_NAME_CRANKSHAFT)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ITEM_ID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ITEM_ID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ITEM_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ITEM_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tool_usage_type_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tool_usage_type_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tool_usage_type_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tool_usage_type_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tool_category_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tool_category_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tool_category_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tool_category_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_blocked)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_blocked)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.tool_operation_map_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

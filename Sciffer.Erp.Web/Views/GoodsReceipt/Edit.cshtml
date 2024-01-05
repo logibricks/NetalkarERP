@@ -1,0 +1,875 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.GOODS_RECEIPT_VM
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Edit";
+}
+
+@using (Html.BeginForm("Edit", "GoodsReceipt", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <div id="GoodsDetailHidden"></div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, "Category *", htmlAttributes: new { Class = "control-label col-md-4 " })
+                        <div class="col-md-5 col-sm-5 col-xs-12">
+                            <input type="hidden" id="is_active" name="is_active" value="true" />
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.categorylist, htmlAttributes: new { Class = "form-control", @onchange = "GetDocumentNumber(this.value)" })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { Class = "text-danger" })
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            @Html.LabelFor(model => model.goods_receipt_number, new { @class = "control-label col-md-4 hidden" })
+                            @Html.EditorFor(model => model.goods_receipt_number, new { htmlAttributes = new { @class = "form-control num validinput removedisabled", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.goods_receipt_number, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.plant_id, "Plant *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plantlist, "--Select--", htmlAttributes: new { @class = "form-control validinput", @onchange = "GetStorageLocation(this.value);" })
+                                @Html.ValidationMessageFor(model => model.plant_id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.posting_date, "Posting Date *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control validinput" } })
+                            @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.document_date, "Document Date *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.document_date, new { htmlAttributes = new { @class = "form-control validinput" } })
+                                @Html.ValidationMessageFor(model => model.document_date, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ref1, "Ref1", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.ref1, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ref1, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">Item Details</a></li>
+                <li><a data-toggle="tab" href="#sectionB">Information</a></li>
+            </ul>
+            <div class="tab-content">
+
+                <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">             
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                                <thead>
+                                    <tr>
+                                        <th><label>ID</label></th>
+                                        <th><label>Sr. No.</label></th>
+                                        <th><label>Item Code</label></th>
+                                        <th><label>Item</label></th>
+                                        <th><label>Reason ID</label></th>
+                                        <th><label>Reason</label></th>
+                                        <th><label>Storage Location ID</label></th>
+                                        <th><label>SLoc</label></th>
+                                        <th><label>Batch ID</label></th>
+                                        <th><label>Batch</label></th>
+                                        <th><label>New Batch</label></th>
+                                        <th><label>Batch</label></th>
+                                        <th><label>Bucket ID</label></th>
+                                        <th><label>Bucket</label></th>
+                                        <th><label>Quantity</label></th>
+                                        <th><label>UOM ID</label></th>
+                                        <th><label>UoM</label></th>
+                                        <th><label>Rate</label></th>
+                                        <th><label>Value</label></th>
+                                        <th><label>Machine Id</label></th>
+                                        <th><label>Machine</label></th>
+                                        <th><label>GL Code ID</label></th>
+                                        <th><label>GL</label></th>
+                                        <th><label>GRN ID</label></th>
+                                        <th><label>GRN</label></th>
+                                        <th><label>Remarks</label></th>
+                                        <th><label>Action</label></th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionB" class="tab-pane fade " style="margin-top:10px;">
+                    <br /><br />
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.remarks, "Additional information", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.remarks, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.remarks, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.attachment, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <input type="file" class="form-control" id="FileUpload" name="FileUpload" accept="application/pdf, image/*" />
+                                    @* @Html.EditorFor(model => model.Attachment, new { htmlAttributes = new { @class = "form-control" } })*@
+                                    @Html.ValidationMessageFor(model => model.attachment, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="productdetail" name="productdetail" />
+                        <input type="hidden" id="deleteids" name="deleteids" />
+                    </div>
+
+                 
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Item Details</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Item *
+                        </label>
+                        <div class="col-md-7">
+                            @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.itemlist, "---Select---", new
+                       {
+                           @class = "form-control col-md-7 col-xs-12",
+                           @onchange = "GetUnit(this.value)"
+                       })
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Reason *
+                        </label>
+
+                        <div class="col-md-7">
+
+                            @Html.DropDownList("REASON_DETERMINATION_ID", (System.Web.Mvc.SelectList)ViewBag.reasonlist, "---Select---", new
+                       {
+                           @class = "form-control col-md-7 col-xs-12"@*, @onchange = "GetUnit()", @style = "width: 100%;"*@ })
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            SLoc *
+                        </label>
+                        <div class="col-md-7">
+                            @Html.DropDownList("storage_location_id", Enumerable.Empty<SelectListItem>(), "", new { @class = "form-control col-md-7 col-xs-12" })
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Batch *
+                        </label>
+
+                        <div class="col-md-7">
+                            @Html.DropDownList("BATCH_ID", (System.Web.Mvc.SelectList)ViewBag.batchlist, "---Select---", new
+                       {
+                           @class = "form-control col-md-7 col-xs-12"@*, @onchange = "GetUnit()", @style = "width: 100%;"*@ })
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Bucket *
+                        </label>
+
+                        <div class="col-md-7">
+                            @Html.DropDownList("bucket_id", (System.Web.Mvc.SelectList)ViewBag.bucketlist, "---Select---", new
+                       {
+                           @class = "form-control col-md-7 col-xs-12"@*, @onchange = "GetUnit()", @style = "width: 100%;"*@ })
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="first-name">
+                            Quantity *
+                        </label>
+                        <div class="col-md-4">
+                            <input type="number" class="form-control" id="quantity" onchange="calculation()">
+                        </div>
+
+                        <div class="col-md-3">
+                            @Html.DropDownList("UOM_ID", (System.Web.Mvc.SelectList)ViewBag.unitlist, new { @class = "form-control col-md-7 col-xs-12" })
+                        </div>
+
+                    </div>
+                </div>
+
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="first-name">
+                            Rate *
+                        </label>
+                        <div class="col-md-7">
+                            <input type="number" class="form-control col-md-7 col-xs-12" id="rate" onchange="calculation()">
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="first-name">
+                            Value *
+                        </label>
+                        <div class="col-md-7">
+                            <input type="number" class="form-control col-md-7 col-xs-12" id="value" readonly="readonly">
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Machine
+                        </label>
+
+                        <div class="col-md-7">
+
+                            @Html.DropDownList("Machine_id", Enumerable.Empty<SelectListItem>(), "---Select---", new
+                       {
+                           @class = "form-control col-md-7 col-xs-12"@*, @onchange = "GetUnit()", @style = "width: 100%;"*@ })
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            GL *
+                        </label>
+                        <div class="col-md-7">
+                            @Html.DropDownList("general_ledger_id", (System.Web.Mvc.SelectList)ViewBag.glcodelist, "---Select---", new
+                       {
+                           @class = "form-control col-md-7 col-xs-12",
+                       })
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Remarks
+                        </label>
+                        <div class="col-md-7">
+
+                            <input type="text" class="form-control col-md-7 col-xs-12" id="remark">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="modal-footer">
+                <input type="hidden" id="srno" />
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                <button type="button" class="add btn btn-primary">Add </button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<input type="hidden" id="goods_detail_id" />
+
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#plant_id").select2({
+                placeholder: "Select Plant",
+                allowClear: true
+            });
+            $("#item_id").select2({
+                placeholder: "Select Item",
+                allowClear: true
+            });
+            $("#storage_location_id").select2({
+                placeholder: "Select Storage Location",
+                allowClear: true
+            });
+            $("#general_ledger_id").select2({
+                placeholder: "Select GL Name",
+                allowClear: true
+            });
+            var yes_no="";
+
+            var t = $('#ContactGrid').DataTable();
+            var goods_receipt_detail=@Html.Raw(JsonConvert.SerializeObject(this.Model));
+            var i=1;
+            $.each(goods_receipt_detail.goods_receipt_detail,function(key,value){
+                if(value.batch_yes_no==false)
+                {
+                    yes_no="No";
+                }
+                else
+                {
+                    yes_no="Yes";
+                }
+                t.fnAddData([value.goods_detail_id,i,value.REF_ITEM.ITEM_ID,value.REF_ITEM.ITEM_CODE+"-"+value.REF_ITEM.ITEM_NAME,
+                    value.reason_determination_id,value.REF_REASON_DETERMINATION.REASON_DETERMINATION_NAME,
+                    value.storage_location_id,value.REF_STORAGE_LOCATION.storage_location_name+ "-" + value.REF_STORAGE_LOCATION.description,
+                    value.item_batch_id,goods_receipt_detail.batch_number,yes_no,value.batch_manual,value.bucket_id,
+                    value.ref_bucket.bucket_name,value.quantity,value.uom_id,value.REF_UOM.UOM_NAME,value.rate,value.value,value.machine_id,goods_receipt_detail.machine_name,
+                    value.general_ledger_id,value.REF_GENERAL_LEDGER.gl_ledger_code+"-"+value.REF_GENERAL_LEDGER.gl_ledger_name,value.grn_id,goods_receipt_detail.grn,
+                    value.remark,'']);
+                i=i+1;
+            });
+
+          
+
+
+
+
+            //GetStorageLocation($("#plant_id").val());
+        });
+
+        $(document).ready(function () {
+            $("#plant_id").select2({
+                placeholder: "Select Plant",
+                allowClear: true
+            });
+            $("#item_id").select2({
+                placeholder: "Select Item",
+                allowClear: true
+            });
+            $("#storage_location_id").select2({
+                placeholder: "Select Storage Location",
+                allowClear: true
+            });
+            $("#general_ledger_id").select2({
+                placeholder: "Select GL Name",
+                allowClear: true
+            });
+            $("#createnewbatch").checkboxpicker();
+            $(".grnhide").hide();
+            document.getElementById('posting_date').valueAsDate = new Date();
+            document.getElementById('document_date').valueAsDate = new Date();
+            GetDocumentNumber($("#category_id").val());
+        });
+        $("#posting_date").change(function () {
+
+            $("#document_date").val($(this).val());
+        })
+    
+
+        $("#Back").click(function () {
+            window.location.href = "../GoodsReceipt/Index";
+        }
+        );
+
+        $(".add").on("click", function (event) {
+
+            var t = $('#ContactGrid').DataTable();
+            var rowCount = t.fnGetData().length;
+            var item_id = $("#item_id").val();
+            var item_name = $('#item_id option:selected').text();
+            var STORAGE_LOCATION = $('#storage_location_id').val();
+            var STORAGE_LOCATION_NAME = $('#storage_location_id option:selected').text();
+            var BATCH_ID = $('#BATCH_ID').val();
+            var BATCH_NAME = $('#BATCH_ID option:selected').text();
+            var batchyesno = $("#createnewbatch").is(':checked');
+            var batchmanual = $("#newbatch").val();
+            var bucket_id = $('#bucket_id').val();
+            var bucket_id_NAME = $('#bucket_id option:selected').text();
+            var reason_id = $('#REASON_DETERMINATION_ID').val();
+            var reason = $('#REASON_DETERMINATION_ID').find("option:selected").text();
+            var gl_code_id = $("#general_ledger_id").val();
+            var gl_code_name = $('#general_ledger_id').find("option:selected").text();
+            var qty = $("#quantity").val();
+            var unit_id = $("#UOM_ID").val();
+            var unit_name = $("#UOM_ID").find("option:selected").text();
+            var rate = $("#rate").val();
+            var value = qty * rate;
+            var remark = $("#remark").val();
+            var machine_id = $("#machine_id :selected").val();
+            var machine = $("#machine_id :selected").text();
+            var grn_id = $("#grn_id :selected").val();
+            var grn = $("#grn_id :selected").text();
+            if (item_id == '') {
+                swal("", "Please Select Item.", "error");
+                return false;
+            }
+            if (reason_id == '') {
+                swal("", "Please Select Reason.", "error");
+                return false;
+            }
+            if (STORAGE_LOCATION == '') {
+                swal("", "Please Select SLoc.", "error");
+                return false;
+            }
+            //if (BATCH_ID == '') {
+            //    swal("", "Please Select Batch.", "error");
+            //    return false;
+            //}
+            if (bucket_id == '') {
+                swal("", "Please Select Bucket.", "error");
+                return false;
+            }
+            if (qty == '') {
+                swal("", "Please Enter Quantity.", "error");
+                return false;
+            }
+            if (rate == '') {
+                swal("", "Please Enter Rate.", "error");
+                return false;
+            }
+            if (gl_code_id == '') {
+                swal("", "Please Enter GL.", "error");
+                return false;
+            }
+            if ($("#srno").val() == "") {
+                t.fnAddData(["0", rowCount + 1, item_id, item_name, reason_id, reason, STORAGE_LOCATION, STORAGE_LOCATION_NAME, BATCH_ID, BATCH_NAME,
+                    batchyesno, batchmanual, bucket_id, bucket_id_NAME, qty, unit_id, unit_name, rate, value, machine_id, machine, gl_code_id,
+                    gl_code_name, grn_id, grn, remark, '']);
+            }
+            else {
+                var cc = $("#srno").val();
+                cc = parseInt(cc) - 1;
+                t.fnUpdate(["0", rowCount + 1, item_id, item_name, reason_id, reason, STORAGE_LOCATION, STORAGE_LOCATION_NAME, BATCH_ID, BATCH_NAME,
+                    batchyesno, batchmanual, bucket_id, bucket_id_NAME, qty, unit_id, unit_name, rate, value, machine_id, machine, gl_code_id,
+                    gl_code_name, grn_id, grn, remark, ''], cc)
+            }
+            clearmodel();
+
+            return true;
+        });
+        function clearmodel() {
+            $("#item_id").val('');
+            $("#REASON_DETERMINATION_ID").val('');
+            $("#storage_location_id").val('');
+            $("#BATCH_ID").val('');
+            $("#bucket_id").val('');
+            $("#quantity").val('');
+            $("#UOM_ID").val('').trigger('change');
+            $("#rate").val('');
+            $("#value").val('');
+            $("#general_ledger_id").val('').trigger('change');
+            $("#srno").val('');
+            $('#remark').val('');
+            document.getElementById("item_id").removeAttribute("disabled");
+            document.getElementById("rate").removeAttribute("disabled");
+            document.getElementById("bucket_id").removeAttribute("disabled");
+            document.getElementById("general_ledger_id").removeAttribute("disabled");
+            document.getElementById("UOM_ID").removeAttribute("disabled");
+        }
+        function calculation() {
+            var quantity = $("#quantity").val();
+
+            var rate = $("#rate").val();
+
+
+            $("#value").val(rate * quantity);
+        }
+
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: true },
+                     { sname: "b" },
+                     { sname: "c", bVisible: true },
+                     { sname: "d" },
+                     { sname: "e", bVisible: true },
+                     { sname: "f" },
+                     { sname: "g", bVisible: true },
+                     { sname: "h" },
+                     { sname: "i", bVisible: true },
+                     { sname: "j", bVisible: true },
+                     { sname: "k", bVisible: true },
+                     { sname: "l", bVisible: true },
+                     { sname: "m", bVisible: true },
+                     { sname: "n", bVisible: true },
+                     { sname: "o" },
+                     { sname: "p", bVisible: true },
+                     { sname: "q" },
+                     { sname: "r" },
+                     { sname: "s" },
+                     { sname: "t" },
+                     { sname: "u", bVisible: true },
+                     { sname: "v" },
+                     { sname: "w" },
+                     { sname: "x", bVisible: true },
+                     { sname: "y" },
+                     { sname: "z" },
+                     {
+                         sname: "1", sWidth: "8%",
+                         bSortable: false,
+                         mRender: function (data, type, full) {
+                             return '<img class="edit" src="../../images/writing_file.png" height="20px" width="25px" alt="Edit" onclick="editRow(' + full[1] + ');" /><img class="edit" src="../../images/remove.png" height="20px" width="25px" alt="Delete" onclick="deleteRow(' + full[1] + ');" />';
+                         }
+                     }]
+
+        });
+
+
+        function TabletoJeson() {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            console.log(rowCount);
+            for (i = 0; i < rowCount; i++) {
+                $("#GoodsDetailHidden").append('<input type="hidden" id="goods_detail_id' + i + '" name="goods_detail_id">');
+                $("#GoodsDetailHidden").append('<input type="hidden" id="sr_no' + i + '" name="sr_no">');
+                $("#GoodsDetailHidden").append('<input type="hidden" id="item_id' + i + '" name="item_id">');
+                $("#GoodsDetailHidden").append('<input type="hidden" id="storage_location_id' + i + '" name="storage_location_id">');
+                $("#GoodsDetailHidden").append('<input type="hidden" id="bucket_id' + i + '" name="bucket_id">');
+                $("#GoodsDetailHidden").append('<input type="hidden" id="batch_yes_no' + i + '" name="batch_yes_no">');
+                $("#GoodsDetailHidden").append('<input type="hidden" id="batch_manual' + i + '" name="batch_manual">');
+                $("#GoodsDetailHidden").append('<input type="hidden" id="reason_determination_id' + i + '" name="reason_determination_id">');
+                $("#GoodsDetailHidden").append('<input type="hidden" id="item_batch_id' + i + '" name="item_batch_id">');
+                $("#GoodsDetailHidden").append('<input type="hidden" id="general_ledger_id' + i + '" name="general_ledger_id">');
+                $("#GoodsDetailHidden").append('<input type="hidden" id="quantity' + i + '" name="quantity">');
+                $("#GoodsDetailHidden").append('<input type="hidden" id="uom_id' + i + '" name="uom_id">');
+                $("#GoodsDetailHidden").append('<input type="hidden" id="rate' + i + '" name="rate">');
+                $("#GoodsDetailHidden").append('<input type="hidden" id="value' + i + '" name="value">');
+                $("#GoodsDetailHidden").append('<input type="hidden" id="remark' + i + '" name="remark">');
+                $("#GoodsDetailHidden").append('<input type="hidden" id="machine_id' + i + '" name="machine_id">');
+                $("#GoodsDetailHidden").append('<input type="hidden" id="grn_id' + i + '" name="grn_id">');
+
+                $("#goods_detail_id" + i).val(t.fnGetData(i)[0]);
+                $("#sr_no" + i).val(t.fnGetData(i)[1]);
+                $("#item_id" + i).val(t.fnGetData(i)[2]);
+                $("#reason_determination_id" + i).val(t.fnGetData(i)[4]);
+                $("#storage_location_id" + i).val(t.fnGetData(i)[6]);
+                $("#item_batch_id" + i).val(t.fnGetData(i)[8]);
+                $("#batch_yes_no" + i).val(t.fnGetData(i)[10]);
+                $("#batch_manual" + i).val(t.fnGetData(i)[11]);
+                $("#bucket_id" + i).val(t.fnGetData(i)[12]);
+                $("#quantity" + i).val(t.fnGetData(i)[14]);
+                $("#uom_id" + i).val(t.fnGetData(i)[15]);
+                $("#rate" + i).val(t.fnGetData(i)[17]);
+                $("#value" + i).val(t.fnGetData(i)[18]);
+                $("#machine_id" + i).val(t.fnGetData(i)[19]);
+                $("#general_ledger_id" + i).val(t.fnGetData(i)[21]);
+                $("#remark" + i).val(t.fnGetData(i)[25]);
+                $("#grn" + i).val(t.fnGetData(i)[23]);
+            }
+        }
+        function editRow() {
+            $('#myModal').modal('show');
+            var t = $('#ContactGrid').DataTable()
+            var cc = parseInt(arguments[0]) - 1;
+            $("#srno").val(t.fnGetData(cc)[1]);
+            $("#goods_detail_id").val(t.fnGetData(cc)[0]);
+            $("#item_id").val(t.fnGetData(cc)[2]).trigger('change');
+            $('#REASON_DETERMINATION_ID').val(t.fnGetData(cc)[4]);
+            $('#storage_location_id').val(t.fnGetData(cc)[6]).trigger('change');
+            $('#BATCH_ID').val(t.fnGetData(cc)[8]);
+            $('#bucket_id').val(t.fnGetData(cc)[10]);
+            $('#quantity').val(t.fnGetData(cc)[12]);
+            $('#UOM_ID').val(t.fnGetData(cc)[13]);
+            $('#rate').val(t.fnGetData(cc)[15]);
+            $('#value').val(t.fnGetData(cc)[16]);
+            $("#general_ledger_id").val(t.fnGetData(cc)[18]).trigger('change');
+            $('#remark').val(t.fnGetData(cc)[20]);
+        }
+
+        function deleteRow() {
+            var t = $('#ContactGrid').DataTable()
+            var len = t.fnGetData.length;
+            var pos;
+            for (var l = 0; l <= len; l++) {
+                if (t.fnGetData(l) != null) {
+                    if (t.fnGetData(l)[1] == arguments[0]) {
+                        pos = l;
+                    }
+                }
+            }
+
+            var id = t.fnGetData(pos)[0];
+
+            var deleteids = $("#deleteids").val();
+
+            swal({
+                title: "Are you sure?",
+
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+
+            },
+
+
+
+      function (isConfirm) {
+          if (isConfirm) {
+
+              $("#deleteids").val(deleteids + "~" + id);
+              t.fnDeleteRow(pos);
+
+          }
+
+
+      });
+
+        }
+
+        function GetDocumentNumber(id) {
+            if (id != '') {
+                $.ajax({
+                    type: 'GET',
+                    url: '/Generic/GetDocumentNumbering',
+                    data: { id: id },
+                    success: function (ITEM) {
+                        $('#goods_receipt_number').val(ITEM);
+                    },
+                    error: function (emp) {
+                        $('#goods_receipt_number').val('');
+                    }
+                });
+            }
+            else {
+                $('#goods_receipt_number').val('');
+            }
+        }
+
+        function GetUnit(id) {
+            if (id != '') {
+                $.ajax({
+                    type: 'GET',
+                    url: '/Generic/GetUnitofItem',
+                    data: { id: id },
+                    success: function (ITEM) {
+                        $("#UOM_ID").val(ITEM.item);
+                    },
+                    error: function (emp) {
+                        $('#UOM_ID').val('');
+                    }
+                });
+            }
+            else {
+                $('#UOM_ID').val('');
+            }
+
+        }
+
+        function onSelect2(args) {
+            var id = "";
+            var id = args.value.split("-")[0];
+            GetUnit(id);
+        }
+        function GetStorageLocation(id) {
+            if (id == "") {
+                id = 0;
+            }
+            $.ajax({
+                url: '/Generic/GetStorageLocation',
+                type: "GET",
+                dataType: "JSON",
+                data: { id: id },
+                success: function (id) {
+                    $("#storage_location_id").html(""); // clear before appending new list
+                    $("#storage_location_id").append($('<option></option>').val("").html("---Select---"));
+                    $.each(id, function (i, cycle) {
+                        $("#storage_location_id").append(
+                            $('<option></option>').val(cycle.storage_location_id).html(cycle.storage_location_name));
+                    });
+                }
+            });
+        }
+        $("#createnewbatch").change(function () {
+            id = $(this).is(':checked');
+            if (id == false) {
+                $('.batch_list').show();
+                // $('.batchmanagedfalse').hide();
+                $('.batchyesno').show();
+                $('.createnewbatch').hide();
+                //$('#newbatch').val('');
+                $("#BATCH_ID").prop('selectedIndex', 0);
+            }
+            else {
+                $('#newbatch').val('');
+                //$("BATCH_ID").prop('selectedIndex', 0);
+                $('.batch_list').hide();
+                $('.batchyesno').show();
+                $('.createnewbatch').show()
+            }
+        });
+        $("#REASON_DETERMINATION_ID").change(function () {
+            val = $("#REASON_DETERMINATION_ID :selected").text();
+            var qty = $("#quantity").val()
+            if (val == "Free Of Cost") {
+                $("#rate").val(0).trigger("change");
+                $("#rate").prop("disabled", "disabled")
+                $(".grnhide").hide();
+
+            } else if (val == "Excess material received" || val == "Excess material available") {
+                var rate = $("#standard_cost_value").val();
+                console.log(rate);
+                $("#rate").val(rate).trigger("change");
+                $("#rate").prop("disabled", "disabled");
+                $("#value").val(rate * qty);
+                $(".grnhide").show();
+            }
+            else {
+                $("#rate").val('').trigger("change");
+                $("#rate").prop("disabled", false);
+                $(".grnhide").hide();
+            }
+        });
+        function GetUnitandBatch(item_id) {
+            var plant_id = $("#plant_id").val();
+            if (item_id == "") {
+                item_id = 0;
+            }
+            $.ajax({
+                url: '@Url.Action("GetItemDetails", "Goodsreceipt")',
+                type: "GET",
+                dataType: "JSON",
+                data: { item_id: item_id },
+                success: function (data) {
+                    console.log(data);
+                    if (data.ITEM_VALUATION_ID == 2) {
+                        $("#standard_cost_value").val(data.standard_cost_value);//if itemvaluation is 1 then calculate MAP otherwise sstandard price
+                    }
+                    else {
+                        $.ajax({
+                            url: '@Url.Action("GetMAP", "Goodsreceipt")',
+                            type: "GET",
+                            dataType: "JSON",
+                            data: { item_id: item_id, plant_id: plant_id },
+                            async: false,
+                            success: function (data) {
+                                // console.log(data);
+                                $("#standard_cost_value").val(data);
+                            }
+                        });
+                    }
+                    if (data.BATCH_MANAGED == true) {
+                        if (data.auto_batch == 2) {
+                            $("#newbatch").prop("disabled", false)
+                        }
+                        else {
+                            $("#newbatch").prop("disabled", "disabled")
+                        }
+                        $('.dt_col_hide').show();
+                        $('.batchyesno').show();
+                        $('.createnewbatch').show()
+                        $('.batch_list').show();
+                        console.log(item_id);
+                        $.ajax({
+                            url: '@Url.Action("BatchList", "Goodsreceipt")',
+                            type: "GET",
+                            dataType: "JSON",
+                            async: false,
+                            data: { item_id: item_id},
+                            success: function (id) {
+                                console.log(id);
+                                $("#BATCH_ID").html(""); // clear before appending new list
+                                $("#BATCH_ID").append($('<option></option>').val(0).html("---Select---"));
+                                $.each(id, function (i, cycle) {
+                                    $("#BATCH_ID").append(
+                                        $('<option></option>').val(cycle.item_batch_id).html(cycle.batch_number));
+                                });
+                            }
+                        });
+                    }
+                    else {
+                        $('.dt_col_hide').hide();
+                        $('.batchyesno').hide();
+                        $('.createnewbatch').hide()
+                        $('.batch_list').hide();
+                        $('#createnewbatch').prop('checked', false);
+                    }
+                }
+            });
+
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetUnitofItem", "Generic")',
+                data: { id: item_id },
+                success: function (ITEM) {
+                    $("#UOM_ID").val(ITEM.item);
+                },
+                error: function (emp) {
+                    $('#UOM_ID').val('');
+                }
+            });
+        }
+    </script>
+}

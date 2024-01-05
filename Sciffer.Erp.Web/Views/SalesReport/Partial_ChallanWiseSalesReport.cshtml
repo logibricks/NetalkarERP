@@ -1,0 +1,51 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<sales_order_report_vm>("Editing")
+                        .Datasource(ds => ds.URL(Url.Action("GetSalesOrderData", "SalesReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&item_id=" + ViewBag.item_id ).Adaptor(AdaptorType.UrlAdaptor))
+                        .AllowPaging().PageSettings(a => a.PageSize(20))
+                        .AllowFiltering()
+                            .FilterSettings(X => X.FilterType(FilterType.Excel))
+                        .ShowColumnChooser()
+                        .AllowSorting()
+                        .AllowScrolling()
+                        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "SalesReport", new { ctrlname = "ChallanWiseSalesReport" })))
+                                                                                                                                                        .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                    .ToolbarSettings(toolbar =>
+                    {
+                        toolbar.ShowToolbar().ToolbarItems(items =>
+                        {
+                            items.AddTool(ToolBarItems.Search);
+                            items.AddTool(ToolBarItems.ExcelExport);
+                            items.AddTool(ToolBarItems.PrintGrid);
+                        });
+                    })
+
+                .ShowSummary()
+
+            .SummaryRow(row =>
+            {
+                row.Title("Total").SummaryColumns(col =>
+                {
+                    col.SummaryType(SummaryType.Sum).DisplayColumn("quantity").DataMember("quantity").Format("{0:n2}").Add();
+                    col.SummaryType(SummaryType.Sum).DisplayColumn("qty").DataMember("qty").Format("{0:n2}").Add();
+                }).Add();
+            })
+            .Columns(col =>
+            {
+
+
+
+                col.Field("si_number").Width("15%").HeaderText("Inv No").Add();
+                col.Field("si_date").Width("15%").HeaderText("Inv Date").Format("{0:dd/MMM/yyyy}").Add();
+                col.Field("quantity").Width("15%").HeaderText("Inv Qty").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                col.Field("customer_chalan_no").Width("15%").HeaderText("Challan No").Add();
+                col.Field("customer_chalan_date").Width("15%").HeaderText("Challan Date").Format("{0:dd/MMM/yyyy}").Add();
+                col.Field("qty").Width("15%").HeaderText("Quantity").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+        })
+                .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick1"); })
+                                                                                                                                                                                                                                                                                                          ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+

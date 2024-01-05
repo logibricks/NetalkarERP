@@ -1,0 +1,69 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+
+
+
+@{(Html.EJ().Grid<Report_ShelfLifeAbouttoExpireReport_vm>("Editing")
+                                                                        .Datasource((IEnumerable<object>)ViewBag.datasource)
+                                                                          .AllowPaging().PageSettings(a=>a.PageSize(20))
+                                                                          .AllowFiltering()
+                                                                              .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                                          .ShowColumnChooser()
+                                                                          .AllowSorting()
+                                                                          .AllowScrolling()
+                                                                          .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelForReport", "Generic", new { ctrlname = "SalesSummaryReport" }))
+                                                                          .ExportToPdfAction(Url.Action("ExportToPdfForReport", "Generic", new { ctrlname = "SalesSummaryReport" })))
+                                                                          .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                                                      .ToolbarSettings(toolbar =>
+                                                                      {
+                                                                          toolbar.ShowToolbar().ToolbarItems(items =>
+                                                                          {
+                                                                              items.AddTool(ToolBarItems.Search);
+                                                                              items.AddTool(ToolBarItems.ExcelExport);
+                                                                              items.AddTool(ToolBarItems.PrintGrid);
+                                                                          });
+                                                                      })
+                                                              .Columns(col =>
+                                                              {
+                                                                  col.Field("Item_Description").Width("10%").HeaderText("Item Description").Add();
+                                                                  col.Field("Plant").Width("10%").HeaderText("Plant").Add();
+                                                                  col.Field("Sloc").Width("10%").HeaderText("Sloc").Visible(false).Add();
+                                                                  col.Field("Batch").Width("10%").HeaderText("Batch").Visible(false).Add();
+                                                                  col.Field("Bucket").Width("10%").HeaderText("Bucket").Visible(false).Add();
+                                                                  col.Field("Shelf_Life_Expiry_Date").Width("10%").HeaderText("Shelf Life Expiry Date").Visible(false).Add();
+                                                                  col.Field("Qty").Width("10%").HeaderText("Qty").Visible(false).Add();
+
+                                                              })
+                                                              .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+                                                              ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    @*$(function () {
+        var obj = @Html.Raw(Json.Encode(ViewBag.datasource));
+        console.log(obj);
+        $("#Editing").ejGrid({
+            dataSource: obj,
+            allowPaging: true,
+            //columns: [
+
+            //],
+            //dataBound : function(args){
+            //	for (var fld =0; fld < list.length; fld++ ) {
+            //	var column = { field: list[fld].value, headerText: list[fld].header, column: "", textAlign: "left", type: "string", visible: true, width: 75 };
+            //	this.model.columns.push(column); //add dynamic columns
+            //	}
+            //	this.columns(this.model.columns);
+            //}
+        });
+    });*@
+
+
+</script>
+
+
+

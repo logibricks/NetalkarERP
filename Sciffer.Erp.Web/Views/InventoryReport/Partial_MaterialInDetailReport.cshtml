@@ -1,0 +1,58 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<report_material_in_out_vm>("Editing")
+                                            .Datasource(ds => ds.URL(Url.Action("MaterialInOutDetailReport", "InventoryReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&plant_id=" + ViewBag.plant_id + "&item_id=" + ViewBag.item_id + "&employee_id=" + ViewBag.employee_id).Adaptor(AdaptorType.UrlAdaptor))
+
+                                                          .AllowPaging().PageSettings(a => a.PageSize(20))
+                                                          .AllowFiltering()
+                                                              .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                          .ShowColumnChooser()
+                                                          .AllowSorting()
+                                                          .AllowScrolling()
+                                                        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelMIO", "InventoryReport", new { ctrlname = "MaterialInDetailReport" })))
+                                                                                                         .ScrollSettings(scroll => { scroll.Width("100%").Height("50%"); })
+
+                                                      .ToolbarSettings(toolbar =>
+                                                      {
+                                                          toolbar.ShowToolbar().ToolbarItems(items =>
+                                                          {
+                                                              items.AddTool(ToolBarItems.Search);
+                                                              items.AddTool(ToolBarItems.ExcelExport);
+                                                              items.AddTool(ToolBarItems.PrintGrid);
+                                                          });
+                                                      })
+                                              .Columns(col =>
+                                              {
+                                                  col.Field("category").Width("15%").HeaderText("Category").Add();
+                                                  col.Field("mi_doc_number").Width("15%").HeaderText("MI Doc Number").Add();
+                                                  col.Field("posting_date").Width("15%").HeaderText("MI Posting Date").Format("{0:dd/MMM/yyyy}").Add();
+                                                  col.Field("document_number").Width("15%").HeaderText("MO Doc Number").Add();
+                                                  col.Field("mo_posting_date").Width("15%").HeaderText("MO Posting Date").Format("{0:dd/MMM/yyyy}").Add();
+                                                  col.Field("VENDOR_NAME").Width("15%").HeaderText("Vendor").Visible(true).Add();
+                                                  col.Field("gst_no").Width("15%").HeaderText("Vendor GSTIN No.").Visible(true).Add();
+                                                  col.Field("BUSINESS_UNIT_NAME").Width("15%").HeaderText("Business Unit").Visible(true).Add();
+                                                  col.Field("PLANT_NAME").Width("15%").HeaderText("Plant").Visible(true).Add();
+                                                  col.Field("ge_number").Width("15%").HeaderText("Gate Number").Visible(true).Add();
+                                                  col.Field("ge_date").Width("15%").HeaderText("Gate Date").Visible(true).Format("{0:dd/MMM/yyyy}").Add();
+                                                  col.Field("employee_name").Width("15%").HeaderText("Employee").Visible(true).Add();
+                                                  col.Field("returnable_nonreturnable").Width("15%").HeaderText("Returnable Nonreturnable").Visible(true).Add();
+                                                  col.Field("ITEM_NAME").Width("15%").HeaderText("Item").Visible(true).Add();
+                                                  col.Field("user_description").Width("15%").HeaderText("User Description").Visible(true).Add();
+                                                  col.Field("UOM_NAME").Width("15%").HeaderText("UoM").Visible(true).Add();
+                                                  col.Field("hsn_code").Width("15%").HeaderText("HSN").Visible(true).Add();
+                                                  col.Field("quantity").Width("15%").HeaderText("Quantity").Format("{0:n2}").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                                  col.Field("rate").Width("15%").HeaderText("Rate").Format("{0:n2}").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                                  col.Field("value").Width("15%").HeaderText("Value").Format("{0:n2}").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                                  col.Field("reason").Width("15%").HeaderText("Reason").Visible(true).Add();
+                                                  col.Field("tax_code").Width("15%").HeaderText("Tax Code").Visible(true).Add();
+                                                  col.Field("er_date").Width("15%").HeaderText("Expected Return Date").Format("{0:dd/MMM/yyyy}").Add();
+                                                  col.Field("balance_qty").Width("15%").HeaderText("Balance Qty").Format("{0:n2}").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                                  col.Field("remarks").Width("15%").HeaderText("Remarks").Visible(true).Add();
+                                                  col.Field("internal_remarks").Width("15%").HeaderText("Internal Remarks").Visible(true).Add();
+                                                  col.Field("remarks_on_document").Width("15%").HeaderText("Remarks On Document").Visible(true).Add();
+                                              }).ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicki"); })).Render();}
+@Html.EJ().ScriptManager()
+
+
+
+

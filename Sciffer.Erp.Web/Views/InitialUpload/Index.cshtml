@@ -1,0 +1,135 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Newtonsoft.Json
+<style>
+    .btn.btn-danger, .btn.btn-primary, .btn.btn-success {
+        padding: 5px 16px;
+    }
+</style>
+@{
+    ViewBag.Title = "Index";
+}
+@using (Html.BeginForm("CreateExcel", "InitialUpload", FormMethod.Post, new { @class = "main_form", enctype = "multipart/form-data" }))
+{
+    <div class="form-horizontal" style="display:none" id="div_slide">
+        <div class="form-group" style="margin-left:0%">
+            <div class="row">
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.ActionLink("Download Excel Format", "DownloadExcelFormat", "Generic", new { ctrlname = "InitialUpload", col_list = "Asset Code,Dep Area,Capitalization Date,Original Cost,Accumlated Depreciation,Net value" }, new { @class = "btn btn-primary" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.Label("fileUpload", "Upload Excel", htmlAttributes: new { @class = "control-label col-md--3 col-sm-3 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input id="fileUpload" name="file" type="file" class="filestyle form-control" data-buttonName="btn-primary">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="submit" value="Upload" id="create" class="btn btn-success" tabindex="4" />
+                            <button type="button" id="btn_cancel" class="btn btn-danger" tabindex="5">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+}
+
+<div class="">
+
+    <button type="button" id="excell_upload" class="btn btn-success">Excel Upload &nbsp<span class="glyphicon glyphicon-plus"></span></button>
+
+</div>
+<br />
+
+<div>
+    @(Html.EJ().Grid<ref_asset_initial_data_header_vm>("Searching")
+        .Datasource((IEnumerable<object>)ViewBag.DataSource)
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "InitialUpload" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("asset_initial_data_header_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Add();
+            col.Field("category").Width("15%").HeaderText("Category").Add();
+            col.Field("document_no").Width("15%").HeaderText("Document No.").Add();
+            col.Field("posting_dates").Width("15%").HeaderText("Posting Date").Add();
+        
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+
+
+
+
+  @section Scripts {
+    <script type="text/javascript">
+    $('#div_slide').hide();
+    $('#btn_create').on('click', function () {
+        location.href = '@Url.Action("Create", "InitialUpload")';
+    });
+
+    $("#excell_upload").click(() => {
+        $('#div_slide').show();
+
+    })
+    $("#btn_cancel").click(() => {
+        $('#div_slide').hide();
+
+    })
+   $(document).ready(function () {
+        var doc_no = '@ViewBag.num';
+        console.log(doc_no);
+        if (doc_no != '') {
+            if (doc_no != 0) {
+                sweetAlert("", " Saved successfully!", "success");
+            }
+        }
+    });
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = "@Url.Action("Edit", "InitialUpload")?id=" + args.rowData.asset_initial_data_header_id;
+        }
+        if (args.requestType == "add") {
+            location.href = '@Url.Action("Create", "InitialUpload")';
+        }
+    }
+    function rightClick(args) {
+        location.href = "@Url.Action("Details", "InitialUpload")?id=" + args.data.asset_initial_data_header_id;
+    }
+    function Click(args) {
+        $('a').css('color','red');
+    }
+
+
+    </script>
+    }

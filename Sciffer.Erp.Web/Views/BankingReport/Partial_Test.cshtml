@@ -1,0 +1,28 @@
+﻿    @*<style>
+        .cols-sample-area {
+            height: 440px;
+        }
+    </style>*@
+
+    @(Html.EJ().TreeGrid("TreeGridContainer")
+          .TreeColumnIndex(1)
+          .AllowColumnResize(true)
+          .IsResponsive(true)
+          .IdMapping("fin_ledger_payment_id")
+          .ParentIdMapping("parent_id")
+          .ChildMapping("Children")
+          .Columns(co =>
+          {
+              co.Field("category").HeaderText("Doc Category").Add();
+              co.Field("document_no").HeaderText("Doc Number").Add();
+              co.Field("payment_date").HeaderText("Task Name").Add();              
+              co.Field("payment_amount").HeaderText("Amount").Add();
+              co.Field("payment_type_name").HeaderText("Payment Method").Add();
+              co.Field("gl_code").HeaderText("GL Code").Add();
+              co.Field("gl_name").HeaderText("GL Name").Add();
+              co.Field("tran_ref_no").HeaderText("Ref No.").Add();             
+          }
+          )
+          .Datasource(ViewBag.datasource)
+    )
+@Html.EJ().ScriptManager()

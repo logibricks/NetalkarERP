@@ -1,0 +1,159 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Incentive Rule";
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<br /><br /><br />
+<div>
+
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+
+    @(Html.EJ().Grid<VM_incentive_rule>("IncentiveRuleGrid")
+       .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.ItemWIPValue).RemoveURL(Url.Action("InlineDelete", "IncentiveRule")).InsertURL(Url.Action("InlineInsert", "IncentiveRule")).UpdateURL(Url.Action("InlineInsert", "IncentiveRule"))
+                       .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(10); })
+        .EnableAltRow()
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Add);
+                items.AddTool(ToolBarItems.Edit);
+                items.AddTool(ToolBarItems.Update);
+                items.AddTool(ToolBarItems.Delete);
+                items.AddTool(ToolBarItems.Cancel);
+                //items.AddTool(ToolBarItems.ExcelExport);
+                items.AddTool(ToolBarItems.PrintGrid);
+            });
+        })
+        //.Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "ToolLifeMaster" }))
+        //.ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "ToolLifeMaster" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "ToolLifeMaster" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("incentive_rule_id").HeaderText("ID").IsPrimaryKey(true).ShowInColumnChooser(false).Width(75).Visible(false).Add();
+
+            col.Field("machine_id").HeaderText("Machine Id").Visible(false).ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("machine_name").HeaderText("Machine Name").Add();
+
+            col.Field("ITEM_ID").HeaderText("Item Id").Visible(false).ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("item_name").HeaderText("Item Name").Add();
+
+            col.Field("min_prod_qty").HeaderText("Min. Product Qty").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("incentive_per_qty").HeaderText("Incentive/Qty").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("effective_date").HeaderText("Effective Date").ValidationRules(val => val.AddRule("required", true)).Format("{0: dd/MMMM/yyyy}").Add();
+            col.Field("is_blocked").HeaderText("Is Blocked").Add();
+
+        })
+        .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+</div>
+
+<script id="template" type="text/template">
+
+    <div>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="hidden" id="incentive_rule_id" name="incentive_rule_id" value="{{: incentive_rule_id}}" class="form-control" />
+            </div>
+        </div>
+        <br />
+
+        <br />
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Item Name *
+            </div>
+            <div class="col-lg-4 col-md-4 col-xs-12">
+                @Html.DropDownList("ITEM_ID", (System.Web.Mvc.SelectList)ViewBag.item_list, "--Select--", htmlAttributes: new { @class = "form-control " })
+            </div>
+
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Machine Name *
+            </div>
+            <div class="col-lg-4 col-md-4 col-xs-12">
+                @Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.machine_list, "--Select--", htmlAttributes: new { @class = "form-control " })
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Minimum Product Quantity *
+            </div>
+            <div class="col-lg-4 col-md-4 col-xs-12">
+                <input type="text" id="min_prod_qty" name="min_prod_qty" value="{{: min_prod_qty}}" class="form-control" />
+            </div>
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Incentive per Quantity *
+            </div>
+            <div class="col-lg-4 col-md-4 col-xs-12">
+                <input type="text" id="incentive_per_qty" name="incentive_per_qty" value="{{: incentive_per_qty}}" class="form-control" />
+            </div>
+
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Effective Date *
+            </div>
+            <div class="col-lg-4 col-md-4 col-xs-12">
+                <input type="date" id="effective_date" name="effective_date" value="" class="form-control" />
+            </div>
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Is Blocked *
+            </div>
+            <div class="col-lg-4 col-md-4 col-xs-12">
+                <input type="checkbox" id="is_blocked" name="is_blocked">
+            </div>
+
+        </div>
+    </div>
+</script>
+
+
+
+<script type="text/javascript">
+
+    var flag = true;
+    function complete(args) {
+        if (args.requestType == "add") {
+            $('#is_blocked').checkboxpicker();
+        }
+
+        if (args.requestType == "beginedit") {
+
+            if (args.rowData.is_blocked == true) {
+                //Check
+                document.getElementById('is_blocked').setAttribute('checked', 'checked');
+            }
+            else {
+                //UnCheck
+                document.getElementById('is_blocked').removeAttribute('checked');
+            }
+            $('#is_blocked').checkboxpicker();
+            $("#ITEM_ID").val(args.rowData.ITEM_ID);
+            $("#machine_id").val(args.rowData.machine_id);
+        }
+        if (args.requestType == "save") {
+
+            var gridObj = $("#IncentiveRuleGrid").ejGrid("instance");
+            gridObj.refreshContent();
+        }
+    }
+
+    function EndProcess() {
+        var gridObj = $("#IncentiveRuleGrid").ejGrid("instance");
+        gridObj.refreshContent();
+    }
+</script>
+

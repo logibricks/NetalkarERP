@@ -1,0 +1,120 @@
+﻿
+@model Sciffer.Erp.Domain.ViewModel.ref_asset_initial_data_header_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+<div class="loading">Loading &#8230;</div>
+@using (Html.BeginForm("Create", "InitialUpload", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form_main", @id = "form_main" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        <div>@Html.ValidationSummary(true, "", new { @class = "text-danger" })</div>
+        @Html.HiddenFor(a => a.asset_initial_data_header_id, new { @class = "primary_id hidden" })
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.document_category_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            @Html.DropDownList("document_category_id", (System.Web.Mvc.SelectList)ViewBag.category_list, new { @class = "form-control category validinput", @required = true, @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.document_category_id, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            @Html.EditorFor(model => model.document_no, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.document_no, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>           
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.posting_date, htmlAttributes: new { Class = "control-label col-md-4 " })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control removedisabled ", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.posting_date, "", new { Class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>  
+            <br />
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table table-responsive table-bordered table-striped" id="upload">
+                        <thead>
+                            <tr>
+                                <th hidden><label>id</label></th>
+                                <th hidden><label>asset_id</label></th>
+                                <th><label>Asset Code</label></th>
+                                <th><label>Asset Class</label></th>
+                                <th hidden><label>dep_area_id</label></th>
+                                <th><label>Depreciation Area</label></th>
+                                <th><label>Historical Cost</label></th>
+                                <th><label>Acc Depreciation</label></th>
+                                <th><label>Net Value</label></th>                             
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>          
+        </div>
+        <div class="row">
+            <div class="col-lg12 col-sm-12">
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">                    
+                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary pull-left" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+
+
+        $('#upload').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", sWidth: "15%",bVisible: false },
+                     { sname: "b", sWidth: "15%",bVisible: false },
+                     { sname: "c", sWidth: "15%",bVisible: true },
+                     { sname: "c", sWidth: "15%",bVisible: true },
+                     { sname: "d", sWidth: "10%",bVisible: false },
+                     { sname: "e", sWidth: "10%" ,bVisible: true},
+                     { sname: "f", sWidth: "10%","sClass":"numericCol",bVisible: true},
+                     { sname: "g", sWidth: "10%","sClass":"numericCol",bVisible: true },
+                     { sname: "h", sWidth: "10%","sClass":"numericCol",bVisible: true },
+                   
+            ]
+
+        });
+
+        var t1 = $('#upload').DataTable();
+
+        var upload = @Html.Raw(JsonConvert.SerializeObject(this.Model.ref_asset_initial_data_vm));
+
+        var i=1;
+
+        $.each(upload,function(key,value){
+           
+            t1.fnAddData([value.asset_initial_data_header_id,value.asset_id,value.asset_code,value.asset_class_des,value.dep_area_id,value.dep_area_code,parseFloat(value.historical_cost).toFixed(4),parseFloat(value.acc_depriciation).toFixed(4),parseFloat(value.net_value).toFixed(4)]);
+            i=i+1;
+        });
+        
+    </script>
+}
+<style>
+    .numericCol {
+        text-align: right;
+    }
+</style>

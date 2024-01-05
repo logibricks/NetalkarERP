@@ -1,0 +1,109 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_shifts
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.plant_id, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10 col-sm-10 col-xs-10">
+                        @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plant_list, "---Select---", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.plant_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.shift_code, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.shift_code, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.shift_code, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.from_time, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10 col-sm-10 col-xs-10">
+                        @Html.EditorFor(model => model.from_time, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.from_time, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.to_time, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.to_time, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.to_time, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-success" id="create" name="create" style="float:right" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index",null,new {@class="btn btn-primary" })
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+    $("#create").click(function (e) {
+        //TabletoJeson();
+        e.preventDefault();
+        var plant = $('#plant_id').val();
+        var code = $('#shift_code').val();
+        var from = $('#from_time').val();
+        var to = $('#to_time').val();
+        var country = $('#COUNTRY_ID').val();
+        if (plant == "")
+        {
+            sweetAlert("", "Plant name is required!", "error");
+        }
+        else if (code == "") {
+            sweetAlert("", "Shift code is required!", "error");
+        }
+        else if (from == "") {
+            sweetAlert("", "From time is required!", "error");
+        }
+        else if (to == "") {
+            sweetAlert("", "To time is required!", "error");
+        }
+        else {
+            $.ajax({
+                url: '@Url.Action("CheckDuplicate", "Shift")',
+                type: "GET",
+                dataType: "JSON",
+                asynch: true,
+                data: { st: from + ","+ to,st1:plant, id: 0 },
+                success: function (output) {
+                    if (output != 0) {
+                        sweetAlert("", "This is already present in databse!", "error");
+                    }
+                    else {
+                        document.forms[0].submit();
+                    }
+                }
+            });
+        }
+    });
+    </script>
+}

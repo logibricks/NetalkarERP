@@ -1,0 +1,137 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<SAL_QUOTATION_VM>("Searching")
+          .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "SalesQuotation" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+         .ContextMenuSettings(contextMenu =>
+         {
+             contextMenu.EnableContextMenu();
+             contextMenu.DisableDefaultItems();
+             contextMenu.CustomContextMenuItems(new List<Syncfusion.JavaScript.Models.CustomContexMenuItems>() { new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu", Text = "Print Report" } }); // CustomContext menu items                     
+         })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "SalesQuotation" })))
+        .AllowSorting()
+        .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("QUOTATION_ID").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Width(80).Add();
+            col.Field("SALES_CATEGORY").Width("15%").HeaderText("Sales Category").Add();
+            col.Field("QUOTATION_NUMBER").Width("15%").HeaderText("Number").Add();
+            col.Field("QUOTATION_DATE").Width("15%").HeaderText("Date").Format("{0:dd/MM/yyyy}").Add();
+            col.Field("BUYER_NAME").Width("15%").HeaderText("Bill To Party").Add();
+            col.Field("BUYER_CODE").Width("15%").HeaderText("Bill To Party Code").Visible(true).Add();
+            col.Field("CONSIGNEE_NAME").Width("15%").HeaderText("Ship To Party").Visible(true).Add();
+            col.Field("CONSIGNEE_CODE").Width("15%").HeaderText("Ship To Party Code").Visible(true).Add();
+            col.Field("supply_state").Width("15%").HeaderText("Place of Supply").Visible(true).Add();
+            col.Field("delivery_state").Width("15%").HeaderText("Place of Delivery").Visible(true).Add();
+            col.Field("SAL_NET_VALUE").Width("15%").HeaderText("Sale Net Value").Add();
+            col.Field("NET_VALUE_CURRENCY_NAME").Width("15%").HeaderText("Sale Net Currency").Visible(false).Add();
+            col.Field("SAL_GROSS_VALUE").Width("15%").HeaderText("Sale Gross Value").Visible(false).Add();
+            col.Field("GROSS_VALUE_CURRENCY_NAME").Width("15%").HeaderText("Sale Gross Currency").Visible(false).Add();
+            col.Field("BUSINESS_UNIT_NAME").Width("15%").HeaderText("Business Unit Name").Visible(false).Add();
+            col.Field("business_desc").Width("15%").HeaderText("Business Unit Description").Visible(false).Add();
+            col.Field("PLANT_NAME").Width("15%").HeaderText("Plant Code").Visible(false).Add();
+            col.Field("plant_code").Width("15%").HeaderText("Plant Description").Visible(false).Add();
+            col.Field("FREIGHT_TERMS_NAME").Width("15%").HeaderText("Freignt Terms").Visible(false).Add();
+            col.Field("TERRITORY_NAME").Width("15%").HeaderText("Territory").Visible(false).Add();
+            col.Field("SALES_RM_NAME").Width("15%").HeaderText("Sales RM").Visible(false).Add();
+            col.Field("DELIVERY_DATE").Width("15%").HeaderText("Delivery Date").Format("{0:dd/MM/yyyy}").Visible(false).Add();
+            col.Field("CUSTOMER_RFQ_NO").Width("15%").HeaderText("Customer RFQ No").Visible(false).Add();
+            col.Field("CUSTOMER_RFQ_DATE").Width("15%").HeaderText("Customer RFQ Date").Format("{0:dd/MM/yyyy}").Visible(false).Add();
+            col.Field("currency_name").Width("15%").HeaderText("Currency").Visible(false).Add();
+            col.Field("QUOTATION_EXPIRY_DATE").Width("15%").HeaderText("Quotation Expiry Date").Format("{0:dd/MM/yyyy}").Visible(false).Add();
+            col.Field("form_name").Width("15%").HeaderText("Sale against Form").Visible(false).Add();
+            col.Field("BILLING_ADDRESS").Width("15%").HeaderText("Billing Address").Visible(false).Add();
+            col.Field("BILLING_CITY").Width("15%").HeaderText("Billing City").Visible(false).Add();
+            col.Field("BILLING_PINCODE").Width("15%").HeaderText("Billing Pincode").Visible(false).Add();
+            col.Field("BILLING_COUNTRY_NAME").Width("15%").HeaderText("Billing Country").Visible(false).Add();
+            col.Field("BILLING_STATE_NAME").Width("15%").HeaderText("Billing State").Visible(false).Add();
+            col.Field("BILLING_EMAIL_ID").Width("15%").HeaderText("Billing Email").Visible(false).Add();
+            col.Field("SHIPPING_ADDRESS").Width("15%").HeaderText("Shipping Address").Visible(false).Add();
+            col.Field("SHIPPING_CITY").Width("15%").HeaderText("Shipping City").Visible(false).Add();
+            col.Field("SHIPPING_PINCODE").Width("15%").HeaderText("Shipping Pincode").Visible(false).Add();
+            col.Field("SHIPPING_COUNTRY_NAME").Width("15%").HeaderText("Shipping Country").Visible(false).Add();
+            col.Field("SHIPPING_STATE_NAME").Width("15%").HeaderText("Shipping State").Visible(false).Add();
+            col.Field("SHIPPING_EMAIL_ID").Width("15%").HeaderText("Shipping Email").Visible(false).Add();
+            col.Field("PAYMENT_CYCLE_TYPE_NAME").Width("15%").HeaderText("Payment Cycle Type").Visible(false).Add();
+            col.Field("PAYMENT_CYCLE_NAME").Width("15%").HeaderText("Payment Cycle").Visible(false).Add();
+            col.Field("PAYMENT_TERMS_NAME").Width("15%").HeaderText("Payment Terms").Visible(false).Add();
+            col.Field("gst_no").Width("15%").HeaderText("Bill To Party GST No").Visible(false).Add();
+            col.Field("pan_no").Width("15%").HeaderText("Bill To Party PAN No").Visible(false).Add();
+            col.Field("shipping_gst_no").Width("15%").HeaderText("Ship To Party GST No").Visible(false).Add();
+            col.Field("shipping_pan_no").Width("15%").HeaderText("Ship To Party PAN No").Visible(false).Add();
+            col.Field("INTERNAL_REMARKS").Width("15%").HeaderText("Internal Remarks").Visible(false).Add();
+            col.Field("REMARKS").Width("15%").HeaderText("Remarks").Visible(false).Add();
+            col.Field("attachment").Width("15%").HeaderText("Attachment").Width(150).Visible(true).Template("<a id='files' target='_blank' href='/Generic/Result?id={{:QUOTATION_ID}}&controllername=SalesQuotation'>File</a>").Visible(false).Add();
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+            eve.ContextClick("contextclick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+     .e-editcell {
+        display:none
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = '@Url.Action("Edit", "SalesQuotation")?id='+args.rowData.QUOTATION_ID;
+        }
+        if (args.requestType == "add") {
+            location.href = '@Url.Action("Create", "SalesQuotation")';
+        }
+    }
+    //function rightClick(args) {
+    //    location.href = "/SalesQuotation/Details?id=" + args.data.QUOTATION_ID;
+    //}
+    function contextclick(args) {
+        if (args.text == "Print Report") {
+            var url = '@Url.Action("Pdf", "SalesQuotation")?id=' + this.getSelectedRecords()[0].QUOTATION_ID;
+            window.open(url);
+        }
+
+    };
+    $(document).ready(function () {
+        var num = '@Html.ViewBag.num';
+        if (num != '') {
+            if (num != undefined) {
+                sweetAlert("", num , "info");
+            }
+        }
+    });
+</script>
+

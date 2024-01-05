@@ -1,0 +1,82 @@
+﻿
+@using Sciffer.Erp.Domain.Model
+
+@{
+    ViewBag.Title = "Index";
+}
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<ref_validation>("Searching")
+       .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "Validation" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+
+        }))        
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "Validation" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+         .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("validation_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Width(80).Add();
+            col.Field("so_mandatory_for_si").Width("15%").HeaderText("SO Mandatory for Sales Invoice").Add();
+            col.Field("rate_change_at_si").Width("15%").HeaderText("Can rate be changed at Sales Invoice").Add();
+            col.Field("pr_mandatory_for_po").Width("15%").HeaderText("Purchase Req mandatory for PO").Add();
+            col.Field("po_mandatory_for_grn").Width("15%").HeaderText("PO Mandatory for GRN").Visible(true).Add();
+            col.Field("po_mandatory_for_pi").Width("15%").HeaderText("PO Mandatory for Invoice").Visible(false).Add();
+            col.Field("allow_to_change_bom").Width("15%").HeaderText("Production order - allow to change bom item").Visible(false).Add();
+            col.Field("allow_negative_cash").Width("15%").HeaderText("Allow Negative Cash").Visible(false).Add();
+            col.Field("allow_negative_bank").Width("15%").HeaderText("Allow Negative Bank").Visible(true).Add();
+            col.Field("round_off_values").Width("15%").HeaderText("Round off Values").Visible(false).Add();
+            col.Field("grn_for_qa").Width("15%").HeaderText("GRN").Visible(false).Add();
+            col.Field("goods_receipt_for_qa").Width("15%").HeaderText("Goods Receipt").Visible(false).Add();
+            col.Field("production_receipt_for_qa").Width("15%").HeaderText("Production Receipt").Visible(false).Add();
+            col.Field("inventory_adjustment").Width("15%").HeaderText("Inventory Adjustment").Visible(false).Add();
+            col.Field("order_creation_date_for_next_month").Width("15%").HeaderText("Order Creation Date for Next Month").Visible(false).Add();
+           
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+           
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = '@Url.Action("Edit", "Validation")?id=' +args.rowData.validation_id;
+        }
+        if (args.requestType == "add") {
+            location.href = '@Url.Action("Create", "Validation")';
+        }
+
+    }
+
+</script>
+

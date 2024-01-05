@@ -1,0 +1,51 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+@{(Html.EJ().Grid<sales_order_report_vm>("Editing")
+                                                             
+                                                                  .Datasource(ds => ds.URL(Url.Action("GetSalesOrderData", "SalesReport") + "?entity=" + ViewBag.entity +  "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&plant_id=" + ViewBag.plant_id + "&item_id=" + ViewBag.item_id ).Adaptor(AdaptorType.UrlAdaptor))
+                                                                    .AllowPaging().PageSettings(a => a.PageSize(20))
+                                                                    .AllowFiltering()
+                                                                        .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                                    .ShowColumnChooser()
+                                                                    .AllowSorting()
+                                                                    .AllowScrolling()
+                                                                    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "SalesReport", new { ctrlname = "ItemWiseSalesSummary" })))
+                                                                                                                                                                                .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+
+                                                                .ToolbarSettings(toolbar =>
+                                                                {
+                                                                    toolbar.ShowToolbar().ToolbarItems(items =>
+                                                                    {
+                                                                        items.AddTool(ToolBarItems.Search);
+                                                                        items.AddTool(ToolBarItems.ExcelExport);
+                                                                        items.AddTool(ToolBarItems.PrintGrid);
+                                                                    });
+                                                                })
+
+                                                            .ShowSummary()
+
+                                                        .SummaryRow(row =>
+                                                        {
+                                                            row.Title("Total").SummaryColumns(col =>
+                                                            {
+                                                                col.SummaryType(SummaryType.Sum).DisplayColumn("so_quantity").DataMember("so_quantity").Format("{0:n2}").Add();
+                                                                col.SummaryType(SummaryType.Sum).DisplayColumn("sales_value").DataMember("sales_value").Format("{0:n2}").Add();
+                                                                col.SummaryType(SummaryType.Sum).DisplayColumn("avg_rate").DataMember("avg_rate").Format("{0:n2}").Add();
+                                                            }).Add();
+                                                        })
+                                                        .Columns(col =>
+                                                        {
+                                                            col.Field("item_code").Width("10%").HeaderText("Item Code").Add();
+                                                            col.Field("item_name").Width("10%").HeaderText("Item Description").Add();
+                                                            col.Field("plant_name").Width("10%").HeaderText("Plant").Add();
+                                                            col.Field("uom_name").Width("10%").HeaderText("UoM").Add();
+                                                            col.Field("so_quantity").Width("10%").HeaderText("Qty").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(true).Add();
+                                                            col.Field("sales_value").Width("10%").HeaderText("Sales Value").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(true).Add();
+                                                            col.Field("avg_rate").Width("10%").HeaderText("Avg Rate").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(true).Add();
+                                                        })
+                                                      .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick1"); })
+                                                                                                                                                                                ).Render();}
+@Html.EJ().ScriptManager()
+

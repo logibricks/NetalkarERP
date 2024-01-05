@@ -1,0 +1,72 @@
+﻿
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="form-horizontal">
+            <div class="x_content">
+                <div class=row>
+                    <div class="col-md-3 col-lg-3 col-xs-12">
+                        <label class="control-label col-md-5 col-lg-5 col-xs-12">From Date*</label>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            <input type="date" id="fromDate" class="form-control radius" required="required">
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-lg-3 col-xs-12">
+                        <label class="control-label col-md-5 col-lg-5 col-xs-12">To Date*</label>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            <input type="date" id="toDate" class="form-control radius" required="required">
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-lg-3 col-xs-12">
+                        <label class="control-label col-md-5 col-lg-5 col-xs-12">Asset Code</label>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            @Html.DropDownList("asset_master_data_id", (System.Web.Mvc.SelectList)ViewBag.asset_master_data_list, htmlAttributes: new { @class = "form-control validinput asset_master_data_id", @required = true })
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-lg-3 col-xs-12">
+                        <label class="control-label col-md-5 col-lg-5 col-xs-12">Depreciation Area</label>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            @Html.DropDownList("dep_area_id", (System.Web.Mvc.SelectList)ViewBag.dep_area_list, htmlAttributes: new { @class = "form-control validinput dep_area_id", @required = true })
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class=row>
+                    <div class="col-md-3 col-lg-3 col-xs-12 pull-right">
+                        <div class="col-md-5 col-lg-5 col-xs-12"></div>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            <button class="searchbutton searchButton btn-success" id="search" onclick="DateCheckForFixedAsset()"> &nbsp; Run Report </button>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="entity" value="getAssetLedgerReport">
+                <input type="hidden" id="partial_v" value="Partial_AssetLedger" />
+
+            </div>
+        </div>
+
+    </div>
+</div>
+<br />
+<div class="row" id="searchresult">
+    @Html.Partial("Partial_AssetLedger", (object)ViewBag)
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#asset_master_data_id").select2({
+            placeholder: "Select Asset Code",
+            allowClear: true
+        });
+        $("#dep_area_id").select2({
+            placeholder: "Select Depreciation Area",
+            allowClear: true
+        });
+
+        $('#asset_master_data_id').val('').trigger('change');
+        $('#dep_area_id').val('').trigger('change');
+
+    });
+
+</script>

@@ -1,0 +1,49 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<accounts_report_vm>("Editing")
+                                                                            .Datasource(ds => ds.URL(Url.Action("GetAccountsData", "AccountsReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&customer_category_id=" + ViewBag.customer_category_id).Adaptor(AdaptorType.UrlAdaptor))
+                                                      .AllowPaging().PageSettings(a => a.PageSize(20))
+                                                      .AllowFiltering()
+                                                          .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                      .ShowColumnChooser()
+                                                      .AllowSorting()
+                                                      .AllowScrolling()
+                                                          .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "AccountsReport", new { ctrlname = "GeneralLedgerDetails" })))
+
+                                                  .ToolbarSettings(toolbar =>
+                                                  {
+                                                      toolbar.ShowToolbar().ToolbarItems(items =>
+                                                      {
+                                                          items.AddTool(ToolBarItems.Search);
+                                                          items.AddTool(ToolBarItems.ExcelExport);
+                                                          items.AddTool(ToolBarItems.PrintGrid);
+                                                      });
+                                                  })
+                                          .Columns(col =>
+                                          {
+                                              col.Field("document_category").Width("10%").HeaderText("Document Category").Add();
+                                              col.Field("doc_number").Width("10%").HeaderText("Document Number").Visible(false).Add();
+                                              col.Field("posting_date").Format("{0:dd/MM/yyyy}").Width("10%").HeaderText("Posting Date").Add();
+                                              col.Field("document_date").Format("{0:dd/MM/yyyy}").Width("10%").HeaderText("Document Date").Visible(false).Add();
+                                              col.Field("due_date").Format("{0:dd/MM/yyyy}").Width("10%").HeaderText("Due Date").Visible(false).Add();
+                                              col.Field("ref1").Width("10%").HeaderText("Ref1").Visible(false).Add();
+                                              col.Field("ref2").Width("10%").HeaderText("Ref2").Visible(false).Add();
+                                              col.Field("ref3").Width("10%").HeaderText("Ref3").Visible(false).Add();
+                                              col.Field("source_doc_type").Width("10%").HeaderText("Doc Type").Visible(false).Add();
+                                              col.Field("source_doc_no").Width("10%").HeaderText("Doc Number").Visible(false).Add();
+                                              col.Field("description").Width("10%").HeaderText("Description").Visible(false).Add();
+                                              col.Field("dr_lc").Width("10%").HeaderText("DR LC").Visible(false).TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                                              col.Field("cr_lc").Width("10%").HeaderText("Cr LC").Visible(false).TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                                              col.Field("currency").Width("10%").HeaderText("Currency Indicator").Visible(false).Add();
+                                              col.Field("dr_fc").Width("10%").HeaderText("Dr FC").Visible(false).TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                                              col.Field("cr_fc").Width("10%").HeaderText("Cr FC").Visible(false).TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                                              col.Field("balance").Width("10%").HeaderText("Closing Bal.").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(false).Add();
+                                              col.Field("cost_center").Width("10%").HeaderText("Cost Center").Visible(false).Add();
+                                              col.Field("line_remarks").Width("10%").HeaderText("Line Remarks").Visible(false).Add();
+
+                                          })
+                        .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicka"); })
+                                                                    ).Render();}
+@Html.EJ().ScriptManager()
+

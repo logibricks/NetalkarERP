@@ -1,0 +1,52 @@
+﻿<div class="form-horizontal">
+    <div class=row>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">From Date</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <input type="date" id="fromDate" class="form-control radius" required="required">
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">To Date</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <input type="date" id="toDate" class="form-control radius" required="required">
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <div class="col-md-5 col-lg-5 col-xs-12">
+                <label></label>
+            </div>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <input type="hidden" id="entity" value="generalledgerdetailsreport">
+                <input type="hidden" id="partial_v" value="Partial_GeneralLedgerDetailsReport" />
+                <button class="searchbutton searchButton" id="search" onclick="DateChecka()"> &nbsp; Run Report </button>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class=row>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">GL Account</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("gl_account", (System.Web.Mvc.SelectList)ViewBag.gl_list,"---Select---", htmlAttributes: new { @class = "form-control customer_category_id" })
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<br />
+<div class="row">
+
+    <div id="searchresult">
+        @Html.Partial("Partial_GeneralLedgerDetailsReport", (object)ViewBag)
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#gl_account").select2({
+            placeholder: "Select GL Account",
+            allowClear: true
+        });
+    });
+    </script>

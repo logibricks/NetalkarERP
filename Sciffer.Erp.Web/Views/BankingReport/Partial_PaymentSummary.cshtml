@@ -1,0 +1,62 @@
+﻿@*<style>
+        .cols-sample-area {
+            height: 440px;
+        }
+    </style>*@
+
+@(Html.EJ().TreeGrid("TreeGridContainer")
+          .TreeColumnIndex(1)
+          .AllowColumnResize(true)
+          .IsResponsive(true)
+          .IdMapping("fin_ledger_payment_id")
+          .ParentIdMapping("parent_id")
+          .ChildMapping("Children")
+          .AllowSorting(true)
+          .AllowMultiSorting(true)
+          .ShowColumnChooser(true)
+          //.AllowFiltering(true)
+          .Columns(co =>
+          {
+              co.Field("category").HeaderText("Doc Category").Add();
+              co.Field("document_no").HeaderText("Doc Number").Add();
+              co.Field("payment_date").HeaderText("Posting Date").Format("{0:dd/MM/yyyy}").FilterEditType(TreeGridFilterEditType.Datepicker).Add();
+              co.Field("gl_code").HeaderText("Code").Add();
+              co.Field("gl_name").HeaderText("Name").Add();
+              co.Field("payment_amount").HeaderText("Amount").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+              co.Field("payment_type_name").HeaderText("Payment Method").Add();
+              co.Field("tran_ref_no").HeaderText("Ref No.").Add();
+          }
+          )
+           .IsResponsive(true)
+              .ToolbarSettings(tool =>
+              {
+                  tool.ShowToolbar(true);
+                  tool.ToolbarItems(new List<TreeGridToolBarItems>()
+                 {                     
+                      TreeGridToolBarItems.ExcelExport,
+                 });
+              }).ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick"); })
+             .Datasource(ViewBag.datasource)
+
+)
+@Html.EJ().ScriptManager()
+<script type="text/javascript">
+    function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1) {
+            if ($('#bank_account_id :selected').length > 0) {
+                var selectedPriority = [];
+                $('#bank_account_id :selected').each(function (i, selected) {
+                    selectedPriority[i] = $(selected).val();
+                });
+                var bank_account_id = selectedPriority + "";
+            }
+            this.model["bank_cash_account_id"] = bank_account_id;
+            this.model["entity"] = "getpaymentsummary";
+            this.model["from_date"] = $("#fromDate").val();
+            this.model["to_date"] = $("#toDate").val();
+            this.model["in_out"] = $("#in_out").val();
+            this.model["cash_bank"] = $("#cash_bank").val();
+        }
+
+    }
+</script>

@@ -1,0 +1,81 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+
+
+
+@{(Html.EJ().Grid<Report_PO_to_Payment_Tracker_vm>("Editing")
+                                    .Datasource((IEnumerable<object>)ViewBag.datasource)
+                                        .AllowPaging().PageSettings(a=>a.PageSize(20))
+                                        .AllowFiltering()
+                                            .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                        .ShowColumnChooser()
+                                        .AllowSorting()
+                                        .AllowScrolling()
+                                        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelForReport", "Generic", new { ctrlname = "SalesSummaryReport" }))
+                                        .ExportToPdfAction(Url.Action("ExportToPdfForReport", "Generic", new { ctrlname = "SalesSummaryReport" })))
+                                        .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                    .ToolbarSettings(toolbar =>
+                                    {
+                                        toolbar.ShowToolbar().ToolbarItems(items =>
+                                        {
+                                            items.AddTool(ToolBarItems.Search);
+                                            items.AddTool(ToolBarItems.ExcelExport);
+                                            items.AddTool(ToolBarItems.PrintGrid);
+                                        });
+                                    })
+                                                                .Columns(col =>
+                                                                {
+                                                                    col.Field("PO_Doc_Number").Width("10%").HeaderText("Po Doc Number").Add();
+                                                                    col.Field("PO_Posting_Date").Width("10%").HeaderText("Po Posting Date").Add();
+                                                                    col.Field("Scheduled_Delivery_Date").Width("10%").HeaderText("Scheduled Delivery Date").Visible(false).Add();
+                                                                    col.Field("GRN_Doc_Category").Width("10%").HeaderText("Grn Doc Category").Visible(false).Add();
+                                                                    col.Field("GRN_Doc_Number").Width("10%").HeaderText("Grn Doc Number").Visible(false).Add();
+                                                                    col.Field("GRN_Posting_Date").Width("10%").HeaderText("Grn Posting Date").Visible(false).Add();
+                                                                    col.Field("IEX_Doc_Category").Width("10%").HeaderText("Iex Doc Category").Visible(false).Add();
+                                                                    col.Field("IEX_Doc_Number").Width("10%").HeaderText("Iex Doc Number").Visible(false).Add();
+                                                                    col.Field("IEX_Posting_Date").Width("10%").HeaderText("Iex Posting Date").Visible(false).Add();
+                                                                    col.Field("QC_Doc_Category").Width("10%").HeaderText("Qc Doc Category").Visible(false).Add();
+                                                                    col.Field("QC_Doc_Number").Width("10%").HeaderText("Qc Doc Number").Visible(false).Add();
+                                                                    col.Field("QC_Posting_Date").Width("10%").HeaderText("Qc Posting Date").Visible(false).Add();
+                                                                    col.Field("PI_Doc_Category").Width("10%").HeaderText("Pi Doc Category").Visible(false).Add();
+                                                                    col.Field("PI_Doc_Number").Width("10%").HeaderText("Pi Doc Number").Visible(false).Add();
+                                                                    col.Field("PI_Posting_Date").Width("10%").HeaderText("Pi Posting Date").Visible(false).Add();
+                                                                    col.Field("Payment_1_Date").Width("10%").HeaderText("Payment 1 Date").Visible(false).Add();
+                                                                    col.Field("Payment_2_Date").Width("10%").HeaderText("Payment 2 Date").Visible(false).Add();
+                                                                    col.Field("Payment_3_Date").Width("10%").HeaderText("Payment 3 Date").Visible(false).Add();
+                                                                    col.Field("Payment_4_Date").Width("10%").HeaderText("Payment 4 Date").Visible(false).Add();
+
+                                                                })
+                                                                .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+                                                                ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    @*$(function () {
+        var obj = @Html.Raw(Json.Encode(ViewBag.datasource));
+        console.log(obj);
+        $("#Editing").ejGrid({
+            dataSource: obj,
+            allowPaging: true,
+            //columns: [
+
+            //],
+            //dataBound : function(args){
+            //	for (var fld =0; fld < list.length; fld++ ) {
+            //	var column = { field: list[fld].value, headerText: list[fld].header, column: "", textAlign: "left", type: "string", visible: true, width: 75 };
+            //	this.model.columns.push(column); //add dynamic columns
+            //	}
+            //	this.columns(this.model.columns);
+            //}
+        });
+    });*@
+
+
+</script>
+
+
+

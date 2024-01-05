@@ -1,0 +1,69 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+
+@{
+    (Html.EJ().Grid<Report_NCRejection_vm>("Editing")
+    .Datasource(ds => ds.URL(Url.Action("GetNCRejecetionReport", "ProductionReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date).Adaptor(AdaptorType.UrlAdaptor))
+    //.Datasource((IEnumerable<object>)ViewBag.datasource)
+    .AllowPaging().PageSettings(a => a.PageSize(50))
+    .AllowFiltering()
+    .FilterSettings(X => X.FilterType(FilterType.Excel))
+    .ShowColumnChooser()
+    .AllowScrolling()
+    .AllowResizing()
+    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelNCRejection", "ProductionReport", new { ctrlname = "ProductionReportNCRejection" })))
+    .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+    .ToolbarSettings(toolbar =>
+    {
+        toolbar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Search);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        });
+    })
+
+    .Columns(col =>
+    {
+        col.Field("date").HeaderText("Date").Width("16%").Format("{0:dd-MMMM-yyyy HH:mm:ss}").Add();
+        col.Field("tag_no").Width("15%").HeaderText("Tag Number").Add();
+        col.Field("ITEM_NAME").Width("15%").HeaderText("Item Name").Add();
+        col.Field("nc_details").Width("15%").HeaderText("Non-Conforming Details").Add();
+        col.Field("machine_name").Width("15%").HeaderText("Machine Name").Add();
+        col.Field("employee_name").Width("15%").HeaderText("Employee Name").Add();
+        col.Field("root_cause_details").Width("15%").HeaderText("Root Cause").Add();
+        col.Field("action_plan").Width("15%").HeaderText("Action Plan").Add();
+        col.Field("nc_status_desc").Width("15%").HeaderText("Non-Conforming Status").Add();
+        col.Field("remarks").Width("15%").HeaderText("Quality Remarks").Add();
+        col.Field("heat_code").Width("15%").HeaderText("Heat Code").Add();
+        col.Field("run_code").Width("15%").HeaderText("Run Code").Add();
+        col.Field("machine_operator_name").Width("15%").HeaderText("Machine Operator Name").Add();
+        col.Field("why1").Width("15%").HeaderText("Why1").Add();
+        col.Field("why2").Width("15%").HeaderText("Why2").Add();
+        col.Field("why3").Width("15%").HeaderText("Why3").Add();
+        col.Field("why4").Width("15%").HeaderText("Why4").Add();
+        col.Field("why5").Width("15%").HeaderText("Why5").Add();
+        col.Field("nc_tag_number").Width("15%").HeaderText("NC Tag Number").Add();
+
+    })
+    .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick"); })
+    )
+    .Render();
+}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1) {
+            this.model["from_date"] = $("#fromDate").val();
+            this.model["to_date"] = $("#toDate").val();
+        }
+    }
+
+</script>
+
+
+
+

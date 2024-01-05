@@ -1,0 +1,75 @@
+﻿@model Sciffer.Erp.Domain.Model.REF_UOM
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()    
+    <div class="form-horizontal">        
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.UOM_ID)
+        <div class="form-group">
+            @Html.LabelFor(model => model.UOM_NAME, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UOM_NAME, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.UOM_NAME, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.UOM_DESCRIPTION, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.UOM_DESCRIPTION, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.UOM_DESCRIPTION, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-success" id="create" name="create" style="float:right" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+                $("#create").click(function (e) {
+                    e.preventDefault();
+                    var UOM = $('#UOM_NAME').val();
+                    var id = $('#UOM_ID').val();
+                    if (UOM == "") {
+                        sweetAlert("", "UOM is required!", "error");
+                    }
+                    else {
+                        $.ajax({
+                            url: '@Url.Action("CheckDuplicate", "UOM")',
+                            type: "GET",
+                            dataType: "JSON",
+                            asynch: true,
+                            data: { st: UOM, id: id },
+                            success: function (output) {
+                                if (output != 0) {
+                                    sweetAlert("", UOM + " is already present in databse!", "error");
+                                }
+                                else {
+                                    document.forms[0].submit();
+                                }
+                            }
+                        });
+                    }
+                });
+    </script>
+}
+
+

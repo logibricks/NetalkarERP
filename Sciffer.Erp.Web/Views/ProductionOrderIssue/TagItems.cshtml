@@ -1,0 +1,58 @@
+﻿<div class="table-responsive">
+    <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+        <thead>
+            <tr>
+                <th><label>ID</label></th>
+                <th><label>Sr. No.</label></th>
+                <th><label>Item ID</label></th>
+                <th><label>Item</label></th>
+                <th><label>Batch ID</label></th>
+                <th><label>Batch Number</label></th>
+                <th><label>Batch Detail ID</label></th>
+                <th><label>Tag ID</label></th>
+                <th><label>Tag No</label></th>
+                <th><label>Prod Order Detail ID</label></th>
+                <th><label>Req Quantity</label></th>
+                <th><label>Rate</label></th>
+                <th><label>Value</label></th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+
+
+
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: true },
+                     { sname: "b" },
+                     { sname: "c", bVisible: true },
+                     { sname: "d" },
+                     { sname: "e", bVisible: true },
+                     { sname: "f" },
+                     { sname: "g", bVisible: true },
+                     { sname: "h" },
+                     { sname: "i", bVisible: true },
+                     { sname: "j" },
+                     { sname: "k", bVisible: true },
+                     { sname: "l" },
+                     { sname: "l" },
+            ]
+
+        });
+    </script>
+}

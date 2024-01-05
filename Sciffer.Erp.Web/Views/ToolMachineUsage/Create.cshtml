@@ -1,0 +1,226 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.ref_tool_machine_usage_VM
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create New Tool";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row form-horizontal">
+        <div id="ItemUsageDetail"></div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.tool_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DropDownList("tool_id", (System.Web.Mvc.SelectList)ViewBag.tool_id, "---Select---", htmlAttributes: new { @class = "form-control validinput", @required = true, })
+                    @Html.ValidationMessageFor(model => model.tool_id, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.machine_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.machine_id, "---Select---", htmlAttributes: new { @class = "form-control validinput", @required = true, @onchange = "GetItemDetails()" })
+                    @Html.ValidationMessageFor(model => model.machine_id, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row form-horizontal">
+
+        <div class="col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.tool_renew_type_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DropDownList("tool_renew_type_id", (System.Web.Mvc.SelectList)ViewBag.tool_renew_type_id, "---Select---", htmlAttributes: new { @class = "form-control validinput", @required = true, })
+                    @Html.ValidationMessageFor(model => model.tool_renew_type_id, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.start_date_time, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.start_date_time, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.start_date_time, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row form-horizontal">
+
+        <div class="col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.current_life_percentage, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.current_life_percentage, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                    @Html.ValidationMessageFor(model => model.current_life_percentage, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        @*<div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.in_use, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        <div class="col-md-8">
+                            <input type="checkbox" id="IN_USE">
+                            <input type="hidden" name="in_use" id="in_use" />
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+    </div>
+    <br />
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading"></div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-responsive table-bordered table-striped" id="ItemUsageGrid">
+                            <thead>
+                                <tr>
+                                    <th><label>Tool Machine Item Usage ID</label></th>
+                                    <th><label>Tool Machine Usage ID</label></th>
+                                    <th><label>Sr. No.</label></th>
+                                    <th><label>Item Id</label></th>
+                                    <th><label>Item Name</label></th>
+                                    <th><label>Life No. of Items</label></th>
+                                    <th><label>Per Unit Life Consumption</label></th>
+                                    <th><label>No. of Items Processed</label></th>
+                                    <th><label>Item Life Consumption</label></th>
+                                    <th><label>Consumption Percentage</label></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-success" data-controller="ToolMachineUsageController" onclick="DataTableToForm()" style="float:right" id="create" name="create" />
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#machine_id").select2({
+                placeholder: "Select Machine",
+                allowClear: true
+            });
+
+            $("#tool_id").select2({
+                placeholder: "Select Tool",
+                allowClear: true
+            });
+
+            $("#tool_renew_type_id").select2({
+                placeholder: "Select Tool Renew Type",
+                allowClear: true
+            });
+            var error=@Html.Raw(Json.Encode(ViewBag.error));
+            if(error !="")
+            {
+                sweetAlert("",error,"error");
+            }
+        })
+
+        function GetItemDetails() {
+            if ($("#tool_id").val() == 0) {
+                swal("Select Tool");
+                $("#machine_id").val(0);
+                return false;
+            }
+            else if ($("#tool_renew_type_id").val() == 0) {
+                swal("Select Tool Renew Type");
+                $("#machine_id").val(0);
+                return false;
+            }
+
+            $.ajax({
+                url: "@Url.Action("GetItemDetails", "ToolMachineUsage")",
+                method: "POST",
+                cache: false,
+                data: { tool_id: $("#tool_id").val(), tool_renew_type_id: $("#tool_renew_type_id").val(), machine_id: $("#machine_id").val(), },
+                success: function (data) {
+                    var tp = $("#ItemUsageGrid").DataTable();
+                    var sr_no = tp.fnGetData().length + 1;
+                    tp.fnClearTable();
+                    $.each(data, function (key, value) {
+                        console.log(value);
+                        console.log(sr_no);
+                        tp.fnAddData(['', '', sr_no, value.item_id, value.item_name, value.life_no_of_items, value.per_unit_life_consumption, 0, 0, 0]);
+                        sr_no++;
+                    });
+                }
+
+            })
+        }
+
+        function DataTableToForm() {
+            var t = $('#ItemUsageGrid').dataTable();
+
+            var rowCount = t.fnGetData().length;
+
+            for (i = 0; i < rowCount; i++) {
+
+                $("#ItemUsageDetail").append('<input type="hidden" id="item_id' + i + '" name="item_id">');
+                $("#ItemUsageDetail").append('<input type="hidden" id="life_no_of_items' + i + '" name="life_no_of_items">');
+                $("#ItemUsageDetail").append('<input type="hidden" id="per_unit_life_consumption' + i + '" name="per_unit_life_consumption">');
+                $("#ItemUsageDetail").append('<input type="hidden" id="no_of_items_processed' + i + '" name="no_of_items_processed">');
+                $("#ItemUsageDetail").append('<input type="hidden" id="item_life_consumption' + i + '" name="item_life_consumption">');
+                $("#ItemUsageDetail").append('<input type="hidden" id="item_life_consumption_percentage' + i + '" name="item_life_consumption_percentage">');
+
+                $("#item_id" + i).val(t.fnGetData(i)[3]);
+                $("#life_no_of_items" + i).val(t.fnGetData(i)[5]);
+                $("#per_unit_life_consumption" + i).val(t.fnGetData(i)[6]);
+                $("#no_of_items_processed" + i).val(t.fnGetData(i)[7]);
+                $("#item_life_consumption" + i).val(t.fnGetData(i)[8]);
+                $("#item_life_consumption_percentage" + i).val(t.fnGetData(i)[9]);
+
+            }
+        }
+
+        $('#ItemUsageGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: false },
+                     { sname: "b", bVisible: false },
+                     { sname: "c", bVisible: true },
+                     { sname: "d", bVisible: false },
+                     { sname: "e", bVisible: true },
+                     { sname: "f", bVisible: true },
+                     { sname: "g", bVisible: true },
+                     { sname: "h", bVisible: true },
+                     { sname: "i", bVisible: true },
+                     { sname: "g", bVisible: true },
+            ]
+
+        });
+    </script>
+}

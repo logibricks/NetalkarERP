@@ -1,0 +1,19 @@
+﻿
+@{
+    ViewBag.Title = "AuthorizeFailed";
+}
+
+<h2>AuthorizeFailed</h2>
+
+<h2>@ViewData["Message"]</h2>
+
+<script>
+    var role =@Html.Raw(Json.Encode(@ViewData["OperatorCheck"]));
+
+    if (role == "1") {
+        $("#sidebar-menu").css("display", "none");
+        $("#menu_toggle").trigger("click");
+        $("#menu_toggle").css("display", "none");
+        $(".site_title").click(function () { return false; });
+    }
+</script>

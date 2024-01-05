@@ -1,0 +1,106 @@
+﻿
+@using Sciffer.Erp.Domain.Model
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<ref_customer_complaint>("Searching")
+       .Datasource(ds => { ds.Json((IEnumerable<object>)ViewBag.DataSource).RemoveURL(Url.Action("Delete", "CustomerComplaint")).Adaptor(AdaptorType.RemoteSaveAdaptor); })
+       .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).ShowDeleteConfirmDialog(true); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "CustomerComplaint" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "CustomerComplaint" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "CustomerComplaint" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+         .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("customer_complaint_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("REF_ITEM.ITEM_NAME").Width("15%").HeaderText("Item Name").Add();
+            col.Field("tag_no").Width("15%").HeaderText("Tag No").Add();
+            col.Field("REF_CUSTOMER.CUSTOMER_NAME").Width("15%").HeaderText("Customer").Width(150).Visible(true).Add();
+            col.Field("complaint_received_from").Width("15%").HeaderText("Complaint Received From").Width(150).Visible(true).Add();
+            col.Field("complaint_date").Width("15%").HeaderText("Complaint Date").Width(150).Visible(true).Format("{0:dd/MMM/yyyy}").Add();
+            col.Field("complaint_receipt_date").Width("15%").HeaderText("Complaint Receipt Date").Width(150).Visible(true).Format("{0:dd/MMM/yyyy}").Add();
+            col.Field("complaint_no").Width("15%").HeaderText("Complaint No").Width(150).Visible(true).Add();
+            col.Field("complaint_type").Width("15%").HeaderText("Complaint Type").Width(150).Visible(true).Add();
+            col.Field("npt_customer_account_holder").Width("15%").HeaderText("NPT Customer Account Holder").Width(150).Visible(true).Add();
+            col.Field("complaint_details").Width("15%").HeaderText("Complaint Details").Width(150).Visible(true).Add();
+            col.Field("reported_first_repeated").Width("15%").HeaderText("Reported First / Repeated").Width(150).Visible(true).Add();
+            col.Field("quantity_affected").Width("15%").HeaderText("Quantity affected").Width(150).Visible(true).Add();
+            col.Field("containment_action").Width("15%").HeaderText("Containment Action").Width(150).Visible(true).Add();
+            col.Field("root_cause_at_occurrence").Width("15%").HeaderText("Root Cause at Occurrence").Width(150).Visible(true).Add();
+            col.Field("root_cause_for_detection").Width("15%").HeaderText("Root cause for Detection").Width(150).Visible(true).Add();
+            col.Field("corrective_action").Width("15%").HeaderText("Corrective action").Width(150).Visible(true).Add();
+            col.Field("preventive_action").Width("15%").HeaderText("Preventive action").Width(150).Visible(true).Add();
+            col.Field("status").Width("15%").HeaderText("Status").Width(150).Visible(true).Add();
+            col.Field("pfc").Width("15%").HeaderText("PFC").Width(150).Visible(true).Format("{0:dd/MMM/yyyy}").Add();
+            col.Field("cp").Width("15%").HeaderText("CP").Width(150).Visible(true).Format("{0:dd/MMM/yyyy}").Add();
+            col.Field("fmea").Width("15%").HeaderText("FMEA").Width(150).Visible(true).Format("{0:dd/MMM/yyyy}").Add();
+            col.Field("wi_sop").Width("15%").HeaderText("WI / SOP").Width(150).Visible(true).Format("{0:dd/MMM/yyyy}").Add();
+            col.Field("oir").Width("15%").HeaderText("OIR").Width(150).Visible(true).Format("{0:dd/MMM/yyyy}").Add();
+            col.Field("lir").Width("15%").HeaderText("LIR").Width(150).Visible(true).Format("{0:dd/MMM/yyyy}").Add();
+            col.Field("start_up_check_sheet").Width("15%").HeaderText("Start-up Check sheet").Width(150).Visible(true).Format("{0:dd/MMM/yyyy}").Add();
+            col.Field("others_pm_gauge_poka_yoke").Width("15%").HeaderText("Others PM, Gauge, Poka Yoke").Width(150).Visible(true).Format("{0:dd/MMM/yyyy}").Add();
+            col.Field("ptdb").Width("15%").HeaderText("PTDB").Width(150).Visible(true).Format("{0:dd/MMM/yyyy}").Add();
+            col.Field("change_note").Width("15%").HeaderText("Change Note").Width(150).Visible(true).Format("{0:dd/MMM/yyyy}").Add();
+            col.Field("capa_no_submission_date").Width("15%").HeaderText("CAPA No submission date").Width(150).Visible(true).Format("{0:dd/MMM/yyyy}").Add();
+            col.Field("month1").Width("15%").HeaderText("Month1").Width(150).Visible(true).Add();
+            col.Field("month2").Width("15%").HeaderText("Month2").Width(150).Visible(true).Add();
+            col.Field("month3").Width("15%").HeaderText("Month3").Width(150).Visible(true).Add();
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var doc_no = '@ViewBag.doc';
+        if (doc_no != '') {
+            if (doc_no != 0) {
+                sweetAlert("", doc_no, "success");
+            }
+        }
+    });
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = '@Url.Action("Edit", "CustomerComplaint")?id=' + args.rowData.customer_complaint_id;
+        }
+        if (args.requestType == "add") {
+            location.href = '@Url.Action("Create", "CustomerComplaint")';
+        }
+    }
+    function rightClick(args) {
+        location.href = '@Url.Action("Details", "CustomerComplaint")?id=' + args.data.customer_complaint_id;
+    }
+
+</script>
+

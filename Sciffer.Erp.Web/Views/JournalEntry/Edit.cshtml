@@ -1,0 +1,619 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.fin_ledgerVM
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(a => a.fin_ledger_id)
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, new { @class = "control-label col-md-4" })
+                        <div class="col-md-5 col-sm-7 col-xs-12">
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.categorylist, new { @class = "form-control removedisabled validinput", @required = true, @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            @Html.EditorFor(model => model.document_no, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.document_no, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ledger_date, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.ledger_date, new { htmlAttributes = new { @class = "form-control removedisabled validinput", @required = true, @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.ledger_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ref1, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.ref1, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.ref1, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.document_date, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.document_date, new { htmlAttributes = new { @class = "form-control removedisabled validinput", @required = true, @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.document_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ref2, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.ref2, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.ref2, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.due_date, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.due_date, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.due_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="productdetail" name="productdetail" />
+                <input type="hidden" id="deleteids" name="deleteids" />
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ref3, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.ref3, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.ref3, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.currency_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.DropDownList("currency_id", (System.Web.Mvc.SelectList)ViewBag.currency_list, new { @class = "form-control removedisabled", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.currency_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.narration, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.narration, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.narration, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6 cancelled">
+                    <div class="form-group">
+                        <label for="status_id" class="control-label col-md-4 col-sm-4 col-xs-12">Status</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <label style="color:#d43f3a;margin-top:-6px"><h4>C A N C E L L E D</h4></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">Details</a></li>
+                <li><a data-toggle="tab" href="#sectionB">Source Document Details</a></li>
+                <li><a data-toggle="tab" href="#sectionC">Information</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade  in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                                <thead>
+                                    <tr>
+                                        <th hidden> <label>ID</label></th>
+                                        <th><label>Sr No.</label></th>
+                                        <th><label>Category</label></th>
+                                        <th hidden><label>Party ID</label></th>
+                                        <th><label>Description</label></th>
+                                        <th hidden><label>Description ID</label></th>
+                                        <th><label>Dr Amount (INR)</label></th>
+                                        <th><label>Cr Amount (INR)</label></th>
+                                        <th><label>Currency</label></th>
+                                        <th><label>Dr FC</label></th>
+                                        <th><label>Cr FC</label></th>
+                                        <th><label>Cost Center</label></th>
+                                        <th><label>Cost Center ID</label></th>
+                                        <th><label>Line Remarks</label></th>
+
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th hidden></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th hidden></th>
+
+                                        <th>
+                                            <label>Total</label>
+                                        </th>
+                                        <th hidden></th>
+                                        <th>
+
+                                            <label class="lbl_dr"></label>
+                                        </th>
+                                        <th>
+
+                                            <label class="lbl_cr"></label>
+                                        </th>
+                                        <th></th>
+                                        <th><label class="lbl_dr_fc"></label></th>
+                                        <th><label class="lbl_cr_fc"></label></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionB" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="DocGrid">
+                                <thead>
+                                    <tr>
+                                        <th><label>ID</label></th>
+                                        <th><label>Doc Type</label></th>
+                                        <th><label>Doc Number</label></th>
+                                        <th><label>Ref Bill no.</label></th>
+                                        <th><label>Doc Total</label></th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionC" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.create_user, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("create_user", (System.Web.Mvc.SelectList)ViewBag.user_list, "---Select---", new { @class = "form-control removedisabled", @disabled = "disabled" })
+                                    @Html.ValidationMessageFor(model => model.create_user, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.create_ts, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.create_ts, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.create_ts, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.modify_user, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("modify_user", (System.Web.Mvc.SelectList)ViewBag.user_list, "---Select---", new { @class = "form-control removedisabled", @disabled = "disabled" })
+                                    @Html.ValidationMessageFor(model => model.modify_user, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.modify_ts, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.modify_ts, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.modify_ts, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cancel">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.cancelled_by, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("cancelled_by", (System.Web.Mvc.SelectList)ViewBag.user_list, "---Select---", new { @class = "form-control removedisabled", @disabled = "disabled" })
+                                    @Html.ValidationMessageFor(model => model.cancelled_by, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.cancelled_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.cancelled_date, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.cancelled_date, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cancel">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.cancellation_remarks, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.cancellation_remarks, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.cancellation_remarks, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="row">
+        <div class="col-lg12 col-sm-12">
+            <div class="form-group">
+                <div class="col-md-5 col-sm-5 col-xs-5">
+                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-2">
+                    <input type="button" value="Cancel Journal Entry" class="btn btn-danger" data-toggle="modal" data-target="#myModal" style="float:right" id="cancel_pi" onclick="canclearmodel();" />
+                </div>
+                <div class="col-md-5 col-sm-5 col-xs-5">
+                    <button type="submit" value="Update" class="btn btn-success" style="float:right" id="create" name="create" data-controller="Receipt">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" onclick="canclearmodel();">&times;</button>
+                    <h3 class="modal-title" style="text-align:center"><span style="color:red">Are you sure you want to cancel this Journal Entry? You will not be able to reverse this action. </span></h3>
+                </div>
+                <div class="modal-body">
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Cancellation Reason <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                @Html.DropDownList("reason_id", (System.Web.Mvc.SelectList)ViewBag.cancellationreasonlist, "---Select---", new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Remarks
+                            </label>
+                            <div class="col-md-7">
+                                <textarea id="cancel_remarks" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <input type="hidden" id="srno" />
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="canclearmodel();">No</button>
+                    <button type="button" class="btn btn-success" id="Cancelled" name="Cancelled" onclick="Cancel_JE();">Yes</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+}
+
+<!-- Modal -->
+
+
+
+<script src="~/Scripts/requirevalidation.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        function codeAddress() {
+            $("#cancel_pi").hide();
+            $("#create").hide();
+            $(".cancelled").hide();
+            var t = $('#ContactGrid').DataTable();
+            var t1 = $('#DocGrid').DataTable();
+            var sr_no = t.fnGetData().length+1;
+            var pl_detail = @Html.Raw(JsonConvert.SerializeObject(this.Model));
+
+            if(pl_detail.document_no==pl_detail.source_document_no)
+            {
+                $("#cancel_pi").show();
+                $("#create").show();
+                $("#ledger_date").prop("disabled", false);
+                $("#ref1").prop("disabled", false);
+                $("#ref2").prop("disabled", false);
+                $("#ref3").prop("disabled", false);
+                $("#document_date").prop("disabled", false);
+                $("#due_date").prop("disabled", false);
+                $("#narration").prop("disabled", false);
+            }
+            else
+            {
+                $("#cancel_pi").hide();
+                $("#create").hide();
+            }
+            if(pl_detail.ref_status!=null)
+            {
+                if(pl_detail.ref_status.status_name=="Cancelled")
+                {
+                    $("#cancel_pi").hide();
+                    $("#create").hide();
+                    $("#ledger_date").prop("disabled", true);
+                    $("#ref1").prop("disabled", true);
+                    $("#ref2").prop("disabled", true);
+                    $("#ref3").prop("disabled", true);
+                    $("#document_date").prop("disabled", true);
+                    $("#due_date").prop("disabled", true);
+                    $("#narration").prop("disabled", true);
+                    $(".cancelled").show();
+                }
+            }
+            var i=1;
+            $.each(pl_detail.GetFinLedgerDetailById, function(key, value) {
+                t.fnAddData([value.fin_ledger_detail_id,sr_no,value.entity_type_name,value.entity_type_id,value.entity_name,value.entity_id,parseFloat(value.debit).toFixed(2),parseFloat(value.credit).toFixed(2),value.currency_name,parseFloat(value.fc_debit).toFixed(2),parseFloat(value.fc_credit).toFixed(2),value.cost_center_description,value.cost_center_id,value.line_remarks
+                ]);
+                i=i+1;
+                sr_no++;
+            });
+            var j=0;
+            t1.fnAddData([pl_detail.source_document_id,pl_detail.document_type_code,'<a href="javascript:void()" class="sr_no" id= srno'+j+'>'+pl_detail.source_document_no+'</a>',pl_detail.ref_bill_no,parseFloat(pl_detail.ledger_amount).toFixed(2)
+            ]);
+            calculate();
+        }
+        window.onload = codeAddress;
+
+
+        $(document).on('click','.sr_no',function(){
+            var id=$(this).attr('id');
+            var index=id.replace("srno", "");
+            var t = $('#DocGrid').DataTable();
+            var doc_type= t.fnGetData(index)[1];
+            var doc_id=t.fnGetData(index)[0];
+            if(doc_type.trim()=="Incoming Excise")
+            {
+                window.open('@Url.Action("Edit", "incomingexcise")?id='+doc_id,'_blank');
+            }
+            else if(doc_type.trim()=="GRN")
+            {
+                window.open('@Url.Action("Edit", "grn")?id='+doc_id,'_blank');
+            }
+            else if(doc_type.trim()=="Sales Invoice")
+            {
+                window.open('@Url.Action("Edit", "salesinvoice")?id='+doc_id,'_blank');
+            }
+            else if(doc_type=="Purchase Invoice")
+            {
+                window.open('@Url.Action("Edit", "purchaseinvoice")?id='+doc_id,'_blank');
+            }
+            else if(doc_type.trim()=="Payment")
+            {
+                window.open('@Url.Action("Edit", "payment")?id='+doc_id,'_blank');
+            }
+            else if(doc_type.trim()=="Receipt")
+            {
+                window.open('@Url.Action("Edit", "receipt")?id='+doc_id,'_blank');
+            }
+            else if(doc_type.trim()=="Incoming Excise")
+            {
+                window.open('@Url.Action("Edit", "incomingexcise")?id='+doc_id,'_blank');
+            }
+            else if(doc_type.trim()=="QA")
+            {
+                window.open('@Url.Action("Edit", "qa")?id='+doc_id,'_blank');
+            }
+            else if(doc_type.trim()=="Goods receipt")
+            {
+                window.open('@Url.Action("Details", "goodsreceipt")?id='+doc_id,'_blank');
+            }
+            else if(doc_type.trim()=="Goods Issue")
+            {
+                window.open('@Url.Action("Details", "goodsissue")?id='+doc_id,'_blank');
+            }
+            else if(doc_type.trim()=="Job Work In")
+            {
+                window.open('@Url.Action("Edit", "jobwork")?id='+doc_id,'_blank');
+            }
+            else if(doc_type.trim()=="Contra Entry")
+            {
+                window.open('@Url.Action("Edit", "contraentry")?id='+doc_id,'_blank');
+            }
+            else if(doc_type.trim()=="Credit Note")
+            {
+                window.open('@Url.Action("Edit", "creditnote")?id='+doc_id,'_blank');
+            }
+            else if(doc_type.trim()=="Debit Note")
+            {
+                window.open('@Url.Action("Edit", "debitnote")?id='+doc_id,'_blank');
+            }
+            else if(doc_type.trim()=="Inventory Revaluation")
+            {
+                window.open('@Url.Action("Edit", "inventoryrevaluation")?id='+doc_id,'_blank');
+            }
+        })
+        $('#open_modal').click(function () {
+            clearmodel();
+        });
+
+
+        //calculate dr cr and total
+        function calculate() {
+            var t = $('#ContactGrid').DataTable();
+            var len = t.fnGetData().length;
+            var dr = 0;
+            var cr = 0;
+            var dr_total = 0;
+            var cr_total = 0;
+            for (var a = 0; a <= len - 1 ; a++)
+            {
+                dr = dr + parseFloat(t.fnGetData(a)[6]);
+                cr = cr + parseFloat(t.fnGetData(a)[7]);
+                dr_total=dr_total + parseFloat(t.fnGetData(a)[9])
+                cr_total=cr_total + parseFloat(t.fnGetData(a)[10])
+            }
+
+            $('.lbl_dr').text(dr.toFixed(2));
+            $('.lbl_cr').text(cr.toFixed(2));
+            $('.lbl_dr_fc').text(dr_total.toFixed(2));
+            $('.lbl_cr_fc').text(cr_total.toFixed(2));
+            $('#ledger_amount').val(dr);
+        }
+
+
+
+
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: false },
+                     { sname: "b", },
+                     { sname: "c", },
+                     { sname: "d", bVisible: false },
+                     { sname: "e", sWidth: "20%", },
+                     { sname: "f", bVisible: false },
+                     { sname: "g","sClass": "right" },
+                     { sname: "h","sClass": "right" },
+                     { sname: "i"},
+                     { sname: "j","sClass": "right" },
+                     { sname: "k","sClass": "right" },
+                     { sname: "l", },
+                     { sname: "m", bVisible: false  },
+                      { sname: "n", },
+
+            ]
+
+        });
+        $('#DocGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: false},
+                     { sname: "b", },
+                     { sname: "c"},
+                     { sname: "d"},
+                     { sname: "e","sClass": "right"   },
+
+            ]
+        });
+        $('#ledger_amount').attr('disabled', true);
+        function Cancel_JE() {
+            if($("#reason_id :selected").text()=="Others")
+            {
+                if($("#cancel_remarks").val()=="")
+                {
+                    swal("Error!", "Please enter the reason for cancellation", "error")
+                    return false;
+                }
+            }
+            if ($("#reason_id").val() == "") {
+                swal("Error!", "Please select the reason for cancellation", "error")
+                return false;
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("DeleteConfirmed", "JournalEntry")',
+                    type: "POST",
+                    dataType: "JSON",
+                    async: false,
+                    data: { id: $("#fin_ledger_id").val(), cancellation_remarks: $("#cancel_remarks").val(), cancellation_reason_id: $("#reason_id").val() },
+                    success: function (id) {
+                        if (id == "Cancelled") {
+
+                            swal({
+                                title: "Cancelled",
+                                text: "Your Journal Entry " + $("#document_no").val() + " has been cancelled.",
+                                type: "success",
+                                showCancelButton: false,
+                                closeOnConfirm: false,
+                                showLoaderOnConfirm: false
+                            }, function () {
+                                location.href = '@Url.Action("Index", "JournalEntry")'
+                            });
+                        }
+                        else {
+                            swal("Error", id, "error");
+                        }
+
+                    }
+                });
+            }
+        }
+        function canclearmodel() {
+            $("#reason_id").val("");
+            $("#cancel_remarks").val("");
+        }
+    </script>
+}
+
+
+

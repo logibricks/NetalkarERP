@@ -1,0 +1,76 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<report_production_vm>("Editing")
+                                                                .Datasource(ds => ds.URL(Url.Action("Get_report_production", "ProductionReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&plant_id=" + ViewBag.plant_id + "&machine_id=" + ViewBag.machine_id + "&item_id=" + ViewBag.item_id+ "&is_qc_remark=" + ViewBag.is_qc_remark).Adaptor(AdaptorType.UrlAdaptor))
+                                                                    //.Datasource((IEnumerable<object>)ViewBag.datasource)
+                                                                    .AllowPaging().PageSettings(a => a.PageSize(20))
+                                                                    .AllowFiltering()
+                                                                    .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                                    .ShowColumnChooser()
+                                                                    .AllowSorting()
+                                                                    .AllowScrolling()
+                                                                    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "ProductionReport", new { ctrlname = "ProductionReport" })))
+                                                                    .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                                                .ToolbarSettings(toolbar =>
+                                                                {
+                                                                    toolbar.ShowToolbar().ToolbarItems(items =>
+                                                                    {
+                                                                        items.AddTool(ToolBarItems.Search);
+                                                                        items.AddTool(ToolBarItems.ExcelExport);
+                                                                        items.AddTool(ToolBarItems.PrintGrid);
+                                                                    });
+                                                                })
+                                                        .Columns(col =>
+                                                        {
+                                                            col.Field("item_code").Width("15%").HeaderText("ITEM CODE").Add();
+                                                        col.Field("item_name").Width("15%").HeaderText("Item Description").Add();
+                                                          col.Field("UOM_NAME").Width("15%").HeaderText("UOM NAME ").Add();
+                                                            col.Field("storage_location_name").Width("15%").HeaderText("STORAGE LOCATION NAME").Add();
+                                                            col.Field("MINIMUM_LEVEL").Width("15%").HeaderText("MINIMUM LEVEL").Add();
+                                                          col.Field("MAXIMUM_LEVEL").Width("15%").HeaderText("MAXIMUM LEVEL").Add();
+                                                          col.Field("REORDER_QUANTITY").Width("15%").HeaderText("REORDER QUANTITY").Add();
+                                                            col.Field("REORDER_LEVEL").Width("15%").HeaderText("REORDER LEVEL").Add();
+                                                            col.Field("AvailableStock").Width("15%").HeaderText("AvailableStock").Add();
+                                                            col.Field("Shortfall").Width("15%").HeaderText("Shortfall").Add();
+
+
+                                                        })
+                                                        .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick"); })
+                                                        ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+    function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1) {
+            if ($('#plant_id :selected').length > 0) {
+                var selectedplantid = [];
+                $('#plant_id :selected').each(function (i, selected) {
+                    selectedplantid[i] = $(selected).val();
+                });
+                var plantid = selectedplantid + "";
+            }
+            if ($('#machine_id :selected').length > 0) {
+                var selectedmachineid = [];
+                $('#machine_id :selected').each(function (i, selected) {
+                    selectedmachineid[i] = $(selected).val();
+                });
+                var machineid = selectedmachineid + "";
+            }
+            if ($('#item_id :selected').length > 0) {
+                var selecteditemid = [];
+                $('#item_id :selected').each(function (i, selected) {
+                    selecteditemid[i] = $(selected).val();
+                });
+                var itemid = selecteditemid + "";
+            }
+            this.model["plant_id"] = plantid;
+            this.model["machine_id"] = machineid;
+            this.model["item_id"] = itemid;
+
+        }
+
+    }
+</script>
+
+

@@ -1,0 +1,62 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_cancellation_reason
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.modul_form_id, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.modul_form_id, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.modul_form_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" id="create" name="create" class="btn btn-success" style="float:right" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $("#create").click(function (e) {
+            //TabletoJeson();
+            e.preventDefault();
+            var notification = $('#modul_form_id').val();
+            if (notification == "") {
+                sweetAlert("", "Notification Type is required!", "error");
+            }
+            else {
+                $.ajax({
+                    url: '/CancellationReason/CheckDuplicate',
+                    type: "GET",
+                    dataType: "JSON",
+                    asynch: true,
+                    data: { st: notification, id: 0 },
+                    success: function (output) {
+                        if (output != 0) {
+                            sweetAlert("", notification + " is already present in databse!", "error");
+                        }
+                        else {
+                            document.forms[0].submit();
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+}

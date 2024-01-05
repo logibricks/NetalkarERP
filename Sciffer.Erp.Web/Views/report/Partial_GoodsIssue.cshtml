@@ -1,0 +1,82 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+
+
+
+@{(Html.EJ().Grid<Report_GoodsIssue_vm>("Editing")
+          .Datasource((IEnumerable<object>)ViewBag.datasource)
+              .AllowPaging().PageSettings(a=>a.PageSize(20))
+              .AllowFiltering()
+                  .FilterSettings(X => X.FilterType(FilterType.Excel))
+              .ShowColumnChooser()
+              .AllowSorting()
+              .AllowScrolling()
+              .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelForReport", "Generic", new { ctrlname = "SalesSummaryReport" }))
+              .ExportToPdfAction(Url.Action("ExportToPdfForReport", "Generic", new { ctrlname = "SalesSummaryReport" })))
+              .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+          .ToolbarSettings(toolbar =>
+          {
+              toolbar.ShowToolbar().ToolbarItems(items =>
+              {
+                  items.AddTool(ToolBarItems.Search);
+                  items.AddTool(ToolBarItems.ExcelExport);
+                  items.AddTool(ToolBarItems.PrintGrid);
+              });
+          })
+  .Columns(col =>
+  {
+      col.Field("Doc_Number").Width("10%").HeaderText("Doc Number").Add();
+      col.Field("Doc_Date").Width("10%").HeaderText("Doc Date").Add();
+      col.Field("header_Remarks").Width("10%").HeaderText("Header Remarks").Visible(false).Add();
+      col.Field("Item_Code").Width("10%").HeaderText("Item Code").Visible(false).Add();
+      col.Field("Item_Description").Width("10%").HeaderText("Item Description").Visible(false).Add();
+      col.Field("Plant").Width("10%").HeaderText("Plant").Visible(false).Add();
+      col.Field("Sloc").Width("10%").HeaderText("Sloc").Visible(false).Add();
+      col.Field("Bucket").Width("10%").HeaderText("Bucket").Visible(false).Add();
+      col.Field("batch").Width("10%").HeaderText("Batch").Visible(false).Add();
+      col.Field("Reason").Width("10%").HeaderText("Reason").Visible(false).Add();
+      col.Field("Qty").Width("10%").HeaderText("Qty").Visible(false).Add();
+      col.Field("uoM").Width("10%").HeaderText("Uom").Visible(false).Add();
+      col.Field("rate").Width("10%").HeaderText("Rate").Visible(false).Add();
+      col.Field("value").Width("10%").HeaderText("Value").Visible(false).Add();
+      col.Field("machine").Width("10%").HeaderText("Machine").Visible(false).Add();
+      col.Field("Cost_Center").Width("10%").HeaderText("Cost Center").Visible(false).Add();
+      col.Field("Order_No").Width("10%").HeaderText("Order No").Visible(false).Add();
+      col.Field("Gl_Account").Width("10%").HeaderText("Gl Account").Visible(false).Add();
+
+
+  })
+    .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    @*$(function () {
+        var obj = @Html.Raw(Json.Encode(ViewBag.datasource));
+        console.log(obj);
+        $("#Editing").ejGrid({
+            dataSource: obj,
+            allowPaging: true,
+            //columns: [
+
+            //],
+            //dataBound : function(args){
+            //	for (var fld =0; fld < list.length; fld++ ) {
+            //	var column = { field: list[fld].value, headerText: list[fld].header, column: "", textAlign: "left", type: "string", visible: true, width: 75 };
+            //	this.model.columns.push(column); //add dynamic columns
+            //	}
+            //	this.columns(this.model.columns);
+            //}
+        });
+    });*@
+
+
+</script>
+
+
+
+

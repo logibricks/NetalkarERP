@@ -1,0 +1,79 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<sales_order_report_vm>("Editing")
+                                        .Datasource(ds => ds.URL(Url.Action("GetSalesOrderData", "SalesReport") + "?entity=" + ViewBag.entity + "&business_unit_id=" + ViewBag.business_unit_id + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&customer_category_id=" + ViewBag.customer_category_id + "&sales_rm=" + ViewBag.sales_rm + "&territory_id=" + ViewBag.territory_id + "&customer_priority_id=" + ViewBag.customer_priority_id + "&currency_id=" + ViewBag.currency_id + "&plant_id=" + ViewBag.plant_id)
+                                        .EnableCaching().CachingPageSize(4)
+                                        .TimeTillExpiration(120000)
+                                        .Adaptor(AdaptorType.UrlAdaptor))
+                                        .AllowPaging().PageSettings(a => a.PageSize(20))
+                                        .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                        .ShowColumnChooser()
+                                        .AllowSorting()
+                                        .AllowScrolling()
+                                        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "SalesReport", new { ctrlname = "SalesReturnDetailLevel" })))
+                                        .ScrollSettings(scroll => { scroll.Width("100%"); })
+                                    .ToolbarSettings(toolbar =>
+                                    {
+                                        toolbar.ShowToolbar().ToolbarItems(items =>
+                                        {
+                                            items.AddTool(ToolBarItems.Search);
+                                            items.AddTool(ToolBarItems.ExcelExport);
+                                            items.AddTool(ToolBarItems.PrintGrid);
+                                        });
+                                    })
+                                    .ShowSummary()
+                                    .SummaryRow(row =>
+                                    {
+                                        row.Title("Total").SummaryColumns(col =>
+                                        {
+                                            col.SummaryType(SummaryType.Sum).DisplayColumn("sales_value").DataMember("sales_value").Format("{0:n2}").Add();
+                                            col.SummaryType(SummaryType.Sum).DisplayColumn("assessable_value").DataMember("assessable_value").Format("{0:n2}").Add();
+                                                              
+                                    }).Add();
+                                    })
+                            .Columns(col =>
+                            {
+                                col.Field("customer_code").Width("15%").HeaderText("Bill To Party Code").Add();
+                                col.Field("customer_name").Width("15%").HeaderText("Bill To Party Description").Add();
+                                col.Field("billing_city").Width("15%").HeaderText("Billing City").Visible(true).Add();
+                                col.Field("shipping_customer_code").Width("15%").HeaderText("Ship To Party Code").Visible(true).Add();
+                                col.Field("shipping_customer_name").Width("15%").HeaderText("Ship To Party Description").Visible(true).Add();
+                                col.Field("shipping_city").Width("15%").HeaderText("Shipping City").Visible(true).Add();
+                                col.Field("return_number").Width("15%").HeaderText("Sales Return Number").Visible(true).Add();
+                                col.Field("posting_date").Width("15%").HeaderText("Return Date").Format("{0:dd/MMM/yyyy}").Visible(true).Add();
+                                col.Field("category").Width("15%").HeaderText("Document Category").Add();                              
+                                col.Field("plant_name").Width("15%").HeaderText("Plant").Add();
+                                col.Field("storage_location_name").Width("15%").HeaderText("SLoc").Add();
+                                col.Field("item_code").Width("15%").HeaderText("Item Code").Add();
+                                col.Field("item_name").Width("15%").HeaderText("Item Description").Add();
+                                col.Field("issue_quantity").Width("15%").HeaderText("Quantity").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                col.Field("uom_name").Width("15%").HeaderText("UoM").Visible(true).Add();
+                                col.Field("unit_price").Width("15%").HeaderText("Unit Price").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                col.Field("discount").Width("15%").HeaderText("Discount").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                col.Field("effective_unit_price").Width("15%").HeaderText("Effective Unit Price").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                col.Field("sales_value").Width("15%").HeaderText("Sales Value").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                col.Field("assessable_rate").Width("15%").HeaderText("Taxable Rate").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                col.Field("assessable_value").Width("15%").HeaderText("Taxable Value ").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                col.Field("tax_code").Width("15%").HeaderText("Tax Code").Add();
+                                col.Field("tax_name").Width("15%").HeaderText("Tax Description").Add();
+                                col.Field("tds_code_value").Width("15%").HeaderText("TDS").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(true).Add();
+                                col.Field("Excise").Width("15%").HeaderText("Excise").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                col.Field("VAT").Width("15%").HeaderText("VAT").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(true).Add();
+                                col.Field("CST").Width("15%").HeaderText("CST").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(true).Add();
+                                col.Field("CVD").Width("15%").HeaderText("CVD").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(true).Add();
+                                col.Field("AED").Width("15%").HeaderText("AED").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(true).Add();
+                                col.Field("ServiceTax").Width("15%").HeaderText("Service Tax").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(true).Add();
+                                col.Field("SBC").Width("15%").HeaderText("SBC").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(true).Add();
+                                col.Field("KKC").Width("15%").HeaderText("KKC").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(true).Add();
+                                col.Field("NoTax").Width("15%").HeaderText("No Tax").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(true).Add();
+                                col.Field("IGST").Width("15%").HeaderText("IGST").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(true).Add();
+                                col.Field("SGST").Width("15%").HeaderText("SGST").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(true).Add();
+                                col.Field("CGST").Width("15%").HeaderText("CGST").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(true).Add();
+                            })
+                            .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick1"); })
+                                                                        ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+

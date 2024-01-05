@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.ViewModel.mfg_qc_qc_parameter_VM>
+@using Sciffer.Erp.Domain.ViewModel
+
+<h2>Quality Parameter</h2>
+<hr />
+<div>
+    @(Html.EJ().Grid<mfg_qc_qc_parameter_VM>("Searching")
+        // .Datasource(ds => ds.URL(Url.Action("GetItems", "Items")).RemoveURL(Url.Action("InlineDelete", "Items")).Adaptor(AdaptorType.RemoteSaveAdaptor))
+
+        .Datasource(ds => { ds.Json((IEnumerable<object>)ViewBag.DataSource).RemoveURL(Url.Action("Delete", "OperatorQualityParameter")).Adaptor(AdaptorType.RemoteSaveAdaptor); })
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(12); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Search);
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+
+        }))
+
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("process_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).ShowInColumnChooser(false).Add();
+            col.Field("item_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).ShowInColumnChooser(false).Add();
+            col.Field("process_code").Width("15%").Visible(true).ShowInColumnChooser(false).HeaderText("Opration").Add();
+            col.Field("item_name").Width("15%").HeaderText("Item Name").Add(); 
+            col.Field("username").Width("15%").Visible(true).ShowInColumnChooser(false).HeaderText("Modified By").Add();
+            col.Field("modify_ts").Width("15%").HeaderText("Modified Date").Format("{0:dd/MM/yyyy}").Add();
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit") {
+            location.href = "@Url.Action("Edit", "QualityParameter")?id=" + args.rowData.process_id + '$' + args.rowData.item_id;
+        }
+        if (args.requestType == "add") {
+            location.href = "@Url.Action("Create", "QualityParameter")"
+        }
+    }
+
+    $(document).ready(function () {
+        var num = '@ViewBag.num';
+        if (num != '') {
+            sweetAlert("", num, "success");
+
+        }
+    });
+
+</script>

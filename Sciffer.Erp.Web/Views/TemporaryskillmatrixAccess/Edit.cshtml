@@ -1,0 +1,106 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.temporary_skill_matrix_access_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2> Edit </h2>
+<hr />
+
+@using (Html.BeginForm("Edit", "TemporaryskillmatrixAccess", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div id="bomdiv"></div>
+    @Html.AntiForgeryToken()
+<div class="area">
+    <div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(x => x.temp_operator_level_mapping_id)
+
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="col-md-3">
+                Operator Name
+            </div>
+            <div class="col-md-9">
+                @Html.DropDownList("operator_id", (System.Web.Mvc.SelectList)ViewBag.operator_list, htmlAttributes: new { @class = "form-control item", required = "required", @disabled = "true" })
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-md-3">
+                Level Name
+            </div>
+            <div class="col-md-9">
+                @Html.DropDownList("level_id", (System.Web.Mvc.SelectList)ViewBag.level_list, htmlAttributes: new { @class = "form-control item", required = "required", @disabled = "true" })
+            </div>
+        </div>
+    </div>
+    <br />
+    <br />
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="col-md-3">
+                Machine Name
+            </div>
+            <div class="col-md-9">
+                @Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.machine_list, htmlAttributes: new { @class = "form-control item", required = "required", @disabled = "true" })
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-md-3">
+                Shift Name
+            </div>
+            <div class="col-md-9">
+                @Html.DropDownList("shift_id", (System.Web.Mvc.SelectList)ViewBag.GetShiftlist, htmlAttributes: new { @class = "form-control item", required = "required", @disabled = "true" })
+            </div>
+        </div>
+    </div>
+    <br /><br />
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="col-md-3">
+                Effective Date
+            </div>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.effective_date, new { htmlAttributes = new { @class = "form-control validinput", @disabled = "true" } })
+
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-md-3">
+                Shift Name
+            </div>
+            <div class="col-md-9">
+                @Html.EditorFor(model => model.is_blocked, new { htmlAttribute = new { @class = "form-control" } })
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Update" id="Update" name="Update" class="btn btn-success" style="float:right" />
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#is_blocked').checkboxpicker();
+    </script>
+}
+
+
+

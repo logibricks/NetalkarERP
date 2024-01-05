@@ -1,0 +1,74 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+
+                <div class=row>
+                    <div class="col-md-4 col-lg-4 col-xs-12">
+                        <label class="control-label col-md-5 col-lg-5 col-xs-12">From Date</label>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            <input type="date" id="fromDate" class="form-control radius" required="required">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-4 col-xs-12">
+                        <label class="control-label col-md-5 col-lg-5 col-xs-12">To Date</label>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            <input type="date" id="toDate" class="form-control radius">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-4 col-xs-12">
+                        <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                            <input type="hidden" id="entity" value="getinventoryledgersummary" />
+                            <input type="hidden" id="partial" value="Partial_InventoryledgerSummary" />
+                            <label></label>
+                        </div>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            <button class="searchbutton searchButton" id="search" onclick="DateChecki()"> &nbsp; Run Report </button>
+                        </div>
+                    </div>
+                </div>
+
+<div class=row>
+    <div class="col-md-4 col-lg-4 col-xs-12">
+        <label class="control-label col-md-5 col-lg-5 col-xs-12">Plant</label>
+        <div class="col-md-7 col-lg-7 col-xs-12">
+            @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plant_list, new { @class = "form-control mickey plant_id", multiple = "multiple" })
+        </div>
+    </div>
+    <div class="col-md-4 col-lg-4 col-xs-12">
+        <label class="control-label col-md-5 col-lg-5 col-xs-12">Item</label>
+        <div class="col-md-7 col-lg-7 col-xs-12">
+            <input type="text" id="item_id" name="item_id" class="form-control item_id" />
+        </div>
+    </div>
+    <div class="col-md-4 col-lg-4 col-xs-12">
+        <div class="col-md-6 col-lg-6 col-xs-12">
+            @Html.RadioButton("plant_bucket", "plant_bucket", isChecked: true) @Html.Label("Plant/Sloc/Bucket Wise")
+        </div>
+        <div class="col-md-6 col-lg-6 col-xs-12">
+            @Html.RadioButton("item_plant", "item_plant", isChecked: false) @Html.Label("Plant Wise")            
+            <input type="hidden" class="reason_code_id" id="reason_id" name="reason_id" value="1" />
+            
+        </div>
+    </div>
+</div>
+
+<br />
+<div class="row">
+
+    <div id="searchresult">
+        @Html.Partial("Partial_InventoryledgerSummary", (object)ViewBag)
+    </div>
+</div>
+<script type="text/javascript">
+    $('input[type=radio]').click(function () {
+        $('input[type=radio]').prop('checked', false);
+        $(this).prop('checked', true);
+        var a = this.id;
+        if (a == "plant_bucket") {
+            $("#reason_id").val("1");
+        }
+        else {
+            $("#reason_id").val("2");
+        }
+    });
+</script>
+
+

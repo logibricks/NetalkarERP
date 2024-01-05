@@ -1,0 +1,36 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<fin_payment_receipt_report>("Editing")
+                        .Datasource(ds => ds.URL(Url.Action("Get_Payment_Receipt_Report", "BankingReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&in_out=" + ViewBag.in_out).Adaptor(AdaptorType.UrlAdaptor))
+                            .AllowPaging().PageSettings(a => a.PageSize(20))
+                            .AllowFiltering()
+                                .FilterSettings(X => X.FilterType(FilterType.Excel))
+                            .ShowColumnChooser()
+                            .AllowSorting()
+                            .AllowScrolling()
+                            .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelNormal", "BankingReport", new { ctrlname = "ContraEntriesDetail" })))
+                                                                .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                        .ToolbarSettings(toolbar =>
+                        {
+                            toolbar.ShowToolbar().ToolbarItems(items =>
+                            {
+                                items.AddTool(ToolBarItems.Search);
+                                items.AddTool(ToolBarItems.ExcelExport);
+                                items.AddTool(ToolBarItems.PrintGrid);
+                            });
+                        })
+                .Columns(col =>
+                {
+                    col.Field("sending").Width("10%").HeaderText("Sending Code").Add();
+                    col.Field("receiving").Width("10%").HeaderText("Receiving Code ").Add();
+                    col.Field("transfer_amount").Width("10%").HeaderText("Amount ").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                    col.Field("posting_date").Width("15%").Format("{0:dd/MMM/yyyy}").Visible(true).HeaderText("Posting Date  ").Add();
+                    col.Field("document_no").Width("10%").HeaderText("Doc No").Add();
+
+
+
+                })
+                .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickb"); })
+                                            ).Render();}
+@Html.EJ().ScriptManager()
+

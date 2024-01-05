@@ -1,0 +1,287 @@
+﻿
+@model Sciffer.Erp.Domain.ViewModel.ref_mfg_incentive_benchmark_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="row">
+                @Html.HiddenFor(a => a.mfg_incentive_benchmark_id)
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.item_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.item_list, "---Select---", new { @class = "form-control validinput num", @required = true, })
+                            @Html.ValidationMessageFor(model => model.item_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.plant_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plant_list, "---Select---", new { @class = "form-control validinput", @required = true, })
+                            @Html.ValidationMessageFor(model => model.plant_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.operation_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("operation_id", (System.Web.Mvc.SelectList)ViewBag.operation_list, "---Select---", new { @class = "form-control validinput num2", @required = true, onchange = "GetMachineListByProcess($(this).val())" })
+                            @Html.ValidationMessageFor(model => model.operation_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.machine_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.machine_list, "---Select---", new { @class = "form-control validinput num1", @required = true, })
+                            @Html.ValidationMessageFor(model => model.machine_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.reporting_quantity, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.reporting_quantity, new { htmlAttributes = new { @class = "form-control validinput", } })
+                            @Html.ValidationMessageFor(model => model.reporting_quantity, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.incentive, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.incentive, new { htmlAttributes = new { @class = "form-control validinput", } })
+                            @Html.ValidationMessageFor(model => model.incentive, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4 hidden">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.srno, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.srno, new { htmlAttributes = new { @class = "form-control", } })
+                            @Html.ValidationMessageFor(model => model.srno, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <br />
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    @if (@Model == null)
+                    {
+                        <input type="submit" value="Create" class="btn btn-success" id="create" data-controller="IncentiveBenchmark" name="create" style="float:right" />
+                    }
+                    else
+                    {
+                        <input type="submit" value="Create" class="btn btn-success" id="create" data-id="@Model.mfg_incentive_benchmark_id" data-controller="IncentiveBenchmark" name="create" style="float:right" />
+                    }
+
+                </div>
+            </div>
+
+            @*<div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                            <thead>
+                                <tr>
+                                    <th><label>ID</label></th>
+                                    <th><label>Sr. No.</label></th>
+                                    <th><label>Item ID</label></th>
+                                    <th><label>ITEM</label></th>
+                                    <th><label>Plant ID</label></th>
+                                    <th><label>PLANT</label></th>
+                                    <th><label>Machine ID</label></th>
+                                    <th><label>MACHINE</label></th>
+                                    <th><label>Operation ID</label></th>
+                                    <th><label>OPERATION</label></th>
+                                    <th><label>BENCHMARK QUANTITY</label></th>
+                                    <th><label>RATE</label></th>
+                                    <th><label>Action</label></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>*@
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+
+        //Get machine list by process id
+        function GetMachineListByProcess(process_id) {
+
+            $.ajax({
+                url: "@Url.Action("GetMachineListByProcess", "IncentiveBenchmark")",
+                method: "POST",
+            cache: false,
+            data: { process_id: process_id },
+            success: function (data) {
+
+                $("#machine_id").empty();
+                $("#machine_id").append('<option value="">--Select--</option>');
+                for (var i = 0; i < data.length; i++) {
+                    $("#machine_id").append('<option value="' + data[i].Value + '">' + data[i].Text + '</option>');
+                }
+
+                $("#machine_id").prop("disabled", false);
+                $("#machine_id").select2({
+                    placeholder: "Select Machine",
+                    allowClear: true
+                });
+            }
+        })
+        }
+
+
+
+        $("#create").click(function () {
+            var mfg_incentive_benchmark_id = $("#mfg_incentive_benchmark_id").val()
+        });
+
+ //ADD DETAILS IN GRID-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+                $(".add").on("click", function (event) {
+                    var t = $('#ContactGrid').DataTable()
+                    var rowCount = t.fnGetData().length - 1;
+                    var sr_no = t.fnGetData().length + 1;
+                    var cc = parseInt(arguments[0]) - 1;
+                    var item_id = $("#item_id").val();
+                    var item = $("#item_id option:selected").text();
+                    var machine_id = $("#machine_id").val();
+                    var machine = $("#machine_id option:selected").text();
+                    var plant_id = $("#plant_id").val();
+                    var plant = $("#plant_id option:selected").text();
+                    var operation_id = $("#operation_id").val();
+                    var operation = $("#operation_id option:selected").text();
+                    var reporting_quantity = $('#reporting_quantity').val();
+                    var incentive = $('#incentive').val();
+
+
+                    if ($("#srno").val() == "") {
+                        t.fnAddData([0, sr_no, item_id, item, plant_id, plant, machine_id, machine, operation_id, operation, parseFloat(reporting_quantity).toFixed(2), parseFloat(incentive).toFixed(2), '']);
+                        rowCount + 1;
+                        sr_no + 1;
+                    }
+                    else {
+                        var cc = $("#srno").val();
+                        cc = parseInt(cc) - 1;
+                        t.fnUpdate([0, cc + 1, item_id, item, plant_id, plant, machine_id, machine, operation_id, operation, parseFloat(reporting_quantity).toFixed(2), parseFloat(incentive).toFixed(2), ''], cc)
+                    }
+
+                    return true;
+                });
+
+//EDIT GRID-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                $('#ContactGrid').on('click', '.edit', function () {
+                    var t = $('#ContactGrid').DataTable();
+                    var id = $(this).parent('td').parent('tr').index();
+
+                    $("#srno").val(t.fnGetData(id)[1]);
+                    $("#item_id").val(t.fnGetData(id)[2]).trigger("change");
+                    $("#plant_id").val(t.fnGetData(id)[4]).trigger("change");
+                    $("#machine_id").val(t.fnGetData(id)[6]).trigger("change");
+                    $("#operation_id").val(t.fnGetData(id)[8]).trigger("change");
+                    $('#reporting_quantity').val(t.fnGetData(id)[10]);
+                    $('#incentive').val(t.fnGetData(id)[11]);
+
+                });
+
+
+//DELETE GRID-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+                $('#ContactGrid').on('click', '.delete', function () {
+
+                    var t = $('#ContactGrid').dataTable();
+                    var id = $(this).parent('td').parent('tr').index();
+                    //var deleteids = t.fnGetData(id).pur_requisition_detail_id;
+                    swal({
+                        title: "Are you sure?",
+
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Yes, delete it!",
+                        closeOnConfirm: true
+                    },
+             function (isConfirm) {
+                 if (isConfirm) {
+                     t.fnDeleteRow(id);
+                 }
+             });
+                });
+
+
+//Fill GRID-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+                $(document).ready(function () {
+
+                    $("#item_id").select2({
+                        placeholder: "Select Item",
+                        allowClear: true
+                    });
+
+                    $("#plant_id").select2({
+                        placeholder: "Select Plant",
+                        allowClear: true
+                    });
+
+                    $("#machine_id").select2({
+                        placeholder: "Select Machine",
+                        allowClear: true
+                    });
+
+                    $("#operation_id").select2({
+                        placeholder: "Select Operation",
+                        allowClear: true
+                    });
+
+                    @*$.ajax({
+                        url: '@Url.Action("GetInsentiveBenchmarkDetail", "Generic")',
+                        data: { entity: "incentive_benchmark" },
+                        success: function (data) {
+                            var i = 1;
+                            $.each(data, function (i, cycle) {
+                                console.log(cycle);
+                                t.fnAddData(['', i, cycle.item_id, cycle.item, cycle.plant_id, cycle.plant, cycle.machine_id, cycle.machine, cycle.operation_id, cycle.operation, parseFloat(cycle.reporting_quantity).toFixed(2), parseFloat(cycle.incentive).toFixed(2), '']);
+                            });
+
+                        }
+
+                    });*@
+
+                });
+
+    </script>
+
+}
+
+
+
+

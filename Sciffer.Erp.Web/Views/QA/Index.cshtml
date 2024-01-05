@@ -1,0 +1,113 @@
+﻿
+@using Sciffer.Erp.Domain.Model
+
+@{
+    ViewBag.Title = "Index";
+}
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<pur_qa_VM>("Searching")
+        .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "QA" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+          //  items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+         .ContextMenuSettings(contextMenu =>
+         {
+             contextMenu.EnableContextMenu();
+             contextMenu.DisableDefaultItems();
+             contextMenu.CustomContextMenuItems(new List<Syncfusion.JavaScript.Models.CustomContexMenuItems>() { new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu", Text = "Print Report" } }); // CustomContext menu items
+         })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "QA" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+         .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("qa_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Width(80).Add();
+            col.Field("category_name").Width("15%").HeaderText("Sales Category").Add();
+            col.Field("document_no").Width("15%").HeaderText("Document Number").Add();
+            col.Field("posting_date").Width("15%").HeaderText("Posting Date").Format("{0:dd/MM/yyyy}").Add();
+            col.Field("item_name").Width("15%").HeaderText("Item").Add();            
+            col.Field("batch_no").Width("15%").HeaderText("Batch Number").Visible(false).Add();
+            col.Field("status_name").Width("15%").HeaderText("Status").Visible(false).Add();
+            col.Field("document_type_code").Width("15%").HeaderText("Document Type Code").Add();
+            col.Field("document_no").Width("15%").HeaderText("Document No").Visible(false).Add();
+            col.Field("document_date").Width("15%").HeaderText("Document Date").Format("{0:dd/MM/yyyy}").Add();
+            col.Field("item_number").Width("15%").HeaderText("item_number").Visible(false).Add();
+            col.Field("document_qty").Width("15%").HeaderText("Document Quantity").Visible(false).Add();
+            col.Field("inspection_lot_qty").Width("15%").HeaderText("Inspection LOT Quantity").Visible(false).Add();
+            col.Field("sample_size_checked").Width("15%").HeaderText("Sample Size Checked").Visible(false).Add();
+            col.Field("sample_size_accepted").Width("15%").HeaderText("Sample Size Accepted").Visible(false).Add();
+            col.Field("sample_size_rejected").Width("15%").HeaderText("Sample Size Rejected").Visible(false).Add();
+            col.Field("total_accepted_qty").Width("15%").HeaderText("Total Accepted Quantity").Visible(false).Add();
+            col.Field("total_rejected_qty").Width("15%").HeaderText("Total Rejected Quantity").Visible(false).Add();
+            col.Field("total_wip_qty").Width("15%").HeaderText("Total WIP Qauntity").Visible(false).Add();
+            col.Field("shelf_life").Width("15%").HeaderText("Shelf Life").Visible(false).Add();
+            col.Field("shelf_life_uom_name").Width("15%").HeaderText("Shelf Life UoM").Visible(false).Add();
+            col.Field("grn_date").Width("15%").HeaderText("GRN Date").Format("{0:dd/MM/yyyy}").Add();
+            col.Field("date_based_on").Width("15%").HeaderText("Date Based On").Visible(false).Add();
+            col.Field("start_date").Width("15%").HeaderText("Start date").Format("{0:dd/MM/yyyy}").Visible(false).Add();
+            col.Field("end_date").Width("15%").HeaderText("End Date").Visible(false).Format("{0:dd/MM/yyyy}").Add();
+            col.Field("internal_remarks").Width("15%").HeaderText("Internal Remarks").Visible(false).Add();
+            col.Field("remrarks_on_doc").Width("15%").HeaderText("Remarks On Doc").Visible(false).Add();
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+            eve.ContextClick("contextclick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = '@Url.Action("Edit", "QA")?id=' +args.rowData.qa_id;
+        }
+        if (args.requestType == "add") {
+            location.href = '@Url.Action("Create", "QA")';
+        }
+    }   
+    function contextclick(args) {
+        if (args.text == "Print Report") {
+            var url = '@Url.Action("Pdf", "QA")?id='+ this.getSelectedRecords()[0].qa_id;
+            window.open(url);
+        }
+
+    };
+    $(document).ready(function () {
+        var doc_no = '@ViewBag.doc';
+        if (doc_no != '') {
+            if (doc_no != 0) {
+                sweetAlert("", doc_no, "success");
+            }
+        }
+    });
+</script>
+

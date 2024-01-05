@@ -1,0 +1,42 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_machine_category
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ref_machine_category</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.machine_category_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.machine_category_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.machine_category_desciption)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.machine_category_desciption)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_active)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.machine_category_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

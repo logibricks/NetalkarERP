@@ -1,0 +1,76 @@
+﻿
+
+@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+
+
+
+@{(Html.EJ().Grid<Report_EmployeeLedgerDetails_vm>("Editing")
+                                      .Datasource((IEnumerable<object>)ViewBag.datasource)
+                                          .ShowColumnChooser()
+                                          .AllowScrolling()
+                                          .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelForReport", "Generic", new { ctrlname = "EmployeeLedgerDetails" }))
+                                          .ExportToPdfAction(Url.Action("ExportToPdfForReport", "Generic", new { ctrlname = "EmployeeLedgerDetails" })))
+                                          .ScrollSettings(scroll => { scroll.Width("100%").Height("50%"); })
+
+                                      .ToolbarSettings(toolbar =>
+                                      {
+                                          toolbar.ShowToolbar().ToolbarItems(items =>
+                                          {
+                                              items.AddTool(ToolBarItems.Search);
+                                              items.AddTool(ToolBarItems.ExcelExport);
+                                              items.AddTool(ToolBarItems.PrintGrid);
+                                          });
+                                      })
+                              .Columns(col =>
+                              {
+                                  col.Field("document_category").Width("10%").HeaderText("Document Category").Add();
+                                  col.Field("doc_number").Width("10%").HeaderText("Document Number").Add();
+                                  col.Field("posting_date").Format("{0:dd/MM/yyyy}").Width("10%").HeaderText("Posting Date").Add();
+                                  col.Field("document_date").Format("{0:dd/MM/yyyy}").Width("10%").HeaderText("Document Date").Add();
+                                  col.Field("due_date").Format("{0:dd/MM/yyyy}").Width("10%").HeaderText("Due Date").Add();
+                                  col.Field("ref1").Width("10%").HeaderText("Ref1").Visible(false).Add();
+                                  col.Field("ref2").Width("10%").HeaderText("Ref2").Visible(false).Add();
+                                  col.Field("ref3").Width("10%").HeaderText("Ref3").Visible(false).Add();
+                                  col.Field("description").Width("10%").HeaderText("Description").Add();
+                                  col.Field("currency").Width("10%").HeaderText("Currency").Add();
+                                  col.Field("dr_fc").Width("10%").HeaderText("Dr FC").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(false).Add();
+                                  col.Field("cr_fc").Width("10%").HeaderText("Cr FC").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(false).Add();
+                                  col.Field("dr_lc").Width("10%").HeaderText("DR LC").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                                  col.Field("cr_lc").Width("10%").HeaderText("Cr LC").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                                  col.Field("balance").Width("10%").HeaderText("Balance").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                                  col.Field("cost_center").Width("10%").HeaderText("Cost Center").Visible(false).Add();
+                                  col.Field("line_remarks").Width("10%").HeaderText("Line Remarks").Visible(false).Add();
+                              })
+                              .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+                              ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    @*$(function () {
+        var obj = @Html.Raw(Json.Encode(ViewBag.datasource));
+        console.log(obj);
+        $("#Editing").ejGrid({
+            dataSource: obj,
+            allowPaging: true,
+            //columns: [
+
+            //],
+            //dataBound : function(args){
+            //	for (var fld =0; fld < list.length; fld++ ) {
+            //	var column = { field: list[fld].value, headerText: list[fld].header, column: "", textAlign: "left", type: "string", visible: true, width: 75 };
+            //	this.model.columns.push(column); //add dynamic columns
+            //	}
+            //	this.columns(this.model.columns);
+            //}
+        });
+    });*@
+
+
+</script>
+
+
+

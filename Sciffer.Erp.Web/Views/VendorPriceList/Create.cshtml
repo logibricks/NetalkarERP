@@ -1,0 +1,435 @@
+﻿@model Sciffer.Erp.Domain.Model.price_list_vm
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Price List</h4>
+        <hr />
+       
+        <div class="modal-body">
+            <div class="row">
+                <div class="form-group">
+                    <label class="control-label col-md-3">
+                        Vendor Code <span class="required">*</span>
+                    </label>
+                    <div class="col-md-7">
+                        @{
+                            Html.EJ()
+                                .Autocomplete("vendor_id")
+                                .Width("100%")
+                                 .ClientSideEvents(e => e.Select("onSelect"))
+                                 .WatermarkText("Select Item")
+                                .Datasource((IEnumerable<object>)ViewBag.Vendor)
+                                 .HighlightSearch(true)
+                                 .ShowPopupButton(true)
+                                .MultiColumnSettings(obj => obj.Enable(true).Columns(obj1 =>
+                                {
+                                    obj1.Field("VENDOR_NAME").HeaderText("Vendor Name").Add();
+                                    obj1.Field("VENDOR_CODE").HeaderText("Vendor Code").Add();
+                                    obj1.Field("VENDOR_ID").HeaderText("ID").Add();
+                                }).ShowHeader(true).StringFormat("{1} ({0}) ({2}) "))
+                                .Render();
+                        }
+                    </div>
+                </div>
+            </div>
+            <br />
+            <input type="hidden" id="productdetail" name="productdetail" />
+            @Html.HiddenFor(a=>a.Id)
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <button type="button" class="btn btn-primary" id="open_modal" style="float:right" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span>Add Item</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                        <thead>
+                            <tr>
+                                <th hidden><label>ID</label></th>
+                                <th><label>SR No.</label></th>
+                                <th hidden><label>Item Id</label></th>
+                                <th><label>Item Code</label></th>
+                                <th><label>Item Name</label></th>
+                                <th><label>Price</label></th>
+                                <th><label>Discount</label></th>
+                                <th><label>Price After Discount</label></th>
+                                <th hidden><label>UOM Id</label></th>
+                                <th><label>UOM name</label></th>
+                                <th><label>Delete</label></th>
+                                
+                            </tr>
+                        </thead>
+
+                    </table>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <input type="submit" value="Create" class="btn btn-success" id="create" onclick="TabletoJeson();" style="float:right" />
+                </div>
+            </div>
+        </div>
+</div>
+}
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Items Detail</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Item Code <span class="required">*</span>
+                        </label>
+
+                        <div class="col-md-7">
+                            @{
+                                Html.EJ()
+                                    .Autocomplete("item_id")
+                                    .Width("100%")
+                                     .ClientSideEvents(e => e.Select("onSelect2"))
+                                     .WatermarkText("Select Item")
+                                    .Datasource((IEnumerable<object>)ViewBag.Item)
+                                     .HighlightSearch(true)
+                                     .ShowPopupButton(true)
+                                    .MultiColumnSettings(obj => obj.Enable(true).Columns(obj1 =>
+                                    {
+                                        obj1.Field("ITEM_NAME").HeaderText("Item Name").Add();
+                                        obj1.Field("ITEM_CODE").HeaderText("Item Code").Add();
+                                        obj1.Field("ITEM_ID").HeaderText("ID").Add();
+                                    }).ShowHeader(true).StringFormat("{1} ({0}) ({2}) "))
+                                    .Render();
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Price <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            <input type="number" class="form-control" name="price" id="price" onclick="calculate()"/>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Discount
+                        </label>
+                        <div class="col-md-7">
+                            <input type="number" class="form-control" name="discount" id="discount" onclick="calculate()"/>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Price After Discount <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            <input type="number" class="form-control" name="price_after_discount" id="price_after_discount" onclick="calculate()"/>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            UoM Name <span class="required">*</span>
+                        </label>
+                       <div class="col-md-7">
+                            @Html.DropDownList("uom_id", (new System.Web.Mvc.SelectList(ViewBag.UOM, "UOM_ID", "UOM_NAME")), "--select--", htmlAttributes: new { @class = "form-control validator" ,required = "required" })
+                        </div>
+                        </div>
+
+                    </div>
+                <br/>
+                    <div class="modal-footer">
+                        <input type="hidden" id="srno" />
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                        <button type="button" class="add btn btn-primary">Add Item</button>
+                    </div>
+                </div>
+
+            </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript" src="~/Scripts/jquery.dataTables1.10.9.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/1.9.4.jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript">
+        function onSelect2(args) {
+            var id = "";
+            var matches = args.value.match(/\([^)]*\)/g);
+            id = matches[1].replace(/[{()}]/g, '')
+            GetUnit(id);
+        }
+        function GetUnit(id) {
+
+            if (id != '') {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetUnitofItem", "Quotation")',
+                    data: { id: id },
+                    success: function (ITEM) {
+                        $('#uom_id').val(ITEM.item.UOM_ID);
+                    },
+                    error: function (emp) {
+                        $('#uom_id').val('');
+                    }
+                });
+            }
+            else {
+                $('#uom_id').val('');
+            }
+
+        }
+
+        $('#open_modal').click(function () {
+            clearmodel();
+        });
+
+        function calculate() {
+            var price = $("#price").val();
+            var discount = $("#discount").val();
+            var y = (price * discount) / 100;
+            var result = (price-y)
+            $("#price_after_discount").val(result);
+            console.log(result);
+        }
+        $(".add").on("click", function (event) {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var vendor = $("#vendor_id").val();
+
+            var matche = vendor.match(/\([^)]*\)/g);
+            var vendor_id = matche[1].replace(/[{()}]/g, '')
+
+            $("#Id").val(vendor_id);
+            var item = $("#item_id").val();
+            var matches = item.match(/\([^)]*\)/g);
+            var item_id = matches[1].replace(/[{()}]/g, '');
+            var item_name = matches[0].replace(/[{()}]/g, '');
+            var item_code = item.replace("(" + item_name + ") (" + item_id + ")", "").trim();
+
+            var price = $("#price").val();
+            var discount = $("#discount").val();
+            var price_after_discount = $("#price_after_discount").val();
+
+            var uom_id = $("#uom_id").val();
+            //var matches = uom.match(/\([^)]*\)/g);
+
+            //var uom_id = uom[0];
+            var uom_name = $('#uom_id').find('option:selected').text();;
+           // console.log(uom_name);
+            //var uom_name = uom.replace("(" + uom_name + ") (" + uom_id + ")", "").trim();
+
+            if (item_id == '') {
+                swal("", "Please Select Item Name.", "error");
+                return false;
+            }
+            if (uom_id == '') {
+                swal("", "Please Select UOM Name.", "error");
+                return false;
+            }
+            if (price == '') {
+                swal("", "Please Enter Price.", "error");
+                return false;
+            }
+            if (discount == 0) {
+                swal("", "Please Enter Discount.", "error");
+                return false;
+            }
+            if (price_after_discount == '') {
+                swal("", "Please select Price After Discount.", "error");
+                return false;
+            }
+            if ($("#srno").val() == "") {
+                t.fnAddData(['', rowCount + 1, item_id, item_code, item_name, price, discount, price_after_discount,uom_id,uom_name, ''
+                ]);
+            }
+            else {
+                var cc = $("#srno").val();
+                cc = parseInt(cc) - 1;
+                t.fnUpdate(['', cc + 1, item_id, item_code, item_name, price, discount, price_after_discount,uom_id, uom_name, ''], cc)
+            }
+
+            clearmodel();
+            return true;
+        });
+        function clearmodel() {
+            $("#item_id").val('');
+            $("#uom_id").val('');
+            $("#price").val('');
+            $("#discount").val('');
+            $("#price_after_discount").val('');
+
+        }
+
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: false },
+                     { sname: "b", bVisible: false },
+                     { sname: "c", bVisible: false },
+                     { sname: "d"},
+                     { sname: "e"},
+                     { sname: "f"},
+                     { sname: "g" },
+                     { sname: "h" },
+                     { sname: "i", bVisible: false },
+                     { sname: "j" },
+                     {
+                         sname: "l", sWidth: "8%",
+                         bSortable: false,
+                         mRender: function (data, type, full) {
+                             return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" onclick="editRow(' + full[1] + ');" /><img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete" onclick="deleteRow(' + full[1] + ');" />';
+                         }
+                     }
+
+            ]
+
+        });
+
+
+        function editRow() {
+            $('#myModal').modal('show');
+            var t = $('#ContactGrid').DataTable()
+            var cc = parseInt(arguments[0]) - 1;
+            $("#srno").val(t.fnGetData(cc)[1]);
+            $("#Item_Id").val(t.fnGetData(cc)[3]).trigger("change");
+            $("#item_id").val(t.fnGetData(cc)[2] + " (" + t.fnGetData(cc)[10] + ") (" + t.fnGetData(cc)[3] + ")");
+
+            $('#price').val(t.fnGetData(cc)[5]);
+            $('#discount').val(t.fnGetData(cc)[6]);
+            $('#Uom_Id').val(t.fnGetData(cc)[8]);
+            $("#uom_id").val(t.fnGetData(cc)[8] + " (" + t.fnGetData(cc)[9] + ") ");
+            $('#price_after_discount').val(t.fnGetData(cc)[7]);
+        }
+
+        $('#ContactGrid').on('click', '.delete', function () {
+
+            var t = $('#ContactGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+
+
+            var deleteids = t.fnGetData(id)[1];
+            swal({
+                title: "Are you sure?",
+
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            },
+     function (isConfirm) {
+         if (isConfirm) {
+
+             $("#deleteids").val(deleteids + "~");
+             t.fnDeleteRow(id);
+         }
+     });
+        });
+
+
+
+        function TabletoJeson() {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var str;
+            var str1;
+            for (i = 0; i < rowCount; i++) {
+
+                str1 = t.fnGetData(i)[0] + ",";
+                str1 = str1 + t.fnGetData(i)[1] + ",";
+                str1 = str1 + t.fnGetData(i)[2] + ",";
+                str1 = str1+ t.fnGetData(i)[3] + ",";
+                str1 = str1 +  t.fnGetData(i)[4] + ",";
+                str1 = str1 + t.fnGetData(i)[5] + ",";
+                str1 = str1 + t.fnGetData(i)[6] + ",";
+                str1 = str1 + t.fnGetData(i)[7] + ",";
+                str1 = str1 + t.fnGetData(i)[8] + ",";
+                str1 = str1 + t.fnGetData(i)[9] + ",";
+
+                if (i == 0) {
+                    str = str1 + "~"
+                }
+                else {
+                    str = str + str1 + "~";
+                }
+            }
+
+
+            document.getElementsByName("productdetail")[0].value = str;
+        }
+
+
+
+
+
+        //CHECK DUPLICATE NUMBER
+        $("#create").click(function (e) {
+            e.preventDefault();
+            var PlantTransferNumber = $('#pla_transfer_number').val();
+
+            if (PlantTransferNumber == "") {
+                sweetAlert("", "plant transfer number is required!", "error");
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("CheckDuplicate", "PlantTransfer")',
+                    type: "GET",
+                    dataType: "JSON",
+                    asynch: true,
+                    data: { st: PlantTransferNumber, id: 0 },
+                    success: function (output) {
+                        if (output != 0) {
+                            sweetAlert("", PlantTransferNumber + " is already present in databse!", "error");
+                        }
+                        else {
+                            document.forms[0].submit();
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+}

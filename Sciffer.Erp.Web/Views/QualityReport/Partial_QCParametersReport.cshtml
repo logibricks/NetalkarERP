@@ -1,0 +1,50 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+@{(Html.EJ().Grid<report_quality_vm>("FlatGrid")
+                    .Datasource(ds => ds.URL(Url.Action("Get_report_quality", "QualityReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&status_id=" + ViewBag.status_id + "&plant_id=" + ViewBag.plant_id +"&document_type_code=" + ViewBag.document_type_code  + "&item_id=" + ViewBag.item_id).Adaptor(AdaptorType.UrlAdaptor))
+                    .AllowPaging().PageSettings(a => a.PageSize(20))
+                    .AllowFiltering()
+                        .FilterSettings(X => X.FilterType(FilterType.Excel))
+                    .ShowColumnChooser()
+                    .AllowSorting()
+                    .AllowScrolling()
+                    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "QualityReport", new { ctrlname = "QCParametersReport" })))
+                                                        .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                .ToolbarSettings(toolbar =>
+                {
+                    toolbar.ShowToolbar().ToolbarItems(items =>
+                    {
+                        items.AddTool(ToolBarItems.Search);
+                        items.AddTool(ToolBarItems.ExcelExport);
+                        items.AddTool(ToolBarItems.PrintGrid);
+                    });
+                })
+        .Columns(col =>
+        {
+            col.Field("category").Width("10%").HeaderText("Doc Category").Add();
+            col.Field("document_no").Width("10%").HeaderText("Doc Number").Add();
+            col.Field("posting_date").Width("10%").HeaderText("Posting Date").Format("{0:dd/MMM/yyyy}").Add();
+            col.Field("item_code").Width("10%").HeaderText("Item Code").Add();
+            col.Field("item_name").Width("10%").HeaderText("Item Description").Add();
+            col.Field("batch_number").Width("10%").HeaderText("Batch").Add();
+            col.Field("document_qty").Width("10%").HeaderText("Qty").Add();
+            col.Field("plant_code").Width("10%").HeaderText("Plant").Add();
+            col.Field("document_type_code").Width("10%").HeaderText("Base Document").Add();
+            col.Field("categry").Width("10%").HeaderText("Doc Category").Add();
+            col.Field("Doc_Category").Width("10%").HeaderText("Doc Number").Add();
+            col.Field("P_Date").Width("10%").HeaderText("Posting Date").Format("{0:dd/MMM/yyyy}").Add();
+            col.Field("parameter_name").Width("10%").HeaderText("Paramater Name").Add();
+            col.Field("parameter_range").Width("10%").HeaderText("Parameter Range").Add();
+            col.Field("actual_value").Width("10%").HeaderText("Actual Value ").Add();
+            col.Field("method_used").Width("10%").HeaderText("Method used").Add();
+            col.Field("checked_by").Width("10%").HeaderText("Checked by ").Template("{{:checked_by==1?'Self Check':'Vendor TC'}}").Add();
+            col.Field("document_reference").Width("10%").HeaderText("Document Ref ").Add();
+            col.Field("pass_fail").Width("10%").HeaderText("Pass / Fail").Template("{{:pass_fail==1?'Pass':'Fail'}}").Add();
+
+        })
+    .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickq"); })
+    ).Render();}
+@Html.EJ().ScriptManager()

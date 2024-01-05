@@ -1,0 +1,25 @@
+﻿@model Sciffer.Erp.Domain.Model.REF_ENTITY_TYPE
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ENTITY_TYPE_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ENTITY_TYPE_NAME)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ENTITY_TYPE_ID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

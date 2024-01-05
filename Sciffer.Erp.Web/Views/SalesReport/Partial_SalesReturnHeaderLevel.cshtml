@@ -1,0 +1,85 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<sales_order_report_vm>("Editing")
+                                                                                        .Datasource(ds => ds.URL(Url.Action("GetSalesOrderData", "SalesReport") + "?entity=" + ViewBag.entity + "&business_unit_id=" + ViewBag.business_unit_id + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&customer_category_id=" + ViewBag.customer_category_id + "&sales_rm=" + ViewBag.sales_rm + "&territory_id=" + ViewBag.territory_id + "&customer_priority_id=" + ViewBag.customer_priority_id + "&currency_id=" + ViewBag.currency_id + "&plant_id=" + ViewBag.plant_id)
+                                                                                        .EnableCaching().CachingPageSize(4)
+                                                                                        .TimeTillExpiration(120000)
+                                                                                        .Adaptor(AdaptorType.UrlAdaptor))
+                                                                                        .AllowPaging().PageSettings(a => a.PageSize(20))
+                                                                                        .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                                                        .ShowColumnChooser()
+                                                                                        .AllowSorting()
+                                                                                        .AllowScrolling()
+                                                                                        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "SalesReport", new { ctrlname = "SalesReturnHeaderLevel" })))
+                                                                                        .ScrollSettings(scroll => { scroll.Width("100%"); })
+                                                                                    .ToolbarSettings(toolbar =>
+                                                                                    {
+                                                                                        toolbar.ShowToolbar().ToolbarItems(items =>
+                                                                                        {
+                                                                                            items.AddTool(ToolBarItems.Search);
+                                                                                            items.AddTool(ToolBarItems.ExcelExport);
+                                                                                            items.AddTool(ToolBarItems.PrintGrid);
+                                                                                        });
+                                                                                    })
+                                                                                    .ShowSummary()
+                                                                                    .SummaryRow(row =>
+                                                                                    {
+                                                                                        row.Title("Total").SummaryColumns(col =>
+                                                                                        {
+                                                                                            col.SummaryType(SummaryType.Sum).DisplayColumn("sales_value").DataMember("sales_value").Format("{0:n2}").Add();
+                                                                                            col.SummaryType(SummaryType.Sum).DisplayColumn("assessable_value").DataMember("assessable_value").Format("{0:n2}").Add();
+
+                                                                                        }).Add();
+                                                                                    })
+                                                                            .Columns(col =>
+                                                                            {
+                                                                                col.Field("return_number").Width("15%").HeaderText("Sales Return Number").Add();
+                                                                                col.Field("posting_date").Width("15%").HeaderText("Posting Date").Format("{0:dd/MMM/yyyy}").Add();
+                                                                                col.Field("category").Width("15%").HeaderText("Document Category").Add();
+                                                                                col.Field("customer_code").Width("15%").HeaderText("Bill To Party Code").Add();
+                                                                                col.Field("customer_name").Width("15%").HeaderText("Bill To Party Description").Add();
+                                                                                col.Field("currency").Width("15%").HeaderText("Currency").Add();
+                                                                                col.Field("shipping_customer_code").Width("15%").HeaderText("Ship To Party Code").Add();
+                                                                                col.Field("shipping_customer_name").Width("15%").HeaderText("Ship To Party Description").Add();
+                                                                                col.Field("billing_city").Width("15%").HeaderText("Billing City").Visible(false).Add();
+                                                                                col.Field("gros_currency").Width("15%").HeaderText("Currency").Add();
+                                                                                col.Field("business_unit_name").Width("15%").HeaderText("Business Unit").Visible(false).Add();
+                                                                                col.Field("plant_code").Width("15%").HeaderText("Plant Code").Add();
+                                                                                col.Field("plant_name").Width("15%").HeaderText("Plant Description").Add();
+                                                                                col.Field("territory_name").Width("15%").HeaderText("Territory").Add();
+                                                                                col.Field("gate_entry_no").Width("15%").HeaderText("Gate Entry No").Add();
+                                                                                col.Field("gate_entry_date").Width("15%").Format("{0:dd/MMM/yyyy}").HeaderText("Gate Entry Date").Add();
+                                                                                col.Field("invoice_number").Width("15%").HeaderText("Document Number").Add();
+                                                                                col.Field("invoice_date").Width("15%").HeaderText("Document Date").Add();
+                                                                                col.Field("reason_for_return").Width("15%").HeaderText("Reason for Return").Visible(false).Add();
+                                                                                col.Field("billing_address").Width("15%").HeaderText("Billing Address").Visible(true).Add();
+                                                                                col.Field("billing_city").Width("15%").HeaderText("Billing City").Visible(true).Add();
+                                                                                col.Field("billing_pincode").Width("15%").HeaderText("Billing Pincode").Visible(true).Add();
+                                                                                col.Field("billing_country").Width("15%").HeaderText("Billing Country").Visible(true).Add();
+                                                                                col.Field("billing_state").Width("15%").HeaderText("Billing State").Visible(true).Add();
+                                                                                col.Field("billing_email_id").Width("15%").HeaderText("Billing Email").Visible(true).Add();
+                                                                                col.Field("shipping_address").Width("15%").HeaderText("Shipping Address").Visible(true).Add();
+                                                                                col.Field("shipping_city").Width("15%").HeaderText("Shipping City").Visible(true).Add();
+                                                                                col.Field("shipping_pincode").Width("15%").HeaderText("Shipping Pincode").Visible(true).Add();
+                                                                                col.Field("shipping_country").Width("15%").HeaderText("Shipping Country").Visible(true).Add();
+                                                                                col.Field("shipping_state").Width("15%").HeaderText("Shipping State").Visible(true).Add();
+                                                                                col.Field("payment_cycle_type_name").Width("15%").HeaderText("Payment Cycle Type").Visible(true).Add();
+                                                                                col.Field("payment_cycle_name").Width("15%").HeaderText("Payment Cycle").Visible(true).Add();
+                                                                                col.Field("payment_terms_code").Width("15%").HeaderText("Payment Terms").Visible(true).Add();
+                                                                                col.Field("credit_avail_after_invoice").Format("{0:n2}").TextAlign(TextAlign.Right).Width("15%").HeaderText("Credit Available After Invoice").Visible(false).Add();
+                                                                                col.Field("tds_code").Width("15%").HeaderText("TDS Code").Visible(false).Add();
+                                                                                col.Field("tds_code_description").Width("15%").HeaderText("TDS Description").Add();
+                                                                                col.Field("available_credit_limit").Width("15%").Format("{0:n2}").TextAlign(TextAlign.Right).HeaderText("Available Credit Limit").Add();
+                                                                                col.Field("net_value").Width("15%").HeaderText("Net Value").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                                                                col.Field("tax_value").Width("15%").HeaderText("Total Taxes").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                                                                col.Field("round_off").Width("15%").HeaderText("Round Off").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                                                                col.Field("tds_value").Width("15%").HeaderText("TDS").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                                                                col.Field("gross_value").Width("15%").HeaderText("Gross Value").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                                                            })
+                                                                            .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick1"); })
+                                                                                                                        ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+

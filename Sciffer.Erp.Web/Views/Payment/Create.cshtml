@@ -1,0 +1,903 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.fin_ledger_paymentVM
+
+@{
+    ViewBag.Title = "Create";
+}
+<div class="loading">Loading &#8230;</div>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="loading">Loading &#8230;</div>
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div id="entity_detail" hidden></div>
+        <div id="transaction_detail" hidden></div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.categorylist, new { @class = "form-control category validinput", @onchange = "GetDocumentNumber(this.value);" })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12" hidden>
+                            @Html.EditorFor(model => model.document_no, new { htmlAttributes = new { @class = "form-control validinput removedisabled", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.document_no, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.payment_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.payment_date, new { htmlAttributes = new { @class = "form-control postingdocumentdate postingdate validinput", @required = true } })
+                            @Html.ValidationMessageFor(model => model.payment_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.entity_type_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("entity_type_id", new List<SelectListItem> { new SelectListItem { Text = "Vendor", Value = "2" }, new SelectListItem { Text = "Customer", Value = "1" }, new SelectListItem { Text = "Employee", Value = "3" }, new SelectListItem { Text = "Account", Value = "7" } }, new { @class = "form-control validinput", @onchange = "Getlist()" })
+                            @Html.ValidationMessageFor(model => model.entity_type_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.payment_amount, htmlAttributes: new { Class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-5 col-sm-5 col-xs-3">
+                            @Html.EditorFor(model => model.payment_amount, new { htmlAttributes = new { @class = "form-control validinput right removedisabled", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.payment_amount, "", new { Class = "text-danger" })
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-3">
+                            @Html.DropDownList("currency_id", (System.Web.Mvc.SelectList)ViewBag.currency_list, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.currency_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.cash_bank, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("cash_bank", new List<SelectListItem>
+                                 {
+                                    new SelectListItem{ Text="Bank", Value = "2" },
+                                    new SelectListItem{ Text="Cash", Value = "1" }
+                                 }, new { @class = "form-control validinput", @onchange = "GetBankAccountByBank(this.value);" })
+                            @Html.ValidationMessageFor(model => model.cash_bank, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.payment_type_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("payment_type_id", (System.Web.Mvc.SelectList)ViewBag.paymenttypelist, "---Select---", new { @class = "form-control validinput removedisabled" })
+                            @Html.ValidationMessageFor(model => model.payment_type_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <label for="bank_account_id" id="bank_account" class="control-label col-md-4 col-sm-4 col-xs-12"></label>
+                        @*@Html.LabelFor(model => model.bank_account_id,"", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12 cashbank" })*@
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("bank_account_id", (System.Web.Mvc.SelectList)ViewBag.BankAccountList, "---Select---", new { @class = "form-control validinput" })
+                            @Html.ValidationMessageFor(model => model.bank_account_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group ">
+                        @Html.LabelFor(model => model.remarks, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.remarks, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.remarks, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <label for="party_id" class="control-label col-md-4 col-sm-4 col-xs-12">Entity * </label>
+                        @*@Html.LabelFor(model => model.bank_account_id,"", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12 cashbank" })*@
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("party_id", (System.Web.Mvc.SelectList)ViewBag.entity_list, "---Select---", new { @class = "form-control validinput", })
+                            @Html.ValidationMessageFor(model => model.party_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <button type="button" class="btn btn-primary" style="float:left" onclick="ChangeParty();"><span class="glyphicon glyphicon-plus"></span>Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">General</a></li>
+                <li><a data-toggle="tab" href="#sectionB">Transaction Detail</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                    @*<div class="row">
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="form-group">
+
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-6">
+                                <div class="form-group">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <button type="button" class="btn btn-primary" style="float:right" data-toggle="modal" data-target="#myModal" onclick="Getlist();"><span class="glyphicon glyphicon-plus"></span>Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>*@
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                                <thead>
+                                    <tr>
+                                        <th><label>ID</label></th>
+                                        <th><label>Sr. No.</label></th>
+                                        <th><label>Entity ID</label></th>
+                                        <th hidden><label>Code</label></th>
+                                        <th><label>Name</label></th>
+                                        <th><label>Total Amount</label></th>
+                                        <th><label>Amount</label></th>
+                                        <th><label>On Account Amount</label></th>
+                                        <th><label>Round Off</label></th>
+                                        <th><label>Bank Charges</label></th>
+                                        <th><label>Tax</label></th>
+                                        <th><label>Ref Number</label></th>
+                                        <th><label>Action</label></th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionB" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="TransactionGrid">
+                                <thead>
+                                    <tr>
+                                        <th><label></label></th>
+                                        <th><label>ID</label></th>
+                                        <th><label>Sr. No.</label></th>
+                                        <th><label>Entity ID</label></th>
+                                        <th><label>Code</label></th>
+                                        <th><label>Name</label></th>
+                                        <th><label>Doc Type</label></th>
+                                        <th><label>Doc ID</label></th>
+                                        <th><label>Doc No</label></th>
+
+                                        <th><label>Ref 1</label></th>
+                                        <th><label>Ref 2</label></th>
+                                        <th><label>Ref 3</label></th>
+
+                                        <th><label>Doc Date</label></th>
+                                        <th><label>Due Date</label></th>
+                                        <th><label>Amount</label></th>
+                                        <th><label>Bal Amount</label></th>
+                                        <th><label>Adjust Amount</label></th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="hidden" id="entitydetail" name="entitydetail" />
+                <input type="hidden" id="transactiondetail" name="transactiondetail" />
+                <button type="submit" value="Create" class="btn btn-success" style="float:right" id="create" name="create" data-controller="Receipt" onclick="TabletoJeson();">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Items Detail</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="EntityDetailGrid">
+                                <thead>
+                                    <tr>
+                                        <th><label> All &nbsp; &nbsp; &nbsp; <input type="checkbox" id="select_all" /></label></th>
+                                        <th><label>Sr No</label></th>
+                                        <th><label>ID</label></th>
+                                        <th><label>Code</label></th>
+                                        <th><label>Name</label></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" id="srno" />
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="add btn btn-primary" id="additem" name="additem">Add</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+@section Scripts {
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        var checkedarr = [];
+        $(document).ready(function () {
+            $("#payment_type_id option:contains(Cash)").hide();
+            $('.cash').hide();
+            $("#payment_amount").val(0);
+
+
+            document.getElementById('payment_date').valueAsDate = new Date();
+            var error=@Html.Raw(Json.Encode(ViewBag.error));
+            if(error !="")
+            {
+                sweetAlert("",error,"error");
+            }
+            $("#bank_account_id").select2({
+                placeholder: "Select Bank Account",
+                allowClear: true
+            });
+            $("#party_id").select2({
+                placeholder: "Select Entity",
+                allowClear: true
+            });
+            $("#bank_account").text("Bank Account *");
+
+            GetDocumentNumber($('#category_id').val());
+        });
+        function GetDocumentNumber(id) {
+            if (id != '') {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetDocumentNumbering", "Generic")',
+                    data: { id: id },
+                    success: function (ITEM) {
+                        $('#document_no').val(ITEM);
+                    },
+                    error: function (emp) {
+                        $('#document_no').val('');
+                    }
+                });
+            }
+            else {
+                $('#document_no').val('');
+            }
+        }
+        $('#select_all').on('click', function () {
+            if ($(this).hasClass('allChecked')) {
+                $('input[type="checkbox"]', '#EntityDetailGrid').prop('checked', false);
+                checkedarr = [];
+            } else {
+
+                $('input[type="checkbox"]', '#EntityDetailGrid').prop('checked', true);
+                var charr = $('input:checked').length;
+                var j = 1;
+                    for (var i = 0; i <= charr-1; i++) {
+                        var checked = $('#check_entity' + j).parent('td').parent('tr').find('input[type="hidden"]').val();
+                        checkedarr.push(checked);
+                        j = j + 1;
+                    }
+            }
+            $(this).toggleClass('allChecked');
+        });
+
+
+        $(document).on('click', '.check_entity', function () {
+            var checked = $(this).parent('td').parent('tr').find('input[type="hidden"]').val();
+            var index = checkedarr.indexOf(checked);
+
+            if ($(this).is(':checked'))
+            {
+                checkedarr.push(checked);
+            }
+            else
+            {
+                checkedarr.splice(index,1);
+            }
+        });
+        function setonaccount(cc)
+        {
+            var k = cc;
+            cc = cc - 1;
+            var tot = 0;
+            var round_off=0;
+            var bank_amount=0;
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            for (var i = 0; i < rowCount; i++) {
+                if (i == cc) {
+                    str = $('#ref_number' + k).val();
+                    on_amt = $('#on_account' + k).val()==""?0: $('#on_account' + k).val();
+                    round_off = round_off +  parseFloat($('#round_off' + k).val()==""?0:$('#round_off' + k).val());
+                    bank_amount = bank_amount +  parseFloat($('#bank_charges' + k).val()==""?0:$('#bank_charges' + k).val());
+                    //if(parseFloat(on_amt)<0)
+                    //{
+                    //    swal("", "On Account amount cannot be negative!", "error");
+                    //    $('#on_account' + k).val(parseFloat(0).toFixed(2))
+                    //    return false;
+                    //}
+                    //else
+                    //{
+                    t.fnUpdate(parseFloat(t.fnGetData(i)[6]).toFixed(2),i,6);
+                    t.fnUpdate(parseFloat(parseFloat(on_amt)+ parseFloat(round_off)+ parseFloat(bank_amount)+parseFloat(t.fnGetData(i)[6])).toFixed(2),i,5);
+
+                   // t.fnUpdate(['Gross Total',parseFloat(total_value).toFixed(2)],rowCount);
+                    // t.fnUpdate([t.fnGetData(i)[0], t.fnGetData(i)[1], t.fnGetData(i)[2], t.fnGetData(i)[3], t.fnGetData(i)[4], parseFloat(parseFloat(on_amt)+parseFloat(t.fnGetData(i)[6])).toFixed(2), parseFloat(t.fnGetData(i)[6]).toFixed(2), '','','','', ''], i)
+                        $('#ref_number' + k).val(str);
+                        $('#on_account' + k).val(parseFloat(on_amt).toFixed(2));
+                        $('#round_off' + k).val(parseFloat(round_off).toFixed(2));
+                        $('#bank_charges' + k).val(parseFloat(bank_amount).toFixed(2));
+                   // }
+
+                }
+            }
+            for (i = 0; i < rowCount; i++) {
+                tot = tot + parseFloat(t.fnGetData(i)[5])
+            }
+            $("#payment_amount").val(parseFloat(tot).toFixed(2));
+        }
+        var j = 1;
+        var list = [];
+        var final_id = "";
+        function ChangeParty()
+        {
+            var id = $("#party_id").val();
+            id = id == "" ? 0 : id;
+            final_id = final_id + "," + id;
+            var i = 0;            
+            var k = 1;
+            var t = $('#ContactGrid').DataTable();
+            //t.fnClearTable();
+            var griddata = t.fnGetData();
+            var vendor = $('#party_id :selected').text();
+            //var gridfilterdata = griddata.findIndex(vendor);
+            //var gridfilterdata = griddata.findIndex(rank => rank == vendor);            
+            if (list.length != 0) {
+                for (i = 0; list.length >= i; i++) {
+                    if (list[i] == id) {
+                        swal("", "Entity already added...!", "error");
+                        return false;
+                    }
+                    //else {
+                    //    if (id != 0) {
+                    //        var txt = $("#party_id option[value=" + id + "]").text();
+                    //        var amount = 0;
+                    //        t.fnAddData(['', j, id, txt, txt, parseFloat('0').toFixed(2), parseFloat('0').toFixed(2), '<input type="number" setonaccount(' + j + ')" id="on_account' + j + '" class="form-control" />', '', '', '', '<input type="hidden" value="' + j + '" id="txtentity' + j + '"><input type="text" id="ref_number' + j + '" class="form-control" />']);
+
+                    //        $("#on_account" + j).val(parseFloat('0').toFixed(2));
+                    //        $("#round_off" + j).val(parseFloat('0').toFixed(2));
+                    //        $("#bank_charges" + j).val(parseFloat('0').toFixed(2));
+                    //        $('.check_entity').prop('checked', false);
+
+                    //        $("#payment_amount").val(parseFloat(0).toFixed(2));
+                    //        // GetEntityTransaction(id);
+                    //        j++;
+                    //    }
+                    }
+               // }
+                if (id != 0) {
+                    var txt = $("#party_id option[value=" + id + "]").text();
+                    var amount = 0;
+                    t.fnAddData(['', j, id, txt, txt, parseFloat('0').toFixed(2), parseFloat('0').toFixed(2), '<input type="number" setonaccount(' + j + ')" id="on_account' + j + '" class="form-control" />', '', '', '', '<input type="hidden" value="' + j + '" id="txtentity' + j + '"><input type="text" id="ref_number' + j + '" class="form-control" />','']);
+
+                    $("#on_account" + j).val(parseFloat('0').toFixed(2));
+                    $("#round_off" + j).val(parseFloat('0').toFixed(2));
+                    $("#bank_charges" + j).val(parseFloat('0').toFixed(2));
+                    $('.check_entity').prop('checked', false);
+
+                    $("#payment_amount").val(parseFloat(0).toFixed(2));
+                    // GetEntityTransaction(id);
+                    j++;
+                }
+            }
+            else {
+                if (id != 0) {
+                    var txt = $("#party_id option[value=" + id + "]").text();
+                    var amount = 0;
+                    t.fnAddData(['', j, id, txt, txt, parseFloat('0').toFixed(2), parseFloat('0').toFixed(2), '<input type="number" setonaccount(' + j + ')" id="on_account' + j + '" class="form-control" />', '', '', '', '<input type="hidden" value="' + j + '" id="txtentity' + j + '"><input type="text" id="ref_number' + j + '" class="form-control" />','']);
+
+                    $("#on_account" + j).val(parseFloat('0').toFixed(2));
+                    $("#round_off" + j).val(parseFloat('0').toFixed(2));
+                    $("#bank_charges" + j).val(parseFloat('0').toFixed(2));
+                    $('.check_entity').prop('checked', false);
+
+                    $("#payment_amount").val(parseFloat(0).toFixed(2));
+                    // GetEntityTransaction(id);
+                    j++;
+                }
+             }
+            list.push(id);
+         }
+        $("#additem").on("click", function (event) {
+            var s = $('#EntityDetailGrid').DataTable()
+            var t = $('#ContactGrid').DataTable()
+            t.fnClearTable();
+            var i = 0;
+            var j = 1;
+            var k = 1;
+            var id = "";
+            $.each(checkedarr, function (index, value)
+            {
+                    if (value != undefined)
+                    {
+                        var amount = 0;
+                        t.fnAddData(['', j, s.fnGetData(value - 1)[2], s.fnGetData(value - 1)[3], s.fnGetData(value - 1)[4], parseFloat('0').toFixed(2), parseFloat('0').toFixed(2), '<input type="number" setonaccount(' + j + ')" id="on_account' + j + '" class="form-control" />','','','' ,'<input type="hidden" value="' + j + '" id="txtentity' + j + '"><input type="text" id="ref_number' + j + '" class="form-control" />']);
+                        id = id + s.fnGetData(value - 1)[2] + ',';
+                        $("#on_account" + j).val(parseFloat('0').toFixed(2));
+                        $("#round_off" + j).val(parseFloat('0').toFixed(2));
+                        $("#bank_charges" + j).val(parseFloat('0').toFixed(2));
+                       // var array = @Html.Raw(Json.Encode(@ViewBag.tax_list));
+                       // $("#tax" + j).empty();
+                        //var mk = '<option value="">--select--</option>';
+                        //for(var l = 0; l < array.length; l++) {
+                        //    mk += '<option value= "' + array[l].Value + '">' + array[l].Text + '</option>';
+                        //}
+                       // $("#tax" + j).append(mk);
+                        //$("#tax" + j).select2({
+                        //    placeholder: "Select Tax",
+                        //    allowClear: true
+                        //});
+                        j = j + 1;
+                    }
+            });
+            var tot = 0;
+                checkedarr.length=0;
+                $('.check_entity').prop('checked', false);
+            var rowCount = t.fnGetData().length;
+            for (i = 0; i < rowCount; i++) {
+                tot = tot + parseFloat(t.fnGetData(i)[5])
+            }
+            $("#payment_amount").val(parseFloat(tot).toFixed(2));
+           // GetEntityTransaction(id.slice(0, -1));
+            $('#myModal').modal('hide');
+        });
+        function GetBankAccountByBank(id) {
+            if (id == "") {
+                id = 2;
+            }
+            $.ajax({
+                url: '@Url.Action("GetGLOrBankAccount", "Generic")',
+                type: "GET",
+                dataType: "JSON",
+                data: { id: id },
+                success: function (result) {
+
+                    $("#bank_account_id").html(""); // clear before appending new list
+                    $("#bank_account_id").append($('<option></option>').val("").html("---Select---"));
+                    if(id==2)
+                    {
+                        $("#bank_account_id").select2({
+                            placeholder: "Select Bank Account",
+                            allowClear: true
+                        });
+                        $("#bank_account").text("Bank Account *");
+                        $("#payment_type_id option:contains(---Select---)").attr('selected', true);
+                        $("#payment_type_id option:contains(Cash)").attr('selected', false);
+                        $("#payment_type_id option:contains(Cash)").hide();
+                        document.getElementById("payment_type_id").disabled = false;
+                        $.each(result, function (i, cycle) {
+                            $("#bank_account_id").append(
+                                $('<option></option>').val(cycle.bank_account_id).html(cycle.bank_account_code));
+                        });
+                    }
+                    else
+                    {
+                        $("#bank_account_id").select2({
+                            placeholder: "Select GL",
+                            allowClear: true
+                        });
+                        $("#payment_type_id option:contains(---Select---)").attr('selected', false);
+                        $("#payment_type_id option:contains(Cash)").attr('selected', true);
+                        document.getElementById("payment_type_id").disabled = true;
+                        $("#bank_account").text("GL *");
+                        $.each(result, function (i, cycle) {
+                            $("#bank_account_id").append(
+                                $('<option></option>').val(cycle.cash_account_id).html(cycle.cash_account_desc));
+                        });
+                    }
+                }
+            });
+        }
+        var count = 0;
+        $(document).on('shown.bs.tab', 'a[href="#sectionB"]', function () {
+            if (count == 0) {
+                final_id = final_id.substring(1);
+            }
+            count++;
+            GetEntityTransaction(final_id);
+        });
+        function GetEntityTransaction(id)
+        {
+            var t = $('#TransactionGrid').DataTable();
+            t.fnClearTable();
+            if (id != "")
+            {
+                $(".loading").show();
+                $.ajax({
+                    type: "get",
+                    async: false,
+                    url: '@Url.Action("GetEntityTransaction", "Generic")',
+                    dataType: 'json',
+                    data: { entity_type_id: $("#entity_type_id").val(), entity_id: id },
+                    success: function (result) {
+                        console.log(result);
+                        var i = 1;
+                        $(result).each(function (index, value) {
+                            t.fnAddData(['', value.fin_ledger_detail_id, i, value.entity_id, value.entity_code, value.entity_name, value.document_type_name, value.source_document_id, value.source_document_no,value.ref1,value.ref2,value.ref3, JSONDate(value.ledger_date), value.due_date==null?"":JSONDate(value.due_date), parseFloat(-value.amount).toFixed(2), parseFloat(-value.balance).toFixed(2), '<input type="number" id="txt' + i + '" onchange="setsumbalance(' + value.entity_id + ')" class="form-control right" />']);
+                            i = i + 1;
+
+                        });
+                        $(".loading").hide();
+                    }
+                });
+            }
+
+        }
+        function setsumbalance(entity_id)
+        {
+            var t = $('#TransactionGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var str1 = 0;
+            for (i = 0; i < rowCount; i++) {
+                if (t.fnGetData(i)[3] == entity_id)
+                {
+
+                    var j = i + 1;
+                    var txt = $('#txt' + j).val();
+                    var id = "chk" + j;
+                    if (Math.abs(parseFloat(t.fnGetData(i)[15])) < Math.abs(parseFloat(txt)))
+                    {
+                        sweetAlert("", "Adjust amount can not be greater than the balance amount!", "error");
+                        $('#txt' + j).val("");
+
+                    }
+                    var xx = document.getElementById(id);
+                    if (xx.checked) {
+                        if ($('#txt' + j).val() != '')
+                        {
+                                str1 = str1 + parseFloat(txt);//amount
+                        }
+                    }
+                }
+
+            }
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var k = 1;
+            var str = "";
+            var total = 0;
+            var on_amt=0;
+            var round_off=0;
+            var bank_amount=0;
+            for (i = 0; i < rowCount; i++)
+            {
+                if (t.fnGetData(i)[2] == entity_id) {
+                    str = $('#ref_number' + k).val();
+                    on_amt = $('#on_account' + k).val();
+                    round_off = round_off +  parseFloat($('#round_off' + k).val()==""?0:$('#round_off' + k).val());
+                    bank_amount = bank_amount +  parseFloat($('#bank_charges' + k).val()==""?0:$('#bank_charges' + k).val());
+                    t.fnUpdate(parseFloat(parseFloat(str1) + parseFloat(on_amt) + parseFloat(round_off) + parseFloat(bank_amount)).toFixed(2),i,5);
+                    t.fnUpdate(parseFloat(str1).toFixed(2),i,6);
+                    $('#ref_number' + k).val(str);
+                    $('#on_account' + k).val(on_amt);
+                    $('#round_off' + k).val(parseFloat(round_off).toFixed(2));
+                    $('#bank_charges' + k).val(parseFloat(bank_amount).toFixed(2));
+                }
+                k = k + 1;
+                total = total + parseFloat(t.fnGetData(i)[5])
+            }
+            $("#payment_amount").val(parseFloat(total).toFixed(2));
+          }
+        function JSONDate(dateStr) {
+            var m, day;
+            jsonDate = dateStr;
+            var d = new Date(parseInt(jsonDate.substr(6)));
+            m = d.getMonth() + 1;
+            if (m < 10)
+                m = '0' + m
+            if (d.getDate() < 10)
+                day = '0' + d.getDate()
+            else
+                day = d.getDate();
+            return (d.getFullYear() + '-' + m + '-' + day);
+        }
+
+        $('#EntityDetailGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": true,
+            "bSort": false,
+
+            aoColumns: [
+                      {
+                          sname: "a", sWidth: "10%",
+                          mRender: function (data, type, row) {
+                              return '<input type="hidden" value="' + row[1] + '" id="txtentity' + row[1] + '"><input id="check_entity' + row[1] + '" type="checkbox" class="check check_entity" name="id[]" value="' + $('<div/>').text(data).html() + '">';
+                          }
+                      },
+                     { sname: "b", bVisible: true },
+                     { sname: "c", bVisible: false },
+                     { sname: "d" },
+                     { sname: "e" },
+                     ]
+
+        });
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: false },
+                     { sname: "b", sWidth: "5%" },
+                     { sname: "c", bVisible: false },
+                     { sname: "d", sWidth: "6%" , bVisible: false},
+                     { sname: "e" , sWidth: "10%"},
+                     {sname: "f", sWidth: "10%", sClass: "right"},
+                     { sname: "g", sWidth: "10%", sClass: "right" },
+                     {
+                         sname: "h", bVisible: true, mRender: function (data, type, row) {
+                             return '<input type="number" class="form-control right" onchange="setonaccount(' + row[1] + ')"  id=on_account' + row[1] + ' value="">';
+                         }},
+                          {
+                              sname: "i", bVisible: true, mRender: function (data, type, row) {
+                                  return '<input type="number" onchange="setonaccount(' + row[1] + ')" class="form-control right"   id=round_off' + row[1] + ' value="">';
+                          }},
+                          {
+                          sname: "j", bVisible: true, mRender: function (data, type, row) {
+                              return '<input type="number" onchange="setonaccount(' + row[1] + ')" class="form-control right"  id=bank_charges' + row[1] + ' value="">';
+                          }},
+                              {
+                                  sname: "Bank", sWidth: "10%", bVisible: false, mRender: function (data, type, row) {
+                                      return '<select id="tax' + row[1] + '" class="form-control" style ="width: 180px";/></select>';
+                                     // return '<input type="number" class="form-control right"  id=bank_charges' + row[1] + ' value="">';
+                                  }},
+                     {
+                         sname: "i", sWidth: "10%", bVisible: true, mRender: function (data, type, row) {
+                          return '<input type="text" class="form-control"  id=ref_number' + row[1] + ' value="">';
+                      }},
+                                          {
+                    sname: "z", sWidth: "6%",
+                    bSortable: false,
+                    mRender: function (data, type, full) {
+                        return '<img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete"  />';
+                    }
+                }
+                     ]
+
+        });
+        $('#TransactionGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: true, mRender: function (data, type, row) {
+                         return '<input type="checkbox" id=chk' + row[2] + ' onchange="SetBalance(' + row[15] + ',' + row[2] + ',' + row[3] + ',this);" class="check" >';
+                     }},
+                     { sname: "b", bVisible: false },
+                     { sname: "c", sWidth: "5%" },
+                     { sname: "d", bVisible: false },
+                     { sname: "e", sWidth: "8%" },
+                     { sname: "f", bVisible: true },
+                     { sname: "g", bVisible: true },
+                     { sname: "h", bVisible: false },
+                     { sname: "i", bVisible: true },
+                     { sname: "j", bVisible: true },
+
+                     { sname: "ref1", bVisible: true },
+                     { sname: "ref2", bVisible: true },
+                     { sname: "ref3", bVisible: true },
+
+                     { sname: "k", bVisible: true },
+                     { sname: "l", bVisible: true,sClass:"right" },
+                     { sname: "m", bVisible: true, sClass: "right" },
+                     { sname: "n", bVisible: true, sClass: "right" },
+                     ]
+
+        });
+        function SetBalance(balance, rid, entity_id, ctrl)
+        {
+
+            if (ctrl.checked)
+            {
+                if($("#txt" + rid).val()=="")
+                {
+                    $("#txt" + rid).val(balance);
+                }
+            } else {
+                $("#txt" + rid).val('');
+            }
+            setsumbalance(entity_id);
+        }
+           var idd=0;
+        function GetEntityType(txt1) {
+            $(".loading").show();
+            var txt = $("#entity_type_id option[value=" + txt1 + "]").text();
+            var t = $('#EntityDetailGrid').DataTable();
+            var t1 = $('#ContactGrid').DataTable();
+            var t2 = $('#TransactionGrid').DataTable();
+
+            t1.fnClearTable();
+            t2.fnClearTable();
+            var rowCount = t.fnGetData().length;
+            if (txt != undefined) {
+                if (txt != '') {
+                    if(txt1!=idd)
+                    {
+                        idd=txt1;
+                        t.fnClearTable();
+                        $.ajax({
+                            type: "get",
+                            async: false,
+                            url: '@Url.Action("GetEntityType", "Generic")?name='+ txt,
+                            dataType: 'json',
+                            success: function (result) {
+                                $('#party_id').empty();
+                                $('#party_id').val("").trigger("change");
+                                $('#party_id').append('<option value=""></option>');
+                                $(result).each(function (index, value) {
+                                    $('#party_id').append('<option value=' + value.id + '>' + value.code + '/' + value.name + '</option>');
+
+                                });
+                                $(".loading").hide();
+                            }
+                        });
+
+                    }
+                    else
+                    {
+                        $('#party_id').empty();
+                        $('#party_id').val("").trigger("change");
+                        $(".loading").hide();
+                    }
+                }
+            }
+        }
+        function TabletoJeson()
+        {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var t1 = $('#TransactionGrid').DataTable()
+            var rowCount1 = t1.fnGetData().length;
+            var j = 1;
+            var str;
+            var str1;
+            var str2;
+            var str3;
+            $("#entity_detail").empty();
+            $("#transaction_detail").empty();
+            for (i = 0; i < rowCount; i++) {
+                var txt = $('#ref_number' + j).val();
+                $("#entity_detail").append('<input type="hidden" id="fin_ledger_payment_detail_id' + i + '" name="fin_ledger_payment_detail_id" value=' + t.fnGetData(i)[0] + ' >');
+                $("#entity_detail").append('<input type="hidden" id="entity_id' + i + '" name="entity_id" value=' + t.fnGetData(i)[2] + ' >');
+                $("#entity_detail").append('<input type="hidden" id="amount' + i + '" name="amount" value=' + t.fnGetData(i)[5] + ' >');
+                $("#entity_detail").append('<input type="hidden" id="tran_ref_no' + i + '" name="tran_ref_no" value=' + txt + ' >');
+
+                $("#entity_detail").append('<input type="hidden" id="on_account_amount' + i + '" name="on_account_amount" value=' + $("#on_account" + j).val() + ' >');
+                $("#entity_detail").append('<input type="hidden" id="round_off_amount' + i + '" name="round_off_amount" value=' + $("#round_off" + j).val() + ' >');
+                $("#entity_detail").append('<input type="hidden" id="bank_charges_amount' + i + '" name="bank_charges_amount" value=' + $("#bank_charges" + j).val() + ' >');
+                j=j+1;
+            }
+            j=1;
+            for (i = 0; i < rowCount1; i++) {
+                var txt = $('#txt' + j).val();
+                var chk = "chk" + j;
+                var xx = document.getElementById(chk);
+                if (xx.checked)
+                {
+                    if(txt!="")
+                    {
+                        $("#transaction_detail").append('<input type="hidden" id="document_type_code' + i + '" name="document_type_code" value=' + t1.fnGetData(i)[6] + ' >');
+                        $("#transaction_detail").append('<input type="hidden" id="document_id' + i + '" name="document_id" value=' + t1.fnGetData(i)[7] + ' >');
+                        $("#transaction_detail").append('<input type="hidden" id="adjust_amount' + i + '" name="adjust_amount" value=' + txt + ' >');
+                        $("#transaction_detail").append('<input type="hidden" id="entity_id1' + i + '" name="entity_id1" value=' + t1.fnGetData(i)[3] + ' >');
+                        $("#transaction_detail").append('<input type="hidden" id="fin_ledger_detail_id' + i + '" name="fin_ledger_detail_id" value=' + t1.fnGetData(i)[1] + ' >');
+                    }
+                }
+
+                j = j + 1;
+            }
+        }
+ function Getlist() {
+            var id = document.getElementById("entity_type_id").value;
+            GetEntityType(id);
+        }
+
+        $('#ContactGrid').on('click', '.delete', function () {
+            var t = $('#ContactGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            var deleteids = t.fnGetData(id)[1];
+            var del = $("#deleteids").val();
+            swal({
+                title: "Are you sure?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        if (del != '') {
+                            $("#deleteids").val(del + "" + deleteids + "~");
+                        }
+                        else {
+                            $("#deleteids").val(deleteids + "~");
+                        }
+
+                        t.fnDeleteRow(id);
+                        TDSChange();
+                        var len = t.fnGetData().length;
+                        var i = 1;
+                        var row = 0;
+                        if (len > 0) {
+                            $('#ContactGrid tbody tr').each(function () {
+                                t.fnUpdate(i, row, 1);
+                                i++;
+                                row++;
+                            });
+                        }
+                    }
+                });
+        });
+    </script>
+    <style>
+        .modal-body {
+            max-height: calc(100vh - 210px);
+            overflow-y: auto;
+        }
+    </style>
+}

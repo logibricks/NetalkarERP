@@ -1,0 +1,114 @@
+﻿@model Sciffer.Erp.Domain.Model.REF_STORAGE_LOCATION
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.STORAGE_LOCATION_ID)
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.STORAGE_LOCATION_NAME, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.STORAGE_LOCATION_NAME, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.STORAGE_LOCATION_NAME, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.STORAGE_LOCATION_DESCRIPTION, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.STORAGE_LOCATION_DESCRIPTION, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.STORAGE_LOCATION_DESCRIPTION, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PLANT_ID, "Plant", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("PLANT_ID", (System.Web.Mvc.SelectList)ViewBag.plantlist, "---Select---", new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.PLANT_ID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.IS_BLOCKED, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.IS_BLOCKED, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.IS_BLOCKED, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">Buckets</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.BUCKET_FREE, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.BUCKET_FREE, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.BUCKET_FREE, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.BUCKET_QUALITY, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.BUCKET_QUALITY, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.BUCKET_QUALITY, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.BUCKET_BLOCKED, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.BUCKET_BLOCKED, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.BUCKET_BLOCKED, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#IS_BLOCKED').checkboxpicker();
+            $('#BUCKET_BLOCKED').checkboxpicker();
+            $('#BUCKET_QUALITY').checkboxpicker();
+            $('#BUCKET_FREE').checkboxpicker();
+            $("#form0 :input").prop("disabled", true);
+        });
+        </script>
+}

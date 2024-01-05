@@ -1,0 +1,404 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.tds_codeVM
+
+@{
+    ViewBag.Title = "Create";
+}
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.tds_code, "TDS Code *", new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.tds_code, new { htmlAttributes = new { @class = "form-control validinput num", @required = true } })
+                            @Html.ValidationMessageFor(model => model.tds_code, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.tds_code_description, "TDS Description *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.tds_code_description, new { htmlAttributes = new { @class = "form-control validinput num1", @required = true } })
+                            @Html.ValidationMessageFor(model => model.tds_code_description, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.creditor_gl, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("creditor_gl", (System.Web.Mvc.SelectList)ViewBag.credit_list, "---Select---", new { @class = "form-control validinput", @required = true })
+                        @Html.ValidationMessageFor(model => model.creditor_gl, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.debtor_gl, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("debtor_gl", (System.Web.Mvc.SelectList)ViewBag.credit_list, "---Select---", new { @class = "form-control validinput", @required = true })
+                        @Html.ValidationMessageFor(model => model.debtor_gl, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+            @*<div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.creditor_gl, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12 autocompletes" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @{
+                                Html.EJ()
+                                    .Autocomplete("creditor_gl_name")
+                                    .Width("100%")
+                                    .ClientSideEvents(e => e.Select("onSelect"))
+                                    .WatermarkText("Select Creditor GL")
+                                    .Datasource((IEnumerable<object>)ViewBag.credit_list)
+                                    .HighlightSearch(true)
+                                    .ShowPopupButton(true)
+                                    .MultiColumnSettings(obj => obj.Enable(true).Columns(obj1 =>
+                                    {
+                                        obj1.Field("gl_ledger_code").HeaderText("GL Code").Add();
+                                        obj1.Field("gl_ledger_name").HeaderText("GL Name").Add();
+                                    }).ShowHeader(true).StringFormat("{0}-{1}"))
+                                    .Render();
+                            }
+                            <label></label>
+                            @Html.ValidationMessageFor(model => model.creditor_gl, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.debtor_gl, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12 autocompletes" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @{
+                                Html.EJ()
+                                    .Autocomplete("debtor_gl_name")
+                                    .Width("100%")
+                                    .ClientSideEvents(e => e.Select("onSelect"))
+                                    .WatermarkText("Select Debtor GL")
+                                    .Datasource((IEnumerable<object>)ViewBag.credit_list)
+                                    .HighlightSearch(true)
+                                    .ShowPopupButton(true)
+                                    .MultiColumnSettings(obj => obj.Enable(true).Columns(obj1 =>
+                                    {
+                                        obj1.Field("gl_ledger_code").HeaderText("GL Code").Add();
+                                        obj1.Field("gl_ledger_name").HeaderText("GL Name").Add();
+                                    }).ShowHeader(true).StringFormat("{0}-{1}"))
+                                    .Render();
+                            }
+                            <label></label>
+                            @Html.ValidationMessageFor(model => model.debtor_gl, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+           
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.is_blocked,"Blocked", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.is_blocked, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.is_blocked, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="productdetail" name="productdetail" />
+                <input type="hidden" id="deleteids" name="deleteids" />
+            </div>
+        </div>
+
+
+
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active">
+                    <a data-toggle="tab" href="#sectionA">TDS Details</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade  in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <button type="button" class="btn btn-primary" id="open_modal" style="float:right" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span>Add TDS</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                                <thead>
+                                    <tr>
+                                        <th hidden> <label>ID</label></th>
+                                        <th><label>Sr.No.</label></th>
+                                        <th><label>Effective Date</label></th>                                       
+                                        <th><label>Rate %</label></th>
+                                        <th hidden><label>Action</label></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <input type="submit" value="Create" id="create" data-controller="TDSCode" class="btn btn-success" onclick="TabletoJeson();" style="float:right" />
+            </div>
+        </div>
+
+    </div>
+
+
+}
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Item Details</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Effective Date <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            <input id="effective_from" type="date" class="form-control col-md-7 col-xs-12" name="effective_from" />
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="first-name">
+                            Rate  <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            <input type="number" name="rate" class="form-control col-md-7 col-xs-12" id="rate">
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <input type="hidden" id="srno" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                    <button type="button" class="add btn btn-primary">Add</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        
+        $('#is_blocked').checkboxpicker();
+        $('#open_modal').click(function () {
+            clearmodel();
+           
+                var t = $('#ContactGrid').DataTable()
+                var rowCount = t.fnGetData().length;
+                if (rowCount > 0) {
+                    var eff = t.fnGetData(rowCount - 1)[3];
+                    var fday = Date.parse(eff);
+                    fday.setDate(fday.getDate() + 1);
+                    var day = fday.getDate();
+                    var month = fday.getMonth() + 1;
+                    var year = fday.getFullYear();
+                    var str = year + '-' + month + '-' + day;
+                    document.getElementById('effective_from').value = str;
+                    $("#effective_from").val(str);
+                }
+            });
+        $(document).ready(function () {
+            $("#creditor_gl").select2({
+                placeholder: "Select Creditor GL",
+                allowClear: true
+            });
+            $("#debtor_gl").select2({
+                placeholder: "Select Debtor GL",
+                allowClear: true
+            });
+        });
+
+            $(".add").on("click", function (event) {
+                var t = $('#ContactGrid').DataTable()
+                var rowCount = t.fnGetData().length;
+                var sr_no = t.fnGetData().length + 1;
+                var cc = parseInt(arguments[0]) - 1;
+                var eff_from = $("#effective_from").val();
+                var rate = $("#rate").val();
+                if (eff_from == '') {
+                    swal("", "Please enter effective from.", "error");
+                    return false;
+                }
+
+                if (rate == '') {
+                    swal("", "Please Enter Rate.", "error");
+                    return false;
+                }
+                if (rate > 100) {
+                    swal("", "Rate should be less than or equal to 100.", "error");
+                    return false;
+                }
+
+                if ($("#srno").val() == 0) {
+                    t.fnAddData(['', sr_no, eff_from, rate, ''
+                    ]);
+                    sr_no + 1;
+                }
+                else {
+                    var cc = $("#srno").val();
+                    cc = parseInt(cc) - 1;
+                    t.fnUpdate(['', cc + 1, eff_from, rate, ''], cc)
+                }
+
+                clearmodel();
+                return true;
+            });
+            function clearmodel() {
+                $("#effective_from").val('');
+                $("#rate").val('');
+                $("#srno").val('');
+            }
+
+            $('#ContactGrid').DataTable({
+                "bPaginate": false,
+                "ordering": false,
+                "bfooter": false,
+                "info": false,
+                "bLengthChange": false,
+                "bAutoWidth": false,
+                "bFilter": false,
+                "bSort": false,
+                aoColumns: [
+                         { sname: "a", bVisible: false },
+                         { sname: "b", sWidth: "7%" },
+                         { sname: "c", },
+                         { sname: "d" },
+                         {
+                             sname: "e", sWidth: "8%",
+                             bSortable: false,
+                             bVisible: false,
+                             mRender: function (data, type, full) {
+                                 return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" onclick="editRow(' + full[1] + ');" /><img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete" onclick="deleteRow(' + full[1] + ');" />';
+                             }
+                         }]
+
+            });
+
+
+            $('#ContactGrid').on('click', '.edit', function () {
+                var t = $('#ContactGrid').DataTable();
+                var id = $(this).parent('td').parent('tr').index();
+                $('#myModal').modal('show');
+                var dm = t.fnGetData(id)[1];
+                $("#srno").val(t.fnGetData(id)[1]);
+                $("#effective_from").val(t.fnGetData(id)[2]);
+                $('#rate').val(t.fnGetData(id)[3]);
+            });
+
+            $('#ContactGrid').on('click', '.delete', function () {
+                var t = $('#ContactGrid').DataTable();
+                var id = $(this).parent('td').parent('tr').index();
+                var deleteids = t.fnGetData(id)[1];
+                var del = $("#deleteids").val();
+                swal({
+                    title: "Are you sure?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: true
+                },
+         function (isConfirm) {
+             if (isConfirm) {
+                 if (del != '') {
+                     $("#deleteids").val(del + "" + deleteids + "~");
+                 }
+                 else {
+                     $("#deleteids").val(deleteids + "~");
+                 }
+
+                 t.fnDeleteRow(id);
+                 var len = t.fnGetData().length;
+                 var i = 1;
+                 var row = 0;
+                 if (len > 0) {
+                     $('#ContactGrid tbody tr').each(function () {
+                         t.fnUpdate(i, row, 1);
+                         i++;
+                         row++;
+                     });
+                 }
+             }
+         });
+            });
+            function TabletoJeson() {
+                var t = $('#ContactGrid').DataTable()
+                var rowCount = t.fnGetData().length;
+                var str;
+                var str1;
+                for (i = 0; i < rowCount; i++) {
+                    str1 = t.fnGetData(i)[0] + ",";
+                    str1 = str1 + t.fnGetData(i)[1] + ",";
+                    str1 = str1 + t.fnGetData(i)[2] + ",";
+                    str1 = str1 + t.fnGetData(i)[3] + ",";
+                    str1 = str1 + t.fnGetData(i)[4] + ",";
+                    if (i == 0) {
+                        str = str1 + "~"
+                    }
+                    else {
+                        str = str + str1 + "~";
+                    }
+                }
+
+
+                document.getElementsByName("productdetail")[0].value = str;
+            }
+
+       
+
+    </script>
+}
+
+
+
+

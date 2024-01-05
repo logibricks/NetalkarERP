@@ -1,0 +1,58 @@
+﻿
+<div class="scrollit">
+    <div class="table-responsive">
+        <br />
+        <table class="table table-responsive table-bordered table-striped jambo_table results1 taskgrid" id="resultUnderQc">
+            <thead>
+                <tr class="e-textwrapper">
+                    <th hidden><label>Machine QC Id</label></th>
+                    <th hidden><label>Machine Id</label></th>
+                    <th><label>Machine Code</label></th>
+                    <th><label>Machine Name</label></th>
+                    <th><label>Machine Blocked</label></th>
+                </tr>
+            </thead>
+
+            <tbody class="scrollit">
+                @{
+                    int count = 0;
+                    foreach (var item in ViewBag.MachineStatus)
+                    {
+                        <tr>
+                            <th hidden><label>@item.mfg_qc_id</label></th>
+                            <td hidden><label id="machine_id-@count">@item.machine_id</label></td>
+                            <td>@item.machine_code</td>
+                            <td>@item.machine_desc</td>
+                            <td>
+                                <input type="checkbox" id="is_machine_blocked-@count" class="machine_blocked" name="is_machine_blocked" value="@count:@item.is_machine_blocked" onchange="Update(@count)">
+                            </td>
+                        </tr>
+                        count++;
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(":checkbox").checkboxpicker({ onLabel: "NO", offLabel: "YES" });
+    function Update(count) {
+        var machine_id = $("#machine_id-" + count).text();
+        var is_machine_blocked = $(this).is(":checked");
+        $.ajax({
+            url: '@Url.Action("InlineUpdate", "MachineEntryForQC")',
+            cache: false,
+            data: { machine_id: machine_id, is_machine_blocked: is_machine_blocked },
+            success: (function (data) {
+                if (data.text == "true") {
+                    $(":checkbox").prop('checked',false);
+                    swal("", "Clear the item in QC to unblock the machine", "error");
+                }
+            })
+        })
+    }
+
+</script>

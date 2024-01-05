@@ -1,0 +1,125 @@
+﻿
+@model Sciffer.Erp.Domain.ViewModel.ref_inventory_balance_VM
+@using Newtonsoft.Json
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+       
+        <hr />
+
+        <div class="modal-body">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.category_id, "Category *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-4 col-sm-4 col-xs-12">
+                                @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.category_list, new { @class = "form-control validinput", @required = true, @onchange = "GetDocumentNumber(this.value);", @disabled = "disaabled" })
+                                @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-xs-12">
+                                @Html.EditorFor(model => model.doc_number, new { htmlAttributes = new { @class = "form-control  num validinput removedisabled", @disabled = "disabled", @required = true } })
+                                @Html.ValidationMessageFor(model => model.doc_number, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.offset_account_id, "Offset Account  *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.DropDownList("offset_account_id", (System.Web.Mvc.SelectList)ViewBag.GeneralLedger, htmlAttributes: new { @class = "form-control validinput removedisabled", @disabled = "disaabled" })
+                                @Html.ValidationMessageFor(model => model.offset_account_id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label class="control-label col-md-4">
+                            Header Remarks
+                        </label>
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.header_remarks, new { htmlAttributes = new { @class = "form-control  num", @required = true, @disabled = "disaabled" } })
+                            @Html.ValidationMessageFor(model => model.header_remarks, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="control-label col-md-4">
+                            Posting Date<span class="required"> *</span>
+                        </label>
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control  num validinput", @required = true, @disabled = "disaabled" } })
+                            @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                @Html.HiddenFor(a => a.gl_ledger_code)
+            </div>
+            <br />
+            <div class="row">
+                <div class="table-responsive" >
+                    <table class="table table-responsive table-bordered table-striped "  id="ContactGridss">
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+}
+<style>
+    table.dataTable {
+clear: both;
+margin-bottom: -1px !important;
+}
+</style>
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var pl_detail = @Html.Raw(JsonConvert.SerializeObject(this.Model.inventory_balance_detail));
+            $('#ContactGridss').DataTable({
+                bFilter: false, bInfo: false,
+                "bPaginate": false,
+                "ordering": false,
+                "bfooter": false,
+                bSortable: false,
+                "info": false,
+                "bAutoWidth": true,
+                "sScrollY": "550px",
+                "scrollCollapse": true,
+                 "aaData": pl_detail,
+                "columns": [
+                      { "data": "", sWidth: "5%", "title": "Sr No.", "defaultContent": "", "bSortable": false },
+                      { "data": "item_code", "title": "Item Code", "bSortable": false },
+                      { "data": "item_desc", "title": "Item Description", "bSortable": false },
+                      { "data": "plant_code", bVisible: true, "title": "Plant Code","bSortable": false },
+                      { "data": "plant_desc", bVisible: true, "title": "Plant Description","bSortable": false },
+                      { "data": "sloc", "title": "Sloc", "bSortable": false },
+                      { "data": "bucket", "title": "Bucket", "bSortable": false },
+                      { "data": "batch", "title": "Batch", "bSortable": false },
+                      { "data": "qty", "title": "Qty", "bSortable": false ,sClass:"right"},
+                      { "data": "uom", "title": "UoM", "bSortable": false },
+                      { "data": "rate", "title": "Rate", "bSortable": false ,sClass:"right"},
+                      { "data": "value", "title": "Value","bSortable": false ,sClass:"right"},
+                      { "data": "line_remarks", "title": "Line Remarks","bSortable": false ,sClass:"right"}
+                ],
+                    "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                        $("td:first", nRow).html(iDisplayIndex + 1);
+                        return nRow;
+                    },
+
+                });
+            });
+    </script>
+}
+
+

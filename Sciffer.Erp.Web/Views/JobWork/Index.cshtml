@@ -1,0 +1,115 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<br /><br /><br />
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<in_jobwork_in_VM>("Searching")
+          .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "JobWork" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+         .PageSettings(p => { p.PageSize(10); })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "JobWork" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("job_work_in_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Add();
+            col.Field("categoryName").Width("15%").HeaderText("Category").Visible(true).Add();
+            col.Field("document_no").Width("15%").HeaderText("Document Number").Visible(true).Add();
+            col.Field("posting_date").Width("15%").HeaderText("Date").Format("{0:dd/MM/yyyy}").Visible(true).Add();
+            col.Field("CustomerName").Width("15%").HeaderText("Customer").Add();
+            col.Field("item_name").Width("15%").HeaderText("Item Name").Add();
+            // col.Field("business_UnitName").Width("15%").HeaderText("Business Unit").Visible(true).Add();
+            col.Field("plant_name").Width("15%").HeaderText("Plant Name").Add();
+            col.Field("customer_chalan_no").Width("15%").HeaderText("Customer Chalan No").Add();
+            col.Field("customer_chalan_date").Width("15%").HeaderText("Customer Chalan Date").Format("{0:dd/MM/yyyy}").Visible(true).Add();
+            col.Field("gate_entry_no").Width("15%").HeaderText("Gate Entry No").Visible(true).Add();
+            col.Field("gate_entry_date").Width("15%").HeaderText("Gate Entry Date").Format("{0:dd/MM/yyyy}").Visible(true).Add();
+            col.Field("billing_address").Width("15%").HeaderText("Billing Address").Add();
+            col.Field("billing_city").Width("15%").HeaderText("Billing City").Visible(true).Add();
+            col.Field("pin_code").Width("15%").HeaderText("Pin Code").Add();
+            col.Field("state_name").Width("15%").HeaderText("State").Add();
+            col.Field("Country_name").Width("15%").HeaderText("Country").Add();
+            col.Field("email").Width("15%").HeaderText("Email").Add();
+            col.Field("item_name").Width("15%").HeaderText("Item Name").Add();
+            col.Field("status_name").Width("10%").HeaderText("Status").Add();
+        }).ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+<script>
+    var flag = true;
+    function complete(args) {
+
+        if (args.requestType == "beginedit")
+        {
+            location.href = "@Url.Action("Edit", "JobWork")?id=" + args.rowData.job_work_in_id;
+        }
+        if (args.requestType == "add") {
+            location.href = "@Url.Action("Create", "JobWork")";
+        }
+    }
+    function EndProcess() {
+        var gridObj = $("#Searching").ejGrid("instance");
+        //console.log(gridObj);
+        gridObj.refreshContent();
+    }
+    $(document).ready(function () {
+        var num = '@Html.ViewBag.num';
+        if (num != '') {
+            if (num != undefined) {
+                sweetAlert("", num, "success");
+            }
+        }
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

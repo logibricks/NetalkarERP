@@ -1,0 +1,568 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.mfg_shiftwise_production_master_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Edit";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <div id="IssueDetail"></div>
+        <div id="BatchDetails"></div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.document_numbring_id, "Document Category", htmlAttributes: new { Class = "control-label col-md-4 " })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="hidden" id="is_active" name="is_active" value="true" />
+
+                            @Html.DropDownList("document_numbring_id", (System.Web.Mvc.SelectList)ViewBag.categorylist, "---Select---", htmlAttributes: new { Class = "form-control removedisabled category setPlant", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.document_numbring_id, "", new { Class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.document_no, "Document Number", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("document_no", Enumerable.Empty<SelectListItem>(), "Document Number", new { @class = "form-control hidden", @required = true, @disabled = "disabled" })
+                            @Html.EditorFor(model => model.document_no, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.document_no, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.posting_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.plant_id, "Plant", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plantlist, "--Select--", htmlAttributes: new { @class = "form-control validinput", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.plant_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-4 col-sm-4 col-xs-12">
+                            Shift
+                        </label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("shift_id", (System.Web.Mvc.SelectList)ViewBag.shift_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12", @disabled = "disabled" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-4 col-sm-4 col-xs-12">
+                            Shift  Time
+                        </label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("shift_time", (System.Web.Mvc.SelectList)ViewBag.shift_list, "--Select--", htmlAttributes: new
+                            {
+                                @class = "form-control col-md-7 col-xs-12 removedisabled ",
+                              @disabled = "disabled"
+                            })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <button type="button" id="Search" class="Search btn btn-primary " style="float:right" disabled><span class="glyphicon glyphicon-search"></span>   Search</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="">
+            <div style="margin-top:10px;">
+                @*id="sectionB" class="tab-pane fade in active"*@
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <input type="hidden" id="shiftwise_production_id" />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="table-responsive" style="max-height: calc(100vh - 150px); overflow-y: auto;">
+                        <table class="table table-responsive table-bordered table-striped clearGridbyCategory" id="ProductionMasterGrid">
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="row" style="padding-top:10px;">
+        <div class="col-lg-12 col-sm-12">
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <button type="button" id="addNewRow" class="addNewRow btn btn-primary" style="float:right"><span class="glyphicon glyphicon-plus"></span>Add New Row</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row" style="padding-top:25px;">
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <input type="button" value="Update" class="btn btn-success" style="float:right" id="Update" name="create" onclick="TabletoJeson()" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 id="itemsdetail" class="modal-title">Update Target Quantity</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" id="divqty">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Target Quantity <span class="required">*</span>
+                            </label>
+                            <div class="col-md-4">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="quantity">
+                            </div>
+                            <div class="col-md-3">
+                                @*@Html.DropDownList("uom_id", (System.Web.Mvc.SelectList)ViewBag.uom_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12", @disabled = "disabled" })*@
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <input type="hidden" id="detailid" />
+                    <input type="hidden" id="indexRow" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="updateTarget btn btn-primary">Update</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        var gridData = [];
+        var shift = 0 ;
+        var shifts_list;
+        var GridCount = 0;
+        var machine_list = @Html.Raw(JsonConvert.SerializeObject(ViewBag.machineList));
+        var item_list = @Html.Raw(JsonConvert.SerializeObject(ViewBag.itemlist));
+        var operation_list = @Html.Raw(JsonConvert.SerializeObject(ViewBag.operationlist));
+        $(document).ready(function () {
+            $(".loading").hide();
+
+            var shiftwiseproductionmaster = @Html.Raw(JsonConvert.SerializeObject(this.Model));
+
+            $("#document_Category_id").val(shiftwiseproductionmaster.document_numbring_id);
+            $("#document_no").val(shiftwiseproductionmaster.document_no);
+            $("#shiftwise_production_id").val(shiftwiseproductionmaster.shiftwise_production_id);
+
+
+
+            //var today1 = new Date(shiftwiseproductionmaster.posting_date);
+            //$("#posting_date").html(""); // clear before appending new list
+            //$("#posting_date").append($('<option></option>').val(today1.toISOString().slice(0, 10)).html(today1.toISOString().slice(0, 10)));
+
+
+
+            $("#plant_id").val(shiftwiseproductionmaster.plant_id);
+            $("#shift_id").val(shiftwiseproductionmaster.shift_id);
+            GetShiftsTime(shiftwiseproductionmaster.shift_id)
+            var t1 = $('#ProductionMasterGrid').DataTable();
+            t1.fnAddData(shiftwiseproductionmaster.shiftwiseProductionDetails);
+            for (var i = 0,k=1; i < shiftwiseproductionmaster.shiftwiseProductionDetails.length; i++,k++) {
+                $("#machine" + k).val(shiftwiseproductionmaster.shiftwiseProductionDetails[i].machine_id).trigger('change');
+                $("#operation" + k).val(shiftwiseproductionmaster.shiftwiseProductionDetails[i].operation_code);//.trigger('change');
+                $("#item" + k).val(shiftwiseproductionmaster.shiftwiseProductionDetails[i].ITEM_ID).trigger('change');               
+                GridCount++;
+            }
+        });
+
+
+
+        $('#ProductionMasterGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            "columns": [
+                /*  { "data": "document_detail_id", "title": "Sub Prod ID", "bSortable": false, bVisible: false },*/
+                {
+                    "data": "rowIndex", sWidth: "5%", "title": "Sr No.", "defaultContent": "", "bSortable": false, bVisible: true
+                },
+                {
+                    "data": "operation_code", "title": "Operation", "bSortable": false, bVisible: true,
+                    mRender: function (data, type, full) {
+
+                        var options; //= '<option value="0">--Select--</option>';
+                        $.each(operation_list, function (i, cycle) {
+                            options = options + '<option value=' + cycle.Value + '>' + cycle.Text + '</option>';
+                        });
+
+                        options = options + '<option value=' + full.process_id + 'selected>' + full.operation_code + '</option>';
+
+                        var x = '<select class="form-control operationddl " data-index=' + ((full.rowIndex) - 1) + ' id="operation' + (full.rowIndex) + '" disabled>' +
+                            options
+                            + '<select/>';
+                        //  $('#operation' + (full.rowIndex) + '').val(full.operation_code).trigger('change');
+                        return x;
+
+                        /*return '<input type="text" id="req_qty' + ((full.rowIndex)) + '" data-index=' + ((full.rowIndex) - 1) + ' class="req_qty form-control" name="id[]" value="' + $('<div/>').text(data).html() + '">';*/
+                    }
+                },
+                { "data": "operation_name", "title": "Operation Name", "bSortable": false, bVisible: false },
+                {
+                    "data": "machine_id", bVisible: true, "title": "Machine", "bSortable": false,
+                    mRender: function (data, type, full) {
+
+                        var options; //= '<option value="0">--Select--</option>';
+                        $.each(machine_list, function (i, cycle) {
+                            options = options + '<option value=' + cycle.Value + '>' + cycle.Text + '</option>';
+                        });
+
+                        var x = '<select class="form-control machineddl " data-index=' + ((full.rowIndex) - 1) + ' id="machine' + (full.rowIndex) + '" disabled>' +
+                            options
+                            + '<select/>';
+                        //$('#machine' + (full.rowIndex) + '').val(full.machine_id).trigger('change');
+                        return x;
+
+                    }
+                },
+                {
+                    "data": "ITEM_ID", bVisible: true, "title": "Item", "bSortable": false,
+                    mRender: function (data, type, full) {
+
+                        var options; //= '<option value="0">--Select--</option>';
+                        $.each(item_list, function (i, cycle) {
+                            options = options + '<option value=' + cycle.Value + '>' + cycle.Text + '</option>';
+                        });
+
+                        var x = '<select class="form-control itemddl " data-index=' + ((full.rowIndex) - 1) + ' id="item' + (full.rowIndex) + '" disabled>' +
+                            options
+                            + '<select/>';
+                        // $('#item' + (full.rowIndex) + '').val(full.ITEM_ID).trigger('change');
+                        return x;
+
+                    }
+                },
+
+                {
+                    "data": "cycle_time", bVisible: true, "title": "Cycle Time", sClass: "right", "bSortable": false
+                    //,
+                    //mRender: function (data, type, full) {
+                    //    return '<input type="text" id="cycle_time' + (full.rowIndex) + '" data-index=' + ((full.rowIndex) - 1) + ' class="cycle_time form-control" name="id[]" value="' + $('<div/>').text(data).html() + '" disabled>';
+                    //}
+                },
+                {
+                    "data": "std_prod_quantity", bVisible: true, "title": "Std Production Qty", sClass: "right", "bSortable": false
+                    //,
+                    //mRender: function (data, type, full) {
+                    //    return '<input type="text" id="std_prod_qty' + (full.rowIndex) + '" data-index=' + ((full.rowIndex) - 1) + ' class="std_prod_qty form-control" name="id[]" value="' + $('<div/>').text(data).html() + '" disabled>';
+                    //}
+                },
+                {
+                    "data": "wip_qty", bVisible: true, "title": "WIP Qty", "bSortable": false, sClass: "right", "defaultContent": ""
+                    //,
+                    //mRender: function (data, type, full) {
+                    //    return '<input type="text" id="wip_qty' + (full.rowIndex) + '" data-index=' + ((full.rowIndex) - 1) + ' class="wip_qty form-control" name="id[]" value="' + $('<div/>').text(data).html() + '" disabled>';
+                    //}
+
+                },
+                // { "data": "", bVisible: true, "title": "Child Item", sClass: "right", "bSortable": false },
+                {
+                    "data": "target_qty", bVisible: true, "title": "Target Qty", sClass: "right", "bSortable": false,
+                    mRender: function (data, type, full) {
+                        return '<input type="text" id="req_qty' + (full.rowIndex) + '" data-index=' + ((full.rowIndex) - 1) + ' class="req_qty form-control" name="id[]" value=' + (data) + '   disabled>';
+                    }
+                },
+                {
+                    "data": "rowIndex", bVisible: true, "title": "Action", "bSortable": false, bVisible: true,
+                    "render": function (data, type, full) {
+                        //return '<button type="button" id="RemoveRow' + ((full.rowIndex) - 1) + '" data-index=' + ((full.rowIndex) - 1) + ' class="removeRow btn btn-primary" name="id[]" value="' + $('<div/>').text(data).html() + '">Remove</button>';
+                        //return '<img class="delete" src="../../images/remove.png" id="remove' + full[0] + '" data-index=' + full[0] + ' height="20px" width="25px" alt="Delete" class="remove" />'
+                        return '<img class="delete" src="../images/edit.png" height="20px" width="25px" alt="Delete" style="cursor: pointer;" />';
+                    }
+                },
+                { "data": "process_id", "title": "Operation ID", "bSortable": false, bVisible: false },
+                { "data": "shiftwise_production_details_id", "title": "shiftwise production detail id", "bSortable": false, bVisible: false },
+            ],
+        });
+
+
+
+
+        $('#ProductionMasterGrid').on('click', '.delete', function () {
+            var t = $('#ProductionMasterGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            var rowIndex = t.fnGetData(id).rowIndex;
+            var shiftwise_production_details_id = t.fnGetData(id).shiftwise_production_details_id;
+            var quantity = t.fnGetData(id).target_qty;
+            var rowData = t.fnGetData(id);
+            $("#detailid").val(shiftwise_production_details_id);
+            $("#quantity").val(quantity);
+            $("#indexRow").val(rowIndex);
+            $('#myModal').modal('show');
+        });
+
+        function GetShifts(id) {
+            if (id == "") {
+                id = 0;
+            }
+            $.ajax({
+                url: "@Url.Action("GetShiftfromPlant", "Generic")",
+                type: "GET",
+                dataType: "JSON",
+                data: { id: id },
+                cache:false,
+                success: function (shifts) {
+                    shifts_list = shifts;
+                    $("#shift_id").html(""); // clear before appending new list
+                  //  $("#shift_time_id").append($('<option></option>').val('0').html("---Select---"));
+                    $.each(shifts, function (i, cycle) {
+                        $("#shift_id").append(
+                            $('<option></option>').val(cycle.shift_id).html(cycle.shift_code));
+                    });
+                    //$("#shift_time_id").val(shift).trigger('change');
+                    GetShiftsTime(shifts[0].shift_id);
+                }
+            });
+        }
+
+        function GetShiftsTime(id) {
+            if (id == "") {
+                id = 0;
+            }
+            $.ajax({
+                url: "@Url.Action("GetShiftTimefromShift", "Generic")",
+                type: "GET",
+                dataType: "JSON",
+                data: { id: id },
+                cache:false,
+                success: function (shiftsTime) {
+                    $("#shift_time").html(""); // clear before appending new list
+                  //  $("#shift_time_id").append($('<option></option>').val('0').html("---Select---"));
+                    $.each(shiftsTime, function (i, cycle) {
+                        $("#shift_time").append(
+                            $('<option></option>').val(cycle.shift_id).html(cycle.from_time_to_time));
+                    });
+                   // $("#shift_time_id").val(shift).trigger('change');
+                }
+            });
+        }
+
+        $("#addNewRow").click(function () {
+
+            var t1 = $('#ProductionMasterGrid').DataTable();
+            var ContactGridCount = parseFloat(t1.fnGetData().length);
+            ContactGridCount++;
+            var obj = {
+                "rowIndex": ContactGridCount,
+                "shiftwise_production_details_id": 0,
+                "process_id": 1,
+                "operation_code": "PROC001",
+                "operation_name": "FACING & CENTERING",
+                "machine_id": 56,
+                "machine_name": "HMT SPM",
+                "ITEM_ID": 374,
+                "ITEM_NAME": "RM-U301 CRANKSHAFT",
+                "cycle_time": "0",
+                "std_prod_quantity": 0,
+                "wip_qty": 0,
+                "target_qty":"0",
+                "shiftwise_production_id": 0
+            };
+            t1.fnAddData(obj);
+            $("#operation" + ContactGridCount).prop("disabled", false);
+            $("#machine" + ContactGridCount).prop("disabled", false);
+            $("#item" + ContactGridCount).prop("disabled", false);
+            $("#req_qty" + ContactGridCount).prop("disabled", false);
+            $("#operation" + ContactGridCount).val(1).trigger('change');
+
+            //  sweetAlert(" Row Added successfully!", "success");
+        });
+
+        $(".updateTarget").on("click", function (event) {
+
+           var detailId = $("#detailid").val();
+            var quantity = $("#quantity").val();
+            var index = $("#indexRow").val();
+            $.ajax({
+                url: "@Url.Action("GetRecordByDetailsId", "ShiftwiseProductionMaster")",
+                type: "GET",
+                dataType: "JSON",
+                data: { Id: detailId },
+                cache:false,
+                success: function (data) {
+                    var objid = {};
+                    var shiftwiseproductionmaster = JSON.parse("[" + data + "]");
+                    for (var i = 0; i <= shiftwiseproductionmaster[0].length - 1; i++) {
+                        objid.rowIndex = shiftwiseproductionmaster[0][i].rowIndex;
+                        objid.shiftwise_production_details_id = shiftwiseproductionmaster[0][i].shiftwise_production_details_id;
+                        objid.operation_code = shiftwiseproductionmaster[0][i].operation_code;
+                        objid.operation_name = shiftwiseproductionmaster[0][i].operation_name;
+                        objid.machine_id = shiftwiseproductionmaster[0][i].machine_id;
+                        objid.cycle_time = shiftwiseproductionmaster[0][i].cycle_time;
+                        objid.std_prod_quantity = shiftwiseproductionmaster[0][i].std_prod_quantity;
+                        objid.wip_qty = shiftwiseproductionmaster[0][i].wip_qty;
+                        objid.target_qty = shiftwiseproductionmaster[0][i].target_qty;
+                        objid.shiftwise_production_id = shiftwiseproductionmaster[0][i].shiftwise_production_id;
+                        objid.is_active = shiftwiseproductionmaster[0][i].is_active;
+                        objid.prod_date = shiftwiseproductionmaster[0][i].prod_date;
+                        objid.ITEM_ID = shiftwiseproductionmaster[0][i].ITEM_ID;
+                        objid.new_target_qty = quantity;
+                        gridData.push(objid);
+                        console.log(gridData);
+                    }
+
+                }
+            });
+
+            var t1 = $('#ProductionMasterGrid').DataTable();
+            index--;
+            t1.fnUpdate(quantity, parseInt(index), 8);
+            $('#myModal').modal('hide');
+
+
+        });
+
+        $(document).on('change', '.operationddl', function () {
+            var t = $('#ProductionMasterGrid').DataTable();
+            var index = $(this).attr('data-index');
+            var operation_id = $(this).find('option:selected').val();
+            var processid = operation_id;
+
+             $.ajax({
+                url: "@Url.Action("GetAllMachinesForProcess", "ProcessMachineMapping")",
+                type: "GET",
+                 dataType: "JSON",
+                 data: { processid: processid},
+                cache:false,
+                 success: function (data) {
+                     var data = JSON.parse("[" + data + "]");
+                         index++;
+                         $("#machine" + index).html(""); // clear before appending new list
+
+                         $.each(data[0], function (i, cycle) {
+                             $("#machine" + index).append(
+                                 $('<option></option>').val(cycle.machine_id).html(cycle.machine_name));
+                         });
+                 }
+             });
+        });
+
+
+         function TabletoJeson() {
+             var gridNewData = [];
+
+            $('#ProductionMasterGrid > tbody > tr').each(function (index, tr) {
+                index++;
+                if (!$('#req_qty' + index).prop('disabled')) {
+                    var objid = {};
+                    objid.rowIndex = this.cells[0].innerHTML;
+                    objid.operation_code = $("#operation" + index +" option:selected").val();
+                    objid.operation_name = $("#operation" + index + " option:selected").text();
+                    objid.machine_id = $("#machine" + index + " option:selected").val();
+                    objid.item_id = $("#item" + index + " option:selected").val();
+                    objid.cycle_time = this.cells[4].innerHTML;
+                    objid.std_prod_qty = this.cells[5].innerHTML;
+                    objid.wip_qty = this.cells[6].innerHTML;
+                    objid.target_qty = $("#req_qty" + index).val();
+                    gridNewData.push(objid);
+                }
+            });
+
+             console.log(gridNewData);
+            var finalobj = {};
+             finalobj.shiftwiseProductionDetails = gridData;
+             finalobj.document_numbring_id = $("#document_numbring_id option:selected").val();
+             finalobj.plant_id = $("#plant_id option:selected").val();
+             finalobj.shift_id = $("#shift_id option:selected").val();
+             finalobj.posting_date = $("#posting_date option:selected").val();
+             finalobj.shiftwise_production_id = $("#shiftwise_production_id").val();
+
+             $.ajax({
+                url: '@Url.Action("Edit", "ShiftwiseProductionMaster")',
+                method: 'POST',
+                async: false,
+                cache: false,
+                 data: { item1: finalobj, newItem: gridNewData },
+                 success: function (data) {
+
+                     if (data.includes("<!DOCTYPE html>")) {
+                         swal({
+                             title: "",
+                             text: "Update Successfully ",
+                             type: "success"
+                         }, function () {
+                             location.href = '@Url.Action("Index", "ShiftwiseProductionMaster")';
+                             return true;
+                         });
+                         location.href = '@Url.Action("Index", "ShiftwiseProductionMaster")';
+
+                     }
+                 }
+            });
+        }
+
+    </script>
+}
+
+
+
+

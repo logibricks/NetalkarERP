@@ -1,0 +1,63 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<sales_order_report_vm>("Editing")
+                
+                    .Datasource(ds => ds.URL(Url.Action("GetSalesOrderData", "SalesReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&plant_id" + ViewBag.plant_id + "&customer_id" + ViewBag.customer_id + "&item_id" + ViewBag.item_id)
+                        .EnableCaching().CachingPageSize(4)
+                    .TimeTillExpiration(120000)
+                    .Adaptor(AdaptorType.UrlAdaptor))
+                    .AllowPaging().PageSettings(a => a.PageSize(20))
+
+
+                        .FilterSettings(X => X.FilterType(FilterType.Excel))
+                    .ShowColumnChooser()
+                    .AllowSorting()
+                    .AllowScrolling()
+                    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "SalesReport", new { ctrlname = "SalesOrderItemWisePlan" })))
+                                                                                                                                                                                                            .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+
+                .ToolbarSettings(toolbar =>
+                {
+                    toolbar.ShowToolbar().ToolbarItems(items =>
+                    {
+                        items.AddTool(ToolBarItems.Search);
+                        items.AddTool(ToolBarItems.ExcelExport);
+                        items.AddTool(ToolBarItems.PrintGrid);
+                    });
+                })
+
+
+                    .ShowSummary()
+
+                .SummaryRow(row =>
+                {
+                    row.Title("Total").SummaryColumns(col =>
+                    {
+                        col.SummaryType(SummaryType.Sum).DisplayColumn("sales_value").DataMember("sales_value").Format("{0:n2}").Add();
+                        col.SummaryType(SummaryType.Sum).DisplayColumn("assessable_value").DataMember("assessable_value").Format("{0:n2}").Add();
+                        //col.SummaryType(SummaryType.Sum).DisplayColumn("round_off").DataMember("round_off").Format("{0:n2}").Add();
+                        //col.SummaryType(SummaryType.Sum).DisplayColumn("tds_value").DataMember("tds_value").Format("{0:n2}").Add();
+                        //col.SummaryType(SummaryType.Sum).DisplayColumn("net_value").DataMember("net_value").Format("{0:n2}").Add();
+                    }).Add();
+                })
+        .Columns(col =>
+        {
+            col.Field("item_code").Width("15%").HeaderText("Item Code").Add();
+            col.Field("item_name").Width("15%").HeaderText("Item Description").Add();
+            col.Field("plant_name").Width("15%").HeaderText("Plant").Add();
+            col.Field("delivery_date").Width("15%").HeaderText("Delivery Date").Format("{0:dd/MMM/yyyy}").Visible(true).Add();
+            col.Field("quantity").Width("15%").HeaderText("Quantity").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+            col.Field("invoice_quantity").Width("15%").HeaderText("Invoiced Qty").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+            col.Field("balance_quantity").Width("15%").HeaderText("Balance Qty ").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+            col.Field("customer_code").Width("15%").HeaderText("Customer Code").Add();
+            col.Field("customer_name").Width("15%").HeaderText("Customer Description").Add();
+            col.Field("so_number").Width("15%").HeaderText("So Number").Visible(true).Add();
+            col.Field("so_date").Width("15%").HeaderText("So Date").Format("{0:dd/MMM/yyyy}").Visible(true).Add();
+
+        })
+        .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick1"); })
+                                                    ).Render();}
+@Html.EJ().ScriptManager()
+
+

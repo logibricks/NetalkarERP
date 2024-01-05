@@ -1,0 +1,93 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<ProdIssueVM>("Searching")
+        .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "ProductionOrderIssue" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.WordExport);
+            items.AddTool(ToolBarItems.PdfExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "ProductionOrderIssue" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "ProductionOrderIssue" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "ProductionOrderIssue" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("prod_issue_id").HeaderText("ID").IsPrimaryKey(true).Visible(false).Add();
+            col.Field("category_id").HeaderText("Category ID").Visible(false).Add();
+            col.Field("category_name").HeaderText("Category Name").Add();
+            col.Field("prod_issue_number").HeaderText("Prod Issue Number").Add();
+            col.Field("posting_date").HeaderText("Posting Date").Format("{0:dd/MM/yyyy}").Add();
+            col.Field("document_date").HeaderText("Document Date").Format("{0:dd/MM/yyyy}").Add();
+            col.Field("plant_id").HeaderText("Plant ID").Visible(false).Add();
+            col.Field("plant_name").HeaderText("Plant Name").Add();
+            col.Field("prod_order_id").HeaderText("Product Order ID").Visible(false).Add();
+            col.Field("prod_order_no").HeaderText("Product Order Number").Add();
+            col.Field("remarks").HeaderText("Remarks").Add();
+            col.Field("item_name").HeaderText("Item Name").Add();
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = '@Url.Action("Details", "ProductionOrderIssue")?id=' + args.rowData.prod_issue_id;
+        }
+        if (args.requestType == "add") {
+            location.href = '@Url.Action("Create", "ProductionOrderIssue")';
+        }
+    }
+    function rightClick(args) {
+        location.href = '@Url.Action("Details", "ProductionOrderIssue")?id=' + args.data.prod_issue_id;
+    }
+    $(document).ready(function () {
+        var num = '@Html.ViewBag.num';
+        if (num != '') {
+            if (num != undefined) {
+                sweetAlert("", num + " Saved successfully.", "success");
+            }
+        }
+    });
+</script>
+

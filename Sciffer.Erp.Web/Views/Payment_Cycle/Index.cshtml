@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.Model.REF_PAYMENT_CYCLE>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<p>
+    <a href="@Url.Action("Create", "Payment_Cycle")" data-toggle="modal" class="btn-circle btn-lg btn-primary"><span class="glyphicon glyphicon-plus"></span> </a>
+</p>
+
+<div class="row">
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <table id="example" class="table table-striped responsive-utilities jambo_table table-bordered">
+                <thead>
+                    <tr class="headings">
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.PAYMENT_CYCLE_NAME)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.REF_PAYMENT_CYCLE_TYPE.PAYMENT_CYCLE_TYPE_NAME)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="even pointer">
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PAYMENT_CYCLE_NAME)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.REF_PAYMENT_CYCLE_TYPE.PAYMENT_CYCLE_TYPE_NAME)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.PAYMENT_CYCLE_ID }) |
+                                @Html.ActionLink("Details", "Details", new { id = item.PAYMENT_CYCLE_ID }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.PAYMENT_CYCLE_ID })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+</div>

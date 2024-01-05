@@ -1,0 +1,40 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<report_quality_vm>("FlatGrid")
+                .Datasource(ds => ds.URL(Url.Action("Get_report_quality", "QualityReport") + "?entity=" + ViewBag.entity).Adaptor(AdaptorType.UrlAdaptor))
+                    .AllowPaging().PageSettings(a => a.PageSize(20))
+                    .AllowFiltering()
+                        .FilterSettings(X => X.FilterType(FilterType.Excel))
+                    .ShowColumnChooser()
+                    .AllowSorting()
+                    .AllowScrolling()
+                    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "QualityReport", new { ctrlname = "BatchRevalidationCountReport" })))
+                                                        .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                .ToolbarSettings(toolbar =>
+                {
+                    toolbar.ShowToolbar().ToolbarItems(items =>
+                    {
+                        items.AddTool(ToolBarItems.Search);
+                        items.AddTool(ToolBarItems.ExcelExport);
+                        items.AddTool(ToolBarItems.PrintGrid);
+                    });
+                })
+            .Columns(col =>
+            {
+                col.Field("item_code").Width("10%").HeaderText("Item Code").Add();
+                col.Field("item_name").Width("10%").HeaderText("Item Description").Add();
+                col.Field("plant_code").Width("10%").HeaderText("Plant").Add();
+                col.Field("batch_number").Width("10%").HeaderText("Batch").Add();
+                col.Field("Revalidation_Doc_Category").Width("10%").HeaderText("Revalidation Doc Category ").Visible(false).Add();
+                col.Field("Revalidation_Doc_Number").Width("10%").HeaderText("Revalidation Doc Number ").Visible(false).Add();
+                col.Field("Revalidation_Doc_Date ").Width("10%").HeaderText("Revalidation Doc Date ").Format("{0:dd/MMM/yyyy}").Visible(false).Add();
+
+                col.Field("Count ").Width("10%").HeaderText("Count  ").Add();
+                           
+
+
+            })
+            .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickq"); })
+            ).Render();}
+    @Html.EJ().ScriptManager()

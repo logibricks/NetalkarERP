@@ -1,0 +1,320 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.Ref_permit_template_VM
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Permit Template</h2>
+
+<div class="loading">Loading &#8230;</div>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        <div class="modal-body">
+            <div id="PermitTemplateHidden"></div>
+            @Html.HiddenFor(x => x.permit_template_id)
+            <div class="row">
+                <div class="col-sm-6">
+                    <label class="control-label col-md-4">
+                        Permit Template No
+                    </label>
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.permit_template_no, new { htmlAttributes = new { @class = "form-control  validinput category removedisabled", @disabled = "disabled", @required = true } })
+
+                        @Html.ValidationMessageFor(model => model.permit_template_no, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <label class="control-label col-md-4">
+                        Permit Category<span class="required"> *</span>
+                    </label>
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.permit_category, new { htmlAttributes = new { @class = "form-control validinput category removedisabled", @disabled = "disabled", @required = true } })
+                        @Html.ValidationMessageFor(model => model.permit_category, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <br />
+
+
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <button type="button" class="btn btn-primary" id="open_modal" style="float:right" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span>Add Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                        <thead>
+                            <tr>
+                                <th hidden>ID</th>
+                                <th><label>Sr. No.</label></th>
+                                <th><label>Check Points</label></th>
+                                <th><label>Ideal Scenario</label></th>
+                                <th><label>Action</label></th>
+                            </tr>
+                        </thead>
+
+                    </table>
+                </div>
+            </div>
+
+            <input type="hidden" id="deleteids" name="deleteids" />
+            <div class="row">
+                <div class="col-lg12 col-sm-12">
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <input type="submit" value="Update" id="create" data-id="@Model.permit_template_id" data-controller="PermitTemplate" class="btn btn-success" onclick="TabletoJeson();" style="float:right" />
+                            @*<input type="submit" value="Update" class="btn btn-success" data-controller="PermitTemplate" id="create"  style="float:right" />*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+           @* <input type="hidden" id="deleteids" name="deleteids" />*@
+        </div>
+    </div>
+}
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Permit Details</h4>
+            </div>
+            <div class="modal-body">
+                @*<div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Checkpoints
+                        </label>
+                        <div class="col-md-7">
+                            <input type="text" class="form-control" name="checkpoints" id="checkpoints" />
+                            @Html.EditorFor(model => model.checkpoints, new { htmlAttributes = new { @class = "form-control  validinput ", @required = true } })
+
+                            @Html.ValidationMessageFor(model => model.checkpoints, "", new { @class = "text-danger" })
+                        </div>
+                    </div>*@
+            <div class="row">
+                <div class="form-group">
+                    <label class="control-label col-md-3">
+                        Checkpoints<span class="required"> *</span>
+                    </label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" name="checkpoints" id="checkpoints" />
+                    </div>
+                </div>
+
+            </div>
+
+                
+                <br />
+            <div class="row">
+                <div class="form-group">
+                    <label class="control-label col-md-3">
+                        Ideal Scenario<span class="required"> *</span>
+                     </label>
+                    <div class="col-md-7">
+                        <input type="text" class="form-control" name="Idealscenario" id="ideal_scenario" />
+                    </div>
+                </div>
+
+            </div>
+                <br />
+
+                <div class="modal-footer">
+                    <input type="hidden" id="sr_no" />
+                    <input type="hidden" id="checkpoint_id" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                    <button type="button" class="add btn btn-primary" >Add </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+
+    <script type="text/javascript">
+
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                        { sname: "a", bVisible: false },
+                        { sname: "b" },
+                        { sname: "e" },
+                        { sname: "f" },
+
+                        {
+                            sname: "o", sWidth: "8%",
+                            bSortable: false,
+                            mRender: function (data, type, full) {
+                                return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" onclick="editRow(' + full[1] + ');" /><img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete"  />';
+                            }
+                        }]
+
+        });
+
+        $(window).ready(function(){
+            var t = $('#ContactGrid').DataTable();
+            var machine_detail=@Html.Raw(JsonConvert.SerializeObject(this.Model));
+            console.log(machine_detail);
+            var i=1;
+            $.each(machine_detail.Ref_checkpoints,function(key,value){
+
+                t.fnAddData([value.check_point_id,i,value.checkpoints,value.ideal_scenario,'']);
+                i=i+1;
+            });
+
+            $("#Permit_template_no").select2({
+               // placeholder: "Select Place of Supply",
+                allowClear: true});
+            $("#checkpoint").select2({
+                // placeholder: "Select Place of Supply",
+                allowClear: true});
+        });
+
+        function editRow() {
+            $('#myModal').modal('show');
+            var t = $('#ContactGrid').DataTable()
+            var cc = parseInt(arguments[0]) - 1;
+            $("#sr_no").val(t.fnGetData(cc)[1]);
+            $("#checkpoint_id").val(t.fnGetData(cc)[0]);
+            $("#checkpoints").val(t.fnGetData(cc)[2]);
+            $('#ideal_scenario').val(t.fnGetData(cc)[3]);
+        }
+
+        $('#open_modal').click(function () {
+            clearmodel();
+        });
+
+        $(".add").on("click", function (event) {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var checkpoints = $("#checkpoints").val();
+            var ideal_scenario = $("#ideal_scenario").val();
+            var checkpoint_id = $("#checkpoint_id").val();
+
+            if (checkpoints == '') {
+                swal("", "Please Select Checkpoint.", "error");
+                return false;
+            }
+
+            if (ideal_scenario == '') {
+                swal("", "Please Enter Ideal Scenario .", "error");
+                return false;
+            }
+
+            if ($("#sr_no").val() == "") {
+                t.fnAddData(['0', rowCount + 1, checkpoints, ideal_scenario, ''
+                ]);
+            }
+            else {
+                var cc = $("#sr_no").val();
+                cc = parseInt(cc) - 1;
+                t.fnUpdate([checkpoint_id, cc + 1, checkpoints, ideal_scenario, ''], cc)
+            }
+
+            clearmodel();
+            return true;
+        });
+        function clearmodel() {
+            $("#checkpoints").val('');
+            $("#ideal_scenario").val('');
+            $("#sr_no").val('');
+        }
+
+
+        function TabletoJeson() {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var str;
+            var str1;
+            $("#permit_template_id").empty();
+            for (i = 0; i < rowCount; i++) {
+
+                $("#PermitTemplateHidden").append('<input type="hidden" id="checkpoint_id' + i + '" name="checkpoint_id">');
+                $("#PermitTemplateHidden").append('<input type="hidden" id="checkpoints' + i + '" name="checkpoints">');
+                $("#PermitTemplateHidden").append('<input type="hidden" id="ideal_scenario' + i + '" name="ideal_scenario">');
+                $("#checkpoint_id" + i).val(t.fnGetData(i)[0]);
+                $("#checkpoints" + i).val(t.fnGetData(i)[2]);
+                $("#ideal_scenario" + i).val(t.fnGetData(i)[3]);
+            }
+        }
+
+
+        $('#ContactGrid').on('click', '.delete', function () {
+
+            var t = $('#ContactGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            var deleteids = t.fnGetData(id)[0];
+            var del = $("#deleteids").val();
+            swal({
+                title: "Are you sure?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            },
+         function (isConfirm) {
+             if (isConfirm) {
+                 if (del != '') {
+                     $("#deleteids").val(del + "" + deleteids + "~");
+                 }
+                 else {
+                     $("#deleteids").val(deleteids + "~");
+                 }
+
+                 t.fnDeleteRow(id);
+                 var len = t.fnGetData().length;
+                 var i = 1;
+                 var row = 0;
+                 if (len > 0) {
+                     $('#ContactGrid tbody tr').each(function () {
+                         t.fnUpdate(i, row, 1);
+                         i++;
+                         row++;
+                     });                   
+                 }
+                 else{
+                     $('#TaxGrid tbody').html('');
+                 }
+             }
+         });
+
+        });
+    </script>
+}

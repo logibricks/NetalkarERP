@@ -1,0 +1,81 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<report_inventory_vm>("Editing")
+           .Datasource(ds => ds.URL(Url.Action("GetInventoryReport", "InventoryReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&plant_id=" + ViewBag.plant_id + "&sloc_id=" + ViewBag.sloc_id + "&item_id=" + ViewBag.item_id + "&item_category_id=" + ViewBag.item_category_id + "&bucket_id=" + ViewBag.bucket_id + "&reason_id=" + ViewBag.reason_id).Adaptor(AdaptorType.UrlAdaptor))
+                                            //.Datasource((IEnumerable<object>)ViewBag.datasource)
+                                            .AllowPaging().PageSettings(a => a.PageSize(20))
+                                            .AllowFiltering()
+                                                .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                            .ShowColumnChooser()
+                                            .AllowSorting()
+                                            .AllowScrolling()
+                                          .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "InventoryReport", new { ctrlname = "InventoryRevaluationReport" })))
+                                          .ScrollSettings(scroll => { scroll.Width("100%").Height("50%"); })
+                                        .ToolbarSettings(toolbar =>
+                                        {
+                                            toolbar.ShowToolbar().ToolbarItems(items =>
+                                            {
+                                                items.AddTool(ToolBarItems.Search);
+                                                items.AddTool(ToolBarItems.ExcelExport);
+                                                items.AddTool(ToolBarItems.PrintGrid);
+                                            });
+                                        })
+                                .Columns(col =>
+                                {
+                                    col.Field("category").Width("15%").HeaderText("Doc Category").Add();
+                                    col.Field("document_no").Width("15%").HeaderText("Doc Number").Add();
+                                    col.Field("posting_date").Width("15%").HeaderText("Posting Date").Format("{0:dd/MMM/yyyy}").Add();
+                                    col.Field("document_date").Width("15%").HeaderText("Document Date").Visible(false).Format("{0:dd/MMM/yyyy}").Add();
+                                    col.Field("plant_name").Width("15%").HeaderText("Plant").Add();
+                                    col.Field("item_code").Width("15%").HeaderText("Item code").Add();
+                                    col.Field("item_name").Width("15%").HeaderText("Description").Add();
+                                    col.Field("uom_name").Width("15%").HeaderText("UOM").Add();
+                                    col.Field("quantity").Width("15%").HeaderText("Qty").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                    col.Field("old_rate").Width("15%").HeaderText("Old Rate").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                    col.Field("new_rate").Width("15%").HeaderText("New Rate").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                    col.Field("differential_rate").Width("15%").HeaderText("Different Rate").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                    col.Field("differential_value").Width("15%").HeaderText("Different Value").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                    col.Field("gl_ledger_name").Width("15%").HeaderText("GL Account").Add();
+                                }).ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicki"); })).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+ function OnToolbarClick(args) {
+        var fromDate = $("#from_date").val();
+        var toDate = $("#to_date").val();      
+        if ($('#item_id :selected').length > 0) {
+            var selectedItem = [];
+            $('#item_id :selected').each(function (i, selected) {
+                selectedItem[i] = $(selected).val();
+            });
+            var Item = selectedItem + "";
+        }
+        if ($('#plant_id :selected').length > 0) {
+            var selectedSloc = [];
+            $('#plant_id :selected').each(function (i, selected) {
+                selectedSloc[i] = $(selected).val();
+            });
+            var plant = selectedSloc + "";
+        }
+        if ($('#item_category_id :selected').length > 0) {
+            var selectedItemCategory = [];
+            $('#item_category_id :selected').each(function (i, selected) {
+                selectedItemCategory[i] = $(selected).val();
+            });
+            var Item_Category = selectedItemCategory + "";
+        }
+      
+        this.model["plant_id"] = plant;
+        this.model["entity"] = "getinventoryrevaluationreport";
+        this.model["from_date"] = fromDate;
+        this.model["to_date"] = toDate;
+        this.model["item_id"] = Item;
+        this.model["item_category_id"] = Item_Category;
+       
+    }
+</script>
+
+
+
+

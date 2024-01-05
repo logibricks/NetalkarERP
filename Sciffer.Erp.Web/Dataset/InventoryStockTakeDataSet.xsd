@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="InventoryStockTakeDataSet" targetNamespace="http://tempuri.org/InventoryStockTakeDataSet.xsd" xmlns:mstns="http://tempuri.org/InventoryStockTakeDataSet.xsd" xmlns="http://tempuri.org/InventoryStockTakeDataSet.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="InventoryStockTakeDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="InventoryStockTakeDataSet" msprop:Generator_UserDSName="InventoryStockTakeDataSet">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="inv_Inventory_stock" msprop:Generator_TableClassName="inv_Inventory_stockDataTable" msprop:Generator_TableVarName="tableinv_Inventory_stock" msprop:Generator_TablePropName="inv_Inventory_stock" msprop:Generator_RowDeletingName="inv_Inventory_stockRowDeleting" msprop:Generator_RowChangingName="inv_Inventory_stockRowChanging" msprop:Generator_RowEvHandlerName="inv_Inventory_stockRowChangeEventHandler" msprop:Generator_RowDeletedName="inv_Inventory_stockRowDeleted" msprop:Generator_UserTableName="inv_Inventory_stock" msprop:Generator_RowChangedName="inv_Inventory_stockRowChanged" msprop:Generator_RowEvArgName="inv_Inventory_stockRowChangeEvent" msprop:Generator_RowClassName="inv_Inventory_stockRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="inventory_stock_id" msprop:Generator_ColumnVarNameInTable="columninventory_stock_id" msprop:Generator_ColumnPropNameInRow="inventory_stock_id" msprop:Generator_ColumnPropNameInTable="inventory_stock_idColumn" msprop:Generator_UserColumnName="inventory_stock_id" type="xs:string" minOccurs="0" />
+              <xs:element name="number" msprop:Generator_ColumnVarNameInTable="columnnumber" msprop:Generator_ColumnPropNameInRow="number" msprop:Generator_ColumnPropNameInTable="numberColumn" msprop:Generator_UserColumnName="number" type="xs:string" minOccurs="0" />
+              <xs:element name="plant_name" msprop:Generator_ColumnVarNameInTable="columnplant_name" msprop:Generator_ColumnPropNameInRow="plant_name" msprop:Generator_ColumnPropNameInTable="plant_nameColumn" msprop:Generator_UserColumnName="plant_name" type="xs:string" minOccurs="0" />
+              <xs:element name="slocname" msprop:Generator_ColumnVarNameInTable="columnslocname" msprop:Generator_ColumnPropNameInRow="slocname" msprop:Generator_ColumnPropNameInTable="slocnameColumn" msprop:Generator_UserColumnName="slocname" type="xs:string" minOccurs="0" />
+              <xs:element name="postingdate" msprop:Generator_ColumnVarNameInTable="columnpostingdate" msprop:Generator_ColumnPropNameInRow="postingdate" msprop:Generator_ColumnPropNameInTable="postingdateColumn" msprop:Generator_UserColumnName="postingdate" type="xs:string" minOccurs="0" />
+              <xs:element name="bucket_name" msprop:Generator_ColumnVarNameInTable="columnbucket_name" msprop:Generator_ColumnPropNameInRow="bucket_name" msprop:Generator_ColumnPropNameInTable="bucket_nameColumn" msprop:Generator_UserColumnName="bucket_name" type="xs:string" minOccurs="0" />
+              <xs:element name="company_name" msprop:Generator_ColumnVarNameInTable="columncompany_name" msprop:Generator_ColumnPropNameInRow="company_name" msprop:Generator_ColumnPropNameInTable="company_nameColumn" msprop:Generator_UserColumnName="company_name" type="xs:string" minOccurs="0" />
+              <xs:element name="company_address" msprop:Generator_ColumnVarNameInTable="columncompany_address" msprop:Generator_ColumnPropNameInRow="company_address" msprop:Generator_ColumnPropNameInTable="company_addressColumn" msprop:Generator_UserColumnName="company_address" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="inv_Inventory_stock_detail" msprop:Generator_TableClassName="inv_Inventory_stock_detailDataTable" msprop:Generator_TableVarName="tableinv_Inventory_stock_detail" msprop:Generator_TablePropName="inv_Inventory_stock_detail" msprop:Generator_RowDeletingName="inv_Inventory_stock_detailRowDeleting" msprop:Generator_RowChangingName="inv_Inventory_stock_detailRowChanging" msprop:Generator_RowEvHandlerName="inv_Inventory_stock_detailRowChangeEventHandler" msprop:Generator_RowDeletedName="inv_Inventory_stock_detailRowDeleted" msprop:Generator_UserTableName="inv_Inventory_stock_detail" msprop:Generator_RowChangedName="inv_Inventory_stock_detailRowChanged" msprop:Generator_RowEvArgName="inv_Inventory_stock_detailRowChangeEvent" msprop:Generator_RowClassName="inv_Inventory_stock_detailRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="inventory_stock_id" msprop:Generator_ColumnVarNameInTable="columninventory_stock_id" msprop:Generator_ColumnPropNameInRow="inventory_stock_id" msprop:Generator_ColumnPropNameInTable="inventory_stock_idColumn" msprop:Generator_UserColumnName="inventory_stock_id" type="xs:string" minOccurs="0" />
+              <xs:element name="inventory_stock_detail_id" msprop:Generator_ColumnVarNameInTable="columninventory_stock_detail_id" msprop:Generator_ColumnPropNameInRow="inventory_stock_detail_id" msprop:Generator_ColumnPropNameInTable="inventory_stock_detail_idColumn" msprop:Generator_UserColumnName="inventory_stock_detail_id" type="xs:string" minOccurs="0" />
+              <xs:element name="item_name" msprop:Generator_ColumnVarNameInTable="columnitem_name" msprop:Generator_ColumnPropNameInRow="item_name" msprop:Generator_ColumnPropNameInTable="item_nameColumn" msprop:Generator_UserColumnName="item_name" type="xs:string" minOccurs="0" />
+              <xs:element name="batch_number" msprop:Generator_ColumnVarNameInTable="columnbatch_number" msprop:Generator_ColumnPropNameInRow="batch_number" msprop:Generator_ColumnPropNameInTable="batch_numberColumn" msprop:Generator_UserColumnName="batch_number" type="xs:string" minOccurs="0" />
+              <xs:element name="UOM_NAME" msprop:Generator_ColumnVarNameInTable="columnUOM_NAME" msprop:Generator_ColumnPropNameInRow="UOM_NAME" msprop:Generator_ColumnPropNameInTable="UOM_NAMEColumn" msprop:Generator_UserColumnName="UOM_NAME" type="xs:string" minOccurs="0" />
+              <xs:element name="actual_qty" msprop:Generator_ColumnVarNameInTable="columnactual_qty" msprop:Generator_ColumnPropNameInRow="actual_qty" msprop:Generator_ColumnPropNameInTable="actual_qtyColumn" msprop:Generator_UserColumnName="actual_qty" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:annotation>
+    <xs:appinfo>
+      <msdata:Relationship name="inv_Inventory_stock_inv_Inventory_stock_detail" msdata:parent="inv_Inventory_stock" msdata:child="inv_Inventory_stock_detail" msdata:parentkey="inventory_stock_id" msdata:childkey="inventory_stock_id" msprop:Generator_UserChildTable="inv_Inventory_stock_detail" msprop:Generator_ChildPropName="Getinv_Inventory_stock_detailRows" msprop:Generator_UserRelationName="inv_Inventory_stock_inv_Inventory_stock_detail" msprop:Generator_RelationVarName="relationinv_Inventory_stock_inv_Inventory_stock_detail" msprop:Generator_UserParentTable="inv_Inventory_stock" msprop:Generator_ParentPropName="inv_Inventory_stockRow" />
+    </xs:appinfo>
+  </xs:annotation>
+</xs:schema>

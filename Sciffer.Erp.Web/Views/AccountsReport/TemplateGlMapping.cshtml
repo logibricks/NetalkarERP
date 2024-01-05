@@ -1,0 +1,38 @@
+﻿
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class=row>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-lg-3 col-xs-12">Template</label>
+                    <div class="col-md-9 col-lg-9 col-xs-12">
+                        @Html.DropDownList("entity_id", (System.Web.Mvc.SelectList)ViewBag.TemplateList, htmlAttributes: new { @class = "form-control entity_id" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-lg-3 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">Balance Sheet/P&L</label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    @Html.DropDownList("entity_type_id", new List<SelectListItem> {
+                    new SelectListItem { Text="Balance Sheet",Value="1"},
+                     new SelectListItem { Text = "P&L", Value = "2" }}, new { @class = "form-control entity_type_id" })
+                    <input type="hidden" id="entity" value="gettemplateglmapping">
+                    <input type="hidden" id="partial_v" value="Paertial_Template_Mapping" />
+                </div>
+            </div>
+
+            <div class="col-md-2 col-lg-2 col-xs-12">
+                <button class="searchbutton searchButton" id="search" onclick="DateChecka()"> &nbsp; Run Report </button>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div id="searchresult">
+            @Html.Partial("Paertial_Template_Mapping", (object)ViewBag)
+        </div>
+    </div>
+</div>
+

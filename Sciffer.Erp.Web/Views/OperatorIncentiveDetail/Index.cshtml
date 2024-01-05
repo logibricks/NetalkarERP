@@ -1,0 +1,206 @@
+﻿
+@model Sciffer.Erp.Domain.ViewModel.operator_incentive_detail_vm
+
+@{
+    ViewBag.Title = "Create";
+}
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        <h4 class="col-md-4 col-sm-4 col-xs-12">Start Date*</h4>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.from_date, new { htmlAttributes = new { @class = "form-control date12  validinput", @required = true } })
+                            @Html.ValidationMessageFor(model => model.from_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        <h4 class="col-md-4 col-sm-4 col-xs-12">End Date*</h4>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.to_date, new { htmlAttributes = new { @class = "form-control date12  validinput", @required = true } })
+                            @Html.ValidationMessageFor(model => model.to_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+
+                    <div class="col-md-7 col-lg-7 col-xs-12">
+                        <button class="searchbutton" type="button" id="search" onclick="search1();"> Run Report </button>
+                    </div>
+                </div>
+                </div>
+
+
+               
+            </div>
+        <br />
+        <div class="row">
+                <div class="table-responsive">
+                    <table class="table table-responsive table-bordered table-striped jambo_table results3 taskgrid" id="ContactGrid">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Sr. No.</th>
+                                <th>Date</th>
+                                <th>Shift</th>
+                                <th>Operation</th>
+                                <th>Machine</th>
+                                <th>Item</th>
+                                <th>Production Qty</th>
+                                <th>Incentive Amount</th>
+                                @*<th>Plant</th>                          
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Incentive Applicability</th>
+                                <th>Multi-machining</th>                               
+                                <th>Benchmark Qty</th>
+                                <th>Excess Qty</th>
+                                <th>Incentive Rate</th>*@
+                                
+                            </tr>
+                        </thead>   
+                    </table>
+                </div>
+            </div>
+        </div>
+   
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+     <script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+     <script src="~/Scripts/requirevalidation.js"></script>
+     <script type="text/javascript">
+
+        document.getElementById('from_date').valueAsDate = new Date();
+        document.getElementById('to_date').valueAsDate = new Date();
+        var from_date = $("#from_date").val();
+        var to_date = $("#to_date").val();
+
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+
+
+                    { sname: "a", bVisible: false }, // <th><label>ID</label></th>
+                    { sname: "b", sWidth: "3%", bVisible: false, },   // <th><label>Sr. No.</label></th>
+                    { sname: "c", bVisible: true, "sClass": "right", sWidth: "6%" }, //  <th><label>Date</label></th>
+                    { sname: "d", bVisible: true }, // <th><label>Shift</label></th>
+                    { sname: "f", bVisible: true },  // <th><label>Operation</label></th>
+                    { sname: "g", bVisible: true }, //  <th><label>Machine</label></th>
+                    { sname: "r", bVisible: true },  // <th><label>Item</label></th>
+                    { sname: "l", bVisible: true, "sClass": "right" }, //  <th><label>Production Qty</label></th>
+                    { sname: "p", bVisible: true, "sClass": "right" }, //  <th><label>Incentive Amount</label></th>
+                    //{ sname: "e", bVisible: true }, // <th><label>Plant</label></th>
+                   
+                    //{ sname: "h", bVisible: true }, //   <th><label>Start Time</label></th>
+                    //{ sname: "i", bVisible: true }, //  <th><label>End Time</label></th>
+                    //{ sname: "j", bVisible: true }, //  <th><label>Incentive Applicability</label></th>
+                    //{ sname: "k", bVisible: true }, //  <th><label>Multi-machining</label></th>
+                 
+                    //{ sname: "m", bVisible: true, "sClass": "right" }, //  <th><label>Benchmark Qty</label></th>
+                    //{ sname: "n", bVisible: true, "sClass": "right" }, //  <th><label>Excess Qty</label></th>
+                    //{ sname: "o", bVisible: true, "sClass": "right" }, //  <th><label>Incentive Rate</label></th>
+                   
+]
+
+
+        });
+
+ //----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+        function search1() {
+
+
+            $(".loading").show();
+            $.ajax({
+                url: '@Url.Action("GetOperatorIncentiveDetail", "OperatorIncentiveDetail")',
+                method: "Post",
+                cache: false,
+                data: { from_date: $("#from_date").val(), to_date: $("#to_date").val(), user_id: 0 },
+                success: function (data) {
+                    var t = $('#ContactGrid').DataTable();
+                    t.fnClearTable();
+                    var i = 1;
+                    var sr_no = t.fnGetData().length + 1;
+                    $.each(data, function (i, cycle) {
+                        console.log(cycle);
+
+                        t.fnAddData(['', cycle.mfg_operator_incentive_detail_id, cycle.date, cycle.shift_code, cycle.process_description, cycle.machine_name, cycle.item_name, parseFloat(cycle.prod_qty).toFixed(2), parseFloat(cycle.incentive_amount).toFixed(2)]);
+                        //if (cycle.is_incentive_appl == true) {
+                        //    document.getElementById("create" + i).setAttribute('checked', 'checked');
+                        //}
+                        //else {
+                        //    document.getElementById("create" + i).removeAttribute('checked');
+                        //}
+
+                        //if (cycle.is_multi_machining == true) {
+                        //    document.getElementById("create1" + i).setAttribute('checked', 'checked');
+                        //}
+                        //else {
+                        //    document.getElementById("create1" + i).removeAttribute('checked');
+                        //}
+                    });
+                },
+
+            });
+        }
+</script>
+}
+
+<style>
+    .taskgrid > thead {
+        text-align: center;
+        font-size: 15px;
+    }
+
+    .taskgrid {
+        font-size: 15px;
+    }
+
+    #sidebar-menu {
+      
+        display: none;
+    }
+
+    .dataTables_filter > label {
+        font-weight: bold !important;
+        font-size: 20px !important;
+    }
+
+        .dataTables_filter > label > input {
+            width: 75%;
+        }
+
+    .input_box_font {
+        font-size: 30px !important;
+        width: 100px !important;
+    }
+</style>
+

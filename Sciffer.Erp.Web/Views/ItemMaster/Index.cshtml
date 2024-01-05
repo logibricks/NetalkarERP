@@ -1,0 +1,139 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<item_list>("Searching")
+
+        //// .Datasource(ds => ds.URL(Url.Action("GetItems", "Items")).RemoveURL(Url.Action("InlineDelete", "Items")).Adaptor(AdaptorType.RemoteSaveAdaptor))
+        ////.Datasource(ds => { ds.URL("ItemMaster/Page").Adaptor("UrlAdaptor"); })
+        //.Datasource(ds => { ds.Json((IEnumerable<object>)ViewBag.DataSource).RemoveURL(Url.Action("Delete", "ItemMaster")).Adaptor(AdaptorType.RemoteSaveAdaptor); })
+        //.EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).ShowDeleteConfirmDialog(true); })
+        //.EnableAltRow().AllowPaging()
+        //.PageSettings(p => { p.PageSize(20); })
+        //.ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        //{
+        //    items.AddTool(ToolBarItems.Add);
+        //    items.AddTool(ToolBarItems.Edit);
+        //    items.AddTool(ToolBarItems.ExcelExport);
+        //    items.AddTool(ToolBarItems.PrintGrid);
+        //}))
+        //.Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "ItemMaster" })))
+        //.AllowSorting()
+        //.AllowPaging()
+        //.IsResponsive()
+        //.AllowFiltering()
+        //.ShowColumnChooser()
+        //.AllowReordering()
+        //.AllowScrolling()
+        //.ScrollSettings(col => { col.Width("100%"); })
+        //.FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+
+        
+
+        .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "ItemMaster" }))
+         
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+         .ContextMenuSettings(contextMenu =>
+         {
+             contextMenu.EnableContextMenu();
+             contextMenu.DisableDefaultItems();
+             contextMenu.CustomContextMenuItems(new List<Syncfusion.JavaScript.Models.CustomContexMenuItems>() { new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu", Text = "Print Report" } }); // CustomContext menu items                     
+         })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "ItemMaster" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "ItemMaster" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "ItemMaster" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+         .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("ITEM_ID").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("ITEM_CATEGORY_NAME").Width("15%").HeaderText("Item Category Code").Add();
+            col.Field("itemtype_name").Width("15%").HeaderText("Item Type").Add();
+            col.Field("ITEM_CODE").Width("15%").HeaderText("Item Code").Add();
+            col.Field("ITEM_NAME").Width("15%").HeaderText("Item Description").Add();
+            col.Field("ITEM_GROUP_NAME").Width("15%").HeaderText("Item Group Code").Add();
+            col.Field("BRAND_NAME").Width("15%").HeaderText("Brand").Add();
+            col.Field("UOM_NAME").Width("15%").HeaderText("UOM Code").Add();
+            col.Field("ITEM_LENGTH").Width("15%").HeaderText("Item Length").Visible(false).Add();
+            // col.Field("ITEM_LENGHT_UOM_ID").Width("15%").HeaderText("Item Length UOM").Visible(false).Add();
+            col.Field("ITEM_WIDTH").Width("15%").HeaderText("Item Width").Visible(false).Add();
+            col.Field("ITEM_HEIGHT").Width("15%").HeaderText("Item Height").Visible(false).Add();
+            col.Field("ITEM_VOLUME").Width("15%").HeaderText("Item Volume").Visible(false).Add();
+            col.Field("ITEM_WEIGHT").Width("15%").HeaderText("Item weight").Visible(false).Add();
+            col.Field("IS_BLOCKED").Width("15%").HeaderText("Blocked").Visible(false).Add();
+            col.Field("PRIORITY_NAME").Width("15%").HeaderText("Priority").Add();
+            col.Field("BATCH_MANAGED").Width("15%").HeaderText("Batch Managed").Visible(false).Add();
+            col.Field("QUALITY_MANAGED").Width("15%").HeaderText("Quality Managed").Visible(false).Add();
+            col.Field("SHELF_LIFE").Width("15%").HeaderText("Selef Life").Visible(false).Add();
+            col.Field("vendor_name").Width("15%").HeaderText("Preferred Vendor").Visible(false).Add();
+            col.Field("VENDOR_PART_NUMBER").Width("15%").HeaderText("Vendor Part No").Visible(false).Add();
+            col.Field("MINIMUM_LEVEL").Width("15%").HeaderText("Minimum level").Visible(false).Add();
+            col.Field("MAXIMUM_LEVEL").Width("15%").HeaderText("Maximum level").Visible(false).Add();
+            col.Field("REORDER_LEVEL").Width("15%").HeaderText("Reorder level").Visible(false).Add();
+            col.Field("REORDER_QUANTITY").Width("15%").HeaderText("Reorder Quantity").Visible(false).Add();
+            col.Field("MRP").Width("15%").HeaderText("MRP").Visible(false).Add();
+            col.Field("rack_no").Width("15%").HeaderText("Rack No.").Visible(false).Add();
+            col.Field("itemvaluation_name").Width("15%").HeaderText("Item valuation").Add();
+            col.Field("itemaccount_name").Width("15%").HeaderText("Item Accounting").Add();
+            col.Field("EXCISE_CATEGORY_NAME").Width("15%").HeaderText("HSN Category").Add();
+            col.Field("hsn_name").Width("15%").HeaderText("HSN").Add();
+            col.Field("gst_applicability_name").Width("15%").HeaderText("GST Applicability").Add();
+            col.Field("sac_name").Width("15%").HeaderText("SAC").Add();
+            col.Field("ADDITIONAL_INFORMATION").Width("15%").HeaderText("Addition information").Visible(false).Add();
+            col.Field("user_description").Width("15%").HeaderText("User Description").Add();
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit") {
+            location.href = "@Url.Action("Edit", "ItemMaster")?id=" + args.rowData.ITEM_ID;
+        }
+        if (args.requestType == "add") {
+            location.href = "@Url.Action("Create", "ItemMaster")"
+        }
+    }
+    function rightClick(args) {
+        location.href = "@Url.Action("Details", "ItemMaster")?id=" + args.data.ITEM_ID;
+    }
+    $(document).ready(function () {
+        var doc_no = '@ViewBag.doc_no';
+        if (doc_no != '') {
+            if (doc_no != 0) {
+                sweetAlert("", doc_no, "success");
+            }
+        }
+    });
+</script>
+
+

@@ -1,0 +1,669 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.fin_bank_reco_vm
+
+@{
+    ViewBag.Title = "Create";
+}
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()    
+    <div class="form-horizontal" style="margin-top:10px;">        
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div id="brs_detail" hidden></div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.document_list, new { @class = "form-control category validinput" })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.posting_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control postingdocumentdate  validinput", @required = true} })
+                            @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.bank_account_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("bank_account_id", (System.Web.Mvc.SelectList)ViewBag.bank_list,"", htmlAttributes: new { @class = "form-control validinput", @onchange = "GettoCurrentBalance();" })
+                            @Html.ValidationMessageFor(model => model.bank_account_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+           
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.reco_start_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.reco_start_date, new { htmlAttributes = new { @class = "form-control  validinput", @required = true } })
+                            @Html.ValidationMessageFor(model => model.reco_start_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.reco_end_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.reco_end_date, new { htmlAttributes = new { @class = "form-control  validinput", @required = true, @onchange = "GettoCurrentBalance();" } })
+                            @Html.ValidationMessageFor(model => model.reco_end_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.user_closing_bal, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-5 col-sm-5 col-xs-12">
+                            @Html.EditorFor(model => model.user_closing_bal, new { htmlAttributes = new { @class = "form-control right validinput",@onchange= "changeAmount();",@type="number" } })
+                            @Html.ValidationMessageFor(model => model.user_closing_bal, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            @Html.DropDownList("currency_id", (System.Web.Mvc.SelectList)ViewBag.currency_list, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.currency_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">                     
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <button type="button" class="add btn btn-success" style="float:left" id="run_report" onclick="GetRecord();">Run Report</button>
+                            <div id="ajaxImage1"><img src="~/images/ajxloaderImage.gif" />Please Wait...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">Payments</a></li>
+                <li><a data-toggle="tab" href="#sectionB">Receipts</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid2">
+                                <thead>
+                                    <tr>                                       
+                                        <th><label>ID</label></th>
+                                        <th><input type="checkbox" name="select_all" value="1" id="example-select-all"></th>
+                                        <th><label>Sr.No.</label></th>
+                                        <th><label>Doc Category ID</label></th>
+                                        <th><label>Doc Category</label></th>                                        
+                                        <th><label>Doc No</label></th>
+                                        <th><label>Posting Date</label></th>
+                                        <th><label>Entity Type ID</label></th>
+                                        <th><label>Entity Type</label></th>
+                                        <th><label>Entity ID</label></th>
+                                        <th><label>Entity Code</label></th>
+                                        <th><label>Entity Name</label></th>
+                                        <th><label>Bank Date</label></th>
+                                        <th><label>Amount</label></th>                                  
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th><label>Total</label></th>
+                                        <th><label class="pay_total">0.00</label></th>  
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionB" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid1">
+                                <thead>
+                                    <tr>
+                                        <th><label>ID</label></th>
+                                        <th><input type="checkbox" name="select_all1" value="1" id="example-select-all1"></th>
+                                        <th><label>Sr.No.</label></th>
+                                        <th><label>Doc Category ID</label></th>
+                                        <th><label>Doc Category</label></th>                                     
+                                        <th><label>Doc No</label></th>
+                                        <th><label>Posting Date</label></th>
+                                        <th><label>Entity Type ID</label></th>
+                                        <th><label>Entity Type</label></th>
+                                        <th><label>Entity ID</label></th>
+                                        <th><label>Entity Code</label></th>
+                                        <th><label>Entity Name</label></th>
+                                        <th><label>Bank Date</label></th>
+                                        <th><label>Amount</label></th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th><label>Total</label></th>
+                                        <th><label class="rec_total">0.00</label></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+       </div>
+        <div class="row" hidden>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.payment_total, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.payment_total, new { htmlAttributes = new { @class = "form-control right  removedisabled", @required = true , @disabled="disabled" } })
+                        @Html.ValidationMessageFor(model => model.payment_total, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.receipt_total, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.receipt_total, new { htmlAttributes = new { @class = "form-control right removedisabled", @required = true, @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.receipt_total, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+           
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ledger_closing_bal, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.ledger_closing_bal, new { htmlAttributes = new { @class = "form-control right  removedisabled", @required = true, @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.ledger_closing_bal, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.payment_not_sel_total, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.payment_not_sel_total, new { htmlAttributes = new { @class = "form-control right  removedisabled", @required = true, @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.payment_not_sel_total, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>  
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.receipt_not_sel_total, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.receipt_not_sel_total, new { htmlAttributes = new { @class = "form-control right  removedisabled", @required = true, @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.receipt_not_sel_total, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    <label for="" class="control-label col-md-4 col-sm-4 col-xs-12">Derived Bank Statment Balance </label>
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        <input type="text" id="derived_bank_statement_balance" name="derived_bank_statement_balance" class="form-control right removedisabled" disabled />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.derived_closing_bal, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.derived_closing_bal, new { htmlAttributes = new { @class = "form-control right  removedisabled", @required = true, @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.derived_closing_bal, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    <label for="" class="control-label col-md-4 col-sm-4 col-xs-12">Difference</label>
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        <input type="text" id="difference_amount" name="difference_amount" class="form-control right difference_amount removedisabled" disabled />
+                    </div>
+                </div>
+            </div>
+        </div>
+ 
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-success" style="float:right" id="create" name="create" data-controller="BRS" onclick="TabletoJeson();" />
+                </div>
+            </div>
+        </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            document.getElementById('posting_date').valueAsDate = new Date();
+            var error=@Html.Raw(Json.Encode(ViewBag.error));
+            if(error !="")
+            {
+                sweetAlert("",error,"error");
+            }
+            $("#ajaxImage1").hide();
+            $("#payment_total").val(0);
+            $("#receipt_total").val(0);
+            $("#bank_account_id").select2({
+                placeholder: "Select Bank Account",
+                allowClear: true
+            });
+        });
+            $('#ContactGrid2').DataTable({
+                "bPaginate": false,
+                "ordering": false,
+                "bfooter": false,
+                "info": false,
+                "bLengthChange": false,
+                "bAutoWidth": false,
+                "bFilter": false,
+                "bSort": false,
+                aoColumns: [
+                        { sname: "a", bVisible: false },
+                         {
+                             sname: "b",
+                             mRender: function (data, type, row) {
+                                 return '<input type="checkbox" data-index=' + ((row[2]) - 1) + ' class="pcheck" name="id[]" value="' + $('<div/>').text(data).html() + '" id=pchk' + ((row[2]) - 1) + '>';
+                             }
+                         },
+                         { sname: "c" },
+                             { sname: "d", bVisible: false },
+                         { sname: "e" },
+                         { sname: "f" },
+                         { sname: "g" },
+                         { sname: "h", bVisible: false },
+                         { sname: "i" },
+                         { sname: "j", bVisible: false },
+                         { sname: "k" },
+                         { sname: "l" },
+                         { sname: "m" },
+                         { sname: "n", sClass: "right" },
+                ]
+
+            });
+            $('#ContactGrid1').DataTable({
+                "bPaginate": false,
+                "ordering": false,
+                "bfooter": false,
+                "info": false,
+                "bLengthChange": false,
+                "bAutoWidth": false,
+                "bFilter": false,
+                "bSort": false,
+                aoColumns: [
+                         {
+                             sname: "a", bVisible: false
+                         },
+                         {
+                             sname: "b",
+                             mRender: function (data, type, row) {
+                                 return '<input type="checkbox" data-index=' + ((row[2]) - 1) + ' class="rcheck" name="id[]" value="' + $('<div/>').text(data).html() + '" id=rchk' + ((row[2]) - 1) + '>';
+                             }
+                         },
+                         { sname: "c"},
+                             { sname: "d", bVisible: false },
+                         { sname: "e" },
+                         { sname: "f" },
+                         { sname: "g" },
+                         { sname: "h", bVisible: false },
+                         { sname: "i" },
+                         { sname: "j", bVisible: false },
+                         { sname: "k"},
+                         { sname: "l" },
+                         { sname: "m" },
+                         { sname: "n",sClass:"right" },
+                ]
+
+            });
+            function GetRecord()
+            {
+                var id = $("#bank_account_id").val();
+                var start_date = $("#reco_start_date").val();
+                var end_date = $("#reco_end_date").val();
+                var t1 = $('#ContactGrid2').DataTable();
+                var t2 = $('#ContactGrid1').DataTable();
+                t1.fnClearTable();
+                t2.fnClearTable();
+                if(id=="")
+                {
+                    swal("", "Please Select Bank Account.", "error");
+                    return false;
+                }
+                if(start_date=="")
+                {
+                    swal("", "Please Select Start Date.", "error");
+                    return false;
+                }
+                if (end_date == "") {
+                    swal("", "Please Select End Date.", "error");
+                    return false;
+                }
+                var i = 1;
+                var j = 1;
+                var pay = 0;
+                var rec = 0;
+                $("#ajaxImage1").show();
+                $.ajax({
+                    url: "@Url.Action("GetPaymentReceiptForBRS", "BRS")",
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { id: id, start_date: start_date, end_date: end_date },
+                    success: function (reco)
+                    {
+                        $.each(reco, function (key, cycle)
+                        {
+                            var d = ConvertJsonDateString(cycle.payment_date);
+                            if (cycle.in_out == 2)
+                            {
+                                t1.fnAddData([cycle.fin_ledger_payment_detail_id, '', i, cycle.category_id, cycle.category, cycle.document_no, d,
+                                cycle.entity_type_id, cycle.entity_type_name, cycle.entity_id, cycle.entity_code, cycle.entity_description, '<input type="date" id="pdate' + (i - 1) + '" class="form-control pdate" style="width:150px;" />', parseFloat(cycle.amount).toFixed(2)]);
+                                i = i + 1;
+                                pay = parseFloat(pay) + parseFloat(cycle.amount);
+                            }
+                            else
+                            {
+                                t2.fnAddData([cycle.fin_ledger_payment_detail_id, '', j, cycle.category_id, cycle.category, cycle.document_no, d,
+                               cycle.entity_type_id, cycle.entity_type_name, cycle.entity_id, cycle.entity_code, cycle.entity_description, '<input type="date" id="rdate' + (j - 1) + '" class="form-control rdate" style="width:150px;" />', parseFloat(cycle.amount).toFixed(2)]);
+                                j = j + 1;
+                                rec = parseFloat(rec) + parseFloat(cycle.amount);
+                            }
+                        });
+                        $("#ajaxImage1").hide();
+                        $("#payment_not_sel_total").val(parseFloat(pay).toFixed(2));
+                        $("#receipt_not_sel_total").val(parseFloat(rec).toFixed(2));
+                        CalculateDerivedBalance();
+                    }
+                });
+
+            }
+        function ConvertJsonDateString(jsonDate) {
+            var shortDate = null;
+            if (jsonDate) {
+                var regex = /-?\d+/;
+                var matches = regex.exec(jsonDate);
+                var dt = new Date(parseInt(matches[0]));
+                var month = dt.getMonth() + 1;
+                var monthString = month > 9 ? month : '0' + month;
+                var day = dt.getDate();
+                var dayString = day > 9 ? day : '0' + day;
+                var year = dt.getFullYear();
+                shortDate = day + '-' + monthString + '-' + year;
+            }
+            return shortDate;
+        }
+
+
+
+
+        $('#example-select-all').on('click', function () {
+            var _amounts = 0;
+            var t = $('#ContactGrid2').DataTable();
+            var uncheck_payment = 0;
+            var trlen = t.fnGetData().length;
+            if ($(this).is(':checked')) {
+                uncheck_payment = $("#payment_not_sel_total").val();
+                $('.pcheck').prop('checked',true);
+                if (trlen > 0) {
+                    for (var j = 0; j <= trlen - 1; j++) {
+                        _amounts = parseFloat(_amounts) + parseFloat(t.fnGetData(j)[13]);
+                    }
+                    $(".pdate").addClass('validinput');
+                    $('#payment_total').val(parseFloat(_amounts).toFixed(2));
+                    $(".pay_total").text(parseFloat(_amounts).toFixed(2));
+                    $("#payment_not_sel_total").val(parseFloat(parseFloat(uncheck_payment) - parseFloat(_amounts)).toFixed(2));
+                    CalculateDerivedBalance();
+                }
+            }
+            else {
+                if (trlen > 0) {
+                    for (var j = 0; j <= trlen - 1; j++) {
+                        _amounts = parseFloat(_amounts) + parseFloat(t.fnGetData(j)[13]);
+                    }
+                }
+                $(".pdate").removeClass('validinput');
+                $('.pcheck').prop('checked', false);
+                $('#payment_total').val(parseFloat(0).toFixed(2));
+                $('.pay_total').text(parseFloat(0).toFixed(2));
+                $("#payment_not_sel_total").val(parseFloat(_amounts).toFixed(2));
+                CalculateDerivedBalance();
+            }
+        });
+
+
+        var _amount = 0;
+        $(document).on('click', '.pcheck', function () {
+            var t = $('#ContactGrid2').DataTable();
+            var uncheck_payment = 0;
+            var index = $(this).attr('data-index');
+            if ($(this).is(':checked')) {
+                $("#pdate" + index).addClass('validinput');
+                var am = t.fnGetData(parseInt(index))[13];
+                uncheck_payment = $("#payment_not_sel_total").val();
+                _amount = parseFloat(_amount) + parseFloat(am);
+                $('#payment_total').val(parseFloat(_amount).toFixed(2));
+                $(".pay_total").text(parseFloat(_amount).toFixed(2));
+                $("#payment_not_sel_total").val(parseFloat(parseFloat(uncheck_payment) - parseFloat(am)).toFixed(2));
+                CalculateDerivedBalance();
+            }
+            else {
+                $("#pdate" + index).removeClass('validinput');
+                uncheck_payment = $("#payment_not_sel_total").val();
+                var am = t.fnGetData(parseInt(index))[13];
+                var amt = $('#payment_total').val();
+                _amount = parseFloat(amt) - parseFloat(t.fnGetData(index)[13]);
+                $('#payment_total').val(parseFloat(_amount).toFixed(2));
+                $(".pay_total").text(parseFloat(_amount).toFixed(2));
+                $("#payment_not_sel_total").val(parseFloat(parseFloat(uncheck_payment) + parseFloat(am)).toFixed(2));
+                CalculateDerivedBalance();
+            }
+        });
+
+
+
+        $('#example-select-all1').on('click', function () {
+            var _amounts = 0;
+            var t = $('#ContactGrid1').DataTable();
+            var uncheck_receipt = 0;
+            var trlen = t.fnGetData().length;
+            if ($(this).is(':checked')) {
+                uncheck_receipt = $("#receipt_not_sel_total").val();
+                $('.rcheck').prop('checked', true);
+                if (trlen > 0) {
+                    for (var j = 0; j <= trlen - 1; j++) {
+                        _amounts = parseFloat(_amounts) + parseFloat(t.fnGetData(j)[13]);
+                    }
+                    $(".rdate").addClass('validinput');
+                    $('#receipt_total').val(parseFloat(_amounts).toFixed(2));
+                    $(".rec_total").text(parseFloat(_amounts).toFixed(2));
+                    $("#receipt_not_sel_total").val(parseFloat(parseFloat(uncheck_receipt) - parseFloat(_amounts)).toFixed(2));
+                    CalculateDerivedBalance();
+                }
+            }
+            else {
+                if (trlen > 0) {
+                    for (var j = 0; j <= trlen - 1; j++) {
+                        _amounts = parseFloat(_amounts) + parseFloat(t.fnGetData(j)[13]);
+                    }
+                }
+                $(".rdate").removeClass('validinput');
+                $('.rcheck').prop('checked', false);
+                $('#receipt_total').val(parseFloat(0).toFixed(2));
+                $('.rec_total').text(parseFloat(0).toFixed(2));
+                $("#receipt_not_sel_total").val(parseFloat(_amounts).toFixed(2));
+                CalculateDerivedBalance();
+            }
+
+        });
+        var _amount1 = 0;
+        $(document).on('click', '.rcheck', function () {
+            var t = $('#ContactGrid1').DataTable();
+            var index = $(this).attr('data-index');
+            var uncheck_receipt = 0;
+            if ($(this).is(':checked')) {
+                $("#rdate" + index).addClass('validinput');
+                var am = t.fnGetData(parseInt(index))[13];
+                uncheck_receipt = $("#receipt_not_sel_total").val();
+                _amount1 = parseFloat(_amount1) + parseFloat(am);
+                $('#receipt_total').val(parseFloat(_amount1).toFixed(2));
+                $(".rec_total").text(parseFloat(_amount1).toFixed(2));
+                $("#receipt_not_sel_total").val(parseFloat(parseFloat(uncheck_receipt) - parseFloat(am)).toFixed(2));
+                CalculateDerivedBalance();
+            }
+            else {
+                $("#rdate" + index).removeClass('validinput');
+                uncheck_receipt = $("#receipt_not_sel_total").val();
+                var amt = $('#receipt_total').val();
+                var am = t.fnGetData(parseInt(index))[13];
+                _amount1 = parseFloat(amt) - parseFloat(t.fnGetData(index)[13]);
+                $('#receipt_total').val(parseFloat(_amount1).toFixed(2));
+                $(".rec_total").text(parseFloat(_amount1).toFixed(2));
+                $("#receipt_not_sel_total").val(parseFloat(parseFloat(uncheck_receipt) + parseFloat(am)).toFixed(2));
+                CalculateDerivedBalance();
+            }
+        });
+        function changeAmount()
+        {
+            var amt = $("#user_closing_bal").val();
+            $("#user_closing_bal").val(parseFloat(amt).toFixed(2));
+            $("#derived_closing_bal").val(parseFloat(amt).toFixed(2));
+            CalculateDerivedBalance();
+        }
+        function GettoCurrentBalance() {
+            var entity_id = $("#bank_account_id").val();
+            var start_date = $("#reco_end_date").val();
+            var entity_type_id = 8;
+            $("#ledger_closing_bal").val(0);
+            if (entity_id != "" && start_date !="") {
+                $.ajax({
+                    url: '@Url.Action("GetCurrenctBalance", "Generic")',
+                    type: "GET",
+                    dataType: "JSON",
+                    async: false,
+                    data: { entity: "getcurrentbalanceasofdate", entity_type_id: entity_type_id, entity_id: entity_id, start_date: start_date },
+                    success: function (level) {
+                        $("#ledger_closing_bal").val(parseFloat(level).toFixed(2));
+                        CalculateDerivedBalance();
+                    }
+                });
+            }
+        }
+        function CalculateDerivedBalance()
+        {
+            var a = $("#ledger_closing_bal").val();
+            var b = $("#payment_not_sel_total").val();
+            var c = $("#receipt_not_sel_total").val();
+            $("#derived_bank_statement_balance").val(parseFloat(parseFloat(a == "" ? 0 : a) + parseFloat(b == "" ? 0 : b) - parseFloat(c == "" ? 0 : c)).toFixed(2));
+            var d = $("#derived_bank_statement_balance").val();
+            var e = $("#derived_closing_bal").val();
+            $("#difference_amount").val(parseFloat(parseFloat(d == "" ? 0 : d) - parseFloat(e == "" ? 0 : e)).toFixed(2));
+
+        }
+        function TabletoJeson()
+        {
+            var t = $('#ContactGrid2').DataTable()
+            var rowCount = t.fnGetData().length;
+            var t1 = $('#ContactGrid1').DataTable()
+            var rowCount1 = t1.fnGetData().length;
+            $('#brs_detail').empty();
+            for (i = 0; i < rowCount; i++) {
+                var dt = $("#pdate" + i).val();
+                var pck = "pchk" + i;
+                var xx = document.getElementById(pck);
+                if (xx.checked) {
+                    $("#brs_detail").append('<input type="hidden" id="fin_ledger_payment_detail_id' + i + '" name="fin_ledger_payment_detail_id" value=' + t.fnGetData(i)[0] + '>');
+                    $("#brs_detail").append('<input type="hidden" id="doc_category_id' + i + '" name="doc_category_id" value=' + t.fnGetData(i)[3] + '>');
+                    $("#brs_detail").append('<input type="hidden" id="doc_no' + i + '" name="doc_no" value=' + t.fnGetData(i)[5] + '>');
+                    $("#brs_detail").append('<input type="hidden" id="doc_posting_date' + i + '" name="doc_posting_date" value=' + t.fnGetData(i)[6] + '>');
+                    $("#brs_detail").append('<input type="hidden" id="entity_type_id' + i + '" name="entity_type_id" value=' + t.fnGetData(i)[7] + '>');
+                    $("#brs_detail").append('<input type="hidden" id="entity_id' + i + '" name="entity_id" value=' + t.fnGetData(i)[9] + '>');
+                    $("#brs_detail").append('<input type="hidden" id="bank_tran_date' + i + '" name="bank_tran_date" value=' + dt + '>');
+                    $("#brs_detail").append('<input type="hidden" id="amount' + i + '" name="amount" value=' + t.fnGetData(i)[13] + '>');
+                }
+            }
+            for (j = 0; j < rowCount1; j++) {
+                var dt = $("#rdate" + j).val();
+                var rck = "rchk" + j;
+                var xx1 = document.getElementById(rck);
+                if (xx1.checked) {
+                    $("#brs_detail").append('<input type="hidden" id="fin_ledger_payment_detail_id1' + j + '" name="fin_ledger_payment_detail_id1" value=' + t1.fnGetData(j)[0] + '>');
+                    $("#brs_detail").append('<input type="hidden" id="doc_category_id1' + j + '" name="doc_category_id1" value=' + t1.fnGetData(j)[3] + '>');
+                    $("#brs_detail").append('<input type="hidden" id="doc_no1' + j + '" name="doc_no1" value=' + t1.fnGetData(j)[5] + '>');
+                    $("#brs_detail").append('<input type="hidden" id="doc_posting_date1' + j + '" name="doc_posting_date1" value=' + t1.fnGetData(j)[6] + '>');
+                    $("#brs_detail").append('<input type="hidden" id="entity_type_id1' + j + '" name="entity_type_id1" value=' + t1.fnGetData(j)[7] + '>');
+                    $("#brs_detail").append('<input type="hidden" id="entity_id1' + j + '" name="entity_id1" value=' + t1.fnGetData(j)[9] + '>');
+                    $("#brs_detail").append('<input type="hidden" id="bank_tran_date1' + j + '" name="bank_tran_date1" value=' + dt + '>');
+                    $("#brs_detail").append('<input type="hidden" id="amount1' + j + '" name="amount1" value=' + t1.fnGetData(j)[13] + '>');
+                }
+
+            }
+        }
+    </script>
+    }

@@ -1,0 +1,89 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<fin_credit_debit_note_vm>("Searching")
+        .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "DebitNote" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "DebitNote" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "DebitNote" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "DebitNote" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("fin_credit_debit_node_id").Width("15%").HeaderText("ID").Visible(false).IsPrimaryKey(true).Add();
+            col.Field("category_name").Width("15%").HeaderText("Category").Add();
+            col.Field("document_no").Width("15%").HeaderText("Document No").Add();
+            col.Field("posting_date").Width("15%").HeaderText("Posting Date").Format("{0:dd/MM/yyyy}").Add();
+            col.Field("entity_type_name").Width("15%").HeaderText("Entity Type").Add();
+            col.Field("entity_code").Width("15%").HeaderText("Entity Code").Visible(true).Add();
+            col.Field("entity_name").Width("15%").HeaderText("Entity Name").Visible(true).Add();
+            col.Field("currency_name").Width("15%").HeaderText("Currency").Add();
+            col.Field("remarks").Width("15%").HeaderText("Remarks").Visible(false).Add();
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = '@Url.Action("Edit", "DebitNote")?id=' + args.rowData.fin_credit_debit_node_id;
+
+        }
+        if (args.requestType == "add") {
+            location.href = '@Url.Action("Create", "DebitNote")';
+        }
+    }
+    function rightClick(args) {
+        location.href = '@Url.Action("Details", "DebitNote")?id=' + args.data.fin_credit_debit_node_id;
+    }
+
+    $(document).ready(function(){
+        var doc_no= '@ViewBag.doc';
+        if (doc_no != '') {
+            if (doc_no != 0) {
+                sweetAlert("", doc_no + " Saved successfully!", "success");
+            }
+        }
+    });
+
+</script>
+

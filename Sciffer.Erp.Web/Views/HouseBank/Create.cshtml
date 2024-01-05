@@ -1,0 +1,196 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.ref_bank_account_vm
+
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.bank_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("bank_id", (System.Web.Mvc.SelectList)ViewBag.BankList, "---Select---", new { @class = "form-control validinput" })
+                        @Html.ValidationMessageFor(model => model.bank_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.bank_account_code, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.bank_account_code, new { htmlAttributes = new { @class = "form-control num validinput" } })
+                        @Html.ValidationMessageFor(model => model.bank_account_code, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.bank_account_type_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("bank_account_type_id", (System.Web.Mvc.SelectList)ViewBag.BankAccountTypeNames, "---Select---", new { @class = "form-control validinput" })
+                        @Html.ValidationMessageFor(model => model.bank_account_type_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.bank_account_number, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.bank_account_number, new { htmlAttributes = new { @class = "form-control num1 validinput" } })
+                        @Html.ValidationMessageFor(model => model.bank_account_number, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.bank_swift_code, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.bank_swift_code, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.bank_swift_code, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.bank_ifsc_code, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.bank_ifsc_code, new { htmlAttributes = new { @class = "form-control validinput" } })
+                        @Html.ValidationMessageFor(model => model.bank_ifsc_code, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.BANK_COUNTRY_ID, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("BANK_COUNTRY_ID", (System.Web.Mvc.SelectList)ViewBag.BankCountryNames, htmlAttributes: new { @class = "form-control validinput", @onchange = "GetStatesByCntry(this.value)" })
+                        @Html.ValidationMessageFor(model => model.BANK_COUNTRY_ID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.bank_state_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("bank_state_id", (System.Web.Mvc.SelectList)ViewBag.BankStateNames, "---Select---", new { @class = "form-control validinput" })
+                        @Html.ValidationMessageFor(model => model.bank_state_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.bank_branch, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.bank_branch, new { htmlAttributes = new { @class = "form-control validinput" } })
+                        @Html.ValidationMessageFor(model => model.bank_branch, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.bank_city, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.bank_city, new { htmlAttributes = new { @class = "form-control validinput" } })
+                        @Html.ValidationMessageFor(model => model.bank_city, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.gl_account_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("gl_account_id", (System.Web.Mvc.SelectList)ViewBag.BankRelatedGLNames, "---Select---", new { @class = "form-control validinput" })
+                        @Html.ValidationMessageFor(model => model.gl_account_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">    
+                <div class="form-group">
+                    @Html.LabelFor(model => model.bank_currency_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("bank_currency_id", (System.Web.Mvc.SelectList)ViewBag.BankCurrencyNames, new { @class = "form-control validinput" })
+                        @Html.ValidationMessageFor(model => model.bank_currency_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>   
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.is_blocked, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.is_blocked, new { htmlAttributes = new { @class = "form-control", Type = "checkbox" } })
+                        @Html.ValidationMessageFor(model => model.is_blocked, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+             
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" data-controller="BankAccount" class="btn btn-success" style="float:right" id="create" name="create" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+<script src="~/Scripts/requirevalidation.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")   
+<script  type="text/javascript">
+    $(document).ready(function(){
+        $('#is_blocked').checkboxpicker();
+        GetStatesByCntry($("#BANK_COUNTRY_ID").val());
+        $("#bank_id").select2({
+            placeholder: "Select Bank",
+            allowClear: true
+        });
+        $("#gl_account_id").select2({
+            placeholder: "Select GL",
+            allowClear: true
+        });
+    });
+    function GetStatesByCntry(id) {
+        if (id == "") {
+            id = 0;
+        }
+        $.ajax({
+            url: "@Url.Action("GetStateNamesFromCountry", "Generic")",
+            type: "GET",
+            dataType: "JSON",
+            data: { c: id },
+            success: function (state) {
+                    $("#bank_state_id").html(""); // clear before appending new list
+                    $("#bank_state_id").append($('<option></option>').val(0).html("---Select---"));
+                    $.each(state, function (i, cycle) {
+                        $("#bank_state_id").append(
+                            $('<option></option>').val(cycle.STATE_ID).html(cycle.STATE_NAME));
+                    });
+            }
+        });
+    }
+    </script>
+   
+}

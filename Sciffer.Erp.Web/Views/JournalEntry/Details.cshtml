@@ -1,0 +1,266 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.journal_entryVM
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+
+
+@using (Html.BeginForm("Edit", "JournalEntry"))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    @Html.HiddenFor(model => model.journal_entry_id)
+                    <input type="hidden" id="journal_entry_is_active" name="journal_entry_is_active" value="true" />
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.journal_entry_doc_number, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-5 col-sm-5 col-xs-12">
+                            @Html.EditorFor(model => model.journal_entry_doc_number, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.journal_entry_doc_number, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            @Html.EditorFor(model => model.journal_entry_number, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.journal_entry_number, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.journal_entry_date, "Posting Date", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.journal_entry_date, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.journal_entry_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.journal_entry_reference, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.journal_entry_reference, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.journal_entry_reference, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.journal_entry_posting_date, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.journal_entry_posting_date, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.journal_entry_posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.journal_entry_remarks, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.journal_entry_remarks, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.journal_entry_remarks, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="productdetail" name="productdetail" />
+                <input type="hidden" id="deleteids" name="deleteids" />
+            </div>
+        </div>
+
+
+
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">Item Details</a></li>
+
+
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade  in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+
+                            </div>
+                        </div>
+                     
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                                <thead>
+                                    <tr>
+                                        <th hidden><label>ID</label></th>
+                                        <th><label>SR No.</label></th>
+                                        <th><label>Party</label></th>
+                                        <th hidden><label>Party ID</label></th>
+                                        <th><label>Description</label></th>
+                                        <th><label>Dr Amount</label></th>
+                                        <th><label>Cr Amount</label></th>
+                                        <th><label>Remarks</label></th>
+                                        <th><label>Delete</label></th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th><label>Total</label></th>
+                                        <th><span></span><label class="lbl_dr"></label></th>
+                                        <th><span></span><labe class="lbl_cr"><label></label></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+}
+<!-- Modal -->
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" src="~/Scripts/jquery.dataTables1.10.9.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/1.9.4.jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript">
+        function codeAddress() {
+            var t = $('#ContactGrid').DataTable();
+            var sr_no = t.fnGetData().length+1;
+            var pl_detail = @Html.Raw(JsonConvert.SerializeObject(this.Model.journal_entry_item));
+
+            var i=1;
+            $.each(pl_detail, function(key, value) {
+                t.fnAddData([value.journal_entry_item_id,sr_no,value.ref_party_type.party_type_name,value.party_type_id,value.journal_entry_item_description,value.journal_entry_dr,value.journal_entry_cr,value.journal_entry_remarks,value.journal_entry_id,value.journal_entry_item_is_active,''
+                ]);
+                i=i+1;
+                sr_no++;
+            });
+            calculate();
+        }
+        window.onload = codeAddress;
+
+        //calculate dr cr and total
+        function calculate(){
+            var t = $('#ContactGrid').DataTable();
+            var len = t.fnGetData().length;
+            var foot_dr = $('.lbl_dr').text();
+            var foot_cr = $('.lbl_cr').text();
+            var dr_amount = $("#txt_dr").val();
+            var cr_amount = $("#txt_cr").val();
+
+            var dr = 0;
+            var cr = 0;
+            var dr_total =0;
+            var cr_total = 0;
+            if (len > 0) {
+                for (var a = 0; a <= len-1 ; a++) {
+                    dr = dr + parseFloat(t.fnGetData(a)[5]);
+                    cr = cr + parseFloat(t.fnGetData(a)[6]);
+                }
+            }
+            else{
+                dr = dr + parseFloat(t.fnGetData(0)[5]);
+                cr = cr + parseFloat(t.fnGetData(0)[6]);
+            }
+            dr_total = dr;
+            cr_total = cr;
+            if (dr_amount != '') {
+                   dr_total = parseFloat(dr_amount) + dr;
+                }
+                if (cr_amount != '') {
+                    cr_total = parseFloat(cr_amount) + cr;
+                }
+                $('.lbl_dr').text(dr_total);
+                $('.lbl_cr').text(cr_total);
+        }
+
+
+        $('#open_modal').click(function () {
+            clearmodel();
+        });
+
+     
+      
+
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: false },
+                     { sname: "b", },
+                     { sname: "c", },
+                     { sname: "d", bVisible: false },
+                     { sname: "e", sWidth: "20%", },
+                     { sname: "f", },
+                     { sname: "g", },
+                     { sname: "h", },
+                     {
+                         sname: "i", sWidth: "8%",
+                         bSortable: false,
+                         mRender: function (data, type, full) {
+                             return '<img class="edit" src="../../images/writing_file.png" height="20px" width="25px" alt="Edit" onclick="editRow(' + full[1] + ');" /><img class="delete" src="../../images/remove.png" height="20px" width="25px" alt="Delete" " />';
+                         }
+                     }]
+
+        });
+
+
+        function TabletoJeson() {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var str;
+            var str1;
+            for (i = 0; i < rowCount; i++) {
+                str1 = t.fnGetData(i)[0] + ",";
+                str1 = str1 + t.fnGetData(i)[1] + ",";
+                str1 = str1 + t.fnGetData(i)[2] + ",";
+                str1 = str1 + t.fnGetData(i)[3] + ",";
+                str1 = str1 + t.fnGetData(i)[4] + ",";
+                str1 = str1 + t.fnGetData(i)[5] + ",";
+                str1 = str1 + t.fnGetData(i)[6] + ",";
+                str1 = str1 + t.fnGetData(i)[7] + ",";
+                str1 = str1 + t.fnGetData(i)[8] + ",";
+                if (i == 0) {
+                    str = str1 + "~"
+                }
+                else {
+                    str = str + str1 + "~";
+                }
+            }
+            document.getElementsByName("productdetail")[0].value = str;
+        }
+
+
+
+        $("#form0 :input").prop("disabled", true);
+
+       
+    </script>
+}
+
+
+

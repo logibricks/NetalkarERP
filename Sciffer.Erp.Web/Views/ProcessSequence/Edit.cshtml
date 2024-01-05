@@ -1,0 +1,331 @@
+﻿
+@{
+    ViewBag.Title = "Edit";
+}
+<h2>Edit Process Sequence</h2>
+<hr />
+@using (Html.BeginForm("UpdateProcessSequence", "ProcessSequence", FormMethod.Post))
+{
+    <div id="ProcessSequenceDetails"></div>
+    <div class="row form-group">
+        <div class="col-md-6">
+            <div class="col-md-3">
+                <label class="control-label">Item Code</label>
+            </div>
+            <div class="col-md-8">
+                @Html.DropDownList("ITEM_ID", (new System.Web.Mvc.SelectList(ViewBag.Item, "ITEM_ID", "ITEM_CODE")), "--select--", htmlAttributes: new { @class = "form-control", required = "required" })
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="col-md-3">
+                Process Sequence name
+            </div>
+            <div class="col-md-8">
+                <input type="text" id="process_sequence_name" name="process_sequence_name" class="form-control" />
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row form-group">
+        <div class="col-md-6">
+            <div class="col-md-3">
+                <label class="control-label"> Is Blocked</label>
+            </div>
+            <div class="col-md-8">
+                <input type="checkbox" id="IS_BLOCKED">
+                <input type="hidden" name="is_blocked" id="is_blocked" />
+            </div>
+        </div>
+    </div>
+    <hr />
+
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading"></div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-4 col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4 col-xs-12">Select Process</label>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <select class="process form-control" id="process">
+                                    <option value="">-- Select Process --</option>
+                                    @foreach (var item in ViewBag.Process)
+                                    {
+                                        <option value="@item.process_id">@item.process_code</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4 col-xs-12">Select Machine</label>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <select class="machine form-control" id="machine">
+                                    <option value="">-- Select Machine --</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-4">
+                        <div class="form-group">
+                            <label class="control-label col-md-4 col-sm-4 col-xs-12">Item Cost </label>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <input type="number" class="form-control" id="item_cost" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-lg-1 col-sm-1" style="float:right">
+                        <div class="form-group">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <button type="button" class="btn btn-primary" id="add_sequence">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="srno3" />
+                </div>
+                <br />
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-responsive table-bordered table-striped" id="ProcessSequenceGrid">
+                            <thead>
+                                <tr>
+                                    <th><label>Sr. No.</label></th>
+                                    <th><label>Id</label></th>
+                                    <th><label>Process Id</label></th>
+                                    <th><label>Process Code</label></th>
+                                    <th><label>Machine Id</label></th>
+                                    <th><label>Machine Code</label></th>
+                                    <th><label>Item Cost</label></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" id="deleteids" name="deleteids" />
+        <input type="hidden" id="sequencedetail" name="sequencedetail" />
+        <input type="hidden" id="process_sequence_id" name="process_sequence_id" />
+
+        <div class="row">
+            <div class="col-lg12 col-sm-12">
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <input type="button" value="Back" id="back" class="btn btn-danger" style="float:left" />
+                        <input type="submit" value="Update" id="create" data-controller="ProcessSequence" class="btn btn-success" onclick="DataTableToForm();" style="float:right" />
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            //$("#machine").select2({
+            //    placeholder: "Select Machine",
+            //    allowClear: true
+            //});
+
+            //$("#process").select2({
+            //    placeholder: "Select Process",
+            //    allowClear: true
+            //});
+
+            //$('#IS_BLOCKED').checkboxpicker();
+
+            $("#machine").attr('disabled','disabled');
+            $("#process").attr('disabled','disabled');
+            $("#item_cost").attr('disabled','disabled');
+            $("#add_sequence").attr('disabled','disabled');
+        
+            var data = @Html.Raw(Json.Encode(ViewBag.result));
+            console.log(data);
+
+            $("#process_sequence_id").val(data.process_sequence_id);
+            $("#process_sequence_name").val(data.process_sequence_name);
+            $("#ITEM_ID").val(data.ITEM_ID);
+
+            if (data.is_blocked == true) {
+                //Check
+                document.getElementById('IS_BLOCKED').setAttribute('checked', 'checked');
+            }
+            else {
+                //UnCheck
+                document.getElementById('IS_BLOCKED').removeAttribute('checked');
+            }
+            $('#IS_BLOCKED').checkboxpicker();
+
+            var tp = $("#ProcessSequenceGrid").DataTable();
+            var sr_no3 = tp.fnGetData().length+1;
+            @*// var tp_detail = @Html.Raw(JsonConvert.SerializeObject(this.Model));*@
+            var j=1;
+            $.each(data.process_sequence_detail_vm , function(key, value){
+                tp.fnAddData([ sr_no3, value.map_process_sequence_id, value.process_id, value.process_code, value.machine_id, value.machine_code, value.item_cost]);
+                j=j+1;
+                sr_no3++;
+            });
+            
+            $("#ITEM_ID").select2({
+                placeholder: "Select Item",
+                allowClear: true
+            });
+
+        })
+
+        $('#IS_BLOCKED').change(function() {
+            if($(this).is(":checked")) {
+                $("#is_blocked").val(true);
+            }
+            else{
+                $("#is_blocked").val(false);
+            }
+            
+        });
+
+        //Onchange Process
+        $("#process").change(function(){
+            $.ajax({
+                url: "@Url.Action("GetMachinebyProcess", "ProcessSequence")",
+                method: "POST",
+                cache: false,
+                data: { process_id: $("#process").val() },
+                success: function (data) {
+                    $("#machine").empty();
+                    for (var i = 0; i < data.length; i++) {
+                        $("#machine").append('<option value="' + data[i].Value + '">' + data[i].Text + '</option>');
+                    }
+                }
+            });
+        });
+
+
+        $("#back").click(function () {
+            window.location.href = '@Url.Action("Index", "ProcessSequence")';
+        });
+
+        //$('#add_sequence').click(function () {
+        //    var t3 = $('#ProcessSequenceGrid').DataTable()
+        //    var rowCount = t3.fnGetData().length;
+        //    var process_id = $("#process").val();
+        //    var process_name = $("#process :selected").text();
+        //    var item_cost = $("#item_cost").val();
+        //    var machine_id = $("#machine").val();
+        //    var machine_name = $("#machine :selected").text();
+
+        //    if (process_id == 0) {
+        //        swal("", "Please select process", "error");
+        //        return false;
+        //    }
+
+        //    if (machine_name == '') {
+        //        swal("", "Please select machine", "error");
+        //        return false;
+        //    }
+
+        //    if (item_cost == '') {
+        //        swal("", "Please Enter item cost", "error");
+        //        return false;
+        //    }
+
+            
+        //    if ($("#srno3").val() == "") {
+        //        for (var k = 0; k <= rowCount - 1; k++) {
+        //            if (t3.fnGetData(k)[2] == process_id && t3.fnGetData(k)[4] == machine_id) {
+        //                swal("", "Process and machine are already added", "error");
+        //                return false;
+        //            }
+        //        }
+        //        t3.fnAddData([rowCount + 1, '',process_id, process_name, machine_id, machine_name, item_cost
+        //        ]);
+        //    }
+        //    else{
+        //        t3.fnClearTable();
+        //    }
+        //    //else {
+        //    //    for (var k = 0; k <= rowCount - 1; k++) {
+        //    //        if (t3.fnGetData(k)[2] == parm_name) {
+        //    //            swal("", "Parameter details are already added.", "error");
+        //    //            return false;
+        //    //        }
+        //    //    }
+        //    //    var cc = parseInt($("#srno3").val());
+        //    //    t3.fnUpdate(['', cc + 1, parm_name, parm_range_uom, parm_range_from, parm_range_to, ''], cc)
+        //    //}
+        //    clearmodel1();
+        //});
+
+        //function clearmodel1() {
+        //    $("#process").val('');
+        //    $("#machine").val('');
+        //    $("#item_cost").val('');
+        //    $('#srno3').val('');
+        //}
+
+        $('#ProcessSequenceGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "q", bVisible: true },
+                     { sname: "a", bVisible: false },
+                     { sname: "b", bVisible: false },
+                     { sname: "c", bVisible: true },
+                     { sname: "d", bVisible: false },
+                     { sname: "e", bVisible: true },
+                     { sname: "f", bVisible: true },]
+
+            //{
+            //    sname: "f", sWidth: "8%",
+            //    bSortable: false,
+            //    mRender: function (data, type, full) {
+            //        return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" />'
+            //        //<img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete" />';
+            //    }
+            //}]
+
+        });
+
+        function DataTableToForm() {
+
+            var t = $('#ProcessSequenceGrid').dataTable();
+
+            var rowCount = t.fnGetData().length;
+
+            for (i = 0; i < rowCount; i++) {
+
+                $("#ProcessSequenceDetails").append('<input type="hidden" id="process_id' + i + '" name="process_id">');
+                $("#ProcessSequenceDetails").append('<input type="hidden" id="process_name' + i + '" name="process_name">');
+                $("#ProcessSequenceDetails").append('<input type="hidden" id="machine_id' + i + '" name="machine_id">');
+                $("#ProcessSequenceDetails").append('<input type="hidden" id="machine_name' + i + '" name="machine_name">');
+                $("#ProcessSequenceDetails").append('<input type="hidden" id="item_cost' + i + '" name="item_cost">');
+
+                $("#process_id" + i).val(t.fnGetData(i)[2]);
+                $("#process_name" + i).val(t.fnGetData(i)[3]);
+                $("#machine_id" + i).val(t.fnGetData(i)[4]);
+                $("#machine_name" + i).val(t.fnGetData(i)[5]);
+                $("#item_cost" + i).val(t.fnGetData(i)[6]);
+
+            }
+        }
+
+    </script>
+}

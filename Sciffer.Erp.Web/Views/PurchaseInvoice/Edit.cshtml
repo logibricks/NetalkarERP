@@ -1,0 +1,1439 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.pur_pi_VM
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Edit";
+}
+@using (Html.BeginForm("Edit", "PurchaseInvoice", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal" id="form" style="margin-top:10px;">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.pi_id)
+        @Html.HiddenFor(model => model.tcs_amount)
+        <div id="pidetail" hidden></div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.po_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("po_id", (System.Web.Mvc.SelectList)ViewBag.po_list, new { @class = "form-control validinput removedisabled", @required = true, @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.po_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.status_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("status_id", (System.Web.Mvc.SelectList)ViewBag.status_list, new { @class = "form-control validinput removedisabled parent ", @disabled = "disabled", @required = true })
+                            @Html.ValidationMessageFor(model => model.status_id, "", new { @class = "text-danger" })
+                            <label id="status" hidden style="color:#d43f3a;margin-top:-6px"><h4>C A N C E L L E D</h4></label>
+                            <label id="closed" hidden style="color:#5cb85c;margin-top:-6px"><h4>C L O S E D</h4></label>
+                            <label id="open" hidden style="color:#5cb85c;margin-top:-6px"><h4>O P E N</h4></label>
+                            <label id="Partially_Open" hidden style="color:orange;margin-top:-6px"><h4>P A R T I A L L Y   &nbsp O P E N</h4></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.category_list, new { @class = "form-control category validinput removedisabled", @disabled = "disabled", @required = true })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.EditorFor(model => model.document_no, new { htmlAttributes = new { @class = "form-control  num validinput removedisabled", @disabled = "disabled", @required = true } })
+                            @Html.ValidationMessageFor(model => model.document_no, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.posting_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control postingdocumentdate  removedisabled" } })
+                            @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.vendor_id, "Vendor *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("vendor_id", (System.Web.Mvc.SelectList)ViewBag.vendor_list, "---Select---", new { @class = "form-control validinput removedisabled", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.vendor_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.item_service_id, "Item/Service *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("item_service_id", new List<SelectListItem>
+                            {
+                            new SelectListItem{ Text="Item", Value = "1" },
+                            new SelectListItem{ Text="Service", Value = "2" },
+                            new SelectListItem{ Text="Asset", Value = "3" }
+                            }, new { @class = "form-control removedisabled", @onchange = "changeItemType();", @disabled = "disabled" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.net_value, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-5 col-sm-5 col-xs-12">
+                            @Html.EditorFor(model => model.net_value, new { htmlAttributes = new { @class = "form-control right  removedisabled", @disabled = "disabled", @type = "number" } })
+                            @Html.ValidationMessageFor(model => model.net_value, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            @Html.DropDownList("net_currency_id", (System.Web.Mvc.SelectList)ViewBag.currency_list, new { @class = "form-control removedisabled", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.net_currency_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.gross_value, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-5 col-sm-5 col-xs-12">
+                            @Html.EditorFor(model => model.gross_value, new { htmlAttributes = new { @class = "form-control right removedisabled", @disabled = "disabled", @type = "number" } })
+                            @Html.ValidationMessageFor(model => model.gross_value, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            @Html.DropDownList("gross_currency_id", (System.Web.Mvc.SelectList)ViewBag.currency_list, new { @class = "form-control removedisabled", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.gross_currency_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">General</a></li>
+                <li><a data-toggle="tab" href="#sectionB">Line Item</a></li>
+                <li><a data-toggle="tab" href="#sectionC">Vendor</a></li>
+                <li><a data-toggle="tab" href="#sectionD">Accounting</a></li>
+                <li><a data-toggle="tab" href="#sectionE">Information</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.business_unit_id, "Business Unit *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("business_unit_id", (System.Web.Mvc.SelectList)ViewBag.business_list, "---Select---", new { @class = "form-control validinput removedisabled" })
+                                    @Html.ValidationMessageFor(model => model.business_unit_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.plant_id, "Plant *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plant_list, "---Select---", new { @class = "form-control removedisabled", @disabled = "disabled", @onchange = "GetStorageLocation(this.value)" })
+                                    @Html.ValidationMessageFor(model => model.plant_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.freight_terms_id, "Freight Terms *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("freight_terms_id", (System.Web.Mvc.SelectList)ViewBag.freight_list, "---Select---", new { @class = "form-control validinput removedisabled" })
+                                    @Html.ValidationMessageFor(model => model.freight_terms_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.place_of_supply_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("place_of_supply_id", (System.Web.Mvc.SelectList)ViewBag.state_list, "---Select---", new { @class = "form-control removedisabled", @disabled = "disabled", })
+                                    @Html.ValidationMessageFor(model => model.place_of_supply_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.vendor_document_no, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.vendor_document_no, new { htmlAttributes = new { @class = "form-control validinput removedisabled" } })
+                                    @Html.ValidationMessageFor(model => model.vendor_document_no, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.vendor_document_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.vendor_document_date, new { htmlAttributes = new { @class = "form-control validinput removedisabled" } })
+                                    @Html.ValidationMessageFor(model => model.vendor_document_date, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.form_id, "GRN Against Form", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("form_id", (System.Web.Mvc.SelectList)ViewBag.form_list, "---Select---", new { @class = "form-control removedisabled" })
+                                    @Html.ValidationMessageFor(model => model.form_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.is_hold_payment, "Hold Payment", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.is_hold_payment, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.is_hold_payment, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.delivery_date, "Delivery Date ", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.delivery_date, new { htmlAttributes = new { @class = "form-control removedisabled" } })
+                                    @Html.ValidationMessageFor(model => model.delivery_date, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.grn_no, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.grn_no, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.grn_no, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.grn_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.grn_date, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.grn_date, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionB" class="tab-pane fade" style="margin-top:10px;">
+
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                                <thead>
+                                    <tr>
+                                        <th hidden><label>ID</label></th>
+                                        <th><label>Sr No.</label></th>
+                                        <th hidden><label>Item ID</label></th>
+                                        <th><label id="itemgl">Item</label></th>
+                                        <th hidden><label>User Description</label></th>
+                                        <th><label>hsn_id</label></th>
+                                        <th><label>SAC/HSN Code</label></th>
+                                        <th hidden><label>Storage Location ID</label></th>
+                                        <th hidden><label>Storage Location</label></th>
+                                        <th class="dt_col_hide"><label>Delivery Date</label></th>
+                                        <th class="dt_col_hide"><label>Quantity</label></th>
+                                        <th hidden><label>UOM ID</label></th>
+                                        <th class="dt_col_hide"><label>UOM</label></th>
+                                        <th hidden><label id="unitpricetext">Unit Price</label></th>
+                                        <th hidden><label>Discount</label></th>
+                                        <th><label>Eff. Price</label></th>
+                                        <th><label>Purchase Value</label></th>
+                                        <th class="dt_col_hide"><label>Taxable Rate</label></th>
+                                        <th class="dt_col_hide"><label>Taxable Value</label></th>
+                                        <th hidden><label>Tax ID</label></th>
+                                        <th class="dt_col_hide"><label>Tax Code</label></th>
+                                        <th hidden><label>Cost Center ID</label></th>
+                                        <th><label>Cost Center</label></th>
+                                        <th hidden><label>GRN Detail ID</label></th>
+                                        <th hidden><label>GRIR</label></th>
+                                        <th hidden><label>Basic Value</label></th>
+                                        <th hidden><label>Item Type ID</label></th>
+                                        <th><label>Details</label></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="table-responsive">
+                                <table class="table table-responsive table-bordered table-striped" id="TaxGrid"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionC" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.billing_address, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.billing_address, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.billing_address, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.billing_city, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.billing_city, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.billing_city, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.billing_pincode, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.billing_pincode, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.billing_pincode, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.country_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("country_id", (System.Web.Mvc.SelectList)ViewBag.country_list, "---Select---", new { @class = "form-control removedisabled", @disabled = "disabled" })
+                                    @Html.ValidationMessageFor(model => model.country_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.billing_state_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("billing_state_id", (System.Web.Mvc.SelectList)ViewBag.state_list, "---Select---", new { @class = "form-control removedisabled", @disabled = "disabled" })
+                                    @Html.ValidationMessageFor(model => model.billing_state_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.email_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.email_id, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.email_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.gst_in, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.gst_in, new { htmlAttributes = new { @class = "form-control removedisabled validinput", @disabled = "disabled", } })
+                                    @Html.ValidationMessageFor(model => model.gst_in, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.gst_vendor_type_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("gst_vendor_type_id", (System.Web.Mvc.SelectList)ViewBag.gst_list, "---Select---", new { @class = "form-control removedisabled validinput", @disabled = "disabled", })
+                                    @Html.ValidationMessageFor(model => model.gst_vendor_type_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionD" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.payment_cycle_type_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("payment_cycle_type_id", (System.Web.Mvc.SelectList)ViewBag.payment_cycle_type_list, "---Select---", new { @class = "form-control validinput removedisabled", @disabled = "disabled", @required = true, @onchange = "FillPaymentCycle()" })
+                                    @Html.ValidationMessageFor(model => model.payment_cycle_type_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.payment_cycle_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("payment_cycle_id", (System.Web.Mvc.SelectList)ViewBag.payment_cycle_list, "---Select---", new { @class = "form-control validinput removedisabled", @disabled = "disabled" })
+                                    @Html.ValidationMessageFor(model => model.payment_cycle_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.payment_terms_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("payment_terms_id", (System.Web.Mvc.SelectList)ViewBag.payment_terms_list, "---Select---", new { @class = "form-control validinput removedisabled", @disabled = "disabled", @required = true })
+                                    @Html.ValidationMessageFor(model => model.payment_terms_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 hidden">
+                            <div class="col-sm-4">JE Entry</div>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <button type="button" id="toggle" title="JE Entry" class="btn btn-primary" onclick="JE_Entry();"><span class="glyphicon glyphicon-plus"></span></button>
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6 hidden">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.gst_no, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.gst_no, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled", } })
+                                    @Html.ValidationMessageFor(model => model.gst_no, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row hidden">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.pan_no, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.pan_no, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.pan_no, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ecc_no, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.ecc_no, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled", } })
+                                    @Html.ValidationMessageFor(model => model.ecc_no, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row hidden">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.vat_tin_no, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.vat_tin_no, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled", } })
+                                    @Html.ValidationMessageFor(model => model.vat_tin_no, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.cst_tin_no, htmlAttributes: new { @class = "control-label col-md-4 removedisabled", @disabled = "disabled", })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.cst_tin_no, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled", } })
+                                    @Html.ValidationMessageFor(model => model.cst_tin_no, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row hidden">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.service_tax_no, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.service_tax_no, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled", } })
+                                    @Html.ValidationMessageFor(model => model.service_tax_no, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.tds_code_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("tds_code_id", (System.Web.Mvc.SelectList)ViewBag.tdslist, "---Select---", new { @class = "form-control removedisabled", @disabled = "disabled", @onchange = "CalculateTax(this.value);" })
+                                    @Html.ValidationMessageFor(model => model.tds_code_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div id="sectionE" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.internal_remarks, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.internal_remarks, new { htmlAttributes = new { @class = "form-control removedisabled" } })
+                                    @Html.ValidationMessageFor(model => model.internal_remarks, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.remarks_on_doc, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.remarks_on_doc, new { htmlAttributes = new { @class = "form-control removedisabled" } })
+                                    @Html.ValidationMessageFor(model => model.remarks_on_doc, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.cancellation_remarks, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.cancellation_remarks, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.cancellation_remarks, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.attachment, "Attachment", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <input type="file" class="form-control" id="FileUpload" name="FileUpload" accept="application/pdf, image/*" />
+                                    @Html.ValidationMessageFor(model => model.attachment, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.created_by, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("created_by", (System.Web.Mvc.SelectList)ViewBag.user_list, "---Select---", new { @class = "form-control removedisabled" })
+                                    @Html.ValidationMessageFor(model => model.created_by, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.created_ts, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.created_ts, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.created_ts, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.modify_by, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("modify_by", (System.Web.Mvc.SelectList)ViewBag.user_list, "---Select---", new { @class = "form-control removedisabled", @disabled = "disabled" })
+                                    @Html.ValidationMessageFor(model => model.modify_by, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.modify_ts, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.modify_ts, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.modify_ts, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.cancelled_by, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("cancelled_by", (System.Web.Mvc.SelectList)ViewBag.user_list, "---Select---", new { @class = "form-control removedisabled", @disabled = "disabled" })
+                                    @Html.ValidationMessageFor(model => model.cancelled_by, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.cancelled_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.cancelled_date, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.cancelled_date, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label col-md-4" for="first-name">
+                                    Cancelled Reason Determination
+                                </label>
+                                <div class="col-md-8">
+                                    @Html.DropDownList("cancellation_reason_id", (System.Web.Mvc.SelectList)ViewBag.cancellationreasonlist, "---Select---", new { @class = "form-control removedisabled", @disabled = "disabled" })
+                                    @*@Html.EditorFor(model => model.cancellation_remarks, new { htmlAttributes = new { @class = "form-control" } })*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="productdetail" name="productdetail" />
+                <input type="hidden" id="attributedetail" name="attributedetail" />
+                <input type="hidden" id="formdetail" name="formdetail" />
+                <input type="hidden" id="deleteids" name="deleteids" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg12 col-sm-12">
+                <div class="form-group">
+                    <div class="col-md-5 col-sm-5 col-xs-5">
+                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-xs-2">
+                        <input type="button" value="Cancel Purchase Invoice" class="btn btn-danger" data-toggle="modal" data-target="#myModal" style="float:right" id="cancel_pi" />
+                    </div>
+                    <div class="col-md-5 col-sm-5 col-xs-5">
+                        <input type="submit" value="Update" data-id="@Model.pi_id" data-controller="PurchaseInvoice" class="btn btn-success" style="float:right" id="create" name="create" onclick="TabletoJeson()" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title" style="text-align:center"><span style="color:red">Are you sure you want to cancel this Purchase Invoice? You will not be able to reverse this action. </span></h3>
+                </div>
+                <div class="modal-body">
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Cancellation Reason <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                @Html.DropDownList("reason_id", (System.Web.Mvc.SelectList)ViewBag.cancellationreasonlist, "---Select---", new { @class = "form-control col-md-7 col-xs-12" })
+                                @*@Html.EditorFor(model => model.cancellation_remarks, new { htmlAttributes = new { @class = "form-control" } })*@
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Remarks
+                            </label>
+                            <div class="col-md-7">
+                                <textarea id="cancel_remarks" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <input type="hidden" id="srno" />
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="canclearmodel();">No</button>
+                    <button type="button" class="btn btn-success" id="Cancelled" name="Cancelled" onclick="Cancel_Purchase();">Yes</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal1" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Item Details</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row hide_item_type">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                Item Type <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                @Html.DropDownList("item_type_id", (System.Web.Mvc.SelectList)ViewBag.item_type, "--Select--", new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                Item <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control" id="item_name" disabled />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                User Description
+                            </label>
+                            <div class="col-md-7">
+                                <textarea class="form-control col-md-7 col-xs-12" id="udescription" rows="3" disabled></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row hide_hsn">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name" id="lbl_sac_hsn_id">
+                                HSN Code <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                @Html.DropDownList("sac_hsn_id", (System.Web.Mvc.SelectList)ViewBag.hsncodelist, "---Select---", new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <br class="dt_col_hide" />
+                    <div class="row dt_col_hide" id="divdelivery">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                Delivery Date <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="date" class="form-control col-md-7 col-xs-12" id="dte" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <br class="dt_col_hide" />
+                    <div class="row dt_col_hide" id="qtext">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Quantity <span class="required">*</span>
+                            </label>
+                            <div class="col-md-4">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="quantity" disabled>
+                            </div>
+                            <div class="col-md-3">
+                                @Html.DropDownList("uom_id", (System.Web.Mvc.SelectList)ViewBag.uom_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12", @disabled = "disabled" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name" id="uprice">
+                                Unit Price <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="unitprice" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Discount (%) <span class="required"></span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" min="0" max="3" class="form-control col-md-7 col-xs-12" id="discount" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <br class="dt_col_hide" />
+                    <div class="row dt_col_hide">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Effective Unit Price <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="effectiveprice" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Purchase Value <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="salesvalue" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <br class="dt_col_hide" />
+                    <div class="row dt_col_hide">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Taxable Rate <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="assessablerate" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <br class="dt_col_hide" />
+                    <div class="row dt_col_hide">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Taxable Value <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="assessablevalue" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Tax Code <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control" id="tax_name" disabled />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <input type="hidden" id="srno" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                    <button type="button" class="addproduct btn btn-primary">Add Item</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal2" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content" style="align-content:center">
+                <div class="modal-header">
+                    <button type="button" class="close closes" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">GL</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="table-responsive">
+                                <table class="table table-responsive table-bordered table-striped" id="CreditDebitGrid">
+                                    <thead>
+                                        <tr>
+                                            <th><label>GL Account</label></th>
+                                            <th><label>Debit</label></th>
+                                            <th><label>Credit</label></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn closes btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+    <div class="modal fade" id="myModalTDS" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">JE Entry Detail</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table class="table table-responsive table-bordered table-striped" id="JEGrid">
+                            <thead>
+                                <tr>
+                                    <th><label>Gl Name</label></th>
+                                    <th><label>Debit</label></th>
+                                    <th><label>Credit</label></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#is_hold_payment").checkboxpicker();
+            var t = $('#ContactGrid').DataTable();
+            var sr_no = t.fnGetData().length+1;
+            var pi_detail = @Html.Raw(JsonConvert.SerializeObject(this.Model));
+            if(pi_detail.ref_status!=null)
+            {
+                if(pi_detail.ref_status.status_name =='Cancelled' || pi_detail.ref_status.status_name =='Closed' ){
+
+                    $("#form :input").prop("disabled", true);
+
+                }
+                if(pi_detail.ref_status.status_name =='Cancelled' )
+                {
+                    $("#status_id").hide();
+                    $("#status").show();
+                }
+                else if( pi_detail.ref_status.status_name =='Closed' )
+                {
+                    $("#status_id").hide();
+                    $("#closed").show();
+                }
+                else if( pi_detail.ref_status.status_name =='Open' )
+                {
+                    $("#status_id").hide();
+                    $("#open").show();
+                }
+                else
+                {
+                    $("#status_id").hide();
+                    $("#Partially_Open").show();
+                }
+                if(pi_detail.ref_status.status_name!='Open')
+                {
+                    document.getElementById("posting_date").disabled = true;
+                    document.getElementById("payment_terms_id").disabled = true;
+                }
+                else
+                {
+                    document.getElementById("posting_date").disabled = false;
+                    document.getElementById("payment_terms_id").disabled = false;
+                }
+            }
+           // console.log(pi_detail);
+            $("#item_service").val(pi_detail.item_service);
+            if(pi_detail.cancellation_remarks!=null)
+            {
+                $("#cancel_pi").hide();
+                $("#create").hide();
+            }
+            var i=1;
+            var str="";
+            var str1="";
+            var tot = 0;
+            $.each(pi_detail.pi_detail_vm, function(key, value) {
+                var result;
+                if(value.delivery_date==null){
+                    result=null
+                }
+                else{
+                    var input = value.delivery_date;
+                    result = input.substring(0, 10);
+                }
+                $("#grn_no").val(value.grn_no);
+                $("#grn_date").val(value.grn_date);
+                t.fnAddData([value.pi_detail_id,i,value.item_id,value.item_name,value.user_description,
+                    value.hsn_id,value.hsn_code,
+                    value.storage_loaction_id,value.sloc_name,result, parseFloat(value.quantity).toFixed(2), value.uom_id,
+                    value.uom_name, parseFloat(value.unit_price).toFixed(2), parseFloat(value.discount).toFixed(2), parseFloat(value.eff_unit_price).toFixed(2), parseFloat(value.purchase_value).toFixed(2),
+                    parseFloat(value.assesable_rate).toFixed(2), parseFloat(value.assesable_value).toFixed(2), value.tax_id,value.tax_name,value.cost_center_id,
+                    value.cost_center_description,value.grn_detail_id,value.grir_value,parseFloat(value.basic_value).toFixed(2),value.item_type_id,''
+                ]);
+                i=i+1;
+                str1 = value.tax_id + "~";
+                str1 = str1 + value.assesable_value + "~";
+                str1 = str1 + value.purchase_value + "~";
+                str1 = str1 + pi_detail.round_off;
+                if (i == 0) {
+                    str = str1 + ","
+                }
+                else {
+                    str = str + str1 + ",";
+                }
+                tot = tot + parseFloat(value.purchase_value);
+            });
+            GetTaxDetail(str.slice(0, -1), tot, pi_detail.posting_date,pi_detail.tds_code_id);
+            if (pi_detail.item_service_id == 1 || pi_detail.item_service_id == 3)
+            {
+                $('#itemgl').text("Item");
+                $("#unitpricetext").text("Unit Price");
+                $('.dt_col_hide').show();
+            }
+            else
+            {
+                $('#itemgl').text("GL");
+                $("#unitpricetext").text("Price");
+                $('.dt_col_hide').hide();
+            }
+            var data="";
+            $.each(pi_detail.pur_pi_form, function(key, value) {
+                $("#form_id").val(value.form_id);
+            });
+            $("#net_value").val(parseFloat(pi_detail.net_value).toFixed(2));
+        });
+
+        function JSONDate(dateStr) {
+            var m, day;
+            jsonDate = dateStr;
+            var d = new Date(parseInt(jsonDate.substr(6)));
+            m = d.getMonth() + 1;
+            if (m < 10)
+                m = '0' + m
+            if (d.getDate() < 10)
+                day = '0' + d.getDate()
+            else
+                day = d.getDate();
+            return (d.getFullYear() + '-' + m + '-' + day);
+        }
+
+
+        function GetTaxDetail(taxdetail, amount, dt,tds_code_id) {
+            var tds_amount = 0;
+            let _tot_count = 0;
+            var tcs_amount = $("#tcs_amount").val() == "" ? 0 : $("#tcs_amount").val();
+            $.ajax({
+                url: "@Url.Action("GetTaxCalculation", "Generic")",
+                type: "GET",
+                dataType: "JSON",
+                async: false,
+                data: {entity:"calculatetaxforsalesedit", st: taxdetail, amt: amount, dt: dt, tds_code_id: tds_code_id },
+                success: function (Payment_Cycle) {
+                   // console.log(Payment_Cycle);
+                    $('#TaxGrid tbody').html('');
+                    $.each(Payment_Cycle, function (i, cycle) {
+                        var n = cycle.tax_name.includes("TDS");
+                        if (n == true) {
+                            tds_amount = cycle.tax_value;
+                        }
+                        if (cycle.tax_name == "Total") {
+                            if (_tot_count == 0) {
+                                $('#TaxGrid').append('<tbody>');
+                                $('#TaxGrid').append('<tr><td>' + cycle.tax_name + '</td><td align="right">' + parseFloat(cycle.tax_value).toFixed(2) + '</td></tr>')
+                                $('#TaxGrid').append('</tbody>');
+                                if (tcs_amount != 0) {
+                                    $('#TaxGrid').append('<tbody>');
+                                    $('#TaxGrid').append('<tr><td>TCS Amount</td><td align="right">' + parseFloat(tcs_amount).toFixed(2) + '</td></tr>')
+                                    $('#TaxGrid').append('</tbody>');
+
+                                    $('#TaxGrid').append('<tbody>');
+                                    $('#TaxGrid').append('<tr><td>' + cycle.tax_name + '</td><td align="right">' + parseFloat(parseFloat(cycle.tax_value) + parseFloat(tcs_amount)).toFixed(2) + '</td></tr>')
+                                    $('#TaxGrid').append('</tbody>');
+                                }
+                            }
+                            _tot_count = _tot_count + 1;
+                        }
+                        else if (cycle.tax_name.includes("Net Total"))
+                        {
+                            $('#TaxGrid').append('<tbody>');
+                            $('#TaxGrid').append('<tr><td>' + cycle.tax_name + '</td><td align="right">' + parseFloat(parseFloat(cycle.tax_value) + parseFloat(tds_amount) + parseFloat(tcs_amount)).toFixed(2) + '</td></tr>')
+                            $('#TaxGrid').append('</tbody>');
+                        }
+                        else {
+                            $('#TaxGrid').append('<tbody>');
+                            $('#TaxGrid').append('<tr><td>' + cycle.tax_name + '</td><td align="right">' + parseFloat(cycle.tax_value).toFixed(2) + '</td></tr>')
+                            $('#TaxGrid').append('</tbody>');
+                        }
+
+
+
+
+                        $("#gross_value").val(parseFloat(parseFloat(cycle.tax_value) + parseFloat(tds_amount) + parseFloat(tcs_amount)).toFixed(2));
+
+                    });
+                }
+            });
+        }
+        function getnetTotal() {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var total = 0;
+            for (var i = 0; i < rowCount; i++) {
+
+                total = total + parseFloat(t.fnGetData(i)[13]);
+            }
+            $("#net_value").val(total);
+            $("#gross_value").val(total);
+        }
+
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: false },
+                     { sname: "b", sWidth: "5%" },
+                     { sname: "c", bVisible: false },
+                     { sname: "d", },
+                     { sname: "e", bVisible: false},
+                     { sname: "hsn_id",  bVisible: false,},
+                     { sname: "hsn", sWidth: "12%" },
+                     { sname: "f", bVisible: false  },
+                     { sname: "g", bVisible: false},
+                     { sname: "h", sClass: "dt_col_hide" },
+                     { sname: "i", sClass: "dt_col_hide right" },
+                     { sname: "j", bVisible: false },
+                     { sname: "k", sClass: "dt_col_hide" },
+                     { sname: "l" ,sClass: "right", bVisible: false},
+                     { sname: "m", bVisible: false,sClass: "right" },
+                     { sname: "n", bVisible: true, sClass: "dt_col_hide right" },
+                     { sname: "o", bVisible: true ,sClass: "right"},
+                     { sname: "P", bVisible: true, sClass: "dt_col_hide right" },
+                     { sname: "q", bVisible: true, sClass: "dt_col_hide right" },
+                     { sname: "r", bVisible: false },
+                     { sname: "s", bVisible: true, sClass: "dt_col_hide" },
+                     { sname: "t", bVisible: false },
+                     { sname: "u"},
+                     { sname: "v", bVisible: false },
+                     { sname: "w", bVisible: false },
+                     { sname: "x", bVisible: false,sClass: "right" },
+                      { sname: "y", bVisible: false,sClass: "right" },
+                     {
+                         sname: "z", sWidth: "5%",
+                         bSortable: false,
+                         mRender: function (data, type, full) {
+                             return '<img class="editsta" src="../images/writing_file.png" height="20px" width="25px" alt="Edit"  /><img class="details" src="../images/Detail.png" height="20px" width="25px" alt="Detail" />';
+                         }
+                     }]
+
+        });
+        $('#ContactGrid').on('click', '.details', function () {
+            $('#myModal2').modal('show');
+            var t = $('#ContactGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            var str3 = "";
+            str3 = t.fnGetData(id)[2] + '~' + t.fnGetData(id)[19] + '~' + t.fnGetData(id)[16] + '~' + t.fnGetData(id)[18] + '~' + t.fnGetData(id)[24] + '~' + t.fnGetData(id)[25];
+            GetCreditDebit(str3, $("#posting_date").val());
+        });
+        $('#CreditDebitGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a" },
+                     { sname: "b",sClass: "right" },
+                     { sname: "c",sClass: "right" }
+            ]
+        });
+        function GetCreditDebit(item_sales_gl, posting_date) {
+            var c = $('#CreditDebitGrid').DataTable();
+            var tds = $('#tds_code_id').val();
+            var tds_code_id = 0;
+            if (tds != "") {
+                tds_code_id = tds;
+            }
+            $.ajax({
+                url: '@Url.Action("GetCreditDebit", "Generic")',
+                type: "GET",
+                dataType: "JSON",
+                async: false,
+                data: { entity: 'calcultetaxforpi', customer_id: $("#vendor_id").val(), total_value: 0, basic_value: 0, item_sales_gl: item_sales_gl, tds_code_id: tds_code_id, posting_date: posting_date },
+                success: function (value) {
+                    c.fnClearTable();
+                    $.each(value, function (i, cycle) {
+                        c.fnAddData([cycle.gl_ledger_name, parseFloat(cycle.debit).toFixed(2), parseFloat(cycle.credit).toFixed(2)]);
+                    });
+                }
+            });
+        }
+        $('.closes').click(function(){
+            $(this).modal('hide');
+        });
+        $("#reason_id").change(function(){
+            $("#cancellation_reason_id").val($(this).val());
+        });
+        function canclearmodel() {
+            $("#reason_id").val('').trigger("change");
+            $("#cancel_remarks").val('');
+        }
+        function Cancel_Purchase()
+        {
+            if($("#reason_id").val()=="")
+            {
+                swal("Error!", "Please select the reason for cancellation", "error")
+                return false;
+            }
+            if($("#reason_id").val()==6)
+            {
+                if($("#cancel_remarks").val()=="")
+                {
+                    swal("Error!", "Please enter the Remarks for cancellation", "error")
+                    return false;
+
+                }
+
+            }
+            else{
+                $.ajax({
+                    url: '@Url.Action("DeleteConfirmed", "PurchaseInvoice")',
+                    type: "POST",
+                    dataType: "JSON",
+                    async:false,
+                    data: { id: $("#pi_id").val(),cancellation_remarks: $("#cancel_remarks").val(),reason_id:$("#reason_id").val()},
+                    success: function (id) {
+                        if(id=="Cancelled")
+                        {
+
+                            swal({
+                                title: "Cancelled",
+                                text: "Your purchase invoice " + $("#document_no").val() + " has been cancelled.",
+                                type: "success",
+                                showCancelButton: false,
+                                closeOnConfirm: false,
+                                showLoaderOnConfirm: false
+                            }, function () {
+                                location.href = '@Url.Action("Index", "PurchaseInvoice")'
+                            });
+                        }
+                        else
+                        {
+                            swal("Error", id, "error");
+                        }
+
+                    }
+                });
+            }
+        }
+        function clearmodel()
+        {
+            $('#myModal1').modal('hide');
+            $("#item_type_id").val('');
+            $("#item_name").val('');
+            $("#udescription").val('');
+            $("#sac_hsn_id").val('');
+            $("#dte").val('');
+            $("#quantity").val('');
+            $("#uom_id").val('');
+            $("#unitprice").val('');
+            $("#discount").val('');
+            $("#effectiveprice").val('');
+            $("#salesvalue").val('');
+            $("#assessablerate").val('');
+            $("#assessablevalue").val('');
+            $("#tax_name").val('');
+            $("#srno").val('');
+        }
+        $('#ContactGrid').on('click', '.editsta', function () {
+            var t = $('#ContactGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            $('#myModal1').modal('show');
+            $("#srno").val(t.fnGetData(id)[1]);
+            $("#item_type_id").val(t.fnGetData(id)[26]);
+            fill_hsn();
+            $("#item_name").val(t.fnGetData(id)[3]);
+            $("#udescription").val(t.fnGetData(id)[4]);
+            $("#sac_hsn_id").val(t.fnGetData(id)[5]);
+            $("#dte").val(t.fnGetData(id)[9]);
+            $("#quantity").val(t.fnGetData(id)[10]);
+            $("#uom_id").val(t.fnGetData(id)[11]);
+            $("#unitprice").val(t.fnGetData(id)[13]);
+            $("#discount").val(t.fnGetData(id)[14]);
+            $("#effectiveprice").val(t.fnGetData(id)[15]);
+            $("#salesvalue").val(t.fnGetData(id)[16]);
+            $("#assessablerate").val(t.fnGetData(id)[17]);
+            $("#assessablevalue").val(t.fnGetData(id)[18]);
+            $("#tax_name").val(t.fnGetData(id)[20]);
+
+        });
+        $('#item_type_id').change(function(){
+            fill_hsn();
+        });
+        function fill_hsn(){
+            var item_type_id = $('#item_type_id').val();
+            if(item_type_id==''){item_type_id=0}
+            if(item_type_id!=''){
+                try{
+                    $.ajax({
+                        url:'@Url.Action("Get_hsn_sac","Generic")',
+                        data:{id:item_type_id},
+                        method:'get',
+                        async:false,
+                        success:function(hsn){
+                            $('#sac_hsn_id').empty();
+                            $('#sac_hsn_id').append('<option value='+0+'>--Select--</option>');
+                            $.each(hsn,function(k,v){
+                                $('#sac_hsn_id').append('<option value='+v.id+'>'+v.code+'</option>');
+                            });
+                        }
+                    });
+                }
+                catch(msg){msg.message}
+            }
+        };
+        $(".addproduct").on("click", function (event) {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var item_type_id = $("#item_type_id").val();
+            var item_type_name = $("#item_type_id :selected").text();
+            var hsn_id = $("#sac_hsn_id").val();
+            var hsn = $("#sac_hsn_id :selected").text();
+            if (item_type_id=='') {
+                swal("", "Item type is required .", "error");
+                return false;
+            }
+            if (item_type_id=='0') {
+                swal("", "Item type is required .", "error");
+                return false;
+            }
+            if (hsn_id=='') {
+                swal("", "SAC/HSN Code is required .", "error");
+                return false;
+            }
+            if (hsn_id=='0') {
+                swal("", "SAC/HSN Code is required .", "error");
+                return false;
+            }
+            var cc = $("#srno").val();
+            cc = parseInt(cc) - 1;
+            t.fnUpdate(item_type_id,cc,26);
+            t.fnUpdate(hsn_id,cc,5);
+            t.fnUpdate(hsn,cc,6);
+            clearmodel()
+        });
+        function TabletoJeson() {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var str;
+            var str1;
+            var str2;
+            var str3;
+            $('#pidetail').empty();
+            for (i = 0; i < rowCount; i++) {
+                $("#pidetail").append('<input type="hidden" id="pi_detail_id' + i + '" name="pi_detail_id" value='+t.fnGetData(i)[0]+'>');
+                $("#pidetail").append('<input type="hidden" id="items' + i + '" name="items" value='+t.fnGetData(i)[2]+'>');
+                $("#pidetail").append('<input type="hidden" id="user_description' + i + '" name="user_description" value=' + t.fnGetData(i)[4] + '>');
+                $("#pidetail").append('<input type="hidden" id="storage_loaction_id' + i + '" name="storage_loaction_id" value=' + t.fnGetData(i)[7] + '>');
+                $("#pidetail").append('<input type="hidden" id="delivery_date1' + i + '" name="delivery_date1" value=' + t.fnGetData(i)[9] + '>');
+                $("#pidetail").append('<input type="hidden" id="quantity' + i + '" name="quantity" value=' + t.fnGetData(i)[10] + '>');
+                $("#pidetail").append('<input type="hidden" id="uom_id' + i + '" name="uom_id" value=' + t.fnGetData(i)[11] + '>');
+                $("#pidetail").append('<input type="hidden" id="unit_price' + i + '" name="unit_price" value=' + t.fnGetData(i)[13] + '>');
+                $("#pidetail").append('<input type="hidden" id="discount' + i + '" name="discount" value=' + t.fnGetData(i)[14] + '>');
+                $("#pidetail").append('<input type="hidden" id="eff_unit_price' + i + '" name="eff_unit_price" value=' + t.fnGetData(i)[15] + '>');
+                $("#pidetail").append('<input type="hidden" id="purchase_value' + i + '" name="purchase_value" value=' + t.fnGetData(i)[16] + '>');
+                $("#pidetail").append('<input type="hidden" id="assessable_rate' + i + '" name="assessable_rate" value=' + t.fnGetData(i)[17] + '>');
+                $("#pidetail").append('<input type="hidden" id="assessable_value' + i + '" name="assessable_value" value=' + t.fnGetData(i)[18] + '>');
+                $("#pidetail").append('<input type="hidden" id="tax_id' + i + '" name="tax_id" value=' + t.fnGetData(i)[19] + '>');
+                $("#pidetail").append('<input type="hidden" id="cost_center_id' + i + '" name="cost_center_id" value=' + 0 + '>');
+                $("#pidetail").append('<input type="hidden" id="grn_detail_id' + i + '" name="grn_detail_id" value=' + t.fnGetData(i)[23] + '>');
+                $("#pidetail").append('<input type="hidden" id="grir_value' + i + '" name="grir_value" value=' + t.fnGetData(i)[24] + '>');
+                $("#pidetail").append('<input type="hidden" id="basic_value' + i + '" name="basic_value" value=' + t.fnGetData(i)[25] + '>');
+                $("#pidetail").append('<input type="hidden" id="sac_hsn_id' + i + '" name="sac_hsn_id" value=' + parseInt(t.fnGetData(i)[5]) + ' >');
+                $("#pidetail").append('<input type="hidden" id="item_type_id' + i + '" name="item_type_id" value=' + parseInt(t.fnGetData(i)[26]) + ' >');
+            }
+        }
+
+
+        function JE_Entry() {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var str2 = "";
+            var str3 = "";
+            var tot = 0;
+            var tds_code_id = 0;
+            var round_off = $("#round_off").val();
+            if (round_off == "") {
+                round_off = 0;
+            }
+            if ($("#tds_code_id").val() != "") {
+                tds_code_id = $("#tds_code_id").val();
+            }
+            for (j = 0; j < rowCount; j++) {
+                str2 = t.fnGetData(j)[2] + "~";
+                str2 = str2 + t.fnGetData(j)[14] + "~";
+                str2 = str2 + t.fnGetData(j)[13] + "~";
+                str2 = str2 + t.fnGetData(j)[11] + "~";
+                str2 = str2 + $("#plant_id").val() + "~";
+                str2 = str2 + t.fnGetData(j)[5];
+                if (j == 0) {
+                    str3 = str2 + ",";
+                }
+                else {
+                    str3 = str3 + str2 + ",";
+                }
+                tot = tot + parseFloat(t.fnGetData(j)[11]);
+            }
+            if (str3 != "") {
+                GetJE_Entry($("#buyer_id").val(), $("#sal_gross_value").val(), tot, str3.slice(0, -1), tds_code_id, $("#si_date").val(), round_off)
+            }
+            $('#myModalTDS').modal('show');
+        }
+        function GetJE_Entry(customer_id,total_value,basic_value,item_sales_gl,tds_code_id,posting_date,round_off) {
+            var c = $('#JEGrid').DataTable();
+            $.ajax({
+                url: '@Url.Action("GetCreditDebit", "Generic")',
+                type: "GET",
+                dataType: "JSON",
+                async:false,
+                data: {entity: 'calculate', customer_id: customer_id, total_value: total_value, basic_value: basic_value, item_sales_gl: item_sales_gl, tds_code_id: tds_code_id, posting_date: posting_date,round_off:round_off },
+                success: function (value) {
+                    c.fnClearTable();
+                    $.each(value, function (i, cycle) {
+                        c.fnAddData([cycle.gl_ledger_name, cycle.debit==null?"":parseFloat(cycle.debit).toFixed(2), cycle.credit==null?"":parseFloat(cycle.credit).toFixed(2)]);
+                    });
+                }
+            });
+        }
+
+        $('#JEGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                { sname: "a" },
+                { sname: "b", "sClass": "right" },
+                { sname: "c", "sClass": "right" }
+            ]
+
+        });
+
+    </script>
+}

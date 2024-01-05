@@ -1,0 +1,68 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<purchase_order_report_vm>("Editing")
+                        .Datasource(ds => ds.URL(Url.Action("Get_Purchase_Order_Report", "PurchaseReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&vendor_category_id=" + ViewBag.vendor_category_id + "&vendor_priority_id=" + ViewBag.vendor_priority_id + "&currency_id=" + ViewBag.currency_id + "&plant_id=" + ViewBag.plant_id + "&business_unit_id=" + ViewBag.business_unit_id + "&vendor_id=" + ViewBag.vendor_id + "&item_service_id=" + ViewBag.item_service_id).Adaptor(AdaptorType.UrlAdaptor))
+                        .AllowPaging().PageSettings(a => a.PageSize(20))
+                        .AllowFiltering()
+                            .FilterSettings(X => X.FilterType(FilterType.Excel))
+                        .ShowColumnChooser()
+                        .AllowSorting()
+                        .AllowScrolling()
+                        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "PurchaseReport", new { ctrlname = "PurchaseInvoiceItemLevel" })))
+                                                                .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                    .ToolbarSettings(toolbar =>
+                    {
+                        toolbar.ShowToolbar().ToolbarItems(items =>
+                        {
+                            items.AddTool(ToolBarItems.Search);
+                            items.AddTool(ToolBarItems.ExcelExport);
+                            items.AddTool(ToolBarItems.PrintGrid);
+                        });
+                    })
+            .Columns(col =>
+            {
+                col.Field("category").Width("15%").HeaderText("Doc Category").Add();
+                col.Field("document_no").Width("15%").HeaderText("Doc Number").Add();
+                col.Field("posting_date").Width("15%").HeaderText("Doc Date").Format("{0:dd/MMM/yyyy}").Add();
+                col.Field("vendor_code").Width("15%").HeaderText("Vendor Code").Add();
+                col.Field("vendor_name").Width("15%").HeaderText("Vendor Description").Add();
+                col.Field("vendor_quotation_no").Width("15%").HeaderText("Vendor Quotation No.").Add();
+                col.Field("vendor_quotation_date").Width("15%").HeaderText("Vendor Quotation Date").Format("{0:dd/MMM/yyyy}").Add();
+                col.Field("item_service").Width("15%").HeaderText("Item / Service").Add();
+                col.Field("plant_name").Width("15%").HeaderText("Plant").Add();
+                col.Field("item_code").Width("15%").HeaderText(ViewBag.item_service == null ? "Item Code" : ViewBag.item_service == true ? "Item Code" : "GL Code").Add();
+                col.Field("item_name").Width("15%").HeaderText(ViewBag.item_service == null ? "Item Description" : ViewBag.item_service == true ? "Item Description" : "GL Description").Add();
+                col.Field("user_description").Width("15%").HeaderText("User Description").Add();
+                col.Field("storage_location_name").Width("15%").HeaderText("SLOC").Visible(ViewBag.item_service == null ? true : ViewBag.item_service).Add();
+                col.Field("delivery_date").Width("15%").Format("{0:dd/MMM/yyyy}").Visible(true).HeaderText("Delivery Date").Visible(ViewBag.item_service == null ? true : ViewBag.item_service).Add();
+                col.Field("quantity").Width("15%").HeaderText("Qty").Visible(ViewBag.item_service == null ? true : ViewBag.item_service).Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                col.Field("uom_name").Width("15%").HeaderText("UoM").Visible(ViewBag.item_service == null ? true : ViewBag.item_service).Add();
+                col.Field("unit_price").Width("15%").HeaderText("Unit Price").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                col.Field("discount").Width("15%").HeaderText("Discount").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                col.Field("eff_unit_price").Width("15%").HeaderText("Effective Unit Price").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                col.Field("purchase_value").Width("15%").HeaderText("Purchase Value").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                col.Field("assessable_rate").Width("15%").HeaderText("Assessable Rate").Visible(ViewBag.item_service == null ? true : ViewBag.item_service).Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                col.Field("assessable_value").Width("15%").HeaderText("Assessable value").Visible(ViewBag.item_service == null ? true : ViewBag.item_service).Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                col.Field("isrcm").Width("15%").HeaderText("RCM").Add();
+                col.Field("tax_name").Width("15%").HeaderText("Tax Code").Add();
+                col.Field("tds_code_value").Width("15%").HeaderText("TDS").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                col.Field("Excise").Width("15%").HeaderText("Excise").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                col.Field("VAT").Width("15%").HeaderText("VAT").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                col.Field("CST").Width("15%").HeaderText("CST").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                col.Field("CVD").Width("15%").HeaderText("CVD").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                col.Field("AED").Width("15%").HeaderText("AED").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                col.Field("ServiceTax").Width("15%").HeaderText("Service Tax").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                col.Field("SBC").Width("15%").HeaderText("SBC").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                col.Field("KKC").Width("15%").HeaderText("KKC").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                col.Field("NoTax").Width("15%").HeaderText("No Tax").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                col.Field("IGST").Width("15%").HeaderText("IGST").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                col.Field("SGST").Width("15%").HeaderText("SGST").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                col.Field("CGST").Width("15%").HeaderText("CGST").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+
+            })
+                                        .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickp"); })
+                        ).Render();}
+@Html.EJ().ScriptManager()
+
+
+

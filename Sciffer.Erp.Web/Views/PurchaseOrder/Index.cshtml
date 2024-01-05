@@ -1,0 +1,168 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<pur_poVM>("Searching")
+        .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "PurchaseOrder" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+            .ContextMenuSettings(contextMenu =>
+            {
+                contextMenu.EnableContextMenu();
+                contextMenu.DisableDefaultItems();
+                contextMenu.CustomContextMenuItems(new List<Syncfusion.JavaScript.Models.CustomContexMenuItems>() { new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu", Text = "Print Purchase Order Report" } });
+            })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "PurchaseOrder" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "PurchaseOrder" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "PurchaseOrder" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("po_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Width(80).Add();
+            col.Field("pur_requisition_name").Width("15%").HeaderText("Purchase Requisition").Visible(true).Add();
+            col.Field("category_name").Width("15%").HeaderText("Category").Visible(false).Add();
+            col.Field("po_no").Width("15%").HeaderText("Number").Add();
+            col.Field("po_date").Width("15%").HeaderText("Posting Date").Format("{0:dd/MM/yyyy}").Visible(true).Add();
+            col.Field("vendor_name").Width("15%").HeaderText("Vendor Name").Add();
+            col.Field("item_service_name").Width("15%").HeaderText("Item/Service").Visible(true).Add();
+            col.Field("item_name").Width("15%").HeaderText("Item/GL").Add();
+            col.Field("net_value").Width("15%").HeaderText("Net Value").TextAlign(TextAlign.Right).Visible(false).Add();
+            col.Field("net_value_currency_name").Width("15%").HeaderText("Net Currency").Visible(false).Add();
+            col.Field("gross_value").Width("15%").HeaderText("Gross Value").TextAlign(TextAlign.Right).Visible(false).Add();
+            col.Field("gross_value_currency_name").Width("15%").HeaderText("Gross Currency").Visible(false).Add();
+            col.Field("business_unit_name").Width("15%").HeaderText("Business Unit Name").Visible(false).Add();
+            col.Field("business_unit_code").Width("15%").HeaderText("Business Unit Description").Visible(false).Add();
+            col.Field("plant_code").Width("15%").HeaderText("Plant Code").Visible(false).Add();
+            col.Field("plant_name").Width("15%").HeaderText("Plant Description").Visible(false).Add();
+            col.Field("freight_terms_name").Width("15%").HeaderText("Freight Terms").Visible(false).Add();
+            col.Field("delivery_date").Width("15%").HeaderText("Delivery Date").Format("{0:dd/MM/yyyy}").Visible(false).Add();
+            col.Field("vendor_quotation_no").Width("15%").HeaderText("Vendor Quotation Number").Visible(false).Add();
+            col.Field("vendor_quotation_date").Width("15%").HeaderText("Vendor Quotation Date").Format("{0:dd/MM/yyyy}").Visible(false).Add();
+            col.Field("valid_until").Width("15%").HeaderText("Valid Until").Format("{0:dd/MM/yyyy}").Visible(false).Add();
+            col.Field("ref_doc_no").Width("15%").HeaderText("Ref Doc No").Visible(false).Add();
+            col.Field("delivery_type_name").Width("15%").HeaderText("Delivery Type").Visible(false).Add();
+            col.Field("billing_address").Width("15%").HeaderText("Billing Address").Visible(false).Add();
+            col.Field("billing_city").Width("15%").HeaderText("Billing City").Visible(false).Add();
+            col.Field("billing_pin_code").Width("15%").HeaderText("Billing Pin Code").Visible(false).Add();
+            col.Field("country_name").Width("15%").HeaderText("Billing Country").Visible(false).Add();
+            col.Field("billing_state_name").Width("15%").HeaderText("Billing State").Visible(false).Add();
+            col.Field("email_id").Width("15%").HeaderText("Email").Visible(false).Add();
+            col.Field("payment_cycle_type_name").Width("15%").HeaderText("Payment Cycle Type").Visible(false).Add();
+            col.Field("payment_cycle_name").Width("15%").HeaderText("Payment Cycle").Visible(false).Add();
+            col.Field("payment_terms_name").Width("15%").HeaderText("Payment Terms").Visible(false).Add();
+            col.Field("gst_no").Width("15%").HeaderText("GST No").Visible(false).Add();
+            col.Field("pan_no").Width("15%").HeaderText("PAN No").Visible(false).Add();
+            col.Field("ecc_no").Width("15%").HeaderText("ECC No").Visible(false).Add();
+            col.Field("vat_tin_no").Width("15%").HeaderText("VAT TIN No").Visible(false).Add();
+            col.Field("cst_tin_no").Width("15%").HeaderText("CST TIN No").Visible(false).Add();
+            col.Field("service_tax_no").Width("15%").HeaderText("Service Tax No").Visible(false).Add();
+            col.Field("status_name").Width("15%").HeaderText("Status").Visible(true).Add();            
+            col.Field("internal_remarks").Width("15%").HeaderText("Internal Remarks").Visible(false).Add();
+            col.Field("remarks_on_document").Width("15%").HeaderText("Remarks On Document").Visible(false).Add();
+            // col.Field("order_status_name").Width("15%").HeaderText("Open/Close").Visible(true).Add();
+            col.Field("rcm").Width("15%").HeaderText("RCM").Visible(false).Add();
+            col.Field("approval_status_name").Width("15%").HeaderText("Approval Status").Visible(true).Add();
+            col.Field("responsibility").Width("15%").HeaderText("Responsibility").Visible(true).Add();
+            col.Field("closed_remarks").Width("15%").HeaderText("Closed Remarks").Visible(true).Add();
+            col.Field("closed_user").Width("15%").HeaderText("Closed By").Visible(true).Add();
+            col.Field("approval_comments").Width("15%").HeaderText("Approval Comments").Visible(true).Add();
+            col.Field("approved_user").Width("15%").HeaderText("Approval By").Visible(true).Add();
+            col.Field("approved_ts").Width("15%").HeaderText("Approval Date").Visible(true).Add();
+            col.Field("created_user").Width("15%").HeaderText("Created By").Visible(true).Add();
+            col.Field("created_ts").Width("15%").HeaderText("Created Date").Format("{0:dd/MM/yyyy}").Visible(true).Add();
+            col.Field("modify_user").Width("15%").HeaderText("Modified By").Visible(true).Add();
+            col.Field("modify_ts").Width("15%").HeaderText("Modified Date").Format("{0:dd/MM/yyyy}").Visible(true).Add();
+            col.Field("po_verson").Width("15%").HeaderText("Version").Visible(true).Add();
+            col.Field("amendment").Width("15%").HeaderText("Amendment").Visible(true).Add();
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+            eve.ContextClick("contextclick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit") {
+            location.href = '@Url.Action("Edit", "PurchaseOrder")?id=' + args.rowData.po_id;
+        }
+        if (args.requestType == "add") {
+            location.href = '@Url.Action("Create", "PurchaseOrder")'
+        }
+    }
+
+    function contextclick(args) {
+       if (this.getSelectedRecords()[0].approval_status_name == "Approved")
+        {
+        if (args.text == "Print Purchase Order Report")
+        {
+            var url = '@Url.Action("Pdf", "PurchaseOrder")?id=' + this.getSelectedRecords()[0].po_id + '&type=' + 1;
+            window.open(url);
+        }
+        else
+        {
+            var url = '@Url.Action("Pdf", "PurchaseOrder")?id=' + this.getSelectedRecords()[0].po_id + '&type=' + 2;
+            window.open(url);
+        }
+        }
+        else
+            {
+        if (args.text == "Print Purchase Order Report")
+        {
+            var url = '@Url.Action("Pdf", "PurchaseOrder")?id=' + this.getSelectedRecords()[0].po_id + '&type=' + 1;
+            window.open(url);
+        }
+        else
+        {
+            var url = '@Url.Action("Pdf", "PurchaseOrder")?id=' + this.getSelectedRecords()[0].po_id + '&type=' + 2;
+            window.open(url);
+        }
+            //sweetAlert("", "This PO is not approved !", "info");
+          }
+    };
+    $(document).ready(function () {
+        var doc_no = '@ViewBag.doc';
+        if (doc_no != '') {
+            if (doc_no != 0) {
+                sweetAlert("", doc_no , "success");
+            }
+        }
+    });
+</script>
+

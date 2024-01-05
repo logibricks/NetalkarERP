@@ -1,0 +1,87 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{
+    (Html.EJ().Grid<report_production_vm>("Editing")
+                .Datasource(ds => ds.URL(Url.Action("Get_report_production", "ProductionReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + " &plant_id=" + ViewBag.plant_id + " &machine_id=" + ViewBag.machine_id + " &item_id=" + ViewBag.item_id + "&is_qc_remark=" + ViewBag.is_qc_remark).Adaptor(AdaptorType.UrlAdaptor))
+                //.Datasource((IEnumerable<object>)ViewBag.datasource)
+                .AllowPaging().PageSettings(a => a.PageSize(20))
+                .AllowFiltering()
+                    .FilterSettings(X => X.FilterType(FilterType.Excel))
+                .ShowColumnChooser()
+                .AllowSorting()
+                .AllowScrolling()
+                .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "ProductionReport", new { ctrlname = "ProductionreportSummary" })))
+                .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+            .ToolbarSettings(toolbar =>
+            {
+                toolbar.ShowToolbar().ToolbarItems(items =>
+                {
+                    items.AddTool(ToolBarItems.Search);
+                    items.AddTool(ToolBarItems.ExcelExport);
+                    items.AddTool(ToolBarItems.PrintGrid);
+                });
+            })
+        .Columns(col =>
+        {
+            // col.Field("machine_id").Width("15%").HeaderText("Machine Id").Add();
+            //col.Field("Operation").Width("15%").Visible(false).HeaderText("Operation").Add();
+            col.Field("machine_code").Width("15%").HeaderText("Machine Code").Add();
+            col.Field("machine_name").Width("15%").HeaderText("Machine Description").Add();
+            col.Field("item_code").Width("15%").HeaderText("Item Code").Add();
+            col.Field("item_name").Width("15%").HeaderText("Item Description").Add();
+            // col.Field("prod_order_no").Width("15%").HeaderText("Production Order").Add();
+            col.Field("OK_Qty").Width("15%").HeaderText("OK Qty").Add();
+            col.Field("Rejected_Qty").Width("15%").HeaderText("Rejected Qty").Add();
+            col.Field("Total_Qty").Width("15%").HeaderText("Total Qty").Add();
+
+
+        })
+        .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick"); })
+                      ).Render();
+}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+    function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1) {
+            if ($('#plant_id :selected').length > 0) {
+                var selectedplantid = [];
+                $('#plant_id :selected').each(function (i, selected) {
+                    selectedplantid[i] = $(selected).val();
+                });
+                var plantid = selectedplantid + "";
+            }
+            if ($('#machine_id :selected').length > 0) {
+                var selectedmachineid = [];
+                $('#machine_id :selected').each(function (i, selected) {
+                    selectedmachineid[i] = $(selected).val();
+                });
+                var machineid = selectedmachineid + "";
+            }
+            if ($('#item_id :selected').length > 0) {
+                var selecteditemid = [];
+                $('#item_id :selected').each(function (i, selected) {
+                    selecteditemid[i] = $(selected).val();
+                });
+                var itemid = selecteditemid + "";
+            }
+            //if ($('#process_id :selected').length > 0) {
+            //    var selectedprocess_id = [];
+            //    $('#process_id :selected').each(function (i, selected) {
+            //        selectedprocess_id[i] = $(selected).val();
+            //    });
+            //    var processid = selectedprocess_id + "";
+            //}           
+            this.model["item_id"] = itemid;
+            this.model["plant_id"] = plantid;
+            this.model["machine_id"] = machineid;
+            this.model["from_date"] = $("#fromDate").val();
+            this.model["to_date"] = $("#toDate").val();
+
+        }
+
+    }
+</script>
+
+

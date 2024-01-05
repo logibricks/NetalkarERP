@@ -1,0 +1,90 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<prod_receipt_VM>("Searching")
+        .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "ProductionReceipt" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.WordExport);
+            items.AddTool(ToolBarItems.PdfExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "ProductionReceipt" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "Employee" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "Employee" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("prod_receipt_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("prod_receipt_number").Width("15%").HeaderText("Number").Add();
+            //col.Field("plant_id").Width("15%").HeaderText("Plant").Add();
+            col.Field("category_name").Width("15%").HeaderText("Category").Add();
+            col.Field("plant_name").Width("15%").HeaderText("Plant").Add();
+            col.Field("prod_order_no").Width("15%").HeaderText("Prod Order").Add();
+            col.Field("posting_date").Width("15%").HeaderText("Posting Date").Format("{0:dd/MM/yyyy}").Add();
+            col.Field("document_date").Width("15%").HeaderText("Document Date").Format("{0:dd/MM/yyyy}").Add();
+            col.Field("header_remarks").Width("15%").HeaderText("Remarks").Add();
+            col.Field("item_name").Width("15%").HeaderText("Item Name").Add();
+            col.Field("created_by").Visible(true).Width("15%").HeaderText("Created By").Add();
+            col.Field("created_ts").Visible(true).Width("15%").HeaderText("Created Date & Time").Format("{0:dd/MM/yyyy hh:mm:ss tt}").Add();
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = '@Url.Action("Details", "ProductionReceipt")?id=' + args.rowData.prod_receipt_id;
+        }
+        if (args.requestType == "add") {
+            location.href = '@Url.Action("Create", "ProductionReceipt")';
+        }
+    }
+    function rightClick(args) {
+        location.href = '@Url.Action("Details", "ProductionReceipt")?id=' + args.data.prod_receipt_id;
+    }
+    $(document).ready(function () {
+        var num = '@Html.ViewBag.num';
+        if (num != '') {
+            if (num != undefined) {
+                sweetAlert("", num + " Saved successfully.", "success");
+            }
+        }
+    });
+</script>

@@ -1,0 +1,161 @@
+﻿
+
+@using Sciffer.Erp.Domain.ViewModel
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.mickey').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            maxHeight: '200',
+            enableCaseInsensitiveFiltering: true,
+            allowClear: true,
+            maximumResultsForSearch: 1,
+            numberDisplayed: 0,
+        });
+    });
+</script>
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel panel">
+            <div class="x_title">
+                <h2 style="font-size:18px">
+                    Open PR Report
+                </h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="form-horizontal">
+                <div class="x_content">
+                    <div class=row>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">As of Date</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <input type="date" id="as_of_date" class="form-control radius" required="required">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                             
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                             
+                            </div>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <button class="searchbutton searchButton" id="search"> &nbsp; Run Report </button>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class=row>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">Item Category</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                @Html.DropDownList("item_category", (System.Web.Mvc.SelectList)ViewBag.item_category_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">Delivery Date</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <input type="date" id="delivery_date" class="form-control radius">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">From</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <input type="date" id="from_date" class="form-control radius">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class=row>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">To</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <input type="date" id="to_date" class="form-control radius">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel panel">
+            <div class="x_title">
+                <h2 style="font-size:18px"></h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div id="searchresult">
+                    @Html.Partial("Partial_OpenPRReport", (object)ViewBag)
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+<script type="text/javascript">
+    $("#search").click(function () {
+        AdvanceSearch();
+    });
+    document.getElementById('as_of_date').valueAsDate = new Date();
+    document.getElementById('toDate').valueAsDate = new Date();
+    function AdvanceSearch() {
+        var asOfDate = $("#as_of_date").val();
+        var FromDate = $("#from_date").val();
+        var toDate = $("#to_date").val();
+        
+        if ($('#item_category :selected').length > 0) {
+            var selectedItemCategory = [];
+            $('#item_category :selected').each(function (i, selected) {
+                selectedItemCategory[i] = $(selected).val();
+            });
+            var ItemCategory = selectedItemCategory + "";
+        }
+
+        $.ajax({
+            url: '/Report/GetOpenPRReport',
+            method: "Post",
+            cache: false,
+            data: { as_of_date: asOfDate, item_category: ItemCategory, from_date: FromDate, to_date: toDate },
+            success: function (data) {
+                $(".loading").hide();
+                $('#searchresult').empty().append(data);
+                //console.log(data);
+            },
+            error: function (http) {
+                console.log(XMLHttpRequest);
+            }
+        });
+    }
+</script>
+<div class="modal"><!-- Place at bottom of page --></div>

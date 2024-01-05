@@ -1,0 +1,61 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+@{(Html.EJ().Grid<sales_order_report_vm>("Editing")
+                                                           
+                                                            .Datasource(ds => ds.URL(Url.Action("GetSalesOrderData", "SalesReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date +  "&item_id=" + ViewBag.item_id + "&sales_rm=" + ViewBag.sales_rm).Adaptor(AdaptorType.UrlAdaptor))
+                                                            .AllowPaging().PageSettings(a => a.PageSize(20))
+                                                            .AllowFiltering()
+                                                                .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                            .ShowColumnChooser()
+                                                            .AllowSorting()
+                                                            .AllowScrolling()
+                                                            .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "SalesReport", new { ctrlname = "ChallanWiseSalesReport" })))
+                                                                                                                                                                                            .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                                        .ToolbarSettings(toolbar =>
+                                                        {
+                                                            toolbar.ShowToolbar().ToolbarItems(items =>
+                                                            {
+                                                                items.AddTool(ToolBarItems.Search);
+                                                                items.AddTool(ToolBarItems.ExcelExport);
+                                                                items.AddTool(ToolBarItems.PrintGrid);
+                                                            });
+                                                        })
+
+                                                    .ShowSummary()
+
+                                                .SummaryRow(row =>
+                                                {
+                                                    row.Title("Total").SummaryColumns(col =>
+                                                    {
+                                                        col.SummaryType(SummaryType.Sum).DisplayColumn("bal_quantity").DataMember("bal_quantity").Format("{0:n2}").Add();
+                                                        col.SummaryType(SummaryType.Sum).DisplayColumn("quantity").DataMember("quantity").Format("{0:n2}").Add();
+                                                        col.SummaryType(SummaryType.Sum).DisplayColumn("dispatch").DataMember("dispatch").Format("{0:n2}").Add();
+                                                    }).Add();
+                                                })
+                                                .Columns(col =>
+                                                {
+                                                    
+  
+                                                    col.Field("item_code").Width("15%").HeaderText("Item Code").Add();
+                                                    col.Field("customer_chalan_no").Width("15%").HeaderText("Challan No").Add();
+                                                    col.Field("customer_chalan_date").Width("15%").HeaderText("Challan Date").Format("{0:dd/MMM/yyyy}").Add();
+                                                    col.Field("quantity").Width("15%").HeaderText("Quantity").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                                    col.Field("dispatch").Width("15%").HeaderText("Dispatch / Rejection").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                                    col.Field("bal_quantity").Width("15%").HeaderText("Balance Quantity").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                                    col.Field("Ageing").Width("15%").HeaderText("Ageing").TextAlign(TextAlign.Right).Add();
+                                                  //    col.Field("uom_name").Width("15%").HeaderText("UoM").Add();
+                                                  //// col.Field("Batch").Width("15%").HeaderText("Batch").Visible(false).Add();
+                                                  //col.Field("customer_code").Width("15%").HeaderText("Customer Code").Add();
+                                                  //    col.Field("customer_name").Width("15%").HeaderText("Customer Description").Add();
+                                                  //    col.Field("so_doc_category").Width("15%").HeaderText("Sales Document Category").Add();
+                                                  //    col.Field("so_no").Width("15%").HeaderText("Sales Document Number").Add();
+
+                                                  //    col.Field("eff_unit_price").Width("15%").HeaderText("Effective Rate").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                                  //    col.Field("sales_value").Width("15%").HeaderText("Sales Value").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                              })
+                                                    .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick1"); })
+                                                                                                                                                                                                                                                                            ).Render();}
+@Html.EJ().ScriptManager()
+

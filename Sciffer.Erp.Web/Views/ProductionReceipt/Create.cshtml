@@ -1,0 +1,802 @@
+﻿@model Sciffer.Erp.Domain.Model.prod_receipt
+@{
+    ViewBag.Title = "Create";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div id="ProdReceiptDetails"></div>
+    <div class="form-horizontal">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    @*<div class="form-group">
+                            @Html.LabelFor(model => model.prod_order_id, "Production Order", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.DropDownList("prod_order_id", Enumerable.Empty<SelectListItem>(), "---Select---", new { @class = "form-control validinput removedisabled", @required = true, @disabled = "disabled" })
+                                @Html.ValidationMessageFor(model => model.prod_order_id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>*@
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <input type="button" value="Select Production Order" name="purchaseorder" id="purchaseorder" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, "Category *", htmlAttributes: new { Class = "control-label col-md-4 " })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="hidden" id="is_active" name="is_active" value="true" />
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.categorylist, htmlAttributes: new { Class = "form-control category setPlant", @onchange = "GetDocumentNumber(this.value)" })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { Class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.plant_id, "Plant *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plantlist, "--Select--", htmlAttributes: new { @class = "form-control validinput removedisabled selectedbycategory", @required = true, @disabled = "disabled", @onchange = "GetStorageLocation(this.value)" })
+                            @Html.ValidationMessageFor(model => model.plant_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.posting_date, "Posting Date *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control validinput postingdocumentdate" } })
+                            @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.document_date, "Document Date *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.document_date, new { htmlAttributes = new { @class = "form-control validinput" } })
+                            @Html.ValidationMessageFor(model => model.document_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.header_remarks, "Remarks", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.header_remarks, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.header_remarks, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.storage_location_id, "Parent SLoc", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("storage_location_id", Enumerable.Empty<SelectListItem>(), "---Select---", new { @class = "form-control validinput removedisabled", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.storage_location_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <input type="hidden" id="deleteids" name="deleteids" />
+            @*<div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <button type="button" class="btn btn-primary" id="open_modal" style="float:right"><span class="glyphicon glyphicon-plus"></span>Add Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+
+            <div class="row">
+                <div class="table-responsive" style="max-height: calc(100vh - 250px); overflow-y: auto;">
+                    <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                        <thead>
+                            <tr>
+                                <th hidden><label>ID</label></th>
+                                <th><label>Sr. No.</label></th>
+                                <th hidden><label>Out Item ID</label></th>
+                                <th><label>Out Item</label></th>
+                                <th hidden><label>UoM ID</label></th>
+                                <th><label>UoM</label></th>
+                                <th hidden><label>SLoc ID</label></th>
+                                <th><label>SLoc</label></th>
+                                <th hidden><label>Batch ID</label></th>
+                                <th><label>Batch No</label></th>
+                                <th hidden><label>Tag ID</label></th>
+                                <th><label>Tag No</label></th>
+                                <th hidden><label>Prod Order Detail ID</label></th>
+                                <th><label>PO Req Qty</label></th>
+                                <th><label>Action</label></th>
+                            </tr>
+                        </thead>
+
+                    </table>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <input type="submit" value="Create" id="create1" class="btn btn-success" onclick="create()" data-controller="ProductionReceipt" style="float:right" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+<div class="modal fade" id="myModal1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" style="align-content:center;width:900px">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Production Order</h4>
+            </div>
+            <div class="modal-body" style="max-height:500px;overflow-y:auto">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-4">
+                                Select Item
+                            </label>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.itemlist, "--Select--", new { @class = "form-control", @onchange = "GetProductionOrderList(this.value);" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-4">
+                                Production Order
+                            </label>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.DropDownList("prod_order_id1", Enumerable.Empty<SelectListItem>(), "---Select---", new
+                           {
+                               @class = "form-control validinput multiselect form",
+                               @multiple = "multiple",
+                               @required = true @*, @onchange = "GetProductionOrder(this.value);"*@ })
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-4">
+                                From Number
+                            </label>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <input type="number" id="fromnumber" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="control-label col-md-4">
+                                To Number
+                            </label>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <input type="number" id="tonumber" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <div class="table-responsive" style="max-height: calc(100vh - 250px); overflow-y: auto;">
+                            <table class="table table-responsive table-bordered table-striped" id="pogrid">
+                                <thead>
+                                    <tr>
+                                        <th hidden><label>ID</label></th>
+                                        <th><label>Sr. No.</label></th>
+                                        <th hidden><label>Out Item ID</label></th>
+                                        <th><label>Out Item</label></th>
+                                        <th hidden><label>UoM ID</label></th>
+                                        <th><label>UoM</label></th>
+                                        <th hidden><label>SLoc ID</label></th>
+                                        <th><label>SLoc</label></th>
+                                        <th hidden><label>Plant ID</label></th>
+                                        <th hidden><label>Item Batch ID</label></th>
+                                        <th><label>Batch No</label></th>
+                                        <th hidden><label>Tag ID</label></th>
+                                        <th><label>Tag No</label></th>
+                                        <th><label>PO Balance Quantity</label></th>
+                                        @*<th><label>Prod Order ID</label></th>
+                                            <th><label>Prod Order No</label></th>*@
+                                        <th><input type="checkbox" name="select_all" value="1" id="example-select-all"></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="addSALES btn btn-primary" disabled="disabled">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="storage_location_id1" />
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Price Details</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Item <span class="required">*</span>
+                        </label>
+
+                        <div class="col-md-7">
+                            @Html.DropDownList("out_item_id", (System.Web.Mvc.SelectList)ViewBag.itemlist, "---Select---", new
+                       {
+                           @class = "form-control col-md-7 col-xs-12",
+                           @disabled = "disabled",
+                           @onchange = "GetUnit(this.value)"
+                       })
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Quantity <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            <input type="number" class="form-control" name="quantity" id="quantity" onchange="calculate()" readonly="readonly" />
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            UoM  <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            @Html.DropDownList("uom_id", (new System.Web.Mvc.SelectList(ViewBag.UOM, "UOM_ID", "UOM_NAME")), "--select--", htmlAttributes: new { @class = "form-control validator", @disabled = "disabled", required = "required" })
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Batch  <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            <input type="text" disabled id="batch_no" class="form-control" />
+                            @* @Html.DropDownList("batch_id", (System.Web.Mvc.SelectList)ViewBag.batchList, "---Select---", new { @class = "form-control", @disabled = "disabled", })*@
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Tag  <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            <input type="text" disabled id="tag_no" class="form-control" />
+                            @*@Html.DropDownList("tag_id", (System.Web.Mvc.SelectList)ViewBag.tagList, "--select--", new { @class = "form-control validator", @disabled = "disabled", required = "required" })*@
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <input type="hidden" id="sr_no" />
+                    <input type="hidden" id="prod_order_detail_id" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                    <button type="button" class="add btn btn-primary hidden">Add </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="loading">Loading&#8230;</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript" src="~/Scripts/jquery.dataTables1.10.9.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/1.9.4.jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script src="~/Scripts/jquery.filedrop.js"></script>
+    <script type="text/javascript">
+        var checkedarray = [];
+        $(".loading").hide();
+        var error=@Html.Raw(Json.Encode(ViewBag.error));
+        if(error !="")
+        {
+            sweetAlert("",error,"error");
+        }
+        function create(){
+            $("#create1").hide();
+            $(".loading").show();
+            $('.removedisabled').removeAttr('disabled', 'disabled');
+        }
+        $("#item_id").select2({
+            placeholder: "Select Item",
+            allowClear: true
+        });
+        $("#prod_order_id1").multiselect({
+            maxHeight: 260,
+            buttonWidth: "200",
+            enableFiltering: true,
+            enableCaseInsensitiveFiltering: true,
+            includeSelectAllOption: true,
+        });
+        //$("#tonumber").change(function ()
+        $(document).on('change', '#tonumber', function () {
+            var fromnumber = parseFloat($("#fromnumber").val());
+            var tonumber = parseFloat($("#tonumber").val());
+            if (fromnumber <= tonumber) {
+                checkedarray.length = 0;
+                while (fromnumber <= tonumber) {
+                    var index = fromnumber;
+                    $("#batchselect" + index).prop('checked', true);
+                    checkedarray.push(index - 1);
+                    $('.addSALES ').removeAttr('disabled');
+                    fromnumber = fromnumber + 1;
+                }
+            }
+            else {
+                swal("", "Enter From number less then To number.", "error")
+            }
+        })
+        $("#purchaseorder").on("click", function (event) {
+            var t = $('#pogrid').DataTable();
+            t.fnClearTable();
+            $("#prod_order_id1").val("").trigger("change");
+            $("#tonumber").val('');
+            $("#fromnumber").val("");
+            $('#myModal1').modal('show');
+            $('#example-select-all').attr('checked', false);
+        })
+        $("#plant_id").select2({
+            placeholder: "Select Plant",
+            allowClear: true
+        });
+        $("#out_item_id").select2({
+            placeholder: "Select Item",
+            allowClear: true
+        });
+        //$("#prod_order_id").select2({
+        //    placeholder: "Select Purchase Order",
+        //    allowClear: true
+        //});
+
+        $(document).ready(function () {
+            document.getElementById('posting_date').valueAsDate = new Date();
+            document.getElementById('document_date').valueAsDate = new Date();
+
+        });
+        function calculate() {
+            var qty = $("#quantity").val();
+            if (qty = "") {
+                qty = 1;
+            }
+            var rate = $("#rate").val();
+            if (rate = "") {
+                rate = 1;
+            }
+            $("#value").val(qty * rate);
+        }
+        function onSelect2(args) {
+            var id = "";
+            var id = args.value.split("-")[0];
+            GetUnit(id);
+        }
+        function GetUnit(id) {
+
+            if (id != '') {
+                $.ajax({
+                    type: 'GET',
+                    url: "@Url.Action("GetUnitofItem", "Generic")",
+                    data: { id: id },
+                    success: function (ITEM) {
+                        $('#uom_id').val(ITEM.item);
+                    },
+                    error: function (emp) {
+                        $('#uom_id').val('');
+                    }
+                });
+            }
+            else {
+                $('#uom_id').val('');
+            }
+
+        }
+        $('#open_modal').click(function () {
+            if ($("#Vendor_code").val() == '') {
+                swal("", "Select Vendor.", "error");
+            }
+            else {
+                $('#myModal').modal('show');
+                clearmodel();
+            }
+        });
+
+        $(".add").on("click", function (event) {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var item_id = $("#out_item_id").val();
+            var item_name = $('#out_item_id option:selected').text();
+            var quantity = $("#quantity").val();
+            var uom_id = $("#uom_id").val();
+            var uom_name = $('#uom_id').find('option:selected').text();
+            var sloc_id = $("#storage_location_id").val();
+            var sloc_name = $('#storage_location_id').find('option:selected').text();
+            var batch_id = $("#batch_id").val();
+            var batch_no = $('#batch_id').find('option:selected').text();
+            var tag_id = $("#tag_id").val();
+            var tag_no = $('#tag_id').find('option:selected').text();
+            var prod_order_detail_id = $("#prod_order_detail_id").val();
+            if (item_id == '') {
+                swal("", "Please Select Item Name.", "error");
+                return false;
+            }
+            if (uom_id == '') {
+                swal("", "Please Select UOM Name.", "error");
+                return false;
+            }
+            if (quantity == '') {
+                swal("", "Please Enter Quantity.", "error");
+                return false;
+            }
+            if (batch_no == '') {
+                swal("", "Please Enter Batch.", "error");
+                return false;
+            }
+            if (tag_no == '') {
+                swal("", "Please Enter Tag.", "error");
+                return false;
+            }
+            if ($("#sr_no").val() == "") {
+                t.fnAddData(['0', rowCount + 1, item_id, item_name, uom_id, uom_name, sloc_id, sloc_name, batch_id, batch_no, tag_id, tag_no, prod_order_detail_id, quantity, ''
+                ]);
+            }
+            else {
+                //var cc = $("#sr_no").val();
+                //cc = parseInt(cc) - 1;
+                //t.fnUpdate(['0', cc + 1, item_id, item_name, uom_id, uom_name, sloc_id, sloc_name, batch_id, batch_no, tag_id, tag_no, prod_order_detail_id, quantity, ''], cc)
+            }
+            clearmodel();
+            return true;
+        });
+        function clearmodel() {
+            $("#sr_no").val('');
+            $("#out_item_id").val('').trigger('change');
+            $("#uom_id").val('');
+            $("#quantity").val('');
+            $("#batch_no").val('');
+            // $("#discount_type_id").val('');
+            $("#tag_no").val('');
+        }
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                { sname: "a", bVisible: false },
+                { sname: "b" },
+                { sname: "c", bVisible: false },
+                { sname: "d" },
+                { sname: "e", bVisible: false },
+                { sname: "f", bVisible: true },
+                { sname: "g", bVisible: false },
+                { sname: "h" },
+                { sname: "i", bVisible: false },
+                { sname: "j", bVisible: true },
+                { sname: "k", bVisible: false },
+                { sname: "l" },
+                { sname: "m", bVisible: false },
+                { sname: "n", bVisible: true },
+                {
+                    sname: "o", sWidth: "8%",
+                    bSortable: false,
+                    mRender: function (data, type, full) {
+                        return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" onclick="editRow(' + full[1] + ');" /><img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete" onclick="deleteRow(' + full[1] + ');" />';
+                    }
+                }]
+
+        });
+        function editRow() {
+            $('#myModal').modal('show');
+            var t = $('#ContactGrid').DataTable()
+            var cc = parseInt(arguments[0]) - 1;
+            $("#sr_no").val(t.fnGetData(cc)[1])
+            $("#prod_order_detail_id").val(t.fnGetData(cc)[12]);
+            $("#out_item_id").val(t.fnGetData(cc)[2]).trigger('change');
+            $("#quantity").val(t.fnGetData(cc)[13]);
+            $('#uom_id').val(t.fnGetData(cc)[5]);
+            //$('#batch_id').val(t.fnGetData(cc)[8]);
+            //$('#tag_id').val(t.fnGetData(cc)[10]);
+            $('#batch_no').val(t.fnGetData(cc)[9]);
+            $('#tag_no').val(t.fnGetData(cc)[11]);
+        }
+        $('#ContactGrid').on('click', '.delete', function () {
+
+            var t = $('#ContactGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            var deleteids = t.fnGetData(id)[1];
+            swal({
+                title: "Are you sure?",
+
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            },
+             function (isConfirm) {
+                 if (isConfirm) {
+                     $("#deleteids").val(deleteids + "~");
+                     t.fnDeleteRow(id);
+                 }
+             });
+        });
+
+        //function TabletoJeson() {
+        //    var t1 = $('#ContactGrid').DataTable()
+        //    var rowCount = t1.fnGetData().length;
+        //    $("#ProdReceiptDetails").empty();
+        //    for (i = 0; i < rowCount; i++) {
+        //        $("#ProdReceiptDetails").append('<input type="hidden" id="prod_receipt_detail_id' + i + '" name="prod_receipt_detail_id" value="' + t1.fnGetData(i)[0] + '">');
+        //        $("#ProdReceiptDetails").append('<input type="hidden" id="out_item_id' + i + '" name="out_item_id" value="' + t1.fnGetData(i)[2] + '">');
+        //        $("#ProdReceiptDetails").append('<input type="hidden" id="uom_id' + i + '" name="uom_id"  value="' + t1.fnGetData(i)[4] + '">');
+        //        $("#ProdReceiptDetails").append('<input type="hidden" id="sloc_id' + i + '" name="sloc_id" value="' + t1.fnGetData(i)[6] + '">');
+        //        $("#ProdReceiptDetails").append('<input type="hidden" id="batch_id' + i + '" name="batch_id" value="' + t1.fnGetData(i)[8] + '">');
+        //        $("#ProdReceiptDetails").append('<input type="hidden" id="tag_id' + i + '" name="tag_id" value="' + t1.fnGetData(i)[10] + '">');
+        //        $("#ProdReceiptDetails").append('<input type="hidden" id="prod_order_detail_id' + i + '" name="prod_order_detail_id"  value="' + t1.fnGetData(i)[12] + '">');
+        //        $("#ProdReceiptDetails").append('<input type="hidden" id="po_quantity' + i + '" name="po_quantity"  value="' + t1.fnGetData(i)[13] + '">');
+        //    }
+        //}
+
+        function GetStorageLocation(id) {
+            if (id == "") {
+                id = 0;
+            }
+            $.ajax({
+                url: "@Url.Action("GetStorageLocation", "Generic")",
+                type: "GET",
+                dataType: "JSON",
+                data: { id: id },
+                cache: false,
+                success: function (storage) {
+                    $("#storage_location_id").html(""); // clear before appending new list
+                    $("#storage_location_id").append($('<option></option>').val('0').html("---Select---"));
+                    $.each(storage, function (i, cycle) {
+                        $("#storage_location_id").append(
+                        $('<option></option>').val(cycle.storage_location_id).html(cycle.storage_location_name));
+                    });
+                    $("#storage_location_id").val($("#storage_location_id1").val()).trigger('change');
+                }
+            });
+        }
+
+        $('#pogrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            "columns": [
+                  { "data": "prod_order_detail_id", bVisible: false },
+                  { "data": "rowIndex", bVisible: true },
+                  { "data": "out_item_id", bVisible: false },
+                  { "data": "out_item_name", bVisible: true },
+                  { "data": "uom_id", bVisible: false },
+                  { "data": "uom_name", bVisible: true },
+                  { "data": "sloc_id", bVisible: false },
+                  { "data": "sloc_name", bVisible: true },
+                  { "data": "plant_id", bVisible: false },
+                  { "data": "batch_id", bVisible: false },
+                  { "data": "batch_number", bVisible: true },
+                  { "data": "tag_id", bVisible: false },
+                  { "data": "tag_no", bVisible: true },
+                  { "data": "balance_qty", bVisible: true },
+                  //{ "data": "prod_order_id", bVisible: false },
+                  //{ "data": "prod_order_no", bVisible: true },
+                  { "data": "rowIndex", sWidth: "4%", 'render': function (data, type, full) { return '<input type="checkbox" id="batchselect' + full.rowIndex + '" data-index=' + (full.rowIndex - 1) + '  class="price check"/>' } },
+            ]
+        });
+        $(document).on('change', '.quant', function () {
+            var t = $('#pogrid').DataTable();
+            var index = $(this).attr('data-index');
+            var _quant_id = $(this).val();
+            var _quant = $(this).find('option:selected').text();
+            if (_quant_id != '') {
+                _quant = (_quant);
+            }
+            var parsedIndex = parseInt(index) - 1;
+            t.fnUpdate(_quant_id, parsedIndex, 12);
+            // t.fnUpdate(_ntag_reason, parsedIndex, 18);
+
+        })
+
+        function GetProductionOrderList(itemid){
+            $.ajax({
+                url: "@Url.Action("GetProductionOrderList", "ProductionReceipt")",
+                type: "GET",
+                data: { item_id: itemid, entity_id : 'production_receipt' },
+                success: function (data) {
+                    console.log(data)
+
+                    $("#prod_order_id1").empty().trigger('change');
+                    $("#prod_order_id1").append('<select id="prod_order_id1" class="form-control validinput" name="prod_order_id1" multiple="multiple" >');
+                    for (var i = 0; i < data.length; i++) {
+                        $("#prod_order_id1").append('<option value="' + data[i].Value + '">' + data[i].Text + '</option>');
+                    }
+                    $("#prod_order_id1").val();
+                    $("#prod_order_id1").append('</select>');
+                    $("#prod_order_id1").multiselect({
+                        maxHeight: 260,
+                        buttonWidth: "200",
+                        enableFiltering: true,
+                        enableCaseInsensitiveFiltering: true,
+                        includeSelectAllOption: true,
+                    });
+                    $("#prod_order_id1").multiselect('rebuild').trigger('change');
+                }
+            });
+        }
+
+        //function GetProductionOrder(poid) {
+        $("#prod_order_id1").change(function(){
+            if ($('#prod_order_id1 :selected').length > 0) {
+                var selectedBusinessUnit = [];
+                $('#prod_order_id1 :selected').each(function (i, selected) {
+                    selectedBusinessUnit[i] = $(selected).val();
+                });
+                var BusinessUnits = selectedBusinessUnit + "";
+                console.log(BusinessUnits);
+
+                var t = $('#pogrid').DataTable();
+                t.fnClearTable();
+
+                var rowCount = t.fnGetData().length;
+                var i = 1;
+                $.ajax({
+                    url: "@Url.Action("ProductionOrderItems", "ProductionReceipt")",
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { id: BusinessUnits },
+                    success: function (poid) {
+                        //console.log(poid);
+                        t.fnAddData(poid);
+                    }
+                });
+            }
+
+        });
+        // }
+        $('#example-select-all').on('click', function () {
+            if ($(this).hasClass('allChecked')) {
+                $('input[type="checkbox"]', '#pogrid').prop('checked', false);
+            } else {
+                $('input[type="checkbox"]', '#pogrid').prop('checked', true);
+            }
+            $(this).toggleClass('allChecked');
+
+            checkedarray.length = 0;
+            var t = $('#pogrid').DataTable();
+            var trlen = t.fnGetData().length;
+            if ($(this).is(':checked')) {
+                if (trlen > 0) {
+                    for (var j = 0; j <= trlen - 1; j++) {
+                        checkedarray.push(j);
+                    }
+                }
+            }
+            else {
+                checkedarray.length = 0;
+            }
+        });
+        $(document).on('change', 'input[type="checkbox"]', function () {
+            if ($('.check').is(':checked')) {
+                $('.addSALES ').removeAttr('disabled');
+            }
+            else {
+                $('.addSALES ').attr('disabled', true);
+            }
+        });
+        $(document).on('click', '.check', function () {
+            var index = $(this).attr('data-index');
+            var t = $('#pogrid').DataTable();
+            if ($(this).is(':checked')) {
+                checkedarray.push(index);
+            }
+            else {
+                var checkedIndex = checkedarray.indexOf(parseInt(index));
+                checkedarray.splice(checkedIndex, 1);
+            }
+        });
+
+        $(".addSALES").on("click", function (event) {
+            //$("#prod_order_id").html(""); // clear before appending new list
+            //$("#prod_order_id").append($('<option></option>').val(0).html("---Select---"));
+            //$("#prod_order_id").append(
+            //           $('<option></option>').val($("#prod_order_id1").val()).html($("#prod_order_id1 option:selected").text()));
+            //$("#prod_order_id").val($("#prod_order_id1").val()).trigger('change');
+            //var tt = $("#prod_order_id1").val();
+
+            var s = $('#pogrid').DataTable();
+            var rowCount4 = s.fnGetData().length;
+            var t = $('#ContactGrid').DataTable();
+            t.fnClearTable();
+            var isFalse = false;
+            var i = 0;
+            var j = 0;
+            $("#ProdReceiptDetails").empty();
+
+            for (var l = 0; l <= checkedarray.length - 1; l++) {
+                var j = checkedarray[l];
+
+                var req_qty = $("#reqq_qty" + (l + 1)).val();
+                $("#plant_id").val(s.fnGetData(j, 8)).trigger('change');
+                $("#storage_location_id1").val(s.fnGetData(j, 6));
+                try {
+                    t.fnAddData(['0', i + 1, s.fnGetData(j, 2), s.fnGetData(j, 3), s.fnGetData(j, 4), s.fnGetData(j, 5),
+                        s.fnGetData(j, 6), s.fnGetData(j, 7), s.fnGetData(j, 9), s.fnGetData(j, 10), s.fnGetData(j, 11),
+                        s.fnGetData(j, 12), s.fnGetData(j, 0), 1, '']);
+
+                    $("#ProdReceiptDetails").append('<input type="hidden" id="prod_receipt_detail_id' + i + '" name="prod_receipt_detail_id" value="' + t.fnGetData(i)[0] + '">');
+                    $("#ProdReceiptDetails").append('<input type="hidden" id="out_item_id' + i + '" name="out_item_id" value="' + t.fnGetData(i)[2] + '">');
+                    $("#ProdReceiptDetails").append('<input type="hidden" id="uom_id' + i + '" name="uom_id"  value="' + t.fnGetData(i)[4] + '">');
+                    $("#ProdReceiptDetails").append('<input type="hidden" id="sloc_id' + i + '" name="sloc_id" value="' + t.fnGetData(i)[6] + '">');
+                    $("#ProdReceiptDetails").append('<input type="hidden" id="batch_id' + i + '" name="batch_id" value="' + t.fnGetData(i)[8] + '">');
+                    $("#ProdReceiptDetails").append('<input type="hidden" id="tag_id' + i + '" name="tag_id" value="' + t.fnGetData(i)[10] + '">');
+                    $("#ProdReceiptDetails").append('<input type="hidden" id="prod_order_detail_id' + i + '" name="prod_order_detail_id"  value="' + t.fnGetData(i)[12] + '">');
+                    $("#ProdReceiptDetails").append('<input type="hidden" id="po_quantity' + i + '" name="po_quantity"  value="' + t.fnGetData(i)[13] + '">');
+                    i = i + 1;
+                }
+                catch (exception) {
+                    checkedarray.length = 0;
+                    alert(exception.message);
+                }
+                isFalse = true;
+            }
+
+            if (isFalse == true) {
+                $('#myModal1').modal('hide');
+                checkedarray.length = 0;
+            }
+        });
+    </script>
+}

@@ -1,0 +1,152 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.Model.ref_gl_acount_type>
+@using Sciffer.Erp.Domain.Model
+@{
+    ViewBag.Title = "Index";
+}
+
+<br /><br /><br />
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<ref_gl_acount_type>("Grid")
+        .Datasource(ds => ds.URL(Url.Action("GetAccountType", "GLAccountType")).RemoveURL(Url.Action("InlineDelete", "GLAccountType")).Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(12); })
+        .EnableAltRow()
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Add);
+                items.AddTool(ToolBarItems.Edit);
+                items.AddTool(ToolBarItems.Delete);
+                items.AddTool(ToolBarItems.Update);
+                items.AddTool(ToolBarItems.Cancel);
+                items.AddTool(ToolBarItems.ExcelExport);
+                items.AddTool(ToolBarItems.WordExport);
+                items.AddTool(ToolBarItems.PdfExport);
+                items.AddTool(ToolBarItems.PrintGrid);
+            });
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "GLAccountType"))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "GLAccountType")).ExportToWordAction(Url.Action("ExportToWord", "GLAccountType")))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+         .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("gl_account_type_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("gl_account_type_description").Width("15%").HeaderText("Description").Add();
+            col.Field("gl_account_type_indent").Width("15%").HeaderText("Indent").Add();
+        })
+        .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+
+</div>
+
+<script id="template" type="text/template">
+    <form name="add_form">
+        <div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <input type="hidden" id="gl_account_type_id" name="gl_account_type_id" value="{{: gl_account_type_id}}" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                    Description *
+                </div>
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <input type="text" id="gl_account_type_description" name="gl_account_type_description" value="{{: gl_account_type_description}}" class="form-control" />
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                    Indent *
+                </div>
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <input type="text" id="gl_account_type_indent" name="gl_account_type_indent" value="{{: gl_account_type_indent}}" class="form-control" />
+
+                </div>
+            </div>
+        </div>
+    </form>
+</script>
+
+
+
+<script type="text/javascript">
+    var flag = true;
+    function complete(args) {
+
+        if (args.requestType == "beginedit") {
+            document.getElementById('gl_account_type_description').setAttribute('disabled', 'disabled');
+            document.getElementById('gl_account_type_indent').setAttribute('disabled', 'disabled');
+        }
+        if (args.requestType == "save" && flag) {
+            var name = args.data.gl_account_type_description;
+            //if (name == null)
+            //{
+            //    sweetAlert("", "Form name is required!", "error");
+            //    flag = false;
+            //}
+            //else
+            if (!(args.data.gl_account_type_description == null)) {
+                flag = true;
+                var record = args.data;
+                args.cancel = true;
+                //send ajax post
+                $.ajax({
+                    url: '@Url.Action("Data", "GLAccountType")',
+                    type: "POST",
+                    //dataType: "json",
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify({ value: record }),
+                    success: function (data) {
+                        var i;                  //display the message when value has duplicate
+                        if (data == false) {
+                            var str = "";
+                            str += "<tr><td>" + "Value contains Duplicate" + "</td></tr>";
+
+                            $('#ErrorList').html("<table>" + str + "</table>");
+                            $('#ErrorList').ejDialog("open");
+                            flag = true;
+                        }
+                            //save the records if values are not duplicate
+                        else {
+
+                            var gridObj = $("#Grid").ejGrid("instance");
+                            gridObj.refreshContent();   //endEdit method called to save records
+                            flag = false;
+                        }
+                    },
+                    error: function (e) {
+                        args.cancel = true;
+                    }
+                });
+            }
+            else {
+                args.cancel = false;
+            }
+
+        }
+        if (flag == false)
+            flag = true;
+    }
+
+    function EndProcess() {
+        var gridObj = $("#Grid").ejGrid("instance");
+        //console.log(gridObj);
+        gridObj.refreshContent();
+    }
+
+
+
+</script>

@@ -1,0 +1,127 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.ViewModel.pur_poVM>
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+<div class="loading">Loading &#8230;</div>
+@*<div class=row>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Status</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("approval_status", new List<SelectListItem>
+                                 {
+                                    new SelectListItem{ Text="All", Value = "-1" },
+                                    new SelectListItem{ Text="Pending", Value = "0" },
+                                    new SelectListItem{ Text="Approved", Value = "1" },
+                                    new SelectListItem{ Text="Rejected", Value = "2" },
+                                 }, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                <label></label>
+            </div>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <button class="searchbutton searchButton" id="search"> &nbsp; Get Record</button>
+            </div>
+        </div>
+    </div>*@
+<br />
+<div id="searchresult" class="row">
+    @(Html.EJ().Grid<object>("Grid")
+       .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.DataSource).UpdateURL(Url.Action("ChangeApprovedStatus", "PurchaseOrder"))
+                       .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .FilterSettings(filter => { filter.FilterType(FilterType.Menu); })
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing(); })
+        .EnableAltRow()
+        .AllowPaging().PageSettings(a => a.PageSize(20))
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+
+                items.AddTool(ToolBarItems.Edit);
+                items.AddTool(ToolBarItems.Update);
+                items.AddTool(ToolBarItems.Cancel);
+            });
+        }).ContextMenuSettings(contextMenu =>
+        {
+            contextMenu.EnableContextMenu();
+            contextMenu.DisableDefaultItems();
+            contextMenu.CustomContextMenuItems(new List<Syncfusion.JavaScript.Models.CustomContexMenuItems>() { new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu", Text = "Print" } });
+        })
+        .AllowSorting()
+
+        .IsResponsive()
+        .AllowFiltering()
+        .AllowReordering()
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("po_id").HeaderText("ID").IsPrimaryKey(true).Width(100).Visible(false).AllowEditing(false).Add();
+            col.Field("po_no").HeaderText("PO Number").IsPrimaryKey(true).Width(100).Add();
+            col.Field("pur_requisition_name").HeaderText("PR Number").IsPrimaryKey(true).Width(150).Add();
+            col.Field("po_date").HeaderText("Posting Date").Width(100).Format("{0:dd/MM/yyyy}").AllowEditing(false).Add();
+            col.Field("vendor_code").HeaderText("Vendor Code").Width(150).AllowEditing(false).Add();
+            col.Field("vendor_name").HeaderText("Vendor Name").Visible(true).Width(100).Add();
+            col.Field("plant_code").HeaderText("Plant").Visible(false).Width(100).Add();
+            col.Field("net_value").HeaderText("Net Value").Format("{0:n2}").TextAlign(TextAlign.Right).Width(100).AllowEditing(false).Add();
+            col.Field("gross_value").HeaderText("Gross Value").Format("{0:n2}").TextAlign(TextAlign.Right).AllowEditing(false).Width(100).Add();
+            col.Field("gross_value_currency_name").HeaderText("Currency").AllowEditing(false).Width(100).Add();
+            col.Field("approval_status").HeaderText("Status").ForeignKeyField("approval_status")
+            .ForeignKeyValue("approval_status_name").DataSource((IEnumerable<object>)ViewBag.status_list).AllowEditing(true)
+            .TextAlign(TextAlign.Left).Add();
+            col.Field("approval_comments").HeaderText("Comments").Width(150).Add();
+        })
+        .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess");
+            eve.ContextClick("contextclick");
+        })
+    )
+</div>
+<br />
+<br>
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+<script>
+
+    function EndProcess()
+    {
+        var gridObj = $("#Grid").ejGrid("instance");
+        gridObj.refreshContent();
+    }
+    $('#approval_status').val("0");
+    $("#search").click(function () {
+        AdvanceSearch();
+    });
+    function AdvanceSearch()
+    {
+        var id = $("#approval_status").val();
+        $(".loading").show();
+        $.ajax({
+            url: "@Url.Action("GetApprovedStatus", "PurchaseOrder")",
+            method: "Post",
+        cache: false,
+        data: {id:id},
+        success: function (data) {
+            console.log(data);
+            $(".loading").hide();
+            $('#searchresult').empty().append(data);
+        },
+        error: function (http) {
+            console.log(XMLHttpRequest);
+        }
+    });
+    }
+    function contextclick(args) {
+
+        if (args.text == "Print") {
+            var url = '@Url.Action("Pdf", "PurchaseOrder")?id=' + this.getSelectedRecords()[0].po_id + '&type=' + 1;
+            window.open(url);
+        }
+
+
+    };
+</script>
+

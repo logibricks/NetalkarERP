@@ -1,0 +1,40 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+@{(Html.EJ().Grid<report_inventory_vm>("Editing")
+                                      //.Datasource((IEnumerable<object>)ViewBag.datasource)
+                                      .Datasource(ds => ds.URL(Url.Action("GetInventoryReport", "InventoryReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&plant_id=" + ViewBag.plant_id + "&item_id=" + ViewBag.item_id + "&customer_id=" + ViewBag.customer_id).Adaptor(AdaptorType.UrlAdaptor))
+                                      .AllowPaging().PageSettings(a => a.PageSize(20))
+                                      .AllowFiltering()
+                                          .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                      .ShowColumnChooser()
+                                      .AllowSorting()
+                                      .AllowScrolling()
+                                      .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "InventoryReport", new { ctrlname = "ChallanWiseReceiptsIssues&Balance" })))
+                                      .ToolbarSettings(toolbar =>
+                                      {
+                                          toolbar.ShowToolbar().ToolbarItems(items =>
+                                          {
+                                              items.AddTool(ToolBarItems.Search);
+                                              items.AddTool(ToolBarItems.ExcelExport);
+                                              items.AddTool(ToolBarItems.PrintGrid);
+                                          });
+                                      })
+                          .Columns(col =>
+                          {
+                              col.Field("item_name").Width("15%").HeaderText("Item Description").Add();
+                              col.Field("posting_date").Width("15%").HeaderText("Posting Date").Format("{0:dd/MMM/yyyy}").Add();
+                              col.Field("customer_chalan_no").Width("15%").HeaderText("Customer Challan No").Add();
+                              col.Field("customer_chalan_date").Width("15%").HeaderText("Customer Challan Date").Format("{0:dd/MMM/yyyy}").Add();
+                              col.Field("quantity").Width("15%").HeaderText("Quantity").TextAlign(TextAlign.Right).Add();
+                              
+                              col.Field("sr_no").Width("15%").HeaderText("Sr No").Add();
+                              col.Field("document_no").Width("15%").HeaderText("Our Invoice No").Add();
+                              col.Field("document_date").Width("15%").HeaderText("Invoice Date").Format("{0:dd/MMM/yyyy}").Add();
+                              col.Field("document_qty").Width("15%").HeaderText("Dispatch Quantity").TextAlign(TextAlign.Right).Add();
+                              col.Field("balance_quantity").Width("15%").HeaderText("Balance Quantity").TextAlign(TextAlign.Right).Add();
+                          })
+                              .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicki"); })
+                                                                                                                                                                                                                                                      ).Render();}
+@Html.EJ().ScriptManager()
+

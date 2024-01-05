@@ -1,0 +1,285 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.inv_Inventory_stock_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Edit";
+}
+
+@using (Html.BeginForm("Edit", "InventoryStock", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.HiddenFor(a=>a.inventory_stock_id)
+        @Html.HiddenFor(model => model.inventory_stock_id)
+        <div id="inv_Inventory_stock_detail"></div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="hidden" id="pla_transfer_is_active" name="pla_transfer_is_active" value="true" />
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.category_list, new { @class = "form-control category validinput", @required = true, @onchange = "GetDocumentNumber(this.value);" })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                        </div>
+                        @Html.LabelFor(model => model.number, new { @class = "control-label col-md-4 hidden" })
+                        <div class="col-md-3 col-sm-3 col-xs-12" hidden>
+                            @Html.EditorFor(model => model.number, new { htmlAttributes = new { @class = "form-control num validinput removedisabled", @required = true, @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.number, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.posting_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control postingdocumentdate validinput", @required = true } })
+                            @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.plant_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plant_list, "---Select---", new { @class = "form-control", @onchange = "GetStorageLocation(this.value);" })
+                            @Html.ValidationMessageFor(model => model.plant_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.sloc_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("sloc_id", (System.Web.Mvc.SelectList)ViewBag.sloc_list, "---Select---", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.sloc_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.document_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.document_date, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.document_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.bucket_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("bucket_id", (System.Web.Mvc.SelectList)ViewBag.bucket_list, "---Select---", new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.bucket_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ref1, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.ref1, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ref1, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">Detail</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg12 col-sm-12">
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <input type="submit" value="Create" class="btn btn-success" data-controller="FinInternalReconcile" id="create" onclick="TabletoJeson();" style="float:right" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+            var t = $('#ContactGrid').dataTable();
+             var inv = @Html.Raw(JsonConvert.SerializeObject(Model));
+            t.fnAddData(inv.inv_Inventory_stock_detail_VM);
+        });
+
+        $(document).ready(function () {
+            @*var t = $('#ContactGrid').DataTable();
+            var inv = @Html.Raw(JsonConvert.SerializeObject(this.Model));
+            t.fnAddData(inv.inv_Inventory_stock_detail);
+            console.log(inv_Inventory_stock_detail);
+            var i=1;
+            $.each(inv.inv_Inventory_stock_detail,function(key,value){
+                t.fnAddData([value.inventory_stock_detail_id,i,value.REF_ITEM.ITEM_ID,value.REF_ITEM.ITEM_CODE+"-"+value.REF_ITEM.ITEM_NAME,value.batch_id,value.batch_number,value.uom_id,value.REF_UOM.UOM_NAME,value.actual_qty,'']);
+            });*@
+
+            $("#plant_id").select2({
+                placeholder: "Select Plant",
+                allowClear: true
+            });
+            $("#sloc_id").select2({
+                placeholder: "Select Sloc",
+                allowClear: true
+            });
+        });
+        var checkedarray = [];
+
+
+        function onSelect2(args) {
+            var id = "";
+            var matches = args.value.split("-");
+            id = matches[0].trim();
+            GetUnit(id);
+        }
+        @*var error=@Html.Raw(Json.Encode(ViewBag.error));
+        if(error !="")
+        {
+            sweetAlert("",error,"error");
+        }*@
+        function GetGRN(poid) {
+            if(poid!=''){
+                var t = $('#pogrid').DataTable();
+                t.fnClearTable();
+                if (poid == "") {
+                    poid = 0;
+                }
+                var rowCount = t.fnGetData().length;
+                var i = 1;
+                $.ajax({
+                    url: '@Url.Action("GetGRNListForPI", "PurchaseReturn")',
+                    type: "GET",
+                    dataType: "json",
+                    data: { id: poid },
+                    success: function (poid) {
+                        t.fnAddData(poid);
+                    }
+                });
+            }
+        }
+
+  
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            "columns": [
+        { "data": "inventory_stock_detail_id", sWidth: "5%", "title": "ID", bVisible: false },
+        { "data": "rowIndex",sWidth:"5%","title":"Sr No." },
+        { "data": "item_id", sWidth: "15%", "title": 'item Id', bVisible: false, },
+        { "data": "item_name", sWidth: "15%", "title": "Item Name" },
+        { "data": "item_batch_id", sWidth: "15%", "title": "batch id", bVisible: false, },
+        { "data": "batch_number", sWidth: "15%", "title": "Batch" },
+        { "data": "uom_id", sWidth: "25%", "title": "Uom Id", bVisible: false, },
+        { "data": "UOM_NAME", sWidth: "15%", "title": "UoM" },     
+        { "data": "actual_qty", sWidth: "15%", "title": "Quantity" }, 
+        { "data": "rowIndex" ,sWidth:"10%","title": "Update Quantity",'render' : function(data, type,full ) 
+            {
+            return '<input type="number" id="actual_qty'+data+'" class="quant form-control"/>'
+           
+            }
+            },
+    
+            ]
+        });
+
+        function TabletoJeson() {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;          
+            $('#inv_Inventory_stock_detail').empty();
+            for (i = 0; i < rowCount; i++) {
+                var k = i+1;
+           
+                var qty = $("#actual_qty" + k ).val()==""?t.fnGetData(i, 8):$("#actual_qty" + k ).val();
+
+                $("#inv_Inventory_stock_detail").append('<input type="hidden" id="inventory_stock_detail_id' + i + '" name="inventory_stock_detail_id" value="' + t.fnGetData(i, 0) + '">');             
+                $("#inv_Inventory_stock_detail").append('<input type="" id="item_id' + i + '" name="item_id" value=' + t.fnGetData(i, 2) + '>');                
+                $("#inv_Inventory_stock_detail").append('<input type="" id="item_batch_id' + i + '" name="item_batch_id" value=' + t.fnGetData(i,4) + '>');
+                $("#inv_Inventory_stock_detail").append('<input type="" id="batch_number' + i + '" name="batch_number" value=' + t.fnGetData(i,5) + '>');
+                $("#inv_Inventory_stock_detail").append('<input type="" id="uom_id' + i + '" name="uom_id" value=' + t.fnGetData(i, 6) + '>');               
+                $("#inv_Inventory_stock_detail").append('<input type="" id="actual_qty' + i + '" name="actual_qty" value=' + qty + '>');
+                
+              
+            }
+            //checkedarray.length = 0;
+            //document.forms[0].submit();
+        }
+
+
+       
+        //$('#actual_qty').change(function () {
+        //    alert('asas');
+        //    checkedarray.length = 0;
+        //    var t = $('#ContactGrid').dataTable();
+        //    var trlen = t.fnGetData().length;
+             
+        //        if (trlen > 0) {
+        //            for (var i = 0; i <= trlen - 1; i++) {
+        //                checkedarray.push(i);
+        //                var balance = t.fnGetData(i, 8);
+        //                var _balance_textBox= $('#actual_qty' + (i + 1)).val();
+                        
+        //            }
+        //        }
+                       
+        //});
+
+
+        function GetStorageLocation(id) {
+            if (id == "") {
+                id = 0;
+            }
+            $.ajax({
+                url: '@Url.Action("GetStorageLocation", "Generic")',
+                type: "GET",
+                dataType: "JSON",
+                data: { id: id },
+                success: function (id) {
+                    $("#sloc_id").html("").trigger('change'); // clear before appending new list
+                    $("#sloc_id").append($('<option></option>').val("").html("---Select---"));
+                    $.each(id, function (i, cycle) {
+                        $("#sloc_id").append(
+                            $('<option></option>').val(cycle.storage_location_id).html(cycle.storage_location_name));
+                    });
+                }
+            });
+        }
+
+    </script>
+
+}

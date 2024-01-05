@@ -1,0 +1,352 @@
+﻿@using Sciffer.Erp.Domain.Model
+@{
+    ViewBag.Title = "Index";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<br /><br /><br />
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<document_numbring>("Grid")
+         .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.Datasource).RemoveURL(Url.Action("InlineDelete", "DocumentNumbering")).InsertURL(Url.Action("InlineInsert", "DocumentNumbering")).UpdateURL(Url.Action("InlineInsert", "DocumentNumbering"))
+                       .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(10); })
+        .EnableAltRow()
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.Update);
+            items.AddTool(ToolBarItems.Cancel);
+            items.AddTool(ToolBarItems.ExcelExport);
+
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "DocumentNumbering" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "DocumentNumbering" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "DocumentNumbering" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("document_numbring_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Width(80).Add();
+            col.Field("module_id").Width("15%").HeaderText("Module").Visible(false).ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("module_name").Width("15%").HeaderText("Module Name").Add();
+            col.Field("module_form_id").Width("15%").HeaderText("Form").Visible(false).ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("form_name").Width("15%").HeaderText("Form").Add();
+            col.Field("financial_year_id").Width("15%").HeaderText("Financial Year").Visible(false).ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("financial_year").Width("15%").HeaderText("Financial Year").Add();
+            col.Field("category").Width("15%").HeaderText("Category").Add();
+            col.Field("plant_id").Width("15%").HeaderText("Plant ID").Visible(false).Add();
+            col.Field("plant_name").Width("15%").HeaderText("Plant").Add();
+            col.Field("prefix_sufix_name").Width("15%").HeaderText("Purfix/Suffix").Add();
+            col.Field("prefix_sufix_id").Width("15%").HeaderText("Purfix/Suffix").Visible(false).ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("prefix_sufix").Width("15%").HeaderText("Purfix/Suffix Series").Visible(false).ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("from_number").Width("15%").HeaderText("From Number").Visible(false).ValidationRules(val => val.AddRule("required", true)).Format("{0:c2}").Add();
+            col.Field("to_number").Width("15%").HeaderText("To Number").Visible(false).ValidationRules(val => val.AddRule("required", true).AddRule("customrule", true).AddRule("checklength", true)).Add();
+            col.Field("current_number").Width("15%").HeaderText("Current Number").Visible(false).Add();
+            col.Field("set_default").Width("15%").HeaderText("Set Default").Visible(false).Add();
+            col.Field("is_blocked").Width("15%").HeaderText("Blocked").Visible(false).Add();
+        }).ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+</div>
+<script id="template" type="text/template">
+
+    <div>
+        <div class="row">
+
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="hidden" id="document_numbring_id" name="document_numbring_id" value="{{: document_numbring_id}}" class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <div class="col-lg-4 col-md-4 col-xs-12" style="text-align: right;">
+                    Module *
+                </div>
+                <div class="col-lg-8 col-md-8 col-xs-12">
+                    @Html.DropDownList("module_id", (System.Web.Mvc.SelectList)ViewBag.modulelist, "---Select---", new { @class = "form-control" })
+
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <div class="col-lg-4 col-md-4 col-xs-12" style="text-align: right;">
+                    Form *
+                </div>
+                <div class="col-lg-8 col-md-8 col-xs-12" style="text-align: right;">
+                    @Html.DropDownList("module_form_id", (System.Web.Mvc.SelectList)ViewBag.moduleformlist, "---Select---", new { @class = "form-control" })
+
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <div class="col-lg-4 col-md-4 col-xs-12" style="text-align: right;">
+                    Financial Year *
+                </div>
+                <div class="col-lg-8 col-md-8 col-xs-12">
+                    @Html.DropDownList("financial_year_id", (System.Web.Mvc.SelectList)ViewBag.financelist, "---Select---", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <div class="col-lg-4 col-md-4 col-xs-12" style="text-align: right;">
+                    Category *
+                </div>
+                <div class="col-lg-8 col-md-8 col-xs-12" style="text-align: right;">
+                    <input type="text" id="category" name="category" value="{{: category}}" class="form-control " />
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <div class="col-lg-4 col-md-4 col-xs-12" style="text-align: right;">
+                    Prefix/Suffix *
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    @Html.DropDownList("prefix_sufix_id", new List<SelectListItem>
+                                 {
+                                    new SelectListItem{ Text="Prefix", Value = "1" },
+                                    new SelectListItem{ Text="Suffix", Value = "2" }
+                                 }, new { @class = "form-control" })
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <input type="text" id="prefix_sufix" name="prefix_sufix" value="{{: prefix_sufix}}" class="form-control " />
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <div class="col-lg-4 col-md-4 col-xs-12" style="text-align: right;">
+                    Plant *
+                </div>
+                <div class="col-lg-8 col-md-8 col-xs-12" style="text-align: right;">
+                    @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.PlantList, "---Select---", new { @class = "form-control" })
+
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <div class="col-lg-4 col-md-4 col-xs-12" style="text-align: right;">
+                    From Number *
+                </div>
+                <div class="col-lg-8 col-md-8 col-xs-12">
+                    <input type="number" id="from_number" name="from_number" value="{{: from_number}}" class="form-control" />
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <div class="col-lg-4 col-md-4 col-xs-12" style="text-align: right;">
+                    To Number *
+                </div>
+                <div class="col-lg-8 col-md-8 col-xs-12" style="text-align: right;">
+                    <input type="number" id="to_number" name="to_number" value="{{: to_number}}" class="form-control" />
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <div class="col-lg-4 col-md-4 col-xs-12" style="text-align: right;">
+                    Last Used
+                </div>
+                <div class="col-lg-8 col-md-8 col-xs-12">
+                    <input type="number" id="current_number" name="current_number" value="{{: current_number}}" class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+
+                <div class="col-lg-4 col-md-4 col-xs-12" style="text-align: right;">
+                    Set Default
+                </div>
+                <div class="col-lg-8 col-md-8 col-xs-12" style="text-align: right;">
+                    <input type="checkbox" id="set_default" name="set_default">
+                </div>
+            </div>
+            <br />
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <div class="col-lg-4 col-md-4 col-xs-12" style="text-align: right;">
+                    Blocked
+                </div>
+                <div class="col-lg-4 col-md-4 col-xs-12" style="text-align: right;">
+                    <input type="checkbox" name="is_blocked" value="{{:is_blocked}}" class="form-control" id="is_blocked">
+                </div>
+            </div>
+        </div>
+</script>
+<script type="text/javascript">
+    $(function () {
+        $.validator.addMethod("customrule", function (value, element, params) {
+            var a = $("#from_number").val();
+            var b = $("#to_number").val();
+            return b > a;
+        }, "Invalid To Number. ")
+        $.validator.addMethod("checklength", function (value, element, params) {
+            var a = $("#from_number").val();
+            var b = $("#to_number").val();
+            return b.length >= a.length;
+        }, "Invalid To Number. ")
+
+    });
+
+    var flag = true;
+    function complete(args) {
+
+        if (args.requestType == "add") {
+            $('#is_blocked').checkboxpicker();
+            document.getElementById('current_number').setAttribute('disabled', 'disabled');
+
+            $("#module_form_id").change(function () {
+                CheckSet();
+            });
+            $("#financial_year_id").change(function () {
+                CheckSet();
+            });
+            $('#set_default').checkboxpicker();
+            document.getElementById('module_form_id').setAttribute('disabled', 'disabled');
+            $('#set_default').prop('checked', true);
+            $("#module_id").change(function () {
+                if ($("#module_id").val() == "") {
+                    $("#module_form_id").val("")
+                    document.getElementById('module_form_id').setAttribute('disabled', 'disabled');
+                }
+                else {
+
+                    document.getElementById('module_form_id').removeAttribute('disabled');
+                    FillForm($("#module_id").val());
+                }
+            });
+        }
+        if (args.requestType == "beginedit") {
+            $("#module_id").prop('value', args.rowData.module_id);
+            $("#module_form_id").prop('value', args.rowData.module_form_id);
+            $("#financial_year_id").prop('value', args.rowData.financial_year_id);
+            $("#plant_id").prop('value', args.rowData.plant_id)
+            document.getElementById('current_number').setAttribute('disabled', 'disabled');
+            document.getElementById('module_id').setAttribute('disabled', 'disabled');
+            document.getElementById('financial_year_id').setAttribute('disabled', 'disabled');
+            document.getElementById('from_number').setAttribute('disabled', 'disabled');
+            document.getElementById('category').setAttribute('disabled', 'disabled');
+            document.getElementById('module_form_id').setAttribute('disabled', 'disabled');
+            document.getElementById('prefix_sufix_id').setAttribute('disabled', 'disabled');
+            document.getElementById('prefix_sufix').setAttribute('disabled', 'disabled');
+            document.getElementById('plant_id').setAttribute('disabled', 'disabled');
+            if (args.rowData.set_default == true) {
+                //Check
+                document.getElementById('set_default').setAttribute('checked', 'checked');
+            }
+            else {
+                //UnCheck
+                document.getElementById('set_default').removeAttribute('checked');
+            }
+
+            $('#set_default').checkboxpicker();
+            if (args.rowData.is_blocked == true) {
+                //Check
+                document.getElementById('is_blocked').setAttribute('checked', 'checked');
+            }
+            else {
+                //UnCheck
+                document.getElementById('is_blocked').removeAttribute('checked');
+            }
+
+
+            $('#is_blocked').checkboxpicker();
+            $("#module_id").change(function () {
+                if ($("#module_id").val() == "") {
+                    $("#module_form_id").val("")
+                    document.getElementById('module_form_id').setAttribute('disabled', 'disabled');
+                }
+                else {
+                    document.getElementById('module_form_id').removeAttribute('disabled');
+                    FillForm($("#module_id").val());
+                }
+            });
+
+        }
+        if (args.requestType == "save") {
+            if (args.data.text == 'duplicate') {
+                sweetAlert("", "Document number already exists!", "error");
+                if (args.model.dataSource.dataSource.json[0].document_numbring_id == null) {
+                    args.model.dataSource.dataSource.json = args.model.dataSource.dataSource.json.splice(1, args.model.dataSource.dataSource.json.length);
+                }
+            }
+            var gridObj = $("#Grid").ejGrid("instance");
+            gridObj.refreshContent();
+        }
+    }
+
+    function EndProcess() {
+        var gridObj = $("#Grid").ejGrid("instance");
+        //console.log(gridObj);
+        gridObj.refreshContent();
+
+    }
+    function FillForm(id) {
+        var module = id;
+        if (module == "") {
+            module = 0;
+        }
+        else {
+            module = id;
+        }
+        $.ajax({
+            //  url: '/Generic/FillModuleForm',
+            url: '@Url.Action("FillModuleForm", "Generic")',
+            type: "GET",
+            dataType: "JSON",
+            data: { id: module },
+            success: function (state) {
+                $("#module_form_id").html("");
+                $("#module_form_id").append($('<option></option>').val("").html("---Select---"));
+                $.each(state, function (i, cycle) {
+                    $("#module_form_id").append(
+                        $('<option></option>').val(cycle.module_form_id).html(cycle.module_form_name));
+                });
+            }
+        })
+    }
+    function CheckSet() {
+        var fin = $("#financial_year_id").val();
+        var id = $("#module_form_id").val();
+        if (id == "") {
+            id = 0;
+        }
+        else {
+            id = id;
+        }
+        if (fin == "") {
+            fin = 0;
+        }
+        else {
+            fin = fin;
+        }
+        $.ajax({
+            // url: '/Generic/CheckSet',
+            url: '@Url.Action("CheckSet", "Generic")',
+            type: "GET",
+            dataType: "JSON",
+            asynch: true,
+            data: { id: id, financial_year_id: fin },
+            success: function (output) {
+                if (output == true) {
+                    $('#set_default').prop('checked', true);
+                }
+                else {
+                    $('#set_default').prop('checked', false);
+                }
+            }
+        });
+    }
+</script>

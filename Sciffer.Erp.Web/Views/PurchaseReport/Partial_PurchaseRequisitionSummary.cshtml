@@ -1,0 +1,40 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<purchase_order_report_vm>("Editing")
+                    .Datasource(ds => ds.URL(Url.Action("Get_Purchase_Order_Report", "PurchaseReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date +"&item_category="+ ViewBag.item_category +"&status_id="+ ViewBag.status_id).Adaptor(AdaptorType.UrlAdaptor)).AllowPaging().PageSettings(a=>a.PageSize(20))
+                    .AllowFiltering()
+                        .FilterSettings(X => X.FilterType(FilterType.Excel))
+                    .ShowColumnChooser()
+                    .AllowSorting()
+                    .AllowScrolling()
+                    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "PurchaseReport", new { ctrlname = "PRSummary" })))
+                    .ScrollSettings(scroll => { scroll.Width("100%"); })
+                .ToolbarSettings(toolbar =>
+                {
+                    toolbar.ShowToolbar().ToolbarItems(items =>
+                    {
+                        items.AddTool(ToolBarItems.Search);
+                        items.AddTool(ToolBarItems.ExcelExport);
+                        items.AddTool(ToolBarItems.PrintGrid);
+                    });
+                })
+        .Columns(col =>
+        {
+            col.Field("item_code").Width("10%").HeaderText("Item Code").Add();
+            col.Field("item_name").Width("10%").HeaderText("Item Description").Add();
+            col.Field("category").Width("10%").HeaderText("PR Doc Category").Add();
+            col.Field("pur_requisition_number").Width("10%").HeaderText("PR Document Number").Add();
+            col.Field("pur_requisition_date").Width("10%").HeaderText("PR Doc Date").Format("{0:dd/MMM/yyyy}").Visible(true).Add();
+            col.Field("quantity").Width("10%").HeaderText("PR Quantity").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+            col.Field("status_name").Width("10%").HeaderText("Status").Add();
+            col.Field("category").Width("10%").HeaderText("PO Doc Category").Add();
+            col.Field("po_no").Width("10%").HeaderText("PO Document Number").Add();
+            col.Field("po_date").Width("10%").HeaderText("PO Doc Date").Format("{0:dd/MMM/yyyy}").Visible(true).Add();
+            col.Field("po_quantity").Width("10%").HeaderText("PO Quantity").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+        })
+        .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickp"); })
+        ).Render();}
+@Html.EJ().ScriptManager()
+
+
+

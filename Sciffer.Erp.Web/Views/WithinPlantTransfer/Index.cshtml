@@ -1,0 +1,92 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<PlantTransferVM>("Searching")
+        .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "WithinPlantTransfer" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+           // items.AddTool(ToolBarItems.WordExport);
+           // items.AddTool(ToolBarItems.PdfExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "WithinPlantTransfer" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "WithinPlantTransfer" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "WithinPlantTransfer" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+          .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("pla_transfer_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Add();
+            col.Field("pla_transfer_number").Width("15%").HeaderText("Plant Transfer Number").Add();
+            col.Field("pla_posting_date").Width("15%").HeaderText("Posting Date").Format("{0:dd/MMM/yyyy}").Add();
+            col.Field("pla_document_date").Width("15%").HeaderText("Document Date").Format("{0:dd/MMM/yyyy}").Add();
+            col.Field("Plant").Width("15%").HeaderText("Plant").Add();
+            col.Field("category").Width("15%").HeaderText("Category").Add();
+            col.Field("pla_send_sloc").Width("15%").HeaderText("Send Sloc").Visible(false).Add();
+            col.Field("pla_send_bucket").Width("15%").HeaderText("Send Bucket").Visible(false).Add();
+            col.Field("pla_receive_sloc").Width("15%").HeaderText("Receive Sloc").Visible(false).Add();
+            col.Field("pla_receive_bucket").Width("15%").HeaderText("Receive Bucket").Visible(false).Add();
+            col.Field("pla_remark").Width("15%").HeaderText("Remarks").Visible(false).Add();
+            col.Field("pla_attachment").Width("15%").HeaderText("Attachment").Width(150).Visible(true).Template("<a target='_blank' href='/Generic/Result?id={{:pla_transfer_id}}&controllername=WithinPlantTransfer'>File</a>").AllowEditing().Add();
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+     .e-editcell {
+        display:none
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = '@Url.Action("Details", "WithinPlantTransfer")?id=' +args.rowData.pla_transfer_id;
+        }
+        if (args.requestType == "add") {
+            location.href = '@Url.Action("Create", "WithinPlantTransfer")';
+        }
+    }
+    function rightClick(args) {
+        location.href = '@Url.Action("Details", "WithinPlantTransfer")?id=' +args.data.pla_transfer_id;
+    }
+
+    $(document).ready(function () {
+        var num = '@Html.ViewBag.num';
+        if (num != '') {
+            if (num != undefined) {
+                sweetAlert("", num + " Saved successfully.", "success");
+            }
+        }
+    });
+
+</script>
+

@@ -1,0 +1,45 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<fin_payment_receipt_report>("Editing")
+                                                  .Datasource(ds => ds.URL(Url.Action("Get_Payment_Receipt_Report", "BankingReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&bank_cash_account_id=" + ViewBag.bank_cash_account_id + "&cash_bank=" + ViewBag.cash_bank + "&in_out=" + ViewBag.in_out).Adaptor(AdaptorType.UrlAdaptor))
+                                                      .AllowPaging().PageSettings(a => a.PageSize(20))
+                                                      .AllowFiltering()
+                                                          .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                      .ShowColumnChooser()
+                                                      .AllowSorting()
+                                                      .AllowScrolling()
+                                                      .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelNormal", "BankingReport", new { ctrlname = "PaymentDetail" })))
+                                                                                          .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                                  .ToolbarSettings(toolbar =>
+                                                  {
+                                                      toolbar.ShowToolbar().ToolbarItems(items =>
+                                                      {
+                                                          items.AddTool(ToolBarItems.Search);
+                                                          items.AddTool(ToolBarItems.ExcelExport);
+                                                          items.AddTool(ToolBarItems.PrintGrid);
+                                                      });
+                                                  })
+                                          .Columns(col =>
+                                          {
+                                              col.Field("payment_date").Width("15%").Format("{0:dd/MMM/yyyy}").Visible(true).HeaderText("Posting Date ").Visible(ViewBag.item_service == null ? true : ViewBag.item_service).Add();
+
+                                              col.Field("entity_code").Width("10%").HeaderText("Code").Add();
+                                              col.Field("entity_name").Width("10%").HeaderText("Description ").Add();
+                                              col.Field("document_no").Width("10%").HeaderText("Payment Doc No ").Add();
+                                              col.Field("document_type_name").Width("10%").HeaderText("Doc Type").Add();
+                                              col.Field("source_document_no").Width("10%").HeaderText("Doc No ").Add();
+                                              col.Field("ledger_date").Width("15%").Format("{0:dd/MMM/yyyy}").Visible(true).HeaderText("Doc Date ").Visible(ViewBag.item_service == null ? true : ViewBag.item_service).Add();
+                                              col.Field("due_date").Width("15%").Format("{0:dd/MMM/yyyy}").Visible(true).HeaderText("Due Date ").Visible(ViewBag.item_service == null ? true : ViewBag.item_service).Add();
+
+
+                                              col.Field("setoff_amount_local").Width("10%").HeaderText("Payment Amount").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                              col.Field("reference").Width("10%").HeaderText("Reference").Add();
+                                              col.Field("payment_type_name").Width("10%").HeaderText("Payment Method").Add();
+
+
+                                          })
+                                        .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickb"); })
+                                            ).Render();}
+@Html.EJ().ScriptManager()
+
+

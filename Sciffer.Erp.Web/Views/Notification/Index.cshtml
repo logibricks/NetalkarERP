@@ -1,0 +1,162 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<br/><br/><br/>
+@*<div>
+    @(Html.EJ().Grid<ref_pm_notification_vm>("Searching")
+        .Datasource(ds => { ds.Json((IEnumerable<object>)ViewBag.DataSource).RemoveURL(Url.Action("Delete", "Notification")).Adaptor(AdaptorType.RemoteSaveAdaptor); })
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging().PageSettings(a => a.PageSize(20))
+        .PageSettings(p => { p.PageSize(12); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "Notification" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20)).PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%").Height("Auto"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("notification_id").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("category_name").HeaderText("Category Name").Add();
+            col.Field("doc_number").HeaderText("Number").Add();
+            col.Field("notification_type").HeaderText("Notification Type").Add();
+            col.Field("notification_date").HeaderText("Notification Date").Format("{0:dd/MM/yyyy}").Add();
+            col.Field("notification_description").HeaderText("Notification Description").Add();
+            col.Field("employee_name").HeaderText("Notified By").Add();
+            //col.Field("start_date").HeaderText("Malfunction Start Date").Format("{0:dd/MM/yyyy}").Add();
+            //col.Field("end_date").HeaderText("Malfunction End Date").Format("{0:dd/MM/yyyy}").Add();
+            col.Field("machine_code").HeaderText("Machine Code").Add();
+            col.Field("plant_name").HeaderText("Plant Name").Add();
+            col.Field("detail_problem").HeaderText("Detail Problem").Add();
+            col.Field("detail_solution").HeaderText("Detail Solution").Add();
+            col.Field("attended_by").HeaderText("Attended By").Add();
+            col.Field("reviewed_by").HeaderText("Reviewed By").Add();
+            //col.Field("breakdown_start_date").HeaderText("Breakdown Start Date").Format("{0:dd/MM/yyyy}").Add();
+            //col.Field("breakdown_end_date").HeaderText("Breakdown End Date").Format("{0:dd/MM/yyyy}").Add();
+            //col.Field("start_time").HeaderText("Malfunction Start Time").Format("{0:HH:mm}").Add();
+            //col.Field("end_time").HeaderText("Malfunction End Time").Format("{0:HH:mm}").Add();
+            //col.Field("breakdown_start_time").HeaderText("Breakdown Start Time").Format("{0:HH:mm}").Add();
+            //col.Field("breakdown_end_time").HeaderText("Breakdown End Time").Format("{0:HH:mm}").Add();
+            // col.Field("attachment").HeaderText("Attachment").Width(150).Visible(false).Template("<a id='files' target='_blank' href='/Generic/Result?id={{:GOODS_RECEIPT_ID}}&&cntrollername=GoodsReceipt'>File</a>").Add();
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>*@
+
+<div>
+    @(Html.EJ().Grid<ref_pm_notification_vm>("Searching")
+        .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "Notification" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.WordExport);
+            items.AddTool(ToolBarItems.PdfExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "Notification" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "Notification" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "Notification" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("notification_id").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("category_name").HeaderText("Category Name").Add();
+            col.Field("doc_number").HeaderText("Number").Add();
+            col.Field("notification_type").HeaderText("Notification Type").Add();
+            col.Field("notification_date").HeaderText("Notification Date").Format("{0:dd/MM/yyyy}").Add();
+            col.Field("notification_description").HeaderText("Notification Description").Add();
+            col.Field("employee_name").HeaderText("Notified By").Add();
+            col.Field("machine_code").HeaderText("Machine Code").Add();
+            col.Field("plant_name").HeaderText("Plant Name").Add();
+            col.Field("detail_problem").HeaderText("Detail Problem").Add();
+            col.Field("detail_solution").HeaderText("Detail Solution").Add();
+            col.Field("attended_by").HeaderText("Attended By").Add();
+            col.Field("reviewed_by").HeaderText("Reviewed By").Add();            
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var saved = '@ViewBag.doc';
+        if (saved != '') {
+            if (saved.includes("Please")) {
+                var id = saved.split("$");
+                sweetAlert("Error", saved, "error");
+                let href = '@Url.Action("Edit", "Notification")?id=' + id[1];
+                window.open(href);
+                let href1 = '@Url.Action("index", "Notification")';
+                window.close(href1);
+            }
+            else if (saved != 0) {
+                sweetAlert("", saved + " Saved Successfully", "success");
+            }
+        }
+        var role = '@ViewBag.role';
+
+        if (role == "Operator") {
+            $("#sidebar-menu").css("display", "none");
+            $("#menu_toggle").trigger("click");
+            $("#menu_toggle").css("display", "none");
+            $(".site_title").click(function () { return false; });
+        }
+
+    });
+    function actionBegin(args) {
+        if (args.requestType == "beginedit") {
+            location.href = "@Url.Action("Edit", "Notification")?id=" + args.rowData.notification_id;
+        }
+        if (args.requestType == "add") {
+            location.href = "@Url.Action("Create", "Notification")";
+        }
+    }
+    function rightClick(args) {
+        location.href = "@Url.Action("Details", "Notification")?id=" + args.rowData.notification_id;
+    }
+
+
+
+</script>

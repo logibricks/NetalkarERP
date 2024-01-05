@@ -1,0 +1,80 @@
+﻿
+
+@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+
+
+
+@{(Html.EJ().Grid<report_sales_summary>("FlatGrid")
+                                            .Datasource((IEnumerable<object>)ViewBag.datasource)
+                                              .ShowColumnChooser()
+                                              .AllowScrolling()
+                                              .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelForReport", "Generic", new { ctrlname = "SalesSummaryReport" }))
+                                              .ExportToPdfAction(Url.Action("ExportToPdfForReport", "Generic", new { ctrlname = "SalesSummaryReport" })))
+                                              .ScrollSettings(scroll => { scroll.Width("100%").Height("50%"); })
+
+                                          .ToolbarSettings(toolbar =>
+                                          {
+                                              toolbar.ShowToolbar().ToolbarItems(items =>
+                                              {
+                                                  items.AddTool(ToolBarItems.Search);
+                                                  items.AddTool(ToolBarItems.ExcelExport);
+                                                  items.AddTool(ToolBarItems.PrintGrid);
+                                              });
+                                          })
+
+                                              .ShowSummary()
+
+                                          .SummaryRow(row =>
+                                          {
+                                              row.Title("Total").SummaryColumns(col =>
+                                              {
+                                                  col.SummaryType(SummaryType.Sum).DisplayColumn("total_value").DataMember("total_value").Format("{0:n2}").Add();
+                                                  col.SummaryType(SummaryType.Sum).DisplayColumn("total_taxes").DataMember("total_taxes").Format("{0:n2}").Add();
+                                                  col.SummaryType(SummaryType.Sum).DisplayColumn("gross_value").DataMember("gross_value").Format("{0:n2}").Add();
+                                                  col.SummaryType(SummaryType.Sum).DisplayColumn("tds_value").DataMember("tds_value").Format("{0:n2}").Add();
+                                                  col.SummaryType(SummaryType.Sum).DisplayColumn("net_value").DataMember("net_value").Format("{0:n2}").Add();
+                                              }).Add();
+                                          })
+                                  .Columns(col =>
+                                  {
+                                      col.Field("customer_code").Width("10%").HeaderText("Customer Code").Add();
+                                      col.Field("customer_name").Width("10%").HeaderText("Customer Description").Add();
+                                      col.Field("parent_code").Width("10%").HeaderText("Parent code").Visible(true).Add();
+                                      col.Field("parent_description").Width("10%").HeaderText("Parent Description").Visible(true).Add();
+                                      col.Field("total_value").Width("10%").HeaderText("Total Value").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                      col.Field("total_taxes").Width("10%").HeaderText("Total Taxes").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                      col.Field("gross_value").Width("10%").HeaderText("Gross Value").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                      col.Field("tds_value").Width("10%").HeaderText("TDS").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                      
+                                  })
+                                  .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+                                  ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    @*$(function () {
+        var obj = @Html.Raw(Json.Encode(ViewBag.datasource));
+        console.log(obj);
+        $("#Editing").ejGrid({
+            dataSource: obj,
+            allowPaging: true,
+            //columns: [
+
+            //],
+            //dataBound : function(args){
+            //	for (var fld =0; fld < list.length; fld++ ) {
+            //	var column = { field: list[fld].value, headerText: list[fld].header, column: "", textAlign: "left", type: "string", visible: true, width: 75 };
+            //	this.model.columns.push(column); //add dynamic columns
+            //	}
+            //	this.columns(this.model.columns);
+            //}
+        });
+    });*@
+
+
+</script>
+

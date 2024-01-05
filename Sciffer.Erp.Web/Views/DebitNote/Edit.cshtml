@@ -1,0 +1,204 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.fin_credit_debit_note_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Edit";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(x => x.total_amount)
+        @Html.HiddenFor(x => x.fin_credit_debit_node_id)
+        <div id="cr_detail" hidden></div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.category_list, new { @class = "form-control validinput", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.EditorFor(model => model.document_no, new { htmlAttributes = new { @class = "form-control validinput", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.document_no, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.posting_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control validinput", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.entity_type_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("entity_type_id", (System.Web.Mvc.SelectList)ViewBag._entityTypeService, new { @class = "form-control validinput", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.entity_type_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.entity_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("entity_id", Enumerable.Empty<SelectListItem>(), "", new { @class = "form-control validinput", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.entity_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.currency_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("currency_id", (System.Web.Mvc.SelectList)ViewBag.currency_list, new { @class = "form-control validinput removedisabled", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.currency_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.remarks, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.remarks, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.remarks, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">General</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                                <thead>
+                                    <tr>
+                                        <th><label>ID</label></th>
+                                        <th><label>Sr. No.</label></th>                                       
+                                        <th><label>GL ID</label></th>
+                                        <th><label>GL</label></th>
+                                        <th><label>Description</label></th>
+                                        <th><label>Amount (INR)</label></th>
+                                        <th><label>Tax ID</label></th>
+                                        <th><label>Tax Code</label></th>
+                                        <th><label>Cost Center ID</label></th>
+                                        <th><label>Cost Center</label></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="table-responsive">
+                                <table class="table table-responsive table-bordered table-striped" id="TaxGrid"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: false },
+                     { sname: "b", sWidth: "5%" },
+                     { sname: "c", bVisible: false },
+                      { sname: "d", bVisible: true},
+                     { sname: "e", bVisible: true },
+                     { sname: "f", "sClass": "right" },
+                     { sname: "g", bVisible: false },
+                     { sname: "h"},
+                     { sname: "i", bVisible: false },
+                     { sname: "j"}]
+
+        });
+        $(document).ready(function () {
+            var t= $('#ContactGrid').DataTable();
+            var str="";
+            var str1="";
+            var tot = 0;
+            var cr_detail = @Html.Raw(JsonConvert.SerializeObject(this.Model));
+            $('#entity_id').append('<option value=' + cr_detail.entity_id + '>' + cr_detail.entity_code + ' - ' + cr_detail.entity_name + '</option>');
+            $('#entity_id').val(cr_detail.entity_id)
+            var i=1;
+            $.each(cr_detail.fin_credit_debit_node_detail, function(key, value) {
+                t.fnAddData([value.fin_credit_debit_node_detail_id, i, value.gl_ledger_id, value.ref_general_ledger.gl_ledger_code + ' - ' + value.ref_general_ledger.gl_ledger_name, value.user_description , parseFloat(value.credit_debit_amount).toFixed(2), value.tax_id, value.ref_tax.tax_code + ' - ' + value.ref_tax.tax_name, value.cost_center_id, value.cost_center_id==0?'':value.ref_cost_center.cost_center_code
+                ]);
+                i=i+1;
+                str1 = value.tax_id+ "~";
+                str1 = str1 + value.credit_debit_amount + "~";
+                str1 = str1 + value.credit_debit_amount;
+                if (str == "") {
+                    str = str1 + ","
+                }
+                else {
+                    str = str + str1 + ",";
+                }
+                tot = tot + parseFloat(value.credit_debit_amount);               
+            });
+            GetTaxDetail(str.slice(0, -1), tot, cr_detail.posting_date);
+        });
+
+
+        function GetTaxDetail(taxdetail, amount, dt) {
+            $.ajax({
+                url: '@Url.Action("GetTaxCalculation", "Generic")',
+                type: "GET",
+                dataType: "JSON",
+                data: {entity:"calculatetax", st: taxdetail, amt: amount, dt: dt, tds_code_id: 0 },
+                success: function (Payment_Cycle) {
+                    $('#TaxGrid tbody').html('');
+                    $.each(Payment_Cycle, function (i, cycle) {
+                        $('#TaxGrid').append('<tbody>');
+                        $('#TaxGrid').append('<tr><td>' + cycle.tax_name + '</td><td align="right">' + parseFloat(cycle.tax_value).toFixed(2) + '</td></tr>')
+                        $('#TaxGrid').append('</tbody>');
+                        $("#total_amount").val(cycle.tax_value);
+                    });
+                }
+            });
+        }
+
+    </script>
+
+}

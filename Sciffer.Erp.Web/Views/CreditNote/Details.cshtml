@@ -1,0 +1,98 @@
+﻿@model Sciffer.Erp.Domain.Model.fin_credit_debit_note
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>fin_credit_debit_note</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_CURRENCY.CURRENCY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_CURRENCY.CURRENCY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ref_document_numbring.category)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ref_document_numbring.category)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.document_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.document_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.credit_debit_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.credit_debit_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.entity_type_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.entity_type_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.entity_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.entity_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.posting_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.posting_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.remarks)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.remarks)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.created_by)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.created_by)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.created_ts)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.created_ts)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.fin_credit_debit_node_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

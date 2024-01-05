@@ -1,0 +1,24 @@
+﻿<div class="row">
+    <div class="col-sm-2" name="Assests">@Html.ActionLink("Assests", "GetTree", "GeneralLedger", new { name = "Assests" }, null)</div>
+    <div class="col-sm-2" name="Liabilities">@Html.ActionLink("Liabilities", "GetTree", "GeneralLedger", new { name = "Liabilities" }, null)</div>
+    <div class="col-sm-2" name="Expenses">@Html.ActionLink("Expenses", "GetTree", "GeneralLedger", new { name = "Expenses" }, null)</div>
+    <div class="col-sm-2" name="Income">@Html.ActionLink("Income", "GetTree", "GeneralLedger", new { name = "Income" }, null)</div>
+    <div class="col-sm-2" name="Equity">@Html.ActionLink("Equity", "GetTree", "GeneralLedger", new { name = "Equity" }, null)</div>
+</div>
+
+@model Sciffer.Erp.Domain.Model.TreeViewNodeVM
+@{
+
+    ViewBag.Title = "Index";
+}
+<h2>
+    Tree View Demo!!!
+</h2>
+<div id="treeDemo">
+    <ul id="tree">
+        <li>
+            <a href="#">@Model.NodeName</a>
+            @Html.Partial("ChildNode", Model.ChildNode)
+        </li>
+    </ul>
+</div>

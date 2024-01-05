@@ -1,0 +1,85 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.ViewModel.mfg_tag_numbering_VM>
+@using Sciffer.Erp.Domain.ViewModel
+<h2>Tag Numbering</h2>
+<hr />
+<div>
+    @(Html.EJ().Grid<mfg_tag_numbering_VM>("Searching")
+        // .Datasource(ds => ds.URL(Url.Action("GetItems", "Items")).RemoveURL(Url.Action("InlineDelete", "Items")).Adaptor(AdaptorType.RemoteSaveAdaptor))
+
+        .Datasource(ds => { ds.Json((IEnumerable<object>)ViewBag.DataSource).RemoveURL(Url.Action("Delete", "TagNumbering")).Adaptor(AdaptorType.RemoteSaveAdaptor); })
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(12); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Search);
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+
+        }))
+
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("tag_numbering_id").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("from_number").HeaderText("From").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("to_number").HeaderText("To").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("current_number").HeaderText("Current Number").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("year").HeaderText("Year").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("month").HeaderText("Month").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("prefix").HeaderText("Prefix").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("ITEM_ID").HeaderText("ITEM_ID").ShowInColumnChooser(false).Visible(false).ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("ITEM_NAME").HeaderText("ITEM").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("mahcine_id").HeaderText("machine_id").ShowInColumnChooser(false).Visible(false).ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("machine_code").HeaderText("Machine").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("is_blocked").HeaderText("Blocked").Visible(false).Add();
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit") {
+            location.href = "@Url.Action("Edit", "TagNumbering")?id=" + args.rowData.tag_numbering_id;
+        }
+        if (args.requestType == "add") {
+            location.href = "@Url.Action("Create", "TagNumbering")"
+        }
+    }
+    @*function rightClick(args) {
+        location.href = "@Url.Action("Details", "QualityControlParameter")?id="+ args.data.ITEM_ID;
+    }*@
+    $(document).ready(function () {
+        var num = '@Html.ViewBag.num';
+        if (num != '') {
+            if (num != undefined) {
+                sweetAlert("", num, "success");
+            }
+        }
+    });
+
+
+</script>

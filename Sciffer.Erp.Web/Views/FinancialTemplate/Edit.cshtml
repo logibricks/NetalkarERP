@@ -1,0 +1,566 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.ref_fin_template_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Index";
+}
+<style type="text/css">
+    .tab-content {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    .tab-content ul {
+        list-style-type: none;
+    }
+
+    .tab-content li {
+        margin: 0px;
+    }
+
+    .tab-content li:hover {
+        border: 1pt solid red;
+    }
+
+    .picked {
+        background: #dcd4d4;
+    }
+
+    .table > tbody > tr > td {
+        padding: 0px !important;
+    }
+
+    .table {
+        margin-bottom: 0px !important;
+    }
+
+    .list-group-item {
+        padding: 0px 15px;
+    }
+
+    .panel-body {
+        padding: 0px !important;
+    }
+
+    .padding {
+        padding: 8px 15px 4px 8px; /* Add some padding */
+    }
+
+    .panel-default > .panel-heading {
+        background-color: #fcfcfc;
+    }
+</style>
+
+
+@using (Html.BeginForm("Edit", "FinancialTemplate"))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <div id="template_id"></div>
+        <div class="container get">
+            <input type="hidden" id="template_id" />
+            <div class="row">
+                <div class="col-lg-8 col-sm-8">
+                    <div class="form-group">
+                        <div class="col-lg-2 col-sm-2">
+                            <label for="template_name">Template Name *</label>
+                        </div>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <input type="text" name="template_name" id="template_name" class="form-control" required oninvalid="this.setCustomValidity('Enter Template Name Here')" oninput="setCustomValidity('')" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-sm-8">
+                    <br />
+                    <div class="col-lg-2 col-sm-2">
+                        <label for="t_format">T Format</label>
+                    </div>
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        <div class="checkbox" id="t_format" name="t_format" style="float:left;">
+                        </div>
+                    </div>
+                </div>
+            </div><br />
+            <br />
+        </div>
+    </div>
+
+    <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+        <ul id="bs_pl" class="nav nav-tabs bar_tabs" role="tablist" name="bs_pl">
+            <li class="active"><a data-toggle="tab" href="#sectionA" id="balance_sheet" value="1">Balance Sheet</a></li>
+            <li><a data-toggle="tab" href="#sectionB" id="profit_loss" value="2">Profit & Loss</a></li>
+        </ul>
+        <div class="tab-content" id="tab-content">
+            <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="panel panel-default">
+                            <div class="panel-heading" style="height:50px;">
+                                <div style="float:left; display:inline-block;">
+                                    <div class="glyphicon glyphicon-pencil edit padding" id="edit" onclick="javascript: EditCall($(this).val());"></div>
+                                </div>
+                                <div style="float:right">
+                                    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." class="padding">
+                                </div>
+                            </div>
+                            <div class="panel-body scrollit">
+                                <div class="table-responsive">
+                                    <table class="table table-responsive table-bordered table-striped hidden" id="ContactGrid1">
+                                        <thead>
+                                            <tr>
+                                                <th><label>ID</label></th> <!--0-->
+                                                <th><label>Bs Pl Side</label></th>
+                                                <th><label>Group ID</label></th>
+                                                <th><label>Group Name</label></th>
+                                                <th><label>Main Heading</label></th>
+                                                <th><label>Parent ID</label></th>
+                                                <th><label>BSPL</label></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label class="control-label">LEFT SIDE</label>
+                                        @foreach (var item in Model.TreeView_Node_VM)
+                                        {
+                                            if (item.bs_pl == 1)
+                                            {
+                                                if (item.bs_pl_side == 1)
+                                                {
+                                                    <ul class="list-group-item">
+                                                        <li id="@item.template_detail_id">
+                                                            @item.NodeName
+                                                        </li>
+                                                        @Html.Partial("ChildNode", @item.ChildNode)
+                                                    </ul>
+                                                }
+                                            }
+                                        }
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="control-label">RIGHT SIDE</label>
+                                        @foreach (var item in Model.TreeView_Node_VM)
+                                        {
+                                            if (item.bs_pl == 1)
+                                            {
+                                                if (item.bs_pl_side == 2)
+                                                {
+                                                    <ul class="list-group-item">
+                                                        <li id="@item.template_detail_id">
+                                                            @item.NodeName
+                                                        </li>
+                                                        @Html.Partial("ChildNode", @item.ChildNode)
+                                                    </ul>
+                                                }
+                                            }
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="panel panel-default" id="balancesheet" hidden>
+                            <div class="panel-body">
+                                <br />
+                                <div class="form-horizontal">
+                                    <input type="hidden" id="group_id" />
+                                    <div class="col-sm-1"></div>
+                                    <div class="col-sm-10">
+                                        <div class="row">
+                                            <label class="control-label col-md-4 col-lg-4 col-xs-12">
+                                                Side *
+                                            </label>
+                                            <div class="col-md-8 col-lg-8 col-xs-12">
+                                                @Html.DropDownList("bs_pl_side", new List<SelectListItem>
+                                                {
+                                                new SelectListItem { Text = "--Select--", Value = "0" },
+                                                new SelectListItem { Text = "Left", Value = "1" },
+                                                new SelectListItem { Text = "Right", Value = "2" }
+                                                }, new { @class = "form-control"/*, @onchnage="balaceparentlist()" */})
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <label for="gl_ledger_code" class="col-sm-4 control-label">Group Name *</label>
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                <input type="text" name="group_name" id="group_name" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <label for="is_blocked" class="col-sm-4 control-label">Main Heading</label>
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                <div class="checkbox">
+                                                    <input type="checkbox" name="main_heading" id="main_heading" checked />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row bparent">
+                                            <label for="gl_parent_ledger_code" class="col-sm-4 control-label">Parent Name *</label>
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.DropDownList("parent_id", Enumerable.Empty<SelectListItem>(), "---select---", new { @class = "form-control " })
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        @*<div class="form-group">
+                                            <div class="col-md-offset-2 col-md-10">
+                                                <button type="button" id="add" class="add btn btn-success" style="float:right">Add</button>
+                                            </div>
+                                        </div>*@
+                                    </div>
+                                </div>
+                                <input type="hidden" id="srno" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="sectionB" class="tab-pane fade " style="margin-top:10px;">
+                <div class="row">
+                    <div class="col-sm-8">
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading" style="height:50px;">
+                                <div style="float:left; display:inline-block;">
+                                    <div class="glyphicon glyphicon-pencil edit1 padding" id="edit1" onclick="javascript: EditCall1($(this).val());"></div>
+                                </div>
+                                <div style="float:right">
+                                    <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." class="padding">
+                                </div>
+                            </div>
+                            <div class="panel-body scrollit">
+                                <div class="table-responsive">
+                                    <table class="table table-responsive table-bordered table-striped hidden" id="ContactGrid2">
+                                        <thead>
+                                            <tr>
+                                                <th><label>ID</label></th> <!--0-->
+                                                <th><label>Bs Pl Side</label></th>
+                                                <th><label>Group ID</label></th>
+                                                <th><label>Group Name</label></th>
+                                                <th><label>Main Heading</label></th>
+                                                <th><label>Parent ID</label></th>
+                                                <th><label>BSPL</label></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label class="control-label">LEFT SIDE</label>
+                                        @foreach (var item in Model.TreeView_Node_VM)
+                                        {
+                                            if (item.bs_pl == 2)
+                                            {
+                                                if (item.bs_pl_side == 1)
+                                                {
+                                                    <ul class="list-group-item">
+                                                        <li id="@item.template_detail_id">
+                                                            @item.NodeName
+                                                        </li>
+                                                        @Html.Partial("ChildNode", @item.ChildNode)
+                                                    </ul>
+                                                }
+                                            }
+                                        }
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label class="control-label">RIGHT SIDE</label>
+                                        @foreach (var item in Model.TreeView_Node_VM)
+                                        {
+                                            if (item.bs_pl == 2)
+                                            {
+                                                if (item.bs_pl_side == 2)
+                                                {
+                                                    <ul class="list-group-item">
+                                                        <li id="@item.template_detail_id">
+                                                            @item.NodeName
+                                                        </li>
+                                                        @Html.Partial("ChildNode", @item.ChildNode)
+                                                    </ul>
+                                                }
+                                            }
+                                        }
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="panel panel-default" id="balancesheet1" hidden>
+                            <div class="panel-body">
+                                <br />
+                                <div class="form-horizontal">
+                                    <input type="hidden" id="group_id1" />
+                                    <div class="col-sm-1"></div>
+                                    <div class="col-sm-10">
+                                        <div class="row">
+                                            <label class="control-label col-md-4 col-lg-4 col-xs-12">
+                                                Side *
+                                            </label>
+                                            <div class="col-md-8 col-lg-8 col-xs-12">
+                                                @Html.DropDownList("bs_pl_side1", new List<SelectListItem>
+                                                {
+                                                new SelectListItem { Text = "--Select--", Value = "0" },
+                                                new SelectListItem { Text = "Left", Value = "1" },
+                                                new SelectListItem { Text = "Right", Value = "2" }
+                                                }, new { @class = "form-control" })
+                                            </div>
+
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <label for="gl_ledger_code" class="col-sm-4 control-label">Group Name *</label>
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                <input type="text" name="group_name1" id="group_name1" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row">
+                                            <label for="is_blocked" class="col-sm-4 control-label">Main Heading</label>
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                <div class="checkbox">
+                                                    <input type="checkbox" class="main_h" name="main_heading1" id="main_heading1" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div class="row pparent">
+                                            <label for="gl_parent_ledger_code" class="col-sm-4 control-label">Parent Name *</label>
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.DropDownList("parent_id1", Enumerable.Empty<SelectListItem>(), "---select---", new { @class = "form-control p" })
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        @*<div class="form-group">
+                                            <div class="col-md-offset-2 col-md-10">
+                                                <button type="button" id="add1" class="add1 btn btn-success" style="float:right">Add</button>
+                                            </div>
+                                        </div>*@
+                                    </div>
+                                </div>
+                                <input type="hidden" id="srno1" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg12 col-sm-12">
+            <div class="form-group">
+                <div class="col-md-5 col-sm-5 col-xs-5">
+                    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-2">
+                </div>
+                @*<div class="col-md-5 col-sm-5 col-xs-5">
+                    <input type="submit" value="Update" class="btn btn-success" style="float:right" id="create" name="create" onclick="TabletoJeson()" />
+                </div>*@
+            </div>
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var details = @Html.Raw(JsonConvert.SerializeObject(this.Model));
+            //console.log(details);
+            $("#template_id").val(details.template_id);
+            $("#template_name").val(details.template_name);
+            if(details.t_format == true){
+                $("#t_format").prop('checked',true);
+            }
+            else{
+                $("#t_format").prop('checked',false);
+            }
+            $("#t_format").checkboxpicker();
+
+            var s = $('#ContactGrid1').DataTable();
+            var t = $("#ContactGrid2").DataTable();
+            $.each(details.ref_fin_template_detail,function(key,value){
+                if(value.bs_pl == 1){
+                    s.fnAddData([value.template_detail_id,value.bs_pl_side,value.group_id, value.group_name, value.main_heading, value.parent_id, value.bs_pl]);
+                }
+                else{
+                    t.fnAddData([value.template_detail_id,value.bs_pl_side,value.group_id, value.group_name, value.main_heading, value.parent_id, value.bs_pl]);
+                }
+            });
+            start();
+
+        });
+        function start() {
+            // Bind all li
+            $('#tab-content li').bind('click', mouseHandler);
+        }
+
+        function mouseHandler(e) {
+            // Add Picked Class
+            if ($(this).hasClass('picked')) {
+                $(this).removeClass('picked');
+                return true;
+            } else {
+                $(".picked").removeClass('picked');
+                $(this).addClass('picked');
+                var value1 = $(this).attr('id');
+                $("#edit").val(value1);
+                $("#child").val(value1);
+                $("#edit1").val(value1);
+                $("#child1").val(value1);
+            }
+        }
+
+        function EditCall1(id) {
+            clearmodel();
+            if (id == undefined) {
+                sweetAlert("", "Select row to edit!", "error");
+            }
+            else {
+                var t = $('#ContactGrid2').DataTable();
+                var rowCount = t.fnGetData().length;
+
+                for (var i = 0; i < rowCount; i++) {
+                    if (parseFloat(t.fnGetData(i, 0)) == parseFloat(id)) {
+                        $("#bs_pl_side1").val(t.fnGetData(i, 1)).trigger('change');
+                        $("#group_id1").val(t.fnGetData(i, 2))
+                        $("#group_name1").val(t.fnGetData(i, 3));
+                        $("#srno1").val(i + 1);
+                        $("#parent_id1").empty();
+                        if (t.fnGetData(i, 4) == 1) {
+                            $("#main_heading1").prop("checked", true);
+                            $(".pparent").hide();
+                        }
+                        else {
+                            $("#main_heading1").prop("checked", false);
+                            $(".pparent").show();
+                            $("#parent_id1").append(
+                              $('<option></option>').val(t.fnGetData(i - 1, 2)).html(t.fnGetData(i - 1, 3)));
+                            $("#parent_id1").val(t.fnGetData(i, 5));
+                        }
+                        $('#main_heading1').checkboxpicker();
+                        
+                        var p = i;
+                    }
+                }
+
+                for (var j = 0; j < p - 1; j++) {
+                    $("#parent_id1").append(
+                              $('<option></option>').val(t.fnGetData(j, 2)).html(t.fnGetData(j, 3)));
+                }
+            }
+            $("#balancesheet1").show();
+        }
+
+        function EditCall(id) {
+            clearmodel1();
+            if (id == undefined) {
+                sweetAlert("", "Select row to edit!", "error");
+            }
+            else {
+                var t = $('#ContactGrid1').DataTable();
+                var rowCount = t.fnGetData().length;
+
+                for (var i = 0; i < rowCount; i++) {
+                    if (parseFloat(t.fnGetData(i, 0)) == parseFloat(id)) {
+                        $("#bs_pl_side").val(t.fnGetData(i, 1)).trigger('change');
+                        $("#group_id").val(t.fnGetData(i, 2))
+                        $("#group_name").val(t.fnGetData(i, 3));
+                        $("#srno").val(i + 1);
+                        $("#parent_id").empty();
+                        if (t.fnGetData(i, 4) == 1) {
+                            $("#main_heading").prop("checked", true);
+                            $(".bparent").hide();
+                        }
+                        else {
+                            $("#main_heading").prop("checked", false);
+                            $(".bparent").show();
+                            $("#parent_id").append(
+                              $('<option></option>').val(t.fnGetData(i - 1, 2)).html(t.fnGetData(i - 1, 3)));
+                            $("#parent_id").val(t.fnGetData(i, 5));
+                        }
+                        $('#main_heading').checkboxpicker();                        
+                        var p = i;
+                    }
+                }
+
+                for (var j = 0; j < p - 1; j++) {
+                    $("#parent_id").append(
+                              $('<option></option>').val(t.fnGetData(j, 2)).html(t.fnGetData(j, 3)));
+                }
+            }
+            $("#balancesheet").show();
+        }
+
+        $('#ContactGrid2').DataTable({
+
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "b", bVisible: true },
+                     { sname: "b", bVisible: true },
+                     { sname: "c", bVisible: true },
+                     { sname: "c", bVisible: true },
+                     { sname: "e", bVisible: true },
+                     { sname: "l", bVisible: true },
+                     { sname: "j", bVisible: true }
+            ]
+        });
+        $('#ContactGrid1').DataTable({
+
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "b", bVisible: true },
+                     { sname: "b", bVisible: true },
+                     { sname: "c", bVisible: true },
+                     { sname: "c", bVisible: true },
+                     { sname: "e", bVisible: true },
+                     { sname: "l", bVisible: true },
+                     { sname: "j", bVisible: true }
+            ]
+        });
+        function clearmodel1() {
+            $("#srno1").val('')
+            $("#bs_pl_side1").val('0').trigger('change');
+            $("#group_name1").val('');
+            $("#main_heading1").prop('checked', false);
+            $("#parent_id1").val('').trigger('change');
+            $(".pparent").show();
+        }
+        function clearmodel() {
+            $("#srno").val("");
+            $("#bs_pl_side").val('0').trigger('change');
+            $("#group_name").val('');
+            $("#main_heading").prop('checked', false);
+            $("#parent_id").val('').trigger('change');
+            $(".bparent").show();
+        }
+    </script>
+}

@@ -1,0 +1,525 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D79FF40E-B729-497F-AFED-277D3ECD347D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Sciffer.Erp.Service</RootNamespace>
+    <AssemblyName>Sciffer.Erp.Service</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=3.3.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="AutoMapper.Net4, Version=3.3.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.3.3.1\lib\net40\AutoMapper.Net4.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="StructureMap, Version=3.1.8.419, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\structuremap.3.1.8.419\lib\net40\StructureMap.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="StructureMap.Net4, Version=3.1.8.419, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\structuremap.3.1.8.419\lib\net40\StructureMap.Net4.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Syncfusion.EJ">
+      <HintPath>..\Sciffer.Erp.Web\bin\Syncfusion.EJ.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.EJ.Export">
+      <HintPath>..\Sciffer.Erp.Web\bin\Syncfusion.EJ.Export.dll</HintPath>
+    </Reference>
+    <Reference Include="Syncfusion.XlsIO.Base">
+      <HintPath>..\Sciffer.Erp.Web\bin\Syncfusion.XlsIO.Base.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Implementation\AccountAssignmentService.cs" />
+    <Compile Include="Implementation\AccountTypesService.cs" />
+    <Compile Include="Implementation\AmountTypeService.cs" />
+    <Compile Include="Implementation\AssetClassService.cs" />
+    <Compile Include="Implementation\AssetGroupService.cs" />
+    <Compile Include="Implementation\AssetMasterDataService.cs" />
+    <Compile Include="Implementation\BankAccountService.cs" />
+    <Compile Include="Implementation\BankService.cs" />
+    <Compile Include="Implementation\BaseService.cs" />
+    <Compile Include="Implementation\BatchNumberingService.cs" />
+    <Compile Include="Implementation\BatchService.cs" />
+    <Compile Include="Implementation\BomService.cs" />
+    <Compile Include="Implementation\BranchService.cs" />
+    <Compile Include="Implementation\BrandService.cs" />
+    <Compile Include="Implementation\BucketService.cs" />
+    <Compile Include="Implementation\BudgetMasterService.cs" />
+    <Compile Include="Implementation\BusinessUnitService.cs" />
+    <Compile Include="Implementation\CancellationReasonService.cs" />
+    <Compile Include="Implementation\CapitalizationService.cs" />
+    <Compile Include="Implementation\CashAccountService.cs" />
+    <Compile Include="Implementation\CategoryService.cs" />
+    <Compile Include="Implementation\CompanyService.cs" />
+    <Compile Include="Implementation\ContraEntryService.cs" />
+    <Compile Include="Implementation\CostCenterService.cs" />
+    <Compile Include="Implementation\CountryService.cs" />
+    <Compile Include="Implementation\CreditCardService.cs" />
+    <Compile Include="Implementation\CreditDebitNoteService.cs" />
+    <Compile Include="Implementation\CreditDebitNoteTransactionService.cs" />
+    <Compile Include="Implementation\CurrencyService.cs" />
+    <Compile Include="Implementation\CustomerBalanceService.cs" />
+    <Compile Include="Implementation\CustomerCategoryService.cs" />
+    <Compile Include="Implementation\CustomerComplaintService.cs" />
+    <Compile Include="Implementation\CustomerParentService.cs" />
+    <Compile Include="Implementation\CustomerService.cs" />
+    <Compile Include="Implementation\CycleTimeService.cs" />
+    <Compile Include="Implementation\DepartmentService.cs" />
+    <Compile Include="Implementation\DepreciationAreaService.cs" />
+    <Compile Include="Implementation\DepreciationRunService.cs" />
+    <Compile Include="Implementation\DepreciationTypeService.cs" />
+    <Compile Include="Implementation\DesignationService.cs" />
+    <Compile Include="Implementation\DivisionService.cs" />
+    <Compile Include="Implementation\DocumentNumbringService.cs" />
+    <Compile Include="Implementation\DocumentTypeService.cs" />
+    <Compile Include="Implementation\EmployeeBalanceService.cs" />
+    <Compile Include="Implementation\EmployeeService.cs" />
+    <Compile Include="Implementation\EntityTypeService.cs" />
+    <Compile Include="Implementation\ExchangeRateService.cs" />
+    <Compile Include="Implementation\ExciseCategoryService.cs" />
+    <Compile Include="Implementation\FinancialTemplateService.cs" />
+    <Compile Include="Implementation\FinancialYearService.cs" />
+    <Compile Include="Implementation\FinBankRecoService.cs" />
+    <Compile Include="Implementation\FinInternalReconcileService.cs" />
+    <Compile Include="Implementation\FinLedgerService.cs" />
+    <Compile Include="Implementation\FormService.cs" />
+    <Compile Include="Implementation\FreightTermsService.cs" />
+    <Compile Include="Implementation\FrequencyService.cs" />
+    <Compile Include="Implementation\GenderService.cs" />
+    <Compile Include="Implementation\GeneralLedgerService.cs" />
+    <Compile Include="Implementation\GenerealLedgerBalanceService.cs" />
+    <Compile Include="Implementation\GenericService.cs" />
+    <Compile Include="Implementation\GLAccountTypeService.cs" />
+    <Compile Include="Implementation\GoodsIssueService.cs" />
+    <Compile Include="Implementation\GoodsReceiptService.cs" />
+    <Compile Include="Implementation\GradeService.cs" />
+    <Compile Include="Implementation\GrnService.cs" />
+    <Compile Include="Implementation\GSTTdsCodeService.cs" />
+    <Compile Include="Implementation\HSNCodeMasterService.cs" />
+    <Compile Include="Implementation\IncentiveApplicabilityService.cs" />
+    <Compile Include="Implementation\IncentiveBenchmarkService.cs" />
+    <Compile Include="Implementation\IncentiveRuleService.cs" />
+    <Compile Include="Implementation\IncetiveHolidayService.cs" />
+    <Compile Include="Implementation\IncomingExciseService.cs" />
+    <Compile Include="Implementation\InitialUploadService.cs" />
+    <Compile Include="Implementation\InjobWorkService.cs" />
+    <Compile Include="Implementation\InstructionTypeService.cs" />
+    <Compile Include="Implementation\InterPlantService.cs" />
+    <Compile Include="Implementation\InventoryBalanceService.cs" />
+    <Compile Include="Implementation\InventoryStockService.cs" />
+    <Compile Include="Implementation\IssuePermitService.cs" />
+    <Compile Include="Implementation\ItemAccountingService.cs" />
+    <Compile Include="Implementation\ItemCategoryService.cs" />
+    <Compile Include="Implementation\ItemGroupService.cs" />
+    <Compile Include="Implementation\ItemService.cs" />
+    <Compile Include="Implementation\ItemTypeService.cs" />
+    <Compile Include="Implementation\ItemValuationService.cs" />
+    <Compile Include="Implementation\ItemWipValuationService.cs" />
+    <Compile Include="Implementation\JobWorkRejectionService.cs" />
+    <Compile Include="Implementation\JournalEntryService.cs" />
+    <Compile Include="Implementation\LoginService.cs" />
+    <Compile Include="Implementation\MachineCategoryService.cs" />
+    <Compile Include="Implementation\MachineEntryForQCService.cs" />
+    <Compile Include="Implementation\MachineEntryService.cs" />
+    <Compile Include="Implementation\MachineMasterService.cs" />
+    <Compile Include="Implementation\MaintenanceTypeService.cs" />
+    <Compile Include="Implementation\MapToolOperationService.cs" />
+    <Compile Include="Implementation\MaritalStatusService.cs" />
+    <Compile Include="Implementation\MaterialInService.cs" />
+    <Compile Include="Implementation\MaterialOutService.cs" />
+    <Compile Include="Implementation\MaterialRequisionNoteService.cs" />
+    <Compile Include="Implementation\MaterialRequisitionIndentService.cs" />
+    <Compile Include="Implementation\ModeOfTransportService.cs" />
+    <Compile Include="Implementation\ModuleFormService.cs" />
+    <Compile Include="Implementation\ModuleService.cs" />
+    <Compile Include="Implementation\MultiMachiningService.cs" />
+    <Compile Include="Implementation\NotificationService.cs" />
+    <Compile Include="Implementation\NotificationTypeService.cs" />
+    <Compile Include="Implementation\OperatorChangeRequestService.cs" />
+    <Compile Include="Implementation\OperatorIncentiveService.cs" />
+    <Compile Include="Implementation\OperatorOperationMappingService.cs" />
+    <Compile Include="Implementation\OperatorQualityParameterService.cs" />
+    <Compile Include="Implementation\OperatorScreenUpgradationService.cs" />
+    <Compile Include="Implementation\OrgTypeService.cs" />
+    <Compile Include="Implementation\ParameterListService.cs" />
+    <Compile Include="Implementation\PartyTypeService.cs" />
+    <Compile Include="Implementation\PaymentCycleService.cs" />
+    <Compile Include="Implementation\PaymentCycleTypeService.cs" />
+    <Compile Include="Implementation\PaymentTermsDueDateService.cs" />
+    <Compile Include="Implementation\PaymentTermsService.cs" />
+    <Compile Include="Implementation\PaymentTypeService.cs" />
+    <Compile Include="Implementation\PermitTemplateService.cs" />
+    <Compile Include="Implementation\PlanBreakdownOrderService.cs" />
+    <Compile Include="Implementation\PlanMaintenanceOrderService.cs" />
+    <Compile Include="Implementation\PlanMaintenanceService.cs" />
+    <Compile Include="Implementation\PlantNotificationService.cs" />
+    <Compile Include="Implementation\PlantService.cs" />
+    <Compile Include="Implementation\PlantTransferService.cs" />
+    <Compile Include="Implementation\PostingPeriodsService.cs" />
+    <Compile Include="Implementation\PostVarianceService.cs" />
+    <Compile Include="Implementation\PriceListCustomerService.cs" />
+    <Compile Include="Implementation\PriceListService.cs" />
+    <Compile Include="Implementation\ProcessMachineMappingService.cs" />
+    <Compile Include="Implementation\ProcessMasterService.cs" />
+    <Compile Include="Implementation\ProcessSequence.cs" />
+    <Compile Include="Implementation\ProdOrderIssueService.cs" />
+    <Compile Include="Implementation\ProductionDownTimeService.cs" />
+    <Compile Include="Implementation\ProductionPlanService.cs" />
+    <Compile Include="Implementation\ProductionReceiptService.cs" />
+    <Compile Include="Implementation\ProductionService.cs" />
+    <Compile Include="Implementation\PurchaseInvoiceService.cs" />
+    <Compile Include="Implementation\PurchaseReturnService.cs" />
+    <Compile Include="Implementation\QAService.cs" />
+    <Compile Include="Implementation\QualityControlParameterService.cs" />
+    <Compile Include="Implementation\QualityParameterService.cs" />
+    <Compile Include="Implementation\ReceiptService.cs" />
+    <Compile Include="Implementation\RejectionReceiptService.cs" />
+    <Compile Include="Implementation\ReportService.cs" />
+    <Compile Include="Implementation\RoleDashboardService.cs" />
+    <Compile Include="Implementation\SACService.cs" />
+    <Compile Include="Implementation\SalesReturnService.cs" />
+    <Compile Include="Implementation\ShelfLifeService.cs" />
+    <Compile Include="Implementation\ShiftwiseProductionMasterService.cs" />
+    <Compile Include="Implementation\ShiftWiseProductionService.cs" />
+    <Compile Include="Implementation\SkillMatrixService.cs" />
+    <Compile Include="Implementation\SMSService.cs" />
+    <Compile Include="Implementation\SPCService.cs" />
+    <Compile Include="Implementation\SRNService.cs" />
+    <Compile Include="Implementation\StockSheetService.cs" />
+    <Compile Include="Implementation\StockTakeBlockedService.cs" />
+    <Compile Include="Implementation\TagNumberingService.cs" />
+    <Compile Include="Implementation\TagService.cs" />
+    <Compile Include="Implementation\TaskService.cs" />
+    <Compile Include="Implementation\TaxChargedOnService.cs" />
+    <Compile Include="Implementation\PriorityService.cs" />
+    <Compile Include="Implementation\PurchaseOrderService.cs" />
+    <Compile Include="Implementation\PurRequisitionService.cs" />
+    <Compile Include="Implementation\ReasonDeterminationService.cs" />
+    <Compile Include="Implementation\RevaluationService.cs" />
+    <Compile Include="Implementation\SalesCategoryService.cs" />
+    <Compile Include="Implementation\SalesInvoiceService.cs" />
+    <Compile Include="Implementation\SalesRMService.cs" />
+    <Compile Include="Implementation\SalQuotationService.cs" />
+    <Compile Include="Implementation\SalSoservice.cs" />
+    <Compile Include="Implementation\SalutationService.cs" />
+    <Compile Include="Implementation\ShiftService.cs" />
+    <Compile Include="Implementation\SourceService.cs" />
+    <Compile Include="Implementation\StateService.cs" />
+    <Compile Include="Implementation\StatusService.cs" />
+    <Compile Include="Implementation\StorageLocation.cs" />
+    <Compile Include="Implementation\TaxElementService.cs" />
+    <Compile Include="Implementation\TaxService.cs" />
+    <Compile Include="Implementation\TaxTypeService.cs" />
+    <Compile Include="Implementation\TdsCodeService.cs" />
+    <Compile Include="Implementation\TDSSectionService.cs" />
+    <Compile Include="Implementation\TerritoryService.cs" />
+    <Compile Include="Implementation\ToolLifeService.cs" />
+    <Compile Include="Implementation\ToolMachineUsageService.cs" />
+    <Compile Include="Implementation\ToolMasterService.cs" />
+    <Compile Include="Implementation\ToolRenewTypeService.cs" />
+    <Compile Include="Implementation\UOMService.cs" />
+    <Compile Include="Implementation\UpdateStockSheetService.cs" />
+    <Compile Include="Implementation\UserManagementRoleService.cs" />
+    <Compile Include="Implementation\UserManagementService.cs" />
+    <Compile Include="Implementation\UserRoleMappingService.cs" />
+    <Compile Include="Implementation\UserRoleRightsService.cs" />
+    <Compile Include="Implementation\UserService.cs" />
+    <Compile Include="Implementation\ValidationService.cs" />
+    <Compile Include="Implementation\VendorBalanceService.cs" />
+    <Compile Include="Implementation\VendorCategoryService.cs" />
+    <Compile Include="Implementation\VendorParentService.cs" />
+    <Compile Include="Implementation\VendorService.cs" />
+    <Compile Include="Implementation\WorkflowService.cs" />
+    <Compile Include="Interface\IAccountAssignmentService.cs" />
+    <Compile Include="Interface\IAccountTypesService.cs" />
+    <Compile Include="Interface\IAmountTypeService.cs" />
+    <Compile Include="Interface\IAssetClassService.cs" />
+    <Compile Include="Interface\IAssetGroupService.cs" />
+    <Compile Include="Interface\IAssetMasterDataService.cs" />
+    <Compile Include="Interface\IBankAccountService.cs" />
+    <Compile Include="Interface\IBankService.cs" />
+    <Compile Include="Interface\IBatchNumberingService.cs" />
+    <Compile Include="Interface\IBatchService.cs" />
+    <Compile Include="Interface\IBomService.cs" />
+    <Compile Include="Interface\IBranchService.cs" />
+    <Compile Include="Interface\IBrandService.cs" />
+    <Compile Include="Interface\IBucketService.cs" />
+    <Compile Include="Interface\IBudgetMasterService.cs" />
+    <Compile Include="Interface\IBusinessUnitService.cs" />
+    <Compile Include="Interface\ICancellationReasonService.cs" />
+    <Compile Include="Interface\ICapitalizationService.cs" />
+    <Compile Include="Interface\ICashAccountService.cs" />
+    <Compile Include="Interface\ICategoryService.cs" />
+    <Compile Include="Interface\ICompanyService.cs" />
+    <Compile Include="Interface\IContraEntryService.cs" />
+    <Compile Include="Interface\ICostCenterService.cs" />
+    <Compile Include="Interface\ICountryService.cs" />
+    <Compile Include="Interface\ICreditCardService.cs" />
+    <Compile Include="Interface\ICreditDebitNoteService.cs" />
+    <Compile Include="Interface\ICreditDebitNoteTransactionService.cs" />
+    <Compile Include="Interface\ICurrencyService.cs" />
+    <Compile Include="Interface\ICustomerBalanceService.cs" />
+    <Compile Include="Interface\ICustomerCategoryService.cs" />
+    <Compile Include="Interface\ICustomerComplaintService.cs" />
+    <Compile Include="Interface\ICustomerParentService.cs" />
+    <Compile Include="Interface\ICustomerService.cs" />
+    <Compile Include="Infrastructure\ServiceRegistry.cs" />
+    <Compile Include="Interface\ICycleTimeService.cs" />
+    <Compile Include="Interface\IDepartmentService.cs" />
+    <Compile Include="Interface\IDepreciationAreaService.cs" />
+    <Compile Include="Interface\IDepreciationRunService.cs" />
+    <Compile Include="Interface\IDepreciationTypeService.cs" />
+    <Compile Include="Interface\IDesignationService.cs" />
+    <Compile Include="Interface\IDivisionService.cs" />
+    <Compile Include="Interface\IDocumentNumbringService.cs" />
+    <Compile Include="Interface\IDocumentTypeService.cs" />
+    <Compile Include="Interface\IEmployeeBalanceService.cs" />
+    <Compile Include="Interface\IEmployeeService.cs" />
+    <Compile Include="Interface\IEntityTypeService.cs" />
+    <Compile Include="Interface\IExchangeRateService.cs" />
+    <Compile Include="Interface\IExciseCategoryService.cs" />
+    <Compile Include="Interface\IFinancialTemplateService.cs" />
+    <Compile Include="Interface\IFinancialYearService.cs" />
+    <Compile Include="Interface\IFinBankRecoService.cs" />
+    <Compile Include="Interface\IFinInternalReconcileService.cs" />
+    <Compile Include="Interface\IFinLedgerService.cs" />
+    <Compile Include="Interface\IFormService.cs" />
+    <Compile Include="Interface\IFreightTermsService.cs" />
+    <Compile Include="Interface\IFrequencyService.cs" />
+    <Compile Include="Interface\IGenderService.cs" />
+    <Compile Include="Interface\IGeneralLedgerBalanceService.cs" />
+    <Compile Include="Interface\IGeneralLedgerService.cs" />
+    <Compile Include="Interface\IGenericService.cs" />
+    <Compile Include="Interface\IGLAccountTypeService.cs" />
+    <Compile Include="Interface\IGoodsIssueService.cs" />
+    <Compile Include="Interface\IGoodsReceiptService.cs" />
+    <Compile Include="Interface\IGradeService.cs" />
+    <Compile Include="Interface\IGrnService.cs" />
+    <Compile Include="Interface\IGSTTdsCodeService.cs" />
+    <Compile Include="Interface\IHSNCodeMasterService.cs" />
+    <Compile Include="Interface\IIncentiveApplicabilityService.cs" />
+    <Compile Include="Interface\IIncentiveBenchmarkService.cs" />
+    <Compile Include="Interface\IIncentiveRuleService.cs" />
+    <Compile Include="Interface\IIncetiveHolidayService.cs" />
+    <Compile Include="Interface\IIncomingExciseService.cs" />
+    <Compile Include="Interface\IInitialUploadService.cs" />
+    <Compile Include="Interface\IInjobWorkService.cs" />
+    <Compile Include="Interface\IInstructionTypeService.cs" />
+    <Compile Include="Interface\IInterPlantService.cs" />
+    <Compile Include="Interface\IInventoryBalanceService.cs" />
+    <Compile Include="Interface\IInventoryStockService.cs" />
+    <Compile Include="Interface\IIssuePermitService.cs" />
+    <Compile Include="Interface\IItemAccountingService.cs" />
+    <Compile Include="Interface\IItemCategoryService.cs" />
+    <Compile Include="Interface\IItemGroupService.cs" />
+    <Compile Include="Interface\IItemService.cs" />
+    <Compile Include="Interface\IItemTypeService.cs" />
+    <Compile Include="Interface\IItemValuationService.cs" />
+    <Compile Include="Interface\IItemWipValuationService.cs" />
+    <Compile Include="Interface\IJobWorkRejectionService.cs" />
+    <Compile Include="Interface\IJournalEntryService.cs" />
+    <Compile Include="Interface\ILoginService.cs" />
+    <Compile Include="Interface\IMachineCategoryService.cs" />
+    <Compile Include="Interface\IMachineEntryForQCService.cs" />
+    <Compile Include="Interface\IMachineEntryService.cs" />
+    <Compile Include="Interface\IMachineMasterService.cs" />
+    <Compile Include="Interface\IMaintenanceTypeService.cs" />
+    <Compile Include="Interface\IMapToolOperationService.cs" />
+    <Compile Include="Interface\IMaritalStatusService.cs" />
+    <Compile Include="Interface\IMaterialInService.cs" />
+    <Compile Include="Interface\IMaterialOutService.cs" />
+    <Compile Include="Interface\IMaterialRequisionNoteService.cs" />
+    <Compile Include="Interface\IMaterialRequisitionIndentService.cs" />
+    <Compile Include="Interface\IModeOfTransportService.cs" />
+    <Compile Include="Interface\IModuleFormService.cs" />
+    <Compile Include="Interface\IModuleService.cs" />
+    <Compile Include="Interface\IMultiMachiningService.cs" />
+    <Compile Include="Interface\INotificationService.cs" />
+    <Compile Include="Interface\INotificationTypeService.cs" />
+    <Compile Include="Interface\IOperatorChangeRequestService.cs" />
+    <Compile Include="Interface\IOperatorIncentiveService.cs" />
+    <Compile Include="Interface\IOperatorOperationMappingService.cs" />
+    <Compile Include="Interface\IOperatorQualityParameterService.cs" />
+    <Compile Include="Interface\IOperatorScreenUpgradationService.cs" />
+    <Compile Include="Interface\IOrgTypeService.cs" />
+    <Compile Include="Interface\IParameterListService.cs" />
+    <Compile Include="Interface\IPartyTypeService.cs" />
+    <Compile Include="Interface\IPaymentCycleService.cs" />
+    <Compile Include="Interface\IPaymentCycleTypeService.cs" />
+    <Compile Include="Interface\IPaymentTermsDueDateService.cs" />
+    <Compile Include="Interface\IPaymentTermsService.cs" />
+    <Compile Include="Interface\IPaymentTypeService.cs" />
+    <Compile Include="Interface\IPermitTemplateService.cs" />
+    <Compile Include="Interface\IPlanBreakdownOrderService.cs" />
+    <Compile Include="Interface\IPlanMaintenanceOrderService.cs" />
+    <Compile Include="Interface\IPlanMaintenanceService.cs" />
+    <Compile Include="Interface\IPlantNotificationService.cs" />
+    <Compile Include="Interface\IPlantService.cs" />
+    <Compile Include="Interface\IPlantTransferService.cs" />
+    <Compile Include="Interface\IPostingPeriodsService.cs" />
+    <Compile Include="Interface\IPostVarianceService.cs" />
+    <Compile Include="Interface\IPriceListCustomerService.cs" />
+    <Compile Include="Interface\IPriceListService.cs" />
+    <Compile Include="Interface\IProcessMachineMappingService.cs" />
+    <Compile Include="Interface\IProcessMasterService.cs" />
+    <Compile Include="Interface\IProcessSequence.cs" />
+    <Compile Include="Interface\IProdOrderIssueService.cs" />
+    <Compile Include="Interface\IProductionDownTimeService.cs" />
+    <Compile Include="Interface\IProductionPlanService.cs" />
+    <Compile Include="Interface\IProductionReceiptService.cs" />
+    <Compile Include="Interface\IProductionService.cs" />
+    <Compile Include="Interface\IPurchaseInvoiceService.cs" />
+    <Compile Include="Interface\IPurchaseReturnService.cs" />
+    <Compile Include="Interface\IQAService.cs" />
+    <Compile Include="Interface\IQualityControlParameterService.cs" />
+    <Compile Include="Interface\IQualityParameterService.cs" />
+    <Compile Include="Interface\IReceiptService.cs" />
+    <Compile Include="Interface\IRejectionReceiptService.cs" />
+    <Compile Include="Interface\IReportService.cs" />
+    <Compile Include="Interface\IRoleDashboardService.cs" />
+    <Compile Include="Interface\ISACService.cs" />
+    <Compile Include="Interface\ISalesReturnService.cs" />
+    <Compile Include="Interface\IShelfLifeService.cs" />
+    <Compile Include="Interface\IShiftwiseProductionMasterService.cs" />
+    <Compile Include="Interface\IShiftWiseProductionService.cs" />
+    <Compile Include="Interface\ISkillMatrixService.cs" />
+    <Compile Include="Interface\ISMSService.cs" />
+    <Compile Include="Interface\ISPCService.cs" />
+    <Compile Include="Interface\ISRNService.cs" />
+    <Compile Include="Interface\IStockSheetService.cs" />
+    <Compile Include="Interface\IStockTakeBlockedService.cs" />
+    <Compile Include="Interface\ITagNumberingService.cs" />
+    <Compile Include="Interface\ITagService.cs" />
+    <Compile Include="Interface\ITaskService.cs" />
+    <Compile Include="Interface\ITaxChargedOnService.cs" />
+    <Compile Include="Interface\IPriorityService.cs" />
+    <Compile Include="Interface\IPurchaseOrderService.cs" />
+    <Compile Include="Interface\IPurRequisitionService.cs" />
+    <Compile Include="Interface\IReasonDeterminationService.cs" />
+    <Compile Include="Interface\IRevaluationService.cs" />
+    <Compile Include="Interface\ISalesCategoryService.cs" />
+    <Compile Include="Interface\ISalesInvoiceService.cs" />
+    <Compile Include="Interface\ISalesRMService.cs" />
+    <Compile Include="Interface\ISalQuotationService.cs" />
+    <Compile Include="Interface\ISalSoservice.cs" />
+    <Compile Include="Interface\ISalutationService.cs" />
+    <Compile Include="Interface\IShiftService.cs" />
+    <Compile Include="Interface\ISourceService.cs" />
+    <Compile Include="Interface\IStateService.cs" />
+    <Compile Include="Interface\IStatusService.cs" />
+    <Compile Include="Interface\IStorageLocation.cs" />
+    <Compile Include="Interface\ITaxElementService.cs" />
+    <Compile Include="Interface\ITaxService.cs" />
+    <Compile Include="Interface\ITaxTypeService.cs" />
+    <Compile Include="Interface\ITdsCodeService.cs" />
+    <Compile Include="Interface\ITDSSectionService.cs" />
+    <Compile Include="Interface\ITerritoryService.cs" />
+    <Compile Include="Interface\IToolLifeService.cs" />
+    <Compile Include="Interface\IToolMachineUsageService.cs" />
+    <Compile Include="Interface\IToolMasterService.cs" />
+    <Compile Include="Interface\IToolRenewTypeService.cs" />
+    <Compile Include="Interface\IUOMService.cs" />
+    <Compile Include="Interface\IUpdateStockSheetService.cs" />
+    <Compile Include="Interface\IUserManagementRoleService.cs" />
+    <Compile Include="Interface\IUserManagementService.cs" />
+    <Compile Include="Interface\IUserRoleMappingService.cs" />
+    <Compile Include="Interface\IUserRoleRightsService.cs" />
+    <Compile Include="Interface\IUserService.cs" />
+    <Compile Include="Interface\IValidationService.cs" />
+    <Compile Include="Interface\IVendorBalanceService.cs" />
+    <Compile Include="Interface\IVendorCategoryService.cs" />
+    <Compile Include="Interface\IVendorParentService.cs" />
+    <Compile Include="Interface\IVendorService.cs" />
+    <Compile Include="Interface\IWorkflowService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\jquery-1.8.0.intellisense.js" />
+    <Content Include="Scripts\jquery-1.8.0.js" />
+    <Content Include="Scripts\jquery-1.8.0.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sciffer.Erp.Data\Sciffer.Erp.Data.csproj">
+      <Project>{DA9B1878-DCE8-47BF-AC90-A52C4974A24D}</Project>
+      <Name>Sciffer.Erp.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sciffer.Erp.Domain\Sciffer.Erp.Domain.csproj">
+      <Project>{C2062873-E869-47A0-84DA-063A07FBDCFC}</Project>
+      <Name>Sciffer.Erp.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.3.1\tools\AutoMapper.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

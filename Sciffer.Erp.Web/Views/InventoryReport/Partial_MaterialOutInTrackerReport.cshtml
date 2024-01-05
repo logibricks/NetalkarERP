@@ -1,0 +1,58 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<report_material_in_out_vm>("Editing")
+                        .Datasource(ds => ds.URL(Url.Action("MaterialInOutDetailReport", "InventoryReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&plant_id=" + ViewBag.plant_id + "&item_id=" + ViewBag.item_id).Adaptor(AdaptorType.UrlAdaptor))
+
+                                    .AllowPaging().PageSettings(a => a.PageSize(20))
+                                    .AllowFiltering()
+                                        .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                    .ShowColumnChooser()
+                                    .AllowSorting()
+                                    .AllowScrolling()
+                                    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelMIO", "InventoryReport", new { ctrlname = "MaterialInOutTrackerDetailReport" })))
+                                                                                    .ScrollSettings(scroll => { scroll.Width("100%").Height("50%"); })
+
+                                .ToolbarSettings(toolbar =>
+                                {
+                                    toolbar.ShowToolbar().ToolbarItems(items =>
+                                    {
+                                        items.AddTool(ToolBarItems.Search);
+                                        items.AddTool(ToolBarItems.ExcelExport);
+                                        items.AddTool(ToolBarItems.PrintGrid);
+                                    });
+                                })
+                                    .Columns(col =>
+                                    {
+
+                                        col.Field("mo_doc").Width("15%").HeaderText("MO Document Number").Add();
+                                        col.Field("mo_date").Width("15%").HeaderText("MO Posting Date").Format("{0:dd/MMM/yyyy}").Add();
+                                        col.Field("mo_vendor_name").Width("15%").HeaderText("Vendor").Visible(true).Add();
+                                        col.Field("mo_gst").Width("15%").HeaderText("GST No.").Visible(true).Add();
+                                        col.Field("mo_item").Width("15%").HeaderText("Item").Visible(true).Add();
+                                        col.Field("mo_uom").Width("15%").HeaderText("UoM").Visible(true).Add();
+                                        col.Field("mo_hsn").Width("15%").HeaderText("HSN").Visible(true).Add();
+                                        col.Field("mo_qty").Width("15%").HeaderText("Qty").Format("{0:n2}").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                        col.Field("mo_rate").Width("15%").HeaderText("Unit Price").Format("{0:n2}").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                        col.Field("igst_text").Width("15%").HeaderText("IGST %").Visible(true).Add();
+                                        col.Field("cgst_text").Width("15%").HeaderText("CGST %").Visible(true).Add();
+                                        col.Field("sgst_text").Width("15%").HeaderText("SGST %").Visible(true).Add();
+                                        col.Field("mo_value").Width("15%").HeaderText("MO Value").Format("{0:n2}").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                        col.Field("mi_doc_number").Width("15%").HeaderText("MI Document Number").Visible(true).Add();
+                                        col.Field("mi_posting_date").Width("15%").HeaderText("MI Posting Date").Format("{0:dd/MMM/yyyy}").Visible(true).Add();
+                                        col.Field("rec_qty").Width("15%").HeaderText("Received Qty.").Format("{0:n2}").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                                    //col.Field("mi_uom").Width("15%").HeaderText("UoM").Visible(true).Add();
+                                    col.Field("mi_rate").Width("15%").HeaderText("Unit Price").Format("{0:n2}").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                        col.Field("mi_igst_text").Width("15%").HeaderText("IGST %").Visible(true).Add();
+                                        col.Field("mi_cgst_text").Width("15%").HeaderText("CGST %").Visible(true).Add();
+                                        col.Field("mi_sgst_text").Width("15%").HeaderText("SGST %").Visible(true).Add();
+                                        col.Field("mi_value").Width("15%").HeaderText("MI Value").Format("{0:n2}").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                        col.Field("vendor_invoice_no").Width("15%").HeaderText("Vendor Inv. No.").Visible(true).Add();
+                                        col.Field("vendor_invoice_date").Width("15%").HeaderText("Vendor Inv Date").Format("{0:dd/MMM/yyyy}").Visible(true).Add();
+                                        col.Field("mi_balance_qty").Width("15%").HeaderText("Balance Qty").Format("{0:n4}").TextAlign(TextAlign.Right).Visible(true).Add();
+                                        col.Field("gross_value").Width("15%").HeaderText("Challan Total").Format("{0:n2}").Visible(true).Add();
+                                    }).ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicki"); })).Render();}
+@Html.EJ().ScriptManager()
+
+
+
+

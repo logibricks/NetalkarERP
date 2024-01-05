@@ -1,0 +1,128 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<plan_maintenance_order_VM>("Searching")
+        //.Datasource((IEnumerable<object>)ViewBag.DataSource)
+        .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "PlanMaintenanceOrder" }))
+         .EnableCaching()
+        .CachingPageSize(2)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+           // items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+         .ContextMenuSettings(contextMenu =>
+         {
+             contextMenu.EnableContextMenu();
+             contextMenu.DisableDefaultItems();
+             contextMenu.CustomContextMenuItems(new List<Syncfusion.JavaScript.Models.CustomContexMenuItems>() { new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu", Text = "Print Parameter" }, new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu1", Text = "Print Component" } });
+         })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "PlanMaintenanceOrder" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("plan_maintenance_order_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Add();
+            col.Field("order_no").Width("15%").HeaderText("Order No").Width(80).Add();
+            col.Field("machine_name").Width("15%").HeaderText("Machine Name").Width(80).Add();
+            col.Field("machine_category_name").Width("15%").HeaderText("Machine Category").Width(80).Add();
+            col.Field("maintenance_type_name").Width("15%").HeaderText("Maintenance Type").Width(80).Add();
+            col.Field("actual_start_date").Width("15%").HeaderText("Plan Start Date").Width(80).Add();
+            col.Field("actual_finish_date").Width("15%").HeaderText("Plan End Date").Width(80).Add();
+            col.Field("creation_date").Width("15%").HeaderText("Created Date").Width(80).Add();
+            col.Field("frequency").Width("15%").HeaderText("Frequency").Width(80).Visible(false).Add();
+            col.Field("frequency_type").Width("15%").HeaderText("Frequency Type").Width(80).Visible(false).Add();
+            col.Field("create_order_days").Width("15%").HeaderText("Create Order Days").Width(80).Visible(false).Add();
+            col.Field("create_order_dtype").Width("15%").HeaderText("Create Order Days Type").Width(80).Visible(false).Add();
+            col.Field("maintenance_period").Width("15%").HeaderText("Maintenance Period").Width(80).Visible(false).Add();
+            col.Field("maintenance_period_type").Width("15%").HeaderText("Maintenance Period Type").Width(80).Visible(false).Add();
+            col.Field("allowed_delay").Width("15%").HeaderText("Allowed Delay").Width(80).Visible(false).Add();
+            col.Field("allowed_delay_type").Width("15%").HeaderText("Allowed Delay Type").Width(80).Visible(false).Add();
+            col.Field("allowed_early_completion").Width("15%").HeaderText("Allowed Early Completion").Width(80).Visible(false).Add();
+            col.Field("allowed_early_comlpletion_type").Width("15%").HeaderText("Early Completion Type").Width(80).Visible(false).Add();
+            col.Field("days_before").Width("15%").HeaderText("Days Before").Width(80).Visible(false).Add();
+            col.Field("create_order_yes").Width("15%").HeaderText("Create Order Yes/No").Width(80).Visible(false).Add();
+            col.Field("plant_name").Width("15%").HeaderText("Plant Name").Width(80).Visible(false).Add();
+            col.Field("model_no").Width("15%").HeaderText("Model No").Width(80).Visible(false).Add();
+            col.Field("manufacturer_part_no").Width("15%").HeaderText("Manufacturer Part No").Width(80).Visible(false).Add();
+            col.Field("manufacturing_serial_number").Width("15%").HeaderText("Manufacturer Serial No").Width(80).Visible(false).Add();
+            col.Field("asset_code_id").Width("15%").HeaderText("Asset Code No").Width(80).Visible(false).Add();
+            col.Field("asset_tag_no").Width("15%").HeaderText("Asset Tag No").Width(80).Visible(false).Add();
+            col.Field("manufacturer").Width("15%").HeaderText("Manufacturer").Width(80).Visible(false).Add();
+            col.Field("employee_name").Width("15%").HeaderText("Employee Name").Width(80).Visible(false).Add();
+            col.Field("remarks").Width("15%").HeaderText("Remarks").Width(80).Add();
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+            eve.ContextClick("contextclick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+     function contextclick(args) {
+         if (args.text == "Print Parameter")
+        {
+           // alert(this.getSelectedRecords()[0].pur_requisition_id);
+             var url = '@Url.Action("Pdf", "PlanMaintenanceOrder")?id=' + this.getSelectedRecords()[0].plan_maintenance_order_id + '&type=' + 1;
+            window.open(url);
+        }
+        else
+            {
+             var url = '@Url.Action("Pdf", "PlanMaintenanceOrder")?id=' + this.getSelectedRecords()[0].plan_maintenance_order_id + '&type=' + 2;
+            window.open(url);
+            }
+    };
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = "@Url.Action("Edit", "PlanMaintenanceOrder")?id=" + args.rowData.plan_maintenance_order_id;
+        }
+        if (args.requestType == "add") {
+            location.href = '@Url.Action("Create", "PlanMaintenanceOrder")';
+        }
+    }
+
+    function Click(args) {
+        $('a').css('color','red');
+    }
+    $(document).ready(function () {
+        var doc_no = '@ViewBag.doc';
+        //console.log(doc_no);
+        if (doc_no != '') {
+            if (doc_no != 0) {
+                sweetAlert("", doc_no + " Saved successfully!", "success");
+            }
+        }
+    });
+</script>

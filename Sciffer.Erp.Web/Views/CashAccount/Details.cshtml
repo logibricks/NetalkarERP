@@ -1,0 +1,66 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_cash_account
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ref_cash_account</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_CURRENCY.CURRENCY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_CURRENCY.CURRENCY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ref_gl_acount_type.gl_account_type_description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ref_gl_acount_type.gl_account_type_description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.cash_account_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.cash_account_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.cash_account_desc)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.cash_account_desc)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_active)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_blocked)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_blocked)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.cash_account_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

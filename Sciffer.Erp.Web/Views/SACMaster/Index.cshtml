@@ -1,0 +1,114 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.Model.REF_COUNTRY>
+@using Sciffer.Erp.Domain.Model
+@{
+    ViewBag.Title = "Index";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<br /><br /><br />
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<ref_sac>("Grid")
+        .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.Datasource).RemoveURL(Url.Action("InlineDelete", "SACMaster")).InsertURL(Url.Action("InlineInsert", "SACMaster")).UpdateURL(Url.Action("InlineInsert", "SACMaster"))
+                       .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(10); })
+        .EnableAltRow()
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Add);
+                items.AddTool(ToolBarItems.Edit);
+                //items.AddTool(ToolBarItems.Delete);
+                items.AddTool(ToolBarItems.Update);
+                items.AddTool(ToolBarItems.Cancel);
+                items.AddTool(ToolBarItems.ExcelExport);
+                items.AddTool(ToolBarItems.PrintGrid);
+            });
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "SACMaster" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "SACMaster" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("sac_id").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("sac_code").HeaderText("SAC Code").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("sac_description").HeaderText("Description").ValidationRules(val => val.AddRule("required", true)).Add();
+        })
+        .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+
+</div>
+
+<script id="template" type="text/template">
+    <form name="add_form">
+        <div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <input type="hidden" id="sac_id" name="sac_id" value="{{: sac_id}}" class="form-control" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                   SAC Code *
+                </div>
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <input type="number" id="sac_code" name="sac_code" value="{{: sac_code}}" class="form-control" />
+                </div>
+            </div>
+            <br />
+
+
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                    Description *
+                </div>
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <input type="text"  id="sac_description" required name="sac_description" value="{{: sac_description}}" class="form-control" />
+
+                </div>
+            </div>
+       </div>
+
+
+    </form>
+</script>
+
+
+
+<script type="text/javascript">
+    var flag = true;
+    function complete(args) {
+        if (args.requestType == "beginedit")
+       {
+            document.getElementById('sac_code').setAttribute('disabled', 'disabled');
+        }
+        if (args.requestType == "save")
+        {
+            if (args.data.text == 'duplicate') {
+                sweetAlert("", "SAC Code already exists", "error");
+                if (args.model.dataSource.dataSource.json[0].sac_id == null) {
+                    args.model.dataSource.dataSource.json = args.model.dataSource.dataSource.json.splice(1, args.model.dataSource.dataSource.json.length);
+                }
+            }
+            var gridObj = $("#Grid").ejGrid("instance");
+            gridObj.refreshContent();
+        }        
+    }
+
+    function EndProcess() {
+        var gridObj = $("#Grid").ejGrid("instance");       
+        gridObj.refreshContent();
+    }
+
+
+
+</script>

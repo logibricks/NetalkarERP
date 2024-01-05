@@ -1,0 +1,49 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<report_plant_maintenanace>("Editing")
+                                .Datasource(ds => ds.URL(Url.Action("GetMaintenancePlanCycleandFrequencyReport", "PlantMaintenanceReport") + "?entity=" + ViewBag.entity + "&plant_id=" + ViewBag.plant_id + "&machine_id=" + ViewBag.machine_id + "&maintenance_type_id=" + ViewBag.maintenance_type_id + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&auto_manual=" + ViewBag.auto_manual).Adaptor(AdaptorType.UrlAdaptor))
+                                .AllowPaging().PageSettings(a => a.PageSize(20))
+                                .AllowFiltering()
+                                    .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                .ShowColumnChooser()
+                                .AllowSorting()
+                                .AllowScrolling()
+                                .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "PlantMaintenanceReport", new { ctrlname = "MaintenanceorderCost" })))
+                                .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                            .ToolbarSettings(toolbar =>
+                            {
+                                toolbar.ShowToolbar().ToolbarItems(items =>
+                                {
+                                    items.AddTool(ToolBarItems.Search);
+                                    items.AddTool(ToolBarItems.ExcelExport);
+                                    items.AddTool(ToolBarItems.PrintGrid);
+                                });
+                            })
+                    .Columns(col =>
+                    {
+                        col.Field("order_no").Width("15%").HeaderText("Document Number").Add();
+                        col.Field("creation_date").Width("15%").HeaderText("Date").Format("{0:dd/MMM/yyyy}").Add();
+                        col.Field("maintenance_type").Width("15%").HeaderText("Maintenance Type").Add();
+                        col.Field("Machine").Width("15%").HeaderText("Machine").Add();
+                        col.Field("Plant").Width("15%").HeaderText("Plant").Add();
+
+                        col.Field("sr_no").Width("15%").HeaderText("Sr.").TextAlign(TextAlign.Right).Add();
+                        col.Field("plan_type").Width("15%").HeaderText("Plan Type").Add();
+                        col.Field("Item").Width("15%").HeaderText("Item").Add();
+                        col.Field("UOM_NAME").Width("15%").HeaderText("UoM").Add();
+                                                                                                              
+                        col.Field("Parameter").Width("15%").HeaderText("Related Parameter").Add();
+                        col.Field("quantity").Width("15%").HeaderText("Required Qty").TextAlign(TextAlign.Right).Add();
+                        col.Field("actual_quantity").Width("15%").HeaderText("Actual Qty").TextAlign(TextAlign.Right).Add();
+                        col.Field("doc_number").Width("15%").HeaderText("Issue - Doc Number").Add();                        
+                        col.Field("posting_date").Width("15%").HeaderText("Issue - Date").Format("{0:dd/MMM/yyyy}").Add();
+
+                    })
+                    .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickplan"); })
+                    ).Render();}
+@Html.EJ().ScriptManager()
+
+
+
+
+

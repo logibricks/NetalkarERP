@@ -1,0 +1,102 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Operator Screen Upgradation";
+}
+
+<br /><br /><br /><br />
+<div>
+    @(Html.EJ().Grid<mfg_machine_item_upgradation_vm>("Searching")
+        .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.Datasource).Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.Search);
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.PrintGrid);
+
+        }))
+         .ContextMenuSettings(contextMenu =>
+         {
+             contextMenu.EnableContextMenu();
+             contextMenu.DisableDefaultItems();
+             contextMenu.CustomContextMenuItems(new List<Syncfusion.JavaScript.Models.CustomContexMenuItems>()
+             {
+                 new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu", Text = "Delete" },
+
+             });
+         })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "OperatorScreenUpgradation" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("mfg_upgradation_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Width(80).Add();
+            col.Field("process_id").Width("15%").HeaderText("process_id").Visible(false).Add();
+            col.Field("process_name").Width("15%").HeaderText("Process Name").Add();
+            col.Field("item_id").Width("15%").HeaderText("Item Id").Visible(false).Add();
+            col.Field("item_name").Width("15%").HeaderText("Item Name").Add();
+            col.Field("machine_id").Width("15%").HeaderText("Machine Id").Visible(false).Add();
+            col.Field("machine_name").Width("15%").HeaderText("Machine Name").Add();
+            col.Field("file_name").Width("15%").HeaderText("File name").Add();
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+            eve.ContextClick("contextclick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        debugger;
+        if (args.requestType == "beginedit") {
+            location.href = '@Url.Action("Details", "OperatorScreenUpgradation")?id=' + args.rowData.mfg_upgradation_id;
+        }
+        if (args.requestType == "delete") {
+            location.href = '@Url.Action("Delete", "OperatorScreenUpgradation")?id=' + args.rowData.mfg_upgradation_id;
+        }
+        if (args.requestType == "add") {
+            location.href = "@Url.Action("Create", "OperatorScreenUpgradation")"
+        }
+    }
+    function contextclick(args) {
+        if (args.text == "Delete") {
+            location.href = '@Url.Action("Delete", "OperatorScreenUpgradation")?id=' + this.getSelectedRecords()[0].mfg_upgradation_id;
+           
+        }
+       
+    };
+
+    function Click(args) {
+        $('a').css('color', 'red');
+    }
+
+</script>
+
+
+
+
+
+
+
+

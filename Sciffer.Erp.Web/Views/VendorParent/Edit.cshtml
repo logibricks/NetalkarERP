@@ -1,0 +1,162 @@
+﻿@model Sciffer.Erp.Domain.Model.VendorParentVM
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.HiddenFor(model=>model.VENDOR_PARENT_ID)
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.vendor_code, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.vendor_code, new { htmlAttributes = new { @class = "form-control num validinput removedisabled", @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.vendor_code, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.VENDOR_PARENT_NAME, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.VENDOR_PARENT_NAME, new { htmlAttributes = new { @class = "form-control validinput" } })
+                        @Html.ValidationMessageFor(model => model.VENDOR_PARENT_NAME, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.REGD_OFFICE_ADDRESS, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.REGD_OFFICE_ADDRESS, new { htmlAttributes = new { @class = "form-control validinput" } })
+                        @Html.ValidationMessageFor(model => model.REGD_OFFICE_ADDRESS, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.REGD_OFFICE_CITY, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.REGD_OFFICE_CITY, new { htmlAttributes = new { @class = "form-control validinput" } })
+                        @Html.ValidationMessageFor(model => model.REGD_OFFICE_CITY, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.REGD_OFFICE_PINCODE, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.REGD_OFFICE_PINCODE, new { htmlAttributes = new { @class = "form-control validinput" } })
+                        @Html.ValidationMessageFor(model => model.REGD_OFFICE_PINCODE, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.REGD_OFFICE_COUNTRY_ID, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("REGD_OFFICE_COUNTRY_ID", (System.Web.Mvc.SelectList)ViewBag.CountryList, htmlAttributes: new { @class = "form-control validinput", @onchange = "FillState(this.value,this.name)" })
+                        @Html.ValidationMessageFor(model => model.REGD_OFFICE_COUNTRY_ID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.REGD_OFFICE_STATE_ID, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("REGD_OFFICE_STATE_ID", (System.Web.Mvc.SelectList)ViewBag.statelist, "--Select--", htmlAttributes: new { @class = "form-control validinput" })
+                        @Html.ValidationMessageFor(model => model.REGD_OFFICE_STATE_ID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.WEBSITE_ADDRESS, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.WEBSITE_ADDRESS, new { htmlAttributes = new { @class = "form-control " } })
+                        @Html.ValidationMessageFor(model => model.WEBSITE_ADDRESS, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>           
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                @Html.LabelFor(model => model.blocked, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.blocked, new { htmlAttributes = new { @class = "form-control data-reverse", Type = "checkbox" } })
+                    @Html.ValidationMessageFor(model => model.blocked, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" id="create" value="Update" class="btn btn-success" data-controller="VendorParent" style="float:right"  data-id="@Model.VENDOR_PARENT_ID"/>
+            </div>
+        </div>
+    </div>
+}
+<hr />
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script src="~/Scripts/requirevalidation.js"></script>
+    <script>
+        $("#blocked").checkboxpicker();
+
+    function FillState(id, nme) {
+        var STATE = id;
+        if (STATE == "") {
+            STATE = 0;
+        }
+        else {
+            STATE = id;
+        }
+        $.ajax({
+            url: '@Url.Action("FillState", "Generic")',
+            type: "GET",
+            dataType: "JSON",
+            async: false,
+            data: { COUNTRY_ID: STATE },
+            success: function (state) {
+                $("#REGD_OFFICE_STATE_ID").html("");
+                $("#REGD_OFFICE_STATE_ID").append($('<option></option>').val(0).html("---Select---"));
+                $.each(state, function (i, cycle) {
+                    $("#REGD_OFFICE_STATE_ID").append(
+                        $('<option></option>').val(cycle.STATE_ID).html(cycle.STATE_NAME));
+                });
+
+            }
+        });
+    }
+    function pincode(inputtxt) {
+        if (inputtxt != undefined) {
+            var pin = /^\d{6}$/;
+            if (inputtxt.match(pin)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+    </script>
+}

@@ -1,0 +1,385 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.cycle_time_excel
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(a => a.cycle_time_id)
+        <input type="hidden" id="is_block" value="true" />
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.item_id, "Item", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.itemlist, "---Select---", new { @class = "form-control removedisabled validinput", @required = true, @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.item_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.operation_id, "Operation", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("operation_id", (System.Web.Mvc.SelectList)ViewBag.processlist, "---Select---", new { @class = "form-control removedisabled validinput", @required = true, @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.operation_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.machine_id, "Machine", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.machinelist, "---Select---", new { @class = "form-control removedisabled validinput", @required = true, @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.machine_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.is_active, "Blocked", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.is_active, new { htmlAttributes = new { @class = "form-control ", } })
+                            @Html.ValidationMessageFor(model => model.is_active, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+                    <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                        <li class="active">
+                            <a data-toggle="tab" href="#sectionA">Details</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="sectionA" class="tab-pane fade  in active" style="margin-top:10px;">
+                            <div class="row">
+                                <div class="col-lg-6 col-sm-6">
+                                    <div class="form-group">
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-sm-6">
+                                    <div class="form-group">
+                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                            <button type="button" class="btn btn-primary" id="open_modal" style="float:right" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span>Add Detail</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="table-responsive">
+                                    <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                                        <thead>
+                                            <tr>
+                                                <th hidden> <label>ID</label></th>
+                                                <th><label>Sr. No.</label></th>
+                                                <th><label>Effective Date</label></th>
+                                                <th><label>Cycle Time</label></th>
+                                                <th><label>Other</label></th>
+                                                <th><label>Loading Unloading</label></th>
+                                                <th><label>Total</label></th>
+                                                <th class="hidden"><label>Incentive</label></th>
+                                                <th hidden><label>Action</label></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Tax Element Details</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                Effective Date <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input id="effective_from" type="date" class="form-control col-md-7 col-xs-12" name="effective_from" />
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Cycle time <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" name="cycle_time" class="form-control col-md-7 col-xs-12" id="cycle_time">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Loading Unloading
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" name="loading_unloading" class="form-control col-md-7 col-xs-12" id="loading_unloading">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Other
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" name="other" class="form-control col-md-7 col-xs-12" id="other">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style=" margin-top:15px;">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Total
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" name="total" class="form-control col-md-7 col-xs-12" id="total" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row hidden">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Incentive
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" name="incentive" value="0" class="form-control col-md-7 col-xs-12" id="incentive">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="modal-footer">
+                        <input type="hidden" id="srno" />
+                        <input type="hidden" id="taxelementdetail" />
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                        <button type="button" class="add btn btn-primary" onclick="TabletoJeson()">Update</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
+<div class="row" style="padding-top:25px;">
+    <div class="col-lg-6 col-sm-6">
+        <div class="form-group">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-sm-6">
+        <div class="form-group">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <input type="button" value="Update" class="btn btn-success" style="float:right" id="Update" name="create" onclick="TabletoJeson()" />
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/requirevalidation.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+    $('#is_active').checkboxpicker();
+
+    $('#ContactGrid').DataTable({
+        "bPaginate": false,
+        "ordering": false,
+        "bfooter": false,
+        "info": false,
+        "bLengthChange": false,
+        "bAutoWidth": false,
+        "bFilter": false,
+        "bSort": false,
+        aoColumns: [
+            { sname: "a", bVisible: false },
+            { sname: "b", },
+            { sname: "c", },
+            { sname: "d", },
+            { sname: "e", },
+            { sname: "f", },
+            { sname: "f1", },
+            { sname: "f2", bVisible: false},
+            {
+                sname: "g", sWidth: "8%",
+                bSortable: false,
+                bVisible: false,
+                mRender: function (data, type, full) {
+                    return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" onclick="editRow(' + full[1] + ');" /><img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete" onclick="deleteRow(' + full[1] + ');" />';
+                }
+            }]
+
+    });
+    var cycle_detail = @Html.Raw(JsonConvert.SerializeObject(this.Model));
+    var t = $('#ContactGrid').DataTable();
+    var sr_no = t.fnGetData().length + 1;
+        t.fnAddData([cycle_detail.cycle_time_id, sr_no, cycle_detail.effective_date, cycle_detail.cycle_time, cycle_detail.other, cycle_detail.loading_unloading, cycle_detail.total_cycle_time, cycle_detail.incentive_rate, '']);
+
+    function clearmodel() {
+        $("#total").val('');
+        $("#other").val('');
+        $("#loading_unloading").val('');
+        $("#cycle_time").val('');
+        $('#effective_from').val('');
+    }
+
+    $('#is_active').change(function () {//do something when the user clicks the box
+        if (this.checked == false) {
+            $("#is_block").val(true);
+        };
+        if (this.checked != false) {
+            $("#is_block").val(false);
+        };
+    });
+
+        $("#cycle_time").focusout(function () {
+            var x = $("#other").val();
+            var y = $("#loading_unloading").val();
+            var z = $("#cycle_time").val();
+            $("#total").val(Number(x) + Number(y) + Number(z));
+        });
+        $("#other").focusout(function () {
+            var x = $("#other").val();
+            var y = $("#loading_unloading").val();
+            var z = $("#cycle_time").val();
+            $("#total").val(Number(x) + Number(y) + Number(z));
+        });
+        $("#loading_unloading").focusout(function () {
+            var x = $("#other").val();
+            var y = $("#loading_unloading").val();
+            var z = $("#cycle_time").val();
+            $("#total").val(Number(x) + Number(y) + Number(z));
+        });
+
+    function TabletoJeson() {
+
+        if ($("#is_block").val() == 'true') {
+
+            var finalobj = {};
+
+            if ($("#cycle_time_id").val() == '' || $("#cycle_time_id").val() == null) {
+                swal("cycle_time_id", "cycle_time_id is null", "error");
+                return false;
+            }
+            if ($("#cycle_time").val() == '' || $("#cycle_time").val() == null) {
+                swal("cycle_time", "cycle_time is null", "error");
+                return false;
+
+            }
+            if ($("#other").val() == '' || $("#other").val() == null) {
+                swal("other", "other is null", "error");
+                return false;
+            }
+            if ($("#loading_unloading").val() == '' || $("#loading_unloading").val() == null) {
+                swal("loading_unloading", "loading_unloading is null", "error");
+                return false;
+            }
+            if ($("#effective_from").val() == '' || $("#effective_from").val() == null) {
+                swal("effective_from", "effective_from is null", "error");
+                return false;
+            }
+
+            finalobj.cycle_time_id = $("#cycle_time_id").val();
+            finalobj.cycle_time = $("#cycle_time").val();
+            finalobj.other = $("#other").val();
+            finalobj.loading_unloading = $("#loading_unloading").val();
+            finalobj.is_active = $("#is_block").val();
+            finalobj.item_id = $("#item_id").val();
+            finalobj.effective_date = $("#effective_from").val();
+
+            $.ajax({
+                url: '@Url.Action("Edit", "CycleTime")',
+                method: 'POST',
+                async: false,
+                cache: false,
+                data: { cycle_time_excel: finalobj },
+                success: function (data) {
+
+                    if (data.includes("Saved")) {
+                        swal({
+                            title: "",
+                            text: "Saved Successfully ",
+                            type: "success"
+                        }, function () {
+                            location.href = '@Url.Action("Index", "CycleTime")';
+                            return true;
+                        });
+                        location.href = '@Url.Action("Index", "CycleTime")';
+
+                    }
+                    else {
+                        swal("Update Failed", "Cycle Time is Not Updated", "error");
+                        return false;
+                    }
+                }
+            });
+        }
+        else {
+
+             $.ajax({
+                url: '@Url.Action("BlockCycleTime", "CycleTime")',
+                method: 'POST',
+                async: false,
+                cache: false,
+                 data: { cyclet_time_id: $("#cycle_time_id").val() },
+                success: function (data) {
+
+                    if (data.includes("Saved")) {
+                        swal({
+                            title: "",
+                            text: "Saved Successfully ",
+                            type: "success"
+                        }, function () {
+                            location.href = '@Url.Action("Index", "CycleTime")';
+                            return true;
+                        });
+                        location.href = '@Url.Action("Index", "CycleTime")';
+                    }
+                    else {
+                        swal("Update Failed", "Cycle Time is Not Updated", "error");
+                        return false;
+                    }
+                }
+            });
+        }
+
+
+    }
+
+    </script>
+}

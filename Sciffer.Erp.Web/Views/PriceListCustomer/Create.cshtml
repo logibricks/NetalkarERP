@@ -1,0 +1,433 @@
+﻿@model Sciffer.Erp.Domain.Model.price_list_customer_vm
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <div id="customer_price_list_detail" hidden></div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.customer_id, "Customer *", htmlAttributes: new { @class = "control-label col-md-4 " })
+
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="hidden" id="is_active" name="is_active" value="true" />
+                            @Html.DropDownList("customer_id", (System.Web.Mvc.SelectList)ViewBag.Customer, "--Select--", htmlAttributes: new { Class = "form-control num" })
+                            @Html.ValidationMessageFor(model => model.customer_id, "", new { Class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <br />
+            <input type="hidden" id="productdetail" name="productdetail" />
+
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <button type="button" class="btn btn-primary" id="open_modal" style="float:right"><span class="glyphicon glyphicon-plus"></span>Add Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                        <thead>
+                            <tr>
+                                <th><label>ID</label></th>
+                                <th><label>Sr. No.</label></th>
+                                <th><label>Item ID</label></th>
+                                <th><label>Item</label></th>
+                                <th><label>UoM Id</label></th>
+                                <th><label>UoM</label></th>
+                                <th><label>Price</label></th>
+                                <th><label>Discount</label></th>
+                                <th><label>Discount id</label></th>
+                                <th><label>Discount type</label></th>
+                                <th><label>Price after Discount</label></th>
+                                <th><label>Action</label></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <input type="submit" value="Create" class="btn btn-success" id="create" data-controller="PriceListCustomer" onclick="TabletoJeson();" style="float:right" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Price Details</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Item <span class="required">*</span>
+                        </label>
+
+                        <div class="col-md-7">
+                            @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.Item, "---Select---", new
+                       {
+                           @class = "form-control col-md-7 col-xs-12",
+                           @onchange = "GetUnit(this.value)"
+                       })
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            UoM  <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            @Html.DropDownList("uom_id", (System.Web.Mvc.SelectList)ViewBag.uom_list, "--select--", htmlAttributes: new { @class = "form-control", required = "required", @disabled = "disabled" })
+                        </div>
+                    </div>
+
+                </div>
+
+                <br />
+
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Price <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            <input type="number" class="form-control" name="price" id="price" onchange="calculate()" />
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Discount
+                        </label>
+                        <div class="col-md-4">
+                            <input type="number" class="form-control" name="discount" id="discount" onchange="calculate()" />
+                        </div>
+                        <div class="col-md-3">
+                            @Html.DropDownList("discount_type_id", new List<SelectListItem>
+                                 {
+                                    new SelectListItem{ Text="%", Value = "1" },
+                                    new SelectListItem{ Text="Amt", Value = "2" }
+                                 }, new { @class = "form-control  col-md-7 col-xs-12", @onchange = "calculate()" })
+
+                        </div>
+                    </div>
+                    <input type="hidden" id="discount_type_id" name="discount_type_id" value="{{: discount_type_id}}" class="form-control" />
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Price after Discount <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            <input type="number" disabled="disabled" class="form-control" name="price_after_discount" id="price_after_discount" onchange="calculate()" />
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+                <div class="modal-footer">
+                    <input type="hidden" id="srno" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                    <button type="button" class="add btn btn-primary">Add </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script src="~/Scripts/jquery.filedrop.js"></script>
+    <script type="text/javascript">
+        $("#customer_id").select2({
+            placeholder: "Select Customer",
+            allowClear: true
+        });
+        $("#item_id").select2({
+            placeholder: "Select Item",
+            allowClear: true
+        });
+        $(function () {
+            $('#dropZone').filedrop({
+                url: '@Url.Action("UploadFiles", "PriceListCustomer")',
+                paramname: 'files',
+                maxFiles: 5,
+                dragOver: function () {
+                    $('#dropZone').css('background', 'blue');
+                },
+                dragLeave: function () {
+                    $('#dropZone').css('background', 'gray');
+                },
+                drop: function () {
+                    $('#dropZone').css('background', 'gray');
+                },
+                afterAll: function () {
+                    $('#dropZone').html('');
+
+                },
+                uploadFinished: function (i, file, response, time) {
+
+                    if (response.Status == "Failed") {
+                        sweetAlert("File cannot be uploaded", "Error found " + response.text, "error");
+                    }
+                    else if (response.Status == "Success") {
+                        $('#uploadResult').append('<li>' + file.name + '</li>');
+                        sweetAlert('File Upload Sucessfully');
+                    }
+                    if (response.errorMessage != "") {
+                        sweetAlert(response.errorMessage, "Error Found", "error");
+                    }
+
+                 }
+            });
+        });
+        function onSelect(args) {
+            var x = args.value.split("-");
+            $("#customer_code1").val(x[0]);
+        }
+        function onSelect2(args) {
+            var id = "";
+            var id = args.value.split("-")[0];
+            GetUnit(id);
+        }
+        function GetUnit(id) {
+
+            if (id != '') {
+                $.ajax({
+                    type: 'GET',
+                    url: "@Url.Action("GetUnitofItem", "Generic")",
+                    data: { id: id },
+                    success: function (ITEM) {
+                        $('#uom_id').val(ITEM.item);
+                    },
+                    error: function (emp) {
+                        $('#uom_id').val('');
+                    }
+                });
+            }
+            else {
+                $('#uom_id').val('');
+            }
+
+        }
+        $('#open_modal').click(function () {
+            if ($("#customer_code").val() == '') {
+
+                swal("", "Select Customer.", "error");
+
+            }
+            else {
+                $('#myModal').modal('show');
+                clearmodel();
+            }
+        });
+        function calculate() {
+            var value = $("#discount_type_id").val();
+            console.log(value);
+            if (value == 1) {
+                var price = $("#price").val();
+                var discount = $("#discount").val();
+                var y = (price * discount) / 100;
+                var result = (price - y)
+                console.log(result);
+                $("#price_after_discount").val(result);
+            }
+            else if (value == 2) {
+                var price = $("#price").val();
+                var amount = $("#discount").val();
+                var result = (price - amount)
+                console.log(result);
+                $("#price_after_discount").val(result);
+            }
+        }
+        $(".add").on("click", function (event) {
+
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+
+            var item_id = $("#item_id").val();
+            var item_name = $('#item_id option:selected').text();
+
+            var price = $("#price").val();
+            var discount = $("#discount").val();
+            var discount_code = $("#discount_type_id").val();
+            var discount_type_id = $("#discount_type_id :selected").text();
+            var price_after_discount = $("#price_after_discount").val();
+            var uom_id = $("#uom_id").val();
+            var uom_name = $('#uom_id').find('option:selected').text();
+            if (item_id == '') {
+                swal("", "Please Select Item Name.", "error");
+                return false;
+            }
+            if (uom_id == '') {
+                swal("", "Please Select UOM Name.", "error");
+                return false;
+            }
+            if (price == '') {
+                swal("", "Please Enter Price.", "error");
+                return false;
+            }
+
+            if (price_after_discount == '') {
+                swal("", "Please select Price After Discount.", "error");
+                return false;
+            }
+            if (parseFloat(price_after_discount) <= 0) {
+                swal("", "Price After Discount Should be greater than zero.", "error");
+                return false;
+            }
+            if (discount == '') {
+                discount = 0;
+            }
+            if (parseFloat(discount) < 0) {
+                swal("", "Discount Should be greater than zero.", "error");
+                return false;
+            }
+            if ($("#srno").val() == "") {
+                t.fnAddData(['', rowCount + 1, item_id, item_name, uom_id, uom_name, parseFloat(price).toFixed(2), parseFloat(discount).toFixed(2), discount_code, discount_type_id, parseFloat(price_after_discount).toFixed(2), ''
+                ]);
+            }
+            else {
+                var cc = $("#srno").val();
+                cc = parseInt(cc) - 1;
+                t.fnUpdate(['', cc + 1, item_id, item_name, uom_id, uom_name, parseFloat(price).toFixed(2), parseFloat(discount).toFixed(2), discount_code, discount_type_id, parseFloat(price_after_discount).toFixed(2), ''], cc)
+            }
+
+            clearmodel();
+            return true;
+        });
+        function clearmodel() {
+            $("#srno").val('');
+            $("#item_id").val('').trigger('change');
+            $("#uom_id").val('');
+            $("#price").val('');
+            $("#discount").val('');
+           // $("#discount_type_id").val('');
+            $("#price_after_discount").val('');
+
+        }
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: false },
+                     { sname: "b" },
+                     { sname: "c", bVisible: false },
+                     { sname: "d" },
+                     { sname: "e", bVisible: false },
+                     { sname: "f" },
+                     { sname: "g",sClass:"right" },
+                     { sname: "h", sClass: "right" },
+                     { sname: "i", bVisible: false },
+                     { sname: "j", bVisible: false },
+                     { sname: "k", sClass: "right" },
+                     {
+                         sname: "l", sWidth: "8%",
+                         bSortable: false,
+                         mRender: function (data, type, full) {
+                             return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" onclick="editRow(' + full[1] + ');" /><img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete" onclick="deleteRow(' + full[1] + ');" />';
+                         }
+                     }
+
+            ]
+
+        });
+        function editRow() {
+            $('#myModal').modal('show');
+            var t = $('#ContactGrid').DataTable()
+            var cc = parseInt(arguments[0]) - 1;
+
+            $("#price_detail_id").val(t.fnGetData(cc)[0]);
+            $("#srno").val(t.fnGetData(cc)[1]);
+            $("#item_id").val(t.fnGetData(cc)[2]).trigger('change');
+            $("#uom_id").val(t.fnGetData(cc)[4]);
+            $('#price').val(t.fnGetData(cc)[6]);
+            $('#discount').val(t.fnGetData(cc)[7]);
+            $('#discount_type_id').val(t.fnGetData(cc)[8]);
+            $('#price_after_discount').val(t.fnGetData(cc)[10]);
+
+
+        }
+        $('#ContactGrid').on('click', '.delete', function () {
+
+            var t = $('#ContactGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+
+
+            var deleteids = t.fnGetData(id)[1];
+            swal({
+                title: "Are you sure?",
+
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            },
+             function (isConfirm) {
+                 if (isConfirm) {
+
+                     $("#deleteids").val(deleteids + "~");
+                     t.fnDeleteRow(id);
+                 }
+             });
+        });
+        function TabletoJeson()
+        {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            $("#customer_price_list_detail").empty();
+            for (i = 0; i < rowCount; i++)
+            {
+                $("#customer_price_list_detail").append('<input type="hidden" id="item_id' + i + '" name="item_id" value=' + t.fnGetData(i)[2] + ' >');
+                $("#customer_price_list_detail").append('<input type="hidden" id="uom_id' + i + '" name="uom_id" value=' + t.fnGetData(i)[4] + ' >');
+                $("#customer_price_list_detail").append('<input type="hidden" id="price' + i + '" name="price" value=' + t.fnGetData(i)[6] + ' >');
+                $("#customer_price_list_detail").append('<input type="hidden" id="discount' + i + '" name="discount" value=' + t.fnGetData(i)[7] + ' >');
+                $("#customer_price_list_detail").append('<input type="hidden" id="discount_type_id' + i + '" name="discount_type_id" value=' + t.fnGetData(i)[8] + ' >');
+                $("#customer_price_list_detail").append('<input type="hidden" id="price_after_discount' + i + '" name="price_after_discount" value=' + t.fnGetData(i)[10] + ' >');
+            }
+        }
+    </script>
+}
+

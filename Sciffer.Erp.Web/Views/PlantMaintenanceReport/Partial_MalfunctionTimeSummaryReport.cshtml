@@ -1,0 +1,34 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+@{(Html.EJ().Grid<report_plant_maintenanace>("Editing")
+                            .Datasource(ds => ds.URL(Url.Action("GetMaintenancePlanCycleandFrequencyReport", "PlantMaintenanceReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&plant_id=" + ViewBag.plant_id + "&machine_id=" + ViewBag.machine_id + "&machine_category_id=" + ViewBag.machine_category_id).Adaptor(AdaptorType.UrlAdaptor))
+                      
+                            .AllowPaging().PageSettings(a => a.PageSize(20))
+                            .AllowFiltering()
+                                .FilterSettings(X => X.FilterType(FilterType.Excel))
+                            .ShowColumnChooser()
+                            .AllowSorting()
+                            .AllowScrolling()
+                                    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "PlantMaintenanceReport", new { ctrlname = "MalfunctionTimeSummaryReport" })))
+                                .ScrollSettings(scroll => { scroll.Width("100%"); })
+                        .ToolbarSettings(toolbar =>
+            {
+                toolbar.ShowToolbar().ToolbarItems(items =>
+                {
+                    items.AddTool(ToolBarItems.Search);
+                    items.AddTool(ToolBarItems.ExcelExport);
+                    items.AddTool(ToolBarItems.PrintGrid);
+                });
+            })
+                        .Columns(col =>
+                        {
+
+                            col.Field("Plant").Width("15%").HeaderText("Plant").Add();
+                            col.Field("Machine").Width("15%").HeaderText("Machine name").Add();
+                            col.Field("Days").Width("15%").HeaderText("Days").TextAlign(TextAlign.Right).Add();
+                            col.Field("Hours").Width("15%").HeaderText("Hours").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                        })
+                .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickplan"); })
+                ).Render();}
+@Html.EJ().ScriptManager()

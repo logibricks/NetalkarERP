@@ -1,0 +1,1166 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.REF_VENDOR_VM
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+
+
+
+
+@using (Html.BeginForm("Edit", "VendorMaster", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.VENDOR_ID)
+        <div id="vendor_detail" hidden></div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    @Html.LabelFor(model => model.VENDOR_CATEGORY_ID, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("VENDOR_CATEGORY_ID", (System.Web.Mvc.SelectList)ViewBag.categorylist, "---Select---", new { @class = "form-control removedisabled", @required = true,@disabled="disabled" })
+                        @Html.ValidationMessageFor(model => model.VENDOR_CATEGORY_ID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.VENDOR_CODE, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.VENDOR_CODE, new { htmlAttributes = new { @class = "form-control num removedisabled", @required = true, @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.VENDOR_CODE, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.VENDOR_NAME, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.VENDOR_NAME, new { htmlAttributes = new { @class = "form-control num1 validinput", @required = true } })
+                            @Html.ValidationMessageFor(model => model.VENDOR_NAME, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.VENDOR_DISPLAY_NAME, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.VENDOR_DISPLAY_NAME, new { htmlAttributes = new { @class = "form-control validinput", @required = true } })
+                            @Html.ValidationMessageFor(model => model.VENDOR_DISPLAY_NAME, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">General</a></li>
+                <li><a data-toggle="tab" href="#sectionB">Bank Details</a></li>
+                <li><a data-toggle="tab" href="#sectionC">Contact Details</a></li>
+                <li><a data-toggle="tab" href="#sectionD">Accounting</a></li>
+                <li><a data-toggle="tab" href="#sectionE">Pricing</a></li>
+                <li><a data-toggle="tab" href="#sectionF">Information</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ORG_TYPE_ID, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("ORG_TYPE_ID", (System.Web.Mvc.SelectList)ViewBag.orglist, "---Select---", new { @class = "form-control validinput", @required = true })
+                                    @Html.ValidationMessageFor(model => model.ORG_TYPE_ID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.BILLING_ADDRESS, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.BILLING_ADDRESS, new { htmlAttributes = new { @class = "form-control validinput", @required = true } })
+                                    @Html.ValidationMessageFor(model => model.BILLING_ADDRESS, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.BILLING_CITY, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.BILLING_CITY, new { htmlAttributes = new { @class = "form-control validinput", @required = true } })
+                                    @Html.ValidationMessageFor(model => model.BILLING_CITY, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.BILLING_PINCODE, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.BILLING_PINCODE, new { htmlAttributes = new { @class = "form-control"} })
+                                    @Html.ValidationMessageFor(model => model.BILLING_PINCODE, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.BILLING_COUNTRY_ID, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("BILLING_COUNTRY_ID", (System.Web.Mvc.SelectList)ViewBag.billinglist, "---Select---", new { @class = "form-control", @required = true, @onchange = "FillState(this.value,this.name)" })
+                                    @Html.ValidationMessageFor(model => model.BILLING_COUNTRY_ID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.BILLING_STATE_ID, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("BILLING_STATE_ID", (System.Web.Mvc.SelectList)ViewBag.billingstatelist, "---Select---", new { @class = "form-control", @required = true })
+                                    @Html.ValidationMessageFor(model => model.BILLING_STATE_ID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PRIORITY_ID, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("PRIORITY_ID", (System.Web.Mvc.SelectList)ViewBag.prioritylist, "---Select---", new { @class = "form-control"})
+                                    @Html.ValidationMessageFor(model => model.PRIORITY_ID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.FREIGHT_TERMS_ID, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("FREIGHT_TERMS_ID", (System.Web.Mvc.SelectList)ViewBag.freightlist, "---Select---", new { @class = "form-control validinput", @required = true })
+                                    @Html.ValidationMessageFor(model => model.FREIGHT_TERMS_ID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.HAS_PARENT, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.HAS_PARENT, new { @class = "" })
+                                    @Html.ValidationMessageFor(model => model.HAS_PARENT, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.VENDOR_PARENT_ID, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("VENDOR_PARENT_ID", (System.Web.Mvc.SelectList)ViewBag.parentlist, "---Select---", new { @class = "form-control validinput", @required = true })
+                                    @Html.ValidationMessageFor(model => model.VENDOR_PARENT_ID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.IS_BLOCKED, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.IS_BLOCKED, new { @class = "validation" })
+                                    @Html.ValidationMessageFor(model => model.IS_BLOCKED, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sectionB" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.bank_id,"Bank", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("bank_id", (System.Web.Mvc.SelectList)ViewBag.banklist, "---Select---", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.bank_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.bank_account_number, "Bank Account Number", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.bank_account_number, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.bank_account_number, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ifsc_code, "IFSC Code", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.ifsc_code, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.ifsc_code, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sectionC" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CORR_ADDRESS, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.CORR_ADDRESS, new { htmlAttributes = new { @class = "form-control validinput", @required = true } })
+                                    @Html.ValidationMessageFor(model => model.CORR_ADDRESS, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CORR_CITY, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.CORR_CITY, new { htmlAttributes = new { @class = "form-control validinput", @required = true } })
+                                    @Html.ValidationMessageFor(model => model.CORR_CITY, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CORR_COUNTRY_ID, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("CORR_COUNTRY_ID", (System.Web.Mvc.SelectList)ViewBag.corlist, "---Select---", new { @class = "form-control", @required = true, @onchange = "FillState(this.value,this.name)" })
+                                    @Html.ValidationMessageFor(model => model.CORR_COUNTRY_ID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CORR_STATE_ID, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("CORR_STATE_ID", (System.Web.Mvc.SelectList)ViewBag.corrstatelist, "---Select---", new { @class = "form-control", @required = true})
+                                    @Html.ValidationMessageFor(model => model.CORR_STATE_ID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CORR_PINCODE, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.CORR_PINCODE, new { htmlAttributes = new { @class = "form-control"} })
+                                    @Html.ValidationMessageFor(model => model.CORR_PINCODE, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.EMAIL_ID_PRIMARY,"Email ", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.EMAIL_ID_PRIMARY, new { htmlAttributes = new { @class = "form-control  email", @type = "email" } })
+                                    @*@Html.ValidationMessageFor(model => model.EMAIL_ID_PRIMARY, "", new { @class = "text-danger" })*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TELEPHONE_PRIMARY, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-3">
+                                    @Html.EditorFor(model => model.phone_code, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.phone_code, "", new { @class = "text-danger" })
+                                </div>
+                                <label class="hidden">Telephone</label>
+                                <div class="col-md-5">
+                                    @Html.EditorFor(model => model.TELEPHONE_PRIMARY, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.TELEPHONE_PRIMARY, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.FAX, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.FAX, new { htmlAttributes = new { @class = "form-control"} })
+                                    @Html.ValidationMessageFor(model => model.FAX, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.WEBSITE_ADDRESS, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.WEBSITE_ADDRESS, new { htmlAttributes = new { @class = "form-control url"} })
+                                    @Html.ValidationMessageFor(model => model.WEBSITE_ADDRESS, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <button class="add btn btn-primary" style="float:right"><span class="glyphicon glyphicon-plus"></span>Add Contact</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table contacts table-responsive table-bordered table-striped" id="contacts">
+                                <thead>
+                                    <tr>
+                                        <th hidden> <label>ID</label></th>
+                                        <th><label>Contact Name</label></th>
+                                        <th><label>Designation</label></th>
+                                        <th><label>Mobile Number</label></th>
+                                        <th><label>Phone Number</label></th>
+                                        <th><label>Email</label></th>
+                                        <th><label>Send SMS</label></th>
+                                        <th><label>Send Email</label></th>
+                                        <th><label>Delete</label></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="VENDOR_CONTACT_ID">
+                                    @{
+                                        if (Model != null && Model.REF_VENDOR_CONTACTS != null)
+                                        {
+                                            int i = 0;
+                                            foreach (var REF_VENDOR_CONTACTS in Model.REF_VENDOR_CONTACTS)
+                                            {
+                                                ViewBag.Count = i++;
+                                                Html.RenderPartial("_VendorContactView", Model);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Html.Partial("_VendorContactView");
+                                        }
+
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionD" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CREDIT_LIMIT_CURRENCY_ID, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.DropDownList("CREDIT_LIMIT_CURRENCY_ID", (System.Web.Mvc.SelectList)ViewBag.Currencylist, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.CREDIT_LIMIT_CURRENCY_ID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PAYMENT_TERMS_ID, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.DropDownList("PAYMENT_TERMS_ID", (System.Web.Mvc.SelectList)ViewBag.paymenttermslist, "---Select---", new { @class = "form-control validinput", @required = true })
+                                    @Html.ValidationMessageFor(model => model.PAYMENT_TERMS_ID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PAYMENT_CYCLE_TYPE_ID, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.DropDownList("PAYMENT_CYCLE_TYPE_ID", (System.Web.Mvc.SelectList)ViewBag.paymentcycletype, "---Select---", new { @class = "form-control validinput", @required = true, @onchange = "FillPaymentCycle()" })
+                                    @Html.ValidationMessageFor(model => model.PAYMENT_CYCLE_TYPE_ID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PAYMENT_CYCLE_ID, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.DropDownList("PAYMENT_CYCLE_ID", (System.Web.Mvc.SelectList)ViewBag.paymentcyclelist, "---Select---", new { @class = "form-control validinput", @required = true })
+                                    @Html.ValidationMessageFor(model => model.PAYMENT_CYCLE_ID, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CREDIT_LIMIT, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.CREDIT_LIMIT, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.CREDIT_LIMIT, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TDS_APPLICABLE, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                    @Html.EditorFor(model => model.TDS_APPLICABLE, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.TDS_APPLICABLE, "", new { @class = "text-danger" })
+                                </div>
+                                @Html.LabelFor(model => model.tds_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12 hidden" })
+                                <div class="col-md-5 col-sm-5 col-xs-12">
+                                    @*@Html.EditorFor(model => model.tds_no, new { htmlAttributes = new { @class = "form-control" } })*@
+                                    @Html.DropDownList("tds_id", (System.Web.Mvc.SelectList)ViewBag.tds_list, "---Select---", new { @class = "form-control", @required = true })
+                                    @Html.ValidationMessageFor(model => model.tds_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.pan_no, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.pan_no, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.pan_no, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.service_tax_no, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.service_tax_no, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.service_tax_no, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ecc_no, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.ecc_no, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.ecc_no, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.vat_tin_no, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.vat_tin_no, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.vat_tin_no, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.cst_tin_no, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.cst_tin_no, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.cst_tin_no, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.gst_vendor_type_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("gst_vendor_type_id", (System.Web.Mvc.SelectList)ViewBag.GST_CustomerType_List, "---Select---", new { @class = "form-control validinput", @onchange = "ChangeGstType(this.value)" })
+                                    @Html.ValidationMessageFor(model => model.gst_vendor_type_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                  
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.gst_no, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.gst_no, new { htmlAttributes = new { @class = "form-control gstin validinput" } })
+                                    @Html.ValidationMessageFor(model => model.gst_no, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.gst_registration_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.gst_registration_date, new { htmlAttributes = new { @class = "form-control validinput" } })
+                                    @Html.ValidationMessageFor(model => model.gst_registration_date, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.gst_tds_applicable, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                    @Html.EditorFor(model => model.gst_tds_applicable, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.gst_tds_applicable, "", new { @class = "text-danger" })
+                                </div>
+                                @Html.LabelFor(model => model.gst_tds_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12 hidden" })
+                                <div class="col-md-5 col-sm-5 col-xs-12">
+                                    @Html.DropDownList("gst_tds_id", (System.Web.Mvc.SelectList)ViewBag.GST_TDS_Code, "---Select---", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.gst_tds_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="LedgerGrid">
+                                <thead>
+                                    <tr>
+                                        <th><label>Sr. No.</label></th>
+                                        <th hidden><label>ID</label></th>
+                                        <th><label>GL Account Type</label></th>
+                                        <th hidden><label>Ledger ID </label></th>
+                                        <th><label>GL Account *</label></th>
+                                        <th><label>Action</label></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionE" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.overall_discount, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.overall_discount, new { htmlAttributes = new { @class = "form-control rate", @type = "number" } })
+                                    @Html.ValidationMessageFor(model => model.overall_discount, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="panel panel-default">
+                            <div class="panel-heading"></div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-6 col-sm-6">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-4 col-sm-4 col-xs-12">Item Group-wise % Discount</label>
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                @Html.DropDownList("item_group_id", (System.Web.Mvc.SelectList)ViewBag.item_group, "---Select---", new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-5 col-sm-5">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-4 col-sm-4 col-xs-12">Rate</label>
+                                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                                <input type="number" class="form-control" id="item_rate" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-1 col-sm-1">
+                                        <div class="form-group">
+                                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                                <button type="button" class="btn btn-primary" id="add_item">Add</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="table-responsive">
+                                        <table class="table table-responsive table-bordered table-striped" id="ContactGrid1">
+                                            <thead>
+                                                <tr>
+                                                    <th hidden> <label>ID</label></th>
+                                                    <th><label>Sr. No.</label></th>
+                                                    <th hidden><label>Item Group ID</label></th>
+                                                    <th><label>Item Group-wise % Discount</label></th>
+                                                    <th><label>Rate(%)</label></th>
+                                                    <th><label>Action</label></th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div id="sectionF" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ADDITIONAL_INFO, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.ADDITIONAL_INFO, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.ADDITIONAL_INFO, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <label class="col-md-2">Attachment</label>
+                                <div class="col-md-10">
+                                    @Html.HiddenFor(model=>model.attachment)
+                                    <input type="file" class="form-control" id="FileUpload" name="FileUpload" accept="application/pdf, image/*" />
+                                    @Html.ValidationMessageFor(model => model.attachment, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="productdetail" name="productdetail" />
+                    <input type="hidden" id="srno" />
+                    <input type="hidden" id="deleteids" name="deleteids" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg12 col-sm-12">
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <input type="submit" value="Update" data-id="@Model.VENDOR_ID" data-controller="VendorMaster" id="create" onclick="TabletoJeson();" class="btn btn-success" style="float:right" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">GL Account</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" id="gllable" name="gllabel"></label>
+                        <div class="col-md-7">
+                            @Html.DropDownList("glid", (System.Web.Mvc.SelectList)ViewBag.generalleder, "---Select---", new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <input type="hidden" id="srno1" />
+                    <input type="hidden" id="ledger_account_type_id" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel1();">Close</button>
+                    <button type="button" class="btn btn-primary" id="addgl" onclick="UpdateGL();" name="addgl">Add</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+<script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+<script src="~/Scripts/requirevalidation.js"></script>
+@using (Ajax.BeginForm("GetPartialvendor", null, new AjaxOptions
+            {
+                HttpMethod = "GET",
+                InsertionMode = InsertionMode.InsertAfter,
+                UpdateTargetId = "VENDOR_CONTACT_ID"
+            }, new { id = "ContactForm" }))
+            {
+    <input type="hidden" id="contactCount" name="count" value="@ViewBag.Count" />
+}
+@section Scripts {
+  @Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript">
+    $("#glid").select2({
+        maximumSelectionLength: 4,
+        placeholder: "Select GL Account",
+        allowClear: true
+    });
+    $("#tds_id").select2({
+        maximumSelectionLength: 4,
+        placeholder: "Select TDS",
+        allowClear: true
+    });   
+    $("#gst_tds_id").select2({
+        maximumSelectionLength: 4,
+        placeholder: "Select GST TDS",
+        allowClear: true
+    });
+    $('#error').hide();
+    $(document).ready(function(){
+        if($("#gst_vendor_type_id").val()==8)
+        {               
+            $('label[for="gst_registration_date"]').text ("Date of Registration");
+            $('#gst_registration_date').val('');
+            $('#validgst_registration_date').remove();
+            $("#gst_registration_date").removeClass('validinput');
+        }
+        var error=@Html.Raw(Json.Encode(ViewBag.error));
+        if(error !="")
+        {
+            sweetAlert("",error,"error");
+        }
+        var t = $('#ContactGrid1').DataTable();
+        var sr_no = t.fnGetData().length+1;
+        var pl_detail = @Html.Raw(JsonConvert.SerializeObject(this.Model.ref_vendor_item_group));
+        $.each(pl_detail, function(key, value) {
+            t.fnAddData([value.vendor_id,sr_no,value.REF_ITEM_GROUP.ITEM_GROUP_ID,value.REF_ITEM_GROUP.ITEM_GROUP_NAME,value.rate,''
+            ]);
+            sr_no++;
+        });
+
+
+        $("table").on("click", ".delete-country", function () {
+            $(this).closest('tr').hide();
+            $(this).prev('input').val('false');
+        });
+
+        $(".add").on("click", function (event) {
+            event.preventDefault();
+            var val = parseInt($("#contactCount").val());
+            var rowCount = document.getElementById("contacts").rows.length - 1;
+            val = isNaN(val) ? 1 : val;
+            $("#contactCount").val(rowCount);
+            $.ajax({
+                url: "@Url.Action("GetPartialvendor", "VendorMaster")",
+                data: { count: rowCount },
+                catch: false,
+                type: "GET",
+                success: function (data) {
+                    $("#contacts").append(data);
+                },
+                error: function (response) {
+
+                }
+
+            });
+        });
+        $('#HAS_PARENT').checkboxpicker();
+        $('#IS_BLOCKED').checkboxpicker();
+        $('#TDS_APPLICABLE').checkboxpicker();
+        $('#gst_tds_applicable').checkboxpicker();
+        $("#VENDOR_PARENT_ID").attr("disabled", "disabled");
+        if ($('#HAS_PARENT').is(':checked')) {
+            $("#VENDOR_PARENT_ID").removeAttr("disabled");
+            $("#VENDOR_PARENT_ID").addClass('validinput');
+        }
+        else {
+            $("#VENDOR_PARENT_ID").attr("disabled", "disabled");
+            $('#validVENDOR_PARENT_ID').remove();
+            $("#VENDOR_PARENT_ID").removeClass('validinput');
+        }
+        $('#HAS_PARENT').change(function () {//do something when the user clicks the box sameas
+            if ($(this).is(':checked')) {
+                $("#VENDOR_PARENT_ID").removeAttr("disabled");
+                $("#VENDOR_PARENT_ID").addClass('validinput');
+            }
+            else {
+                $("#VENDOR_PARENT_ID").attr("disabled", "disabled");
+                $('#validVENDOR_PARENT_ID').remove();
+                $("#VENDOR_PARENT_ID").removeClass('validinput');
+            }
+        });
+        $('#VENDOR_NAME').change(function () {//do something when the user clicks the box
+            $('#VENDOR_DISPLAY_NAME').val($('#VENDOR_NAME').val());
+        });
+        //$("#BILLING_STATE_ID").html("");
+        //$("#BILLING_STATE_ID").append($('<option></option>').val(0).html("---Select---"));
+        //$("#CORR_STATE_ID").html(""); // clear before appending new list
+        //$("#CORR_STATE_ID").append($('<option></option>').val(0).html("---Select---"));
+
+        if($('#TDS_APPLICABLE').is(':checked'))
+        {
+            $("#tds_id").removeAttr("disabled");
+            $("#tds_id").addClass('validinput');
+        }
+        else
+        {
+            $("#tds_id").attr("disabled", "disabled");
+            $('#tds_id').val('').trigger("change");
+            $('#validtds_id').remove();
+            $("#tds_id").removeClass('validinput');
+        }
+        if($('#gst_tds_applicable').is(':checked'))
+        {
+            $("#gst_tds_id").removeAttr("disabled");
+            $("#gst_tds_id").addClass('validinput');
+        }
+        else
+        {
+            $("#gst_tds_id").attr("disabled", "disabled");
+            $('#gst_tds_id').val('').trigger("change");
+            $('#validgst_tds_id').remove();
+            $("#gst_tds_id").removeClass('validinput');
+        }
+        //$("#tds_id").attr("disabled", "disabled");
+        $('#gst_tds_applicable').change(function () {//do something when the user clicks the box
+            if ($(this).is(':checked')) {
+                $('#gst_tds_id').val('').trigger("change");
+                $("#gst_tds_id").removeAttr("disabled");
+                $("#gst_tds_id").addClass('validinput');
+            }
+            else {
+                $("#gst_tds_id").attr("disabled", "disabled");
+                $('#gst_tds_id').val('').trigger("change");
+                $('#validgst_tds_id').remove();
+                $("#gst_tds_id").removeClass('validinput');
+            };
+        });
+        $('#TDS_APPLICABLE').change(function () {//do something when the user clicks the box
+            if ($(this).is(':checked')) {
+                $('#tds_id').val('').trigger("change");
+                $("#tds_id").removeAttr("disabled");
+                $("#tds_id").addClass('validinput');
+            }
+            else {
+                $("#tds_id").attr("disabled", "disabled");
+                $('#tds_id').val('').trigger("change");
+                $('#validtds_id').remove();
+                $("#tds_id").removeClass('validinput');
+            };
+        });
+        GetLedgerAccountType($("#VENDOR_ID").val());
+    });
+    function ChangeGstType(id)
+    {
+        if(id==8)
+        {
+            $("#gst_no").val("NA");
+            $('label[for="gst_registration_date"]').text ("Date of Registration");
+            $('#gst_registration_date').val('');
+            $('#validgst_registration_date').remove();
+            $("#gst_registration_date").removeClass('validinput');
+        }
+        else
+        {
+            $("#gst_no").val("");
+            $('label[for="gst_registration_date"]').text ("Date of Registration *");
+            $("#gst_registration_date").addClass('validinput');
+        }
+    }
+    function GetLedgerAccountType(id) {
+        $.ajax({
+            url: '@Url.Action("GetLedgerAccountType", "Generic")',
+            type: "GET",
+            dataType: "JSON",
+            data: { entity_type_id: 2, entity_id: id },
+            success: function (Payment_Cycle) {
+                var t = $('#LedgerGrid').DataTable();
+                t.fnClearTable();
+                var sr_no = t.fnGetData().length + 1;
+
+                $.each(Payment_Cycle, function (i, cycle) {
+                    var gl_ledger_id='';
+                    var gl_ledger_code='';
+                    if(cycle.gl_ledger_id!=0)
+                    {
+                        gl_ledger_id=cycle.gl_ledger_id;
+                        gl_ledger_code=cycle.gl_ledger_code + " - "+ cycle.gl_ledger_name;
+                    }
+                    t.fnAddData([sr_no, cycle.ledger_account_type_id, cycle.ledger_account_type_name, '<label class="ledger_grid" id="ledger_code' + sr_no + '">' + gl_ledger_id + '</label>', '<label class="ledger_grid" id="ledger_name' + sr_no + '">' + gl_ledger_code + '</label>', ''
+                    ]);
+                    sr_no++;
+                });
+            }
+        });
+    }
+    function clearmodel1() {
+        $("#glid").val("");
+    }
+    $('#LedgerGrid').DataTable({
+        "bPaginate": false,
+        "ordering": false,
+        "bfooter": false,
+        "info": false,
+        "bLengthChange": false,
+        "bAutoWidth": false,
+        "bFilter": false,
+        "bSort": false,
+        aoColumns: [
+                    { sname: "a", sWidth: "7%" },
+                    { sname: "b", bVisible: false },
+                    { sname: "c" },
+                    { sname: "d" , bVisible: false },
+                    { sname: "e" },
+                    {
+                        sname: "f", sWidth: "8%",
+                        bSortable: false,
+                        mRender: function (data, type, full) {
+                            return '<img class="edit1" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" />';
+                        }
+                    }]
+    });
+    function FillState(id, nme) {
+        var STATE = id;
+        if (STATE == "") {
+            STATE = 0;
+        }
+        else {
+            STATE = id;
+        }
+        $.ajax({
+            url: '@Url.Action("FillState", "CustomerMaster")',
+            type: "GET",
+            dataType: "JSON",
+            data: { COUNTRY_ID: STATE },
+            success: function (state) {
+                if (nme == "BILLING_COUNTRY_ID") {
+                    $("#BILLING_STATE_ID").html(""); // clear before appending new list
+                    $("#BILLING_STATE_ID").append($('<option></option>').val(0).html("---Select---"));
+                    $.each(state, function (i, cycle) {
+                        $("#BILLING_STATE_ID").append(
+                            $('<option></option>').val(cycle.STATE_ID).html(cycle.STATE_NAME));
+                    });
+                }
+                else {
+                    $("#CORR_STATE_ID").html(""); // clear before appending new list
+                    $("#CORR_STATE_ID").append($('<option></option>').val(0).html("---Select---"));
+                    $.each(state, function (i, cycle) {
+                        $("#CORR_STATE_ID").append(
+                            $('<option></option>').val(cycle.STATE_ID).html(cycle.STATE_NAME));
+                    });
+                }
+
+            }
+        });
+    }
+    function FillPaymentCycle() {
+        var Payment_Cycle = $('#PAYMENT_CYCLE_TYPE_ID').val();
+        if (Payment_Cycle == "") {
+            Payment_Cycle = 0;
+        }
+        else {
+            Payment_Cycle = Payment_Cycle;
+        }
+        $.ajax({
+            url: '@Url.Action("FillPaymentCycle", "CustomerMaster")',
+            type: "GET",
+            dataType: "JSON",
+            data: { Payment_Type_id: Payment_Cycle },
+            success: function (Payment_Cycle) {
+                $("#PAYMENT_CYCLE_ID").html(""); // clear before appending new list
+                $("#PAYMENT_CYCLE_ID").append($('<option></option>').val(0).html("--Select--"));
+                $.each(Payment_Cycle, function (i, cycle) {
+
+                    $("#PAYMENT_CYCLE_ID").append(
+
+                        $('<option></option>').val(cycle.PAYMENT_CYCLE_ID).html(cycle.PAYMENT_CYCLE_NAME));
+                });
+            }
+        });
+    }
+    //ADD TO ITEM GROUP TABLE
+    $('#add_item').click(function () {
+        var t = $('#ContactGrid1').DataTable()
+        var rowCount = t.fnGetData().length;
+        var cat_id = $('#item_group_id').val();
+        var cat = $('#item_group_id :selected').text();
+        var rate = $('#item_rate').val();
+
+        if (cat_id == '') {
+            swal("", "Please Select Item Group-wise.", "error");
+            return false;
+        }
+        if (rate == '') {
+            swal("", "Please Enter Rate.", "error");
+            return false;
+        }
+        if (rate > 100) {
+            swal("", "Rate cannot be greater than 100.", "error");
+            return false;
+        }
+        if ($("#srno").val() == "") {
+            for (var k = 0; k <= rowCount - 1; k++) {
+                if (t.fnGetData(k)[2] == cat_id) {
+                    swal("", "Item Group-wise is already added.", "error");
+                    return false;
+                }
+            }
+            t.fnAddData(['', rowCount + 1, cat_id, cat, rate, ''
+            ]);
+        }
+        else {
+            var cc = parseInt($("#srno").val());
+            for (var k = 0; k <= rowCount - 1; k++) {
+                if(k==cc)
+                {
+                    continue;
+                }
+                if (t.fnGetData(k)[2] == cat_id) {
+                    swal("", "Item Group-wise is already added.", "error");
+                    return false;
+                }
+            }
+
+            t.fnUpdate(['', cc + 1, cat_id, cat, rate, ''], cc)
+        }
+        clearmodel();
+    });
+
+
+    function clearmodel() {
+        $("#item_group_id").val('');
+        $("#item_rate").val('');
+        $('#srno').val('');
+    }
+
+    $('#ContactGrid1').on('click', '.edit', function () {
+        var t = $('#ContactGrid1').DataTable();
+        var id = $(this).parent('td').parent('tr').index();
+        $('#srno').val(id);
+        $("#item_group_id").val(t.fnGetData(id)[2]);
+        $("#item_rate").val(t.fnGetData(id)[4]);
+    });
+
+    $('#ContactGrid1').on('click', '.delete', function () {
+        var t = $('#ContactGrid1').DataTable();
+        var id = $(this).parent('td').parent('tr').index();
+        var deleteids = t.fnGetData(id)[1];
+        swal({
+            title: "Are you sure?",
+
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Yes, delete it!",
+            closeOnConfirm: true
+        },
+    function (isConfirm) {
+        if (isConfirm) {
+
+            $("#deleteids").val(deleteids + "~");
+            t.fnDeleteRow(id);
+            var len = t.fnGetData().length;
+            var i = 1;
+            var row = 0;
+            if (len > 0) {
+                $('#ContactGrid1 tbody tr').each(function () {
+                    t.fnUpdate(i, row, 1);
+                    i++;
+                    row++;
+                });
+            }
+        }
+    });
+    });
+
+
+    $('#ContactGrid1').DataTable({
+        "bPaginate": false,
+        "ordering": false,
+        "bfooter": false,
+        "info": false,
+        "bLengthChange": false,
+        "bAutoWidth": false,
+        "bFilter": false,
+        "bSort": false,
+        aoColumns: [
+                    { sname: "a", bVisible: false },
+                    { sname: "b", sWidth: "7%" },
+                    { sname: "c", bVisible: false },
+                    { sname: "d" },
+                    { sname: "e" },
+                    {
+                        sname: "f", sWidth: "8%",
+                        bSortable: false,
+                        mRender: function (data, type, full) {
+                            return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" /><img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete" />';
+                        }
+                    }]
+
+    });
+    function TabletoJeson() {
+        var t = $('#ContactGrid1').DataTable()
+        var rowCount = t.fnGetData().length;           
+        var t1 = $('#LedgerGrid').DataTable()
+        var rowCount1 = t1.fnGetData().length;
+        $("#vendor_detail").empty();
+        for (i = 0; i < rowCount; i++)
+        {
+            $("#vendor_detail").append('<input type="hidden" id="item_category_id' + i + '" name="item_category_id" value=' + t.fnGetData(i)[2] + '>');
+            $("#vendor_detail").append('<input type="hidden" id="rate' + i + '" name="rate" value=' + t.fnGetData(i)[4] + '>');
+        }
+        for (i = 0; i < rowCount1; i++)
+        {
+            var tx = t1.fnGetData(i)[3];
+            var txx = $(tx).text();
+            $("#vendor_detail").append('<input type="hidden" id="ledger_account_type_id' + i + '" name="ledger_account_type_id" value=' + t1.fnGetData(i)[1] + '>');
+            $("#vendor_detail").append('<input type="hidden" id="gl_ledger_id' + i + '" name="gl_ledger_id" value=' + txx + '>');
+        }           
+    }
+
+
+
+    $('#LedgerGrid').on('click', '.edit1', function () {
+        var t = $('#LedgerGrid').DataTable();
+        var id = $(this).parent('td').parent('tr').index();
+        $('#myModal').modal('show');
+        $("#gllable").text(t.fnGetData(id)[2]);
+        $("#srno1").val(t.fnGetData(id)[0]);
+        var tx = t.fnGetData(id)[3];
+        var txx = $(tx).text();
+        var tx1 = t.fnGetData(id)[4];
+        var txx1 = $(tx1).text();
+        if (txx != "")
+        {
+            $("#glid").val(txx + "-" + txx1);
+        }
+        $("#ledger_account_type_id").val(t.fnGetData(id)[1]);
+    });
+    function UpdateGL() {
+        var gl = $("#glid").val();
+        var ledger_account_type_name = $("#gllable").text();
+        if (gl == "-") {
+            sweetAlert("", "Please select Account!", "error");
+        }
+        else if (gl == "") {
+            sweetAlert("", "Please select Account!", "error");
+        }
+        else {
+            var t = $('#LedgerGrid').DataTable();
+            var rowCount = t.fnGetData().length;
+            var srno = parseInt($("#srno1").val());
+            var gl_id = gl;
+            var gl_code = $("#glid :selected").text();
+            var ledger_account_type_id = $("#ledger_account_type_id").val();
+            var cc = parseInt($("#srno").val());
+            t.fnUpdate([srno, ledger_account_type_id, ledger_account_type_name, '<label class="ledger_grid" id="ledger_code' + srno + '">' + gl_id + '</label>', '<label class="ledger_grid" id="ledger_name' + srno + '">' + gl_code + '</label>', ''], srno - 1)
+            $("#glid").val('')
+            $('#myModal').modal('hide');
+        }
+    }
+
+    $('.removedisabled').attr('disabled', 'disabled');
+
+</script>
+   
+}

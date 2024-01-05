@@ -1,0 +1,180 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.ref_posting_periods_vm
+
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        <div>@Html.ValidationSummary(true, "", new { @class = "text-danger" })</div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <label for="financial_year_id" class="control-label col-md-4 col-sm-4 col-xs-12">Financial Year *</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("financial_year_id", (System.Web.Mvc.SelectList)ViewBag.financiallist, "---Select---", new { @class = "form-control validinput num" })
+                            @Html.ValidationMessageFor(model => model.financial_year_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <label for="financial_year_id" class="control-label col-md-4 col-sm-4 col-xs-12">Frequency *</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("frequency_id", (System.Web.Mvc.SelectList)ViewBag.frequencylist, "---Select---", new { @class = "form-control validinput", @onchange = "GetPeriods(this.value)" })
+                            @Html.ValidationMessageFor(model => model.frequency_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <label for="no_of_periods" class="control-label col-md-4 col-sm-4 col-xs-12">No. of Periods *</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.no_of_periods, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.financial_year_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <label for="no_of_periods" class="control-label col-md-4 col-sm-4 col-xs-12">Period Code *</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12"  style="height: 200px; overflow-y: scroll;">
+                            <table class="table contacts table-responsive table-bordered table-striped" border="1" id="PeriodsCode">
+                                <thead>
+                                    <tr>
+                                        <th hidden>ID</th>
+                                        <th>Period Code</th>
+                                    </tr>
+                                </thead>                                
+                            </table>
+                        </div>
+                    </div>
+              </div>
+            </div>
+        </div>
+        <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-success" data-controller="PostingPeriod" id="create" name="create" style="float:right" />
+                    <input type="hidden" name="periodsdetail" id="periodsdetail" />
+                </div>
+            </div>
+        </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script src="~/Scripts/requirevalidation.js"></script>
+<script type="text/javascript">
+    $('#PeriodsCode').DataTable({
+        "bPaginate": false,
+        "ordering": false,
+        "bfooter": false,
+        "info": false,
+        "bLengthChange": false,
+        "bAutoWidth": false,
+        "bFilter": false,
+        "bSort": false,
+        aoColumns: [
+                 { sname: "a", bVisible: false },
+                 { sname: "b"}]
+
+    });
+    function GetPeriods(id) {
+        var table = $('#PeriodsCode').DataTable();
+        var iddd = ""
+        iddd = $("#financial_year_id :selected").text();
+        if (iddd != '---Select---')
+        {
+            if ($("#no_of_periods").val() == "") {
+
+            }
+            if (id == "") {
+                $("#no_of_periods").val("");
+                table.fnClearTable();
+            }
+            else if (id == 1) {
+                $("#no_of_periods").val(1);
+                table.fnClearTable();
+                table.fnAddData([0, iddd]);
+            }
+            else if (id == 2) {
+                $("#no_of_periods").val(4);
+                table.fnClearTable();
+                for (i = 1; i <= 4; i++) {
+                    table.fnAddData([0, iddd + "-Q"+ i]);
+                }
+            }
+            else if (id == 3) {
+                $("#no_of_periods").val(12);
+                table.fnClearTable();
+                for (i = 1; i <= 12; i++) {
+                    table.fnAddData([0, iddd + "-M"+i]);
+                }
+            }
+        }
+        else
+            {
+            $("#no_of_periods").val("");
+            table.fnClearTable();
+           }
+
+    }
+    function TabletoJeson() {
+        var t = $('#PeriodsCode').DataTable()
+        var rowCount = t.fnGetData().length;
+        var str;
+        var str1;
+        for (i = 0; i < rowCount; i++) {
+            str1 = t.fnGetData(i)[0] + ",";
+            str1 = str1 + t.fnGetData(i)[1] + ",";
+            if (i == 0) {
+                str = str1 + "~"
+            }
+            else {
+                str = str + str1 + "~";
+            }
+        }
+        document.getElementsByName("periodsdetail")[0].value = str;
+    }
+    $("#create").click(function (e) {
+        e.preventDefault();
+        TabletoJeson();
+        if ($('#financial_year_id').val() == "") {
+            sweetAlert("", "Financial year is required!", "error");
+        }
+        else if ($('#frequency_id').val() == "") {
+            sweetAlert("", "Frequency is required!", "error");
+        }
+        else
+        {
+            $.ajax({
+                url: "@Url.Action("CheckDuplicate", "PostingPeriods")",
+                type: "GET",
+                dataType: "JSON",
+                asynch: true,
+                data: { st: $('#financial_year_id').val(), st1: "", id: 0 },
+                success: function (output) {
+                    if (output != 0) {
+                        sweetAlert("","Posting periods is already exists!", "error");
+                    }
+                    else {
+                        document.getElementById('no_of_periods').removeAttribute('disabled');
+                        document.forms[0].submit();
+                    }
+                }
+            });
+        }
+
+    });
+    </script>
+ 
+}

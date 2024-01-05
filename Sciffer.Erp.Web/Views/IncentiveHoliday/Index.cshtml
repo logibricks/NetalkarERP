@@ -1,0 +1,106 @@
+﻿@using Sciffer.Erp.Domain.Model
+@{
+    ViewBag.Title = "IncentiveHoliday";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<br /><br /><br />
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<ref_mfg_incentive_holiday>("Grid")
+        .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.Datasource).RemoveURL(Url.Action("InlineDelete", "IncentiveHoliday")).InsertURL(Url.Action("InlineInsert", "IncentiveHoliday")).UpdateURL(Url.Action("InlineInsert", "IncentiveHoliday"))
+                        .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(10); })
+        .EnableAltRow()
+
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Add);
+                items.AddTool(ToolBarItems.Edit);
+                items.AddTool(ToolBarItems.Update);
+                items.AddTool(ToolBarItems.Cancel);
+            });
+        })
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("holiday_date").HeaderText("Holiday Date").Format("{0:dd MMMM yyyy}").IsPrimaryKey(true).ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("holiday_desc").HeaderText("Holiday Desc").ValidationRules(val => val.AddRule("required", true)).Add();
+        })
+        .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+</div>
+
+<script id="template" type="text/template">
+
+    <div>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <div class="col-lg-4 col-md-4 col-xs-12" style="text-align: right;">
+                    Holiday Date *
+                </div>
+                <div class="col-lg-8 col-md-8 col-xs-12">
+                    <input type="date" id="holiday_date" name="holiday_date" value="{{: holiday_date}}" class="form-control" />
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <div class="col-lg-4 col-md-4 col-xs-12" style="text-align: right;">
+                    Holiday Desc *
+                </div>
+                <div class="col-lg-8 col-md-8 col-xs-12">
+                    <input type="text" id="holiday_desc" name="holiday_desc" value="{{: holiday_desc}}" class="form-control" />
+                </div>
+            </div>
+        </div>
+        <br />
+    </div>
+</script>
+
+
+
+<script type="text/javascript">
+
+    function complete(args) {
+        if (args.requestType == "add") {
+
+        }
+        if (args.requestType == "beginedit") {
+
+            var holiday_date = convert(args.rowData.holiday_date);
+
+            $("#holiday_date").val(holiday_date);
+            $("#holiday_desc").val(args.rowData.holiday_desc);
+        }
+
+        if (args.requestType == "save") {
+            var gridObj = $("#Grid").ejGrid("instance");
+            gridObj.refreshContent();
+        }
+    }
+
+    function EndProcess() {
+        var gridObj = $("#Grid").ejGrid("instance");
+        gridObj.refreshContent();
+    }
+
+    $(document).ready(function () {
+
+    })
+
+    function convert(str) {
+        var date = new Date(str),
+            mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+            day = ("0" + date.getDate()).slice(-2);
+        return [date.getFullYear(), mnth, day].join("-");
+    }
+</script>

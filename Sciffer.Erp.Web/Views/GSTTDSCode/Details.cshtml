@@ -1,0 +1,66 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_gst_tds_code
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ref_gst_tds_code</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.gst_tds_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.gst_tds_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.gst_tds_code_description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.gst_tds_code_description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.creditor_gl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.creditor_gl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.debtor_gl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.debtor_gl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_blocked)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_blocked)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_active)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.gst_tds_code_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

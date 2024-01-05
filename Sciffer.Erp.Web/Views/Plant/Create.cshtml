@@ -1,0 +1,283 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.REF_PLANT_VM
+
+@{
+    ViewBag.Title = "Create";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PLANT_CODE, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.PLANT_CODE, new { htmlAttributes = new { @class = "form-control validinput num", @required=true} })
+                            @Html.ValidationMessageFor(model => model.PLANT_CODE, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PLANT_NAME, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.PLANT_NAME, new { htmlAttributes = new { @class = "form-control num1 validinput", @required = true } })
+                            @Html.ValidationMessageFor(model => model.PLANT_NAME, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">General</a></li>
+                <li><a data-toggle="tab" href="#sectionB">Accounting and Taxation</a></li>
+            </ul>
+
+
+
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+
+                  <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.PLANT_ADDRESS, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.PLANT_ADDRESS, new { htmlAttributes = new { @class = "form-control validinput", @required = true } })
+                                @Html.ValidationMessageFor(model => model.PLANT_ADDRESS, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                      <div class="col-lg-6 col-sm-6">
+                          <div class="form-group">
+                              @Html.LabelFor(model => model.PLANT_CITY, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                              <div class="col-md-8 col-sm-8 col-xs-12">
+                                  @Html.EditorFor(model => model.PLANT_CITY, new { htmlAttributes = new { @class = "form-control validinput", @required = true } })
+                                  @Html.ValidationMessageFor(model => model.PLANT_CITY, "", new { @class = "text-danger" })
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.pincode, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.pincode, new { htmlAttributes = new { @class = "form-control validinput pincode", @required = true, @maxlength = "6" } })
+                                    @Html.ValidationMessageFor(model => model.pincode, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PLANT_COUNTRY, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("PLANT_COUNTRY", (System.Web.Mvc.SelectList)ViewBag.CountryNames, new { @class = "form-control validinput", @required = true ,@onchange = "GetStatesByCntry(this.value)" })
+                                    @Html.ValidationMessageFor(model => model.PLANT_COUNTRY, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                       
+                   </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PLANT_STATE, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("PLANT_STATE", (System.Web.Mvc.SelectList)ViewBag.StateNames, "---Select---", new { @class = "form-control validinput", @required = true })
+                                    @Html.ValidationMessageFor(model => model.PLANT_STATE, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.telephone_cdoe, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                    @Html.EditorFor(model => model.telephone_cdoe, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.telephone_cdoe, "", new { @class = "text-danger" })
+                                </div>
+                                <label class="hidden">Telephone</label>
+                                <div class="col-md-5 col-sm-5 col-xs-12">
+                                    @Html.EditorFor(model => model.PLANT_TELEPHONE, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.PLANT_TELEPHONE, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PLANT_MOBILE, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                    @Html.DropDownList("PLANT_COUNTRY_CODE", (System.Web.Mvc.SelectList)ViewBag.CountryCodes, new { @class = "form-control validinput", @required = true,disabled="disabled" })
+                                    @Html.ValidationMessageFor(model => model.PLANT_MOBILE, "", new { @class = "text-danger" })
+                                </div>
+                                 <div class="col-md-5 col-sm-5 col-xs-12">
+                                    @Html.EditorFor(model => model.PLANT_MOBILE, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.PLANT_MOBILE, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.PLANT_EMAIL, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.PLANT_EMAIL, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.PLANT_EMAIL, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+
+                                @Html.LabelFor(model => model.is_blocked, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.is_blocked, new { htmlAttribute = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.is_blocked, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+
+                <div id="sectionB" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.excise_number, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.excise_number, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.excise_number, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.excise_range, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.excise_range, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.excise_range, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.excise_division, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.excise_division, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.excise_division, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.excise_commisionerate, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.excise_commisionerate, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.excise_commisionerate, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.service_tax_number, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.service_tax_number, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.service_tax_number, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.cst_number, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.cst_number, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.cst_number, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.gst_number, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.gst_number, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.gst_number, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.vat_number, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.vat_number, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.vat_number, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+           </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-success" id="create" data-controller="Plant" name="create" style="float:right" />
+                </div>
+            </div>
+
+                </div>
+
+        </div>
+}
+
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index","",new { @class="btn btn-primary"})
+</div>
+<script src="~/Scripts/requirevalidation.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {           
+            $('#is_blocked').checkboxpicker();
+            GetStatesByCntry($("#PLANT_COUNTRY").val());
+        });
+        function GetStatesByCntry(id) {
+            $("#PLANT_COUNTRY_CODE").val(id);
+            if (id == "") {
+                id = 0;                
+            }
+            $.ajax({
+                url: "@Url.Action("GetStateNamesFromCountry", "Generic")",
+                type: "GET",
+                dataType: "JSON",
+                data: { c: id },
+                success: function (state) {
+                    // alert("suceess");
+                        $("#PLANT_STATE").html(""); // clear before appending new list
+                        $("#PLANT_STATE").append($('<option></option>').val("").html("---Select---"));
+                        $.each(state, function (i, cycle) {
+                            $("#PLANT_STATE").append(
+                                $('<option></option>').val(cycle.STATE_ID).html(cycle.STATE_NAME));
+                        });
+                }
+            });
+        }
+
+</script>
+}

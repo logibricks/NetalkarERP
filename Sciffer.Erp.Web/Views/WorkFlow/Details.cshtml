@@ -1,0 +1,74 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_workflow
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ref_workflow</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_CATEGORY.CATEGORY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_CATEGORY.CATEGORY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ref_document_type.document_type_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ref_document_type.document_type_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.has_value)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.has_value)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.value_from)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.value_from)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.value_to)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.value_to)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.no_of_approval)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.no_of_approval)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_active)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.workflow_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,359 @@
+﻿@model Sciffer.Erp.Domain.Model.price_list_vendor_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm("Edit", "PriceList"))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.HiddenFor(model => model.price_list_id)
+
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Vendor <span class="required">*</span>
+                        </label>
+                        <div class="col-md-7">
+                            @{
+                                Html.EJ()
+                                    .Autocomplete("vendor_code")
+                                    .Width("100%")
+                                     .ClientSideEvents(e => e.Select("onSelect"))
+                                     .WatermarkText("Select Item")
+                                    .Datasource((IEnumerable<object>)ViewBag.Vendor)
+                                    .HighlightSearch(true)
+                                    .ShowPopupButton(true)
+                                    .Enabled(false)
+                                    .MultiColumnSettings(obj => obj.Enable(true).Columns(obj1 =>
+                                    {
+                                        obj1.Field("VENDOR_NAME").HeaderText("Vendor Name").Add();
+                                        obj1.Field("VENDOR_CODE").HeaderText("Vendor Code").Add();
+                                    }).ShowHeader(true).StringFormat("{1}-{0}"))
+                                    .Value(ViewBag.vendorcodename)
+                                    .Render();
+                            }
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+            <br />
+            <input type="hidden" id="productdetail" name="productdetail" />
+            <input type="hidden" id="deleteids" name="deleteids" />
+
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                        <thead>
+                            <tr>
+                                <th hidden><label>ID</label></th>
+                                <th><label>Sr. No.</label></th>
+                                <th><label>Item Code</label></th>
+                                <th><label>Item Name</label></th>
+                                <th><label>Price</label></th>
+                                <th><label>Discount</label></th>
+                                <th><label>Price after Discount</label></th>
+                                <th hidden><label>UoM Id</label></th>
+                                <th><label>UoM name</label></th>
+
+                            </tr>
+                        </thead>
+
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+
+        <script type="text/javascript" src="~/Scripts/jquery.dataTables1.10.9.min.js"></script>
+        <script type="text/javascript" src="~/Scripts/1.9.4.jquery.dataTables.min.js"></script>
+
+        <script type="text/javascript">
+            function onSelect2(args) {
+
+                var id = "";
+                var matches = args.value.split("-");
+                id = matches[0]
+                GetUnit(id);
+            }
+            function GetUnit(id) {
+
+                if (id != '') {
+                    $.ajax({
+                        type: 'GET',
+                        url: '/Quotation/GetUnitofItemCode',
+                        data: { id: id },
+                        success: function (ITEM) {
+
+                            $('#uom_id').val(ITEM.item.UOM_ID);
+                        },
+                        error: function (emp) {
+                            $('#uom_id').val('');
+                        }
+                    });
+                }
+                else {
+                    $('#uom_id').val('');
+                }
+
+            }
+        function codeAddress() {
+            var t = $('#ContactGrid').DataTable();
+            var sr_no = t.fnGetData().length+1;
+            var pl_detail = @Html.Raw(JsonConvert.SerializeObject(this.Model.ref_price_list_vendor_details ));
+            console.log(pl_detail);
+            var i=1;
+            $.each(pl_detail, function(key, value) {
+
+                t.fnAddData([value.price_list_detail_id,sr_no,value.REF_ITEM.ITEM_CODE,value.REF_ITEM.ITEM_NAME,value.price,value.discount,value.price_after_discount,value.uom_id,value.REF_UOM.UOM_NAME,''
+                ]);
+                i=i+1;
+                sr_no++;
+            });
+        }
+        window.onload = codeAddress;
+        $('#open_modal').click(function () {
+            clearmodel();
+        });
+
+
+        $(".add").on("click", function (event) {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var item = $("#item_id").val();
+            var matches = item.split("-");
+            var item_name = matches[1];
+            var item_code = matches[0];
+
+            var price = $("#price").val();
+            var discount = $("#discount").val();
+            var price_after_discount = $("#price_after_discount").val();
+
+            var uom_id = $("#uom_id").val();
+            var uom_name = $("#uom_id :selected").text();
+
+            if (item_id == '') {
+                swal("", "Please Select Item Name.", "error");
+                return false;
+            }
+            if (uom_id == '') {
+                swal("", "Please Select UOM Name.", "error");
+                return false;
+            }
+            if (price == '') {
+                swal("", "Please Enter Price.", "error");
+                return false;
+            }
+            if (discount == 0) {
+                swal("", "Please Enter Discount.", "error");
+                return false;
+            }
+            if (price_after_discount == '') {
+                swal("", "Please select Price After Discount.", "error");
+                return false;
+            }
+            if ($("#srno").val() == "") {
+                t.fnAddData(['', rowCount + 1, item_code, item_name, price, discount, price_after_discount,uom_id,uom_name, ''
+                ]);
+            }
+            else {
+                var cc = $("#srno").val();
+                cc = parseInt(cc) - 1;
+                t.fnUpdate(['', cc + 1, item_code, item_name, price, discount, price_after_discount,uom_id, uom_name, ''], cc)
+            }
+
+            clearmodel();
+            return true;
+        });
+        function clearmodel() {
+            $("#item_id").val('');
+            $("#price").val('');
+            $("#discount").val('');
+            $("#price_after_discount").val('');
+            $("#uom_id").val('');
+
+        }
+
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: false },
+                     { sname: "b"},
+                     { sname: "d"},
+                     { sname: "e"},
+                     { sname: "f"},
+                     { sname: "g" },
+                     { sname: "h" },
+                     { sname: "i", bVisible:false},
+                     { sname: "j" },
+
+
+            ]
+
+        });
+
+        function editRow() {
+            $('#myModal').modal('show');
+            var t = $('#ContactGrid').DataTable()
+            var cc = parseInt(arguments[0]) - 1;
+            console.log(cc);
+            $("#price_detail_id").val(t.fnGetData(cc)[0]);
+            $("#srno").val(t.fnGetData(cc)[1]);
+            $("#item_id").val(t.fnGetData(cc)[2] + "-" + t.fnGetData(cc)[3]);
+            $('#price').val(t.fnGetData(cc)[4]);
+            $('#discount').val(t.fnGetData(cc)[5]);
+            $('#price_after_discount').val(t.fnGetData(cc)[6]);
+            $("#uom_id").val(t.fnGetData(cc)[7]);
+        }
+
+        $('#ContactGrid').on('click', '.delete', function () {
+
+            var t = $('#ContactGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+
+
+            var deleteids = t.fnGetData(id)[0];
+            console.log(deleteids);
+            swal({
+                title: "Are you sure?",
+
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            },
+            function (isConfirm) {
+            if (isConfirm) {
+
+             $("#deleteids").val(deleteids + "~");
+             t.fnDeleteRow(id);
+
+            }
+        });
+        });
+
+        function calculate() {
+            var price = $("#price").val();
+            var discount = $("#discount").val();
+            var y = (price * discount) / 100;
+            var result = (price-y)
+            $("#price_after_discount").val(result);
+            console.log(result);
+        }
+
+        //function TabletoJeson() {
+        //    var t = $('#ContactGrid').DataTable()
+        //    var rowCount = t.fnGetData().length;
+        //    var str;
+        //    var str1;
+        //    for (i = 0; i < rowCount; i++) {
+
+        //        str1 = t.fnGetData(i)[0] + ",";
+        //        str1 = str1 + t.fnGetData(i)[1] + ",";
+        //        str1 = str1 + t.fnGetData(i)[2] + ",";
+        //        str1 = str1+ t.fnGetData(i)[3] + ",";
+        //        str1 = str1 +  t.fnGetData(i)[4] + ",";
+        //        str1 = str1 + t.fnGetData(i)[5] + ",";
+        //        str1 = str1 + t.fnGetData(i)[6] + ",";
+        //        str1 = str1 + t.fnGetData(i)[7] + ",";
+        //        str1 = str1 + t.fnGetData(i)[8] + ",";
+
+
+        //        if (i == 0) {
+        //            str = str1 + "~"
+        //        }
+        //        else {
+        //            str = str + str1 + "~";
+        //        }
+        //    }
+
+
+        //    document.getElementsByName("productdetail")[0].value = str;
+        //}
+
+        function TabletoJeson() {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var str;
+            var str1;
+            for (i = 0; i < rowCount; i++) {
+
+                str1 = t.fnGetData(i)[0] + ",";
+                str1 = str1 + t.fnGetData(i)[1] + ",";
+                str1 = str1 + t.fnGetData(i)[2] + ",";
+                str1 = str1+ t.fnGetData(i)[3] + ",";
+                str1 = str1 +  t.fnGetData(i)[4] + ",";
+                str1 = str1 + t.fnGetData(i)[5] + ",";
+                str1 = str1 + t.fnGetData(i)[6] + ",";
+                str1 = str1 + t.fnGetData(i)[7] + ",";
+                str1 = str1 + t.fnGetData(i)[8] + ",";
+                str1 = str1 + t.fnGetData(i)[9] + ",";
+
+                if (i == 0) {
+                    str = str1 + "~"
+                }
+                else {
+                    str = str + str1 + "~";
+                }
+            }
+
+
+            document.getElementsByName("productdetail")[0].value = str;
+        }
+
+
+
+        //CHECK DUPLICATE NUMBER
+        $("#create").click(function (e) {
+            e.preventDefault();
+            var PlantTransferNumber = $('#pla_transfer_number').val();
+
+            if (PlantTransferNumber == "") {
+                sweetAlert("", "plant transfer number is required!", "error");
+            }
+            else {
+                $.ajax({
+                    url: "@Url.Action("CheckDuplicate", "PlantTransfer")",
+                    type: "GET",
+                    dataType: "JSON",
+                    asynch: true,
+                    data: { st: PlantTransferNumber, id: 0 },
+                    success: function (output) {
+                        if (output != 0) {
+                            sweetAlert("", PlantTransferNumber + " is already present in databse!", "error");
+                        }
+                        else {
+                            document.forms[0].submit();
+                        }
+                    }
+                });
+            }
+        });
+
+        </script>
+    }
+
+

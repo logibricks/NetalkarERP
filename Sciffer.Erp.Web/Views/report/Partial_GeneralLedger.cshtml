@@ -1,0 +1,101 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+
+
+
+@{(Html.EJ().Grid<Report_GeneralLedger_vm>("Editing")
+                .Datasource((IEnumerable<object>)ViewBag.datasource)
+                .AllowPaging().PageSettings(a=>a.PageSize(20))
+                .AllowFiltering()
+                    .FilterSettings(X => X.FilterType(FilterType.Excel))
+                .ShowColumnChooser()
+                .AllowSorting()
+                .AllowScrolling()
+                .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelForReport", "Generic", new { ctrlname = "SalesSummaryReport" }))
+                .ExportToPdfAction(Url.Action("ExportToPdfForReport", "Generic", new { ctrlname = "SalesSummaryReport" })))
+                .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+            .ToolbarSettings(toolbar =>
+            {
+                toolbar.ShowToolbar().ToolbarItems(items =>
+                {
+                    items.AddTool(ToolBarItems.Search);
+                    items.AddTool(ToolBarItems.ExcelExport);
+                    items.AddTool(ToolBarItems.PrintGrid);
+                });
+            })
+                .ShowSummary()
+
+            .SummaryRow(row =>
+            {
+                row.Title("Total").SummaryColumns(col =>
+                {
+                    col.SummaryType(SummaryType.Sum).DisplayColumn("Description").DataMember("Description").Format("{0:n2}").Add();
+                    col.SummaryType(SummaryType.Sum).DisplayColumn("DR_LC").DataMember("DR_LC").Format("{0:n2}").Add();
+                    col.SummaryType(SummaryType.Sum).DisplayColumn("Cr_LC").DataMember("Cr_LC").Format("{0:n2}").Add();
+                    col.SummaryType(SummaryType.Sum).DisplayColumn("Currency_Indicator").DataMember("Currency_Indicator").Format("{0:n2}").Add();
+                    col.SummaryType(SummaryType.Sum).DisplayColumn("Dr_FC").DataMember("Dr_FC").Format("{0:n2}").Add();
+                    col.SummaryType(SummaryType.Sum).DisplayColumn("Dr_FC").DataMember("Dr_FC").Format("{0:n2}").Add();
+                    col.SummaryType(SummaryType.Sum).DisplayColumn("Closing_Bal.").DataMember("Closing_Bal.").Format("{0:n2}").Add();
+                    col.SummaryType(SummaryType.Sum).DisplayColumn("Cost_Center").DataMember("Cost_Center").Format("{0:n2}").Add();
+                    col.SummaryType(SummaryType.Sum).DisplayColumn("Line_Remarks").DataMember("Line_Remarks").Format("{0:n2}").Add();
+
+                }).Add();
+            })
+    .Columns(col =>
+    {
+        col.Field("Document_category").Width("10%").HeaderText("Document category").Add();
+        col.Field("Document_Number").Width("10%").HeaderText("Document Number").Add();
+        col.Field("Posting_Date").Width("10%").HeaderText("Posting Date").Visible(false).Add();
+        col.Field("Document_Date").Width("10%").HeaderText("Document Date").Visible(false).Add();
+        col.Field("Due_Date").Width("10%").HeaderText("Due Date").Visible(false).Add();
+        col.Field("Ref1").Width("10%").HeaderText("Ref1").Visible(false).Add();
+        col.Field("Ref2").Width("10%").HeaderText("Ref2").Visible(false).Add();
+        col.Field("Ref3").Width("10%").HeaderText("Ref3").Visible(false).Add();
+        col.Field("Doc_Type").Width("10%").HeaderText("Doc Type").Visible(false).Add();
+        col.Field("Doc_Number").Width("10%").HeaderText("Doc Number").Visible(false).Add();
+        col.Field("Category").Width("10%").HeaderText("Category").Visible(false).Add();
+        col.Field("Description").Width("10%").HeaderText("Description").Visible(false).Add();
+        col.Field("DR_LC").Width("10%").HeaderText("DR LC").Visible(false).Add();
+        col.Field("Cr_LC").Width("10%").HeaderText("Cr LC").Visible(false).Add();
+        col.Field("Currency_Indicator").Width("10%").HeaderText("Currency Indicator").Visible(false).Add();
+        col.Field("Dr_FC").Width("10%").HeaderText("Dr FC").Visible(false).Add();
+        col.Field("Dr_FC").Width("10%").HeaderText("Dr FC").Visible(false).Add();
+        col.Field("Closing_Bal.").Width("10%").HeaderText("Closing Bal.").Visible(false).Add();
+        col.Field("Cost_Center").Width("10%").HeaderText("Cost Center").Visible(false).Add();
+        col.Field("Line_Remarks").Width("10%").HeaderText("Line Remarks").Visible(false).Add();
+
+    })
+    .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    @*$(function () {
+        var obj = @Html.Raw(Json.Encode(ViewBag.datasource));
+        console.log(obj);
+        $("#Editing").ejGrid({
+            dataSource: obj,
+            allowPaging: true,
+            //columns: [
+
+            //],
+            //dataBound : function(args){
+            //	for (var fld =0; fld < list.length; fld++ ) {
+            //	var column = { field: list[fld].value, headerText: list[fld].header, column: "", textAlign: "left", type: "string", visible: true, width: 75 };
+            //	this.model.columns.push(column); //add dynamic columns
+            //	}
+            //	this.columns(this.model.columns);
+            //}
+        });
+    });*@
+
+
+</script>
+
+
+

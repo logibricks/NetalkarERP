@@ -1,0 +1,76 @@
+﻿<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+
+        <div class="form-horizontal">
+            <div class=row>
+                <div class="col-md-6 col-lg-6 col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-lg-3 col-xs-12">Employee</label>
+                        <div class="col-md-9 col-lg-9 col-xs-12">
+                            @Html.DropDownList("customer_id", (System.Web.Mvc.SelectList)ViewBag.employee_list,"", htmlAttributes: new { @class = "form-control entity_id" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-xs-12">
+                    <label class="control-label col-md-5 col-lg-5 col-xs-12">From Date</label>
+                    <div class="col-md-7 col-lg-7 col-xs-12">
+                        <input type="date" id="fromDate" class="form-control" required="required">
+                        <input type="hidden" id="entity_type_id" class="entity_type_id" value="3" />
+                        <input type="hidden" id="entity" value="getallledger">
+                        <input type="hidden" id="partial_v" value="Partial_CustomerLedgerReport" />
+                    </div>
+                </div>
+                <div class="col-md-3 col-lg-3 col-xs-12">
+                    <label class="control-label col-md-5 col-lg-5 col-xs-12">To Date</label>
+                    <div class="col-md-7 col-lg-7 col-xs-12">
+                        <input type="date" id="toDate" class="form-control radius" required="required">
+                    </div>
+                </div>
+
+            </div>
+            <div class=row>
+                <div class="col-md-4 col-lg-4 col-xs-12">
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-lg-3 col-xs-12"></label>
+                        <div class="col-md-9 col-lg-9 col-xs-12">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4 col-xs-12">
+                    <label class="control-label col-md-5 col-lg-5 col-xs-12"></label>
+                   
+                    <div class="col-md-7 col-lg-7 col-xs-12">
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4 col-xs-12">
+                    <label class="control-label col-md-5 col-lg-5 col-xs-12"></label>
+                    <div class="col-md-7 col-lg-7 col-xs-12">
+                        <button class="searchbutton searchButton" style="float:right" id="search" onclick="DateChecka()"> &nbsp; Run Report </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+
+        <div id="searchresult">
+            @Html.Partial("Partial_CustomerLedgerReport", (object)ViewBag)
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+    $("#customer_id").select2({
+        placeholder:"Select Employee",
+        allowClear: true
+    });
+
+    </script>
+}
+

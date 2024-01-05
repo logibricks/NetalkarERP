@@ -1,0 +1,93 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Production Order";
+}
+<br />
+<br />
+<br />
+<div>
+    @(Html.EJ().Grid<mfg_prod_order_VM>("Searching")
+        // .Datasource(ds => ds.URL(Url.Action("GetItems", "Items")).RemoveURL(Url.Action("InlineDelete", "Items")).Adaptor(AdaptorType.RemoteSaveAdaptor))
+
+        .Datasource(ds => { ds.Json((IEnumerable<object>)ViewBag.ProductionOrder).RemoveURL(Url.Action("Delete", "ProductionOrder")).Adaptor(AdaptorType.RemoteSaveAdaptor); })
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(12); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "ProductionOrder" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("prod_order_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).ShowInColumnChooser(false).Add();
+            col.Field("prod_order_no").Width("15%").HeaderText("Order Number").Add();
+            col.Field("prod_order_date").Width("15%").HeaderText("Order Date").Format("{0:dd MMMM yyyy}").Add();
+            col.Field("out_item_name").Width("15%").HeaderText("Out Item Description").Add();
+            col.Field("quantity").Width("15%").HeaderText("Quantity").Add();
+            col.Field("process_sequence_name").Width("15%").HeaderText("Process sequence").Add();
+            col.Field("plant_id").Visible(false).ShowInColumnChooser(false).Width("15%").HeaderText("Plant Name").Add();
+            col.Field("plant_name").Width("15%").HeaderText("Plant Name").Add();
+            col.Field("child_sloc_id").Visible(false).ShowInColumnChooser(false).Width("15%").HeaderText("Child SLoc").Add();
+            col.Field("child_sloc_name").Visible(false).Width("15%").HeaderText("Child SLoc").Add();
+            col.Field("parent_sloc_id").Visible(false).ShowInColumnChooser(false).Width("15%").HeaderText("Parent SLoc").Add();
+            col.Field("in_item_id").Visible(false).Width("15%").HeaderText("in_item_id").Add();
+            col.Field("in_item_code").Visible(true).Width("15%").HeaderText("In Item Description").Add();
+            col.Field("challan_no").Visible(true).Width("15%").HeaderText("Batch No.").Add();
+            col.Field("created_by").Visible(true).Width("15%").HeaderText("Created By").Add();
+            col.Field("created_ts").Visible(true).Width("15%").HeaderText("Created Date & Time").Format("{0:dd/MM/yyyy hh:mm:ss tt}").Add();
+            col.Field("modified_by").Visible(true).Width("15%").HeaderText("Modified By").Add();
+            col.Field("modified_ts").Visible(true).Width("15%").HeaderText("Modified Date & Time").Format("{0:dd/MM/yyyy hh:mm:ss tt}").Add();
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit") {
+            location.href = "@Url.Action("Edit", "ProductionOrder")?id=" + args.rowData.prod_order_id;
+        }
+        if (args.requestType == "add") {
+            location.href = "@Url.Action("Create", "ProductionOrder")";
+        }
+    }
+    @*function rightClick(args) {
+        location.href = "@Url.Action("Details", "QualityControlParameter")?id="+ args.data.ITEM_ID;
+    }*@
+    $(document).ready(function () {
+        var doc_no = '@ViewBag.num';
+        if (doc_no != '') {
+            if (doc_no != 0) {
+                sweetAlert("", doc_no + " Saved successfully!", "success");
+            }
+        }
+    });
+
+</script>

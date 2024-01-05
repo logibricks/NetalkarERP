@@ -1,0 +1,42 @@
+﻿@model IEnumerable <Sciffer.Erp.Domain.Model.ref_account_assignment>
+
+    @{
+        ViewBag.Title = "Index";
+    }
+
+    <p>
+        <a href="@Url.Action("Create", "AccountAssignment")" data-toggle="modal" class="btn-circle btn-lg btn-primary"><span class="glyphicon glyphicon-plus"></span> </a>
+    </p>
+    <div class="row">
+
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <table id="example" class="table table-striped responsive-utilities jambo_table table-bordered">
+                    <thead>
+                        <tr class="headings">
+                            <th>
+                                @Html.DisplayNameFor(model => model.account_assignment_name)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model)
+                    {
+                        <tbody>
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.account_assignment_name)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.account_assignment_id }) |
+                                    @Html.ActionLink("Details", "Details", new { id = item.account_assignment_id }) |
+                                    @Html.ActionLink("Delete", "Delete", new { id = item.account_assignment_id })
+                                </td>
+                            </tr>
+                        </tbody>
+                    }
+
+                </table>
+            </div>
+        </div>
+    </div>

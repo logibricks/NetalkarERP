@@ -1,0 +1,35 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<gstr_report_vm>("Editing")
+                                                    .Datasource((IEnumerable<object>)ViewBag.datasource)
+                                                    .AllowPaging().PageSettings(a => a.PageSize(20))
+                                                    .AllowFiltering()
+                                                        .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                    .ShowColumnChooser()
+                                                    .AllowSorting()
+                                                    .AllowScrolling()
+                                                    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "GSTRReport", new { ctrlname = ViewBag.ctrlname })))
+                                                    .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                                .ToolbarSettings(toolbar =>
+                                                {
+                                                    toolbar.ShowToolbar().ToolbarItems(items =>
+                                                    {
+                                                        items.AddTool(ToolBarItems.Search);
+                                                        items.AddTool(ToolBarItems.ExcelExport);
+                                                        items.AddTool(ToolBarItems.PrintGrid);
+                                                    });
+                                                })
+                                        .Columns(col =>
+                                        {
+                                            col.Field("category").Width("30%").HeaderText("Nature of Supplies").Add();
+                                            col.Field("taxable_amount").Width("15%").HeaderText("Total Taxable Value").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                            col.Field("IGST").Width("15%").HeaderText("Integrated Tax").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                            col.Field("CGST").Width("15%").HeaderText("Central Tax").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                            col.Field("SGST").Width("15%").HeaderText("State/UT Tax").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                            col.Field("Cess").Width("15%").HeaderText("Cess").Format("{0:n2}").TextAlign(TextAlign.Right).Visible(true).Add();
+
+                                        })
+                                            .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickg"); })
+                                                                                                                                                                                                                                                                ).Render();}
+@Html.EJ().ScriptManager()
+

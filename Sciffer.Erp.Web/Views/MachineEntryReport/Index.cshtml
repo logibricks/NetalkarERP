@@ -1,0 +1,174 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<style>
+    .item_label{
+        font-size:14px!important;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".loading").hide();
+        $('.mickey').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            maxHeight: '200',
+            enableCaseInsensitiveFiltering: true,
+            allowClear: true,
+            maximumResultsForSearch: 1,
+            numberDisplayed: 0,
+        });
+    });
+</script>
+
+
+<div class="loading">Loading &#8230;</div>
+<div class="form-horizontal">
+    <div class=row>
+
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Tag number *</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <input type="text" id="tag_number" class="form-control radius" required="required" />
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Item List *</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("ITEM_ID", (System.Web.Mvc.SelectList)ViewBag.item_list, "--Select--", htmlAttributes: new { @class = "form-control radius" })
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Production Order</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("prod_order_id", (System.Web.Mvc.SelectList)ViewBag.production_order_list, "--Select--", htmlAttributes: new { @class = "form-control radius" })
+            </div>
+        </div>
+
+    </div>
+    <br />
+
+    <div class=row>
+
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Item Status</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("machine_task_status_id", (System.Web.Mvc.SelectList)ViewBag.status_list, "--Select--", htmlAttributes: new { @class = "form-control radius" })
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">From Date</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <input type="date" id="fromDate" class="form-control">
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">To Date</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <input type="date" id="toDate" class="form-control radius">
+            </div>
+        </div>
+
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-4 col-lg-4 col-xs-12" style="float:right">
+            <button class="searchbutton searchButton" id="search" style="float:right"> Run Report </button>
+        </div>
+    </div>
+</div>
+<hr />
+
+<div class="row">
+
+    <div id="searchresult">
+        @Html.Partial("Partial_TagNumberReport", (object)ViewBag)
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#machine_task_status_id").select2({
+            placeholder: "Select Status",
+            allowClear: true
+        });
+
+        $("#ITEM_ID").select2({
+            placeholder: "Select Item",
+            allowClear: true
+        });
+
+        $("#prod_order_id").select2({
+            placeholder: "Select Production Order",
+            allowClear: true
+        });
+    });
+
+    $("#search").click(function () {
+        AdvanceSearch();
+    });
+
+    document.getElementById('fromDate').valueAsDate = new Date();
+    document.getElementById('toDate').valueAsDate = new Date();
+
+    function AdvanceSearch() {
+        var fromDate = $("#fromDate").val();
+        var toDate = $("#toDate").val();
+        var tag_number = $("#tag_number").val();
+        var item_id = $("#ITEM_ID").val();
+        var prod_order_id = $("#prod_order_id").val();
+        var item_status_id = $("#machine_task_status_id").val();
+
+        if (tag_number == null || tag_number == '') {
+            swal("", "Please select tag number", "error");
+            return false;
+        }
+
+        if (item_id == null || item_id == '') {
+            swal("", "Please select Item", "error");
+            return false;
+        }
+
+        //if ($('#ITEM_ID :selected').length > 0) {
+        //    var selectedItem = [];
+        //    $('#ITEM_ID :selected').each(function (i, selected) {
+        //        selectedItem[i] = $(selected).val();
+        //    });
+        //    var ItemList = selectedItem + "";
+        //}
+
+        //if ($('#prod_order_id :selected').length > 0) {
+        //    var selectedProdOrder = [];
+        //    $('#prod_order_id :selected').each(function (i, selected) {
+        //        selectedProdOrder[i] = $(selected).val();
+        //    });
+        //    var ProdOrderList = selectedProdOrder + "";
+        //}
+
+        $(".loading").show();
+        $.ajax({
+            url: "@Url.Action("Machine_Entry_Report", "MachineEntryReport")",
+            method: "Post",
+            cache: false,
+            data: { entity: "get_tag_number_report", tag_number: tag_number, item_list: item_id, prod_order_list: prod_order_id, item_status_id: item_status_id, fromDate: fromDate, toDate: toDate },
+            success: function (data) {
+                $(".loading").hide();
+                $('#searchresult').empty().append(data);
+            },
+            error: function (http) {
+                $(".loading").hide();
+                $("", "Something went wrong", "error");
+                console.log(XMLHttpRequest);
+            }
+        });
+
+    }
+</script>
+<div class="modal"><!-- Place at bottom of page --></div>

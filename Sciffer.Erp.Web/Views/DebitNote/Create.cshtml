@@ -1,0 +1,421 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.fin_credit_debit_note_vm
+
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(x => x.total_amount)
+        <div id="cr_detail" hidden></div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.category_list, new { @class = "form-control validinput category" })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.posting_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control validinput postingdate postingdocumentdate", @required = true, @onchange = "TaxCalculation();" } })
+                            @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.entity_type_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("entity_type_id", (System.Web.Mvc.SelectList)ViewBag._entityTypeService, new { @class = "form-control validinput" })
+                            @Html.ValidationMessageFor(model => model.entity_type_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.entity_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("entity_id", (System.Web.Mvc.SelectList)ViewBag.customerlist, "", new { @class = "form-control validinput" })
+                            @Html.ValidationMessageFor(model => model.entity_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.currency_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("currency_id", (System.Web.Mvc.SelectList)ViewBag.currency_list, new { @class = "form-control validinput removedisabled", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.currency_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.remarks, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.remarks, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.remarks, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">General</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <button type="button" class="btn btn-primary" style="float:right" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span>Add</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                                <thead>
+                                    <tr>
+                                        <th><label>ID</label></th>
+                                        <th><label>Sr. No.</label></th>                                      
+                                        <th><label>GL ID</label></th>
+                                        <th><label>GL</label></th>
+                                        <th><label>Description</label></th>
+                                        <th><label>Amount (INR)</label></th>
+                                        <th><label>Tax ID</label></th>
+                                        <th><label>Tax Code</label></th>
+                                        <th><label>Cost Center ID</label></th>
+                                        <th><label>Cost Center</label></th>
+                                        <th><label>Action</label></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="table-responsive">
+                                <table class="table table-responsive table-bordered table-striped" id="TaxGrid"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="hidden" id="entitydetail" name="entitydetail" />
+                <input type="hidden" id="transactiondetail" name="transactiondetail" />
+                <button type="submit" value="Create" class="btn btn-success" style="float:right" id="create" name="create" data-controller="Receipt" onclick="TabletoJeson();">Create</button>
+            </div>
+        </div>
+    </div>
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Details</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">
+                                    GL <span class="required">*</span>
+                                </label>
+                                <div class="col-md-7">
+                                    @Html.DropDownList("gl_ledger_id", (System.Web.Mvc.SelectList)ViewBag.gl_list, "", new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="control-label col-md-3">
+                                    Description
+                                </label>
+                                <div class="col-md-7">
+                                    <input type="text" class="form-control col-md-7 col-xs-12" id="description">
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="first-name">
+                                    Amount <span class="required">*</span>
+                                </label>
+                                <div class="col-md-7">
+                                    <input type="number" class="form-control col-md-7 col-xs-12" id="amount">
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="first-name">
+                                    Tax Code <span class="required">*</span>
+                                </label>
+                                <div class="col-md-7">
+                                    @Html.DropDownList("tax_id", (System.Web.Mvc.SelectList)ViewBag.taxlist, "", new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="control-label col-md-3" for="first-name">
+                                    Cost Center
+                                </label>
+                                <div class="col-md-7">
+                                    @Html.DropDownList("cost_center_id", (System.Web.Mvc.SelectList)ViewBag.cost_list, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="modal-footer">
+                        <input type="hidden" id="srno" />
+                        <input type="hidden" id="quotationdetailid" />
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                        <button type="button" class="add btn btn-primary">Add Item</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: false },
+                     { sname: "b", sWidth: "5%" },
+                     { sname: "c", bVisible: false },
+                      { sname: "d", bVisible: true },
+                     { sname: "e", bVisible: true },
+                     { sname: "f", "sClass": "right" },
+                     { sname: "g", bVisible: false },
+                     { sname: "h"},
+                     { sname: "i", bVisible: false },
+                     { sname: "j"},
+                     {
+                         sname: "k", sWidth: "8%",
+                         bSortable: false,
+                         mRender: function (data, type, full) {
+                             return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit"  /><img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete"  />';
+                         }
+                     }]
+
+        });
+        $(document).ready(function () {
+            document.getElementById('posting_date').valueAsDate = new Date();
+            var error=@Html.Raw(Json.Encode(ViewBag.error));
+            if(error !="")
+            {
+                sweetAlert("",error,"error");
+            }
+            $("#tax_id").select2({
+                placeholder: "Select Tax",
+                allowClear: true
+            });
+            $("#gl_ledger_id").select2({
+                placeholder: "Select GL",
+                allowClear: true
+            });
+            $("#entity_id").select2({
+                placeholder: "Select Description",
+                allowClear: true
+            });
+        });
+        function FillDescription(txt)
+        {
+            $('#entity_id').val("").trigger("change");
+          
+            if (txt != '') {
+                $.ajax({
+                url: "@Url.Action("GetEntityType", "Generic")?name="+ txt,
+                method: 'get',
+                async: false,
+                success: function (data) {
+                    $('#entity_id').html("");  
+                    $("#entity_id").append($('<option></option>').val("").html(""));
+                    $.each(data, function (index, dt) {
+                        $('#entity_id').append('<option value=' + dt.id + '>' + dt.code + ' - ' + dt.name + '</option>');
+                    });
+                }
+            });
+        }
+            else
+            {
+                $('#entity_id').html("");
+                $('#entity_id').val("").trigger("change");
+        }
+        }
+        $('#entity_type_id').change(function () {
+            var txt = $('#entity_type_id option:selected').text();
+            FillDescription(txt);
+        });
+
+        $(".add").on("click", function (event) {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length - 1;
+            var sr_no = t.fnGetData().length + 1;
+            var cc = parseInt(arguments[0]) - 1;
+            var gl_id = $("#gl_ledger_id").val();
+            var gl_name = $("#gl_ledger_id option:selected").text();
+            var description = $("#description").val();
+            var amount = $('#amount').val();
+            var cost_center = $('#cost_center_id option:selected').text();
+            var cost_center_id = $('#cost_center_id').val();
+            var tax_id = $('#tax_id').val();
+            var tax_name = $('#tax_id option:selected').text();
+
+            if (gl_id == '') {
+                swal("", "Please Select GL!", "error");
+                return false;
+            }
+            if (amount == '') {
+                swal("", "Please enter amount.", "error");
+                return false;
+            }
+            if (tax_id == '') {
+                swal("", "Please Select Tax Code.", "error");
+                return false;
+            }
+            if (cost_center_id == '') {
+                cost_center_id = 0;
+            }
+
+
+            if ($("#srno").val() == "") {
+                t.fnAddData([0, sr_no, gl_id, gl_name,description, parseFloat(amount).toFixed(2), tax_id, tax_name, cost_center_id, cost_center, ''
+                ]);
+                rowCount + 1;
+                sr_no + 1;
+            }
+            else {
+                var cc = $("#srno").val();
+                cc = parseInt(cc) - 1;
+                t.fnUpdate([0, cc + 1, gl_id, gl_name,description, parseFloat(amount).toFixed(2), tax_id, tax_name, cost_center_id, cost_center, ''], cc)
+            }
+            clearmodel();
+            TaxCalculation();
+            return true;
+        });
+        function  clearmodel()
+        {
+            $("#gl_ledger_id").val("").trigger("change");
+            $("#description").val("");
+            $("#amount").val("");
+           // $("#cost_center_id").val("").trigger("change");
+            $("#tax_id").val("").trigger("change");
+        }
+        $('#ContactGrid').on('click', '.edit', function () {
+            var t = $('#ContactGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            $('#myModal').modal('show');
+            $("#srno").val(t.fnGetData(id)[1]);
+            $("#gl_ledger_id").val(t.fnGetData(id)[2]).trigger("change");
+            $('#amount').val(t.fnGetData(id)[5]);
+            $('#tax_id').val(t.fnGetData(id)[6]).trigger("change");
+            $('#cost_center_id').val(t.fnGetData(id)[8]).trigger("change");
+            $('#description').val(t.fnGetData(id)[4]);
+        });
+        function GetTaxDetail(taxdetail, amount, dt) {
+            $.ajax({
+                url: '@Url.Action("GetTaxCalculation", "Generic")',
+                type: "GET",
+                dataType: "JSON",
+                data: {entity:"calculatetax", st: taxdetail, amt: amount, dt: dt, tds_code_id: 0 },
+                success: function (Payment_Cycle) {
+                    $('#TaxGrid tbody').html('');
+                    $.each(Payment_Cycle, function (i, cycle) {
+                        $('#TaxGrid').append('<tbody>');
+                        $('#TaxGrid').append('<tr><td>' + cycle.tax_name + '</td><td align="right">' + parseFloat(cycle.tax_value).toFixed(2) + '</td></tr>')
+                        $('#TaxGrid').append('</tbody>');
+                        $("#total_amount").val(cycle.tax_value);
+                    });
+                }
+            });
+        }
+        function TaxCalculation()
+        {
+            var t = $('#ContactGrid').DataTable();
+            var rowCount = t.fnGetData().length;
+            var str = "";
+            var str1 = "";
+            var tot = 0;
+            for (j = 0; j < rowCount; j++) {
+                str1 = t.fnGetData(j)[6] + "~";
+                str1 = str1 + t.fnGetData(j)[5] + "~";
+                str1 = str1 + t.fnGetData(j)[5];
+                if (j == 0) {
+                    str = str1 + ","
+                }
+                else {
+                    str = str + str1 + ",";
+                }
+                tot = tot + parseFloat(t.fnGetData(j)[5]);
+            }
+            GetTaxDetail(str.slice(0, -1), tot, $("#posting_date").val());
+        }
+        function TabletoJeson() {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            $("#cr_detail").empty();
+            for (i = 0; i < rowCount; i++) {
+
+                $("#cr_detail").append('<input type="hidden" id="gl_ledger_id1' + i + '" name="gl_ledger_id1" value=' + t.fnGetData(i)[2] + ' >');
+                $("#cr_detail").append('<input type="hidden" id="user_description' + i + '" name="user_description" value=' + t.fnGetData(i)[4] + ' >');
+                $("#cr_detail").append('<input type="hidden" id="credit_debit_amount' + i + '" name="credit_debit_amount" value=' + t.fnGetData(i)[5] + ' >');
+                $("#cr_detail").append('<input type="hidden" id="cost_center_id1' + i + '" name="cost_center_id1" value=' + t.fnGetData(i)[8] + ' >');
+                $("#cr_detail").append('<input type="hidden" id="tax_id1' + i + '" name="tax_id1" value=' + t.fnGetData(i)[6] + ' >');
+            }
+        }
+    </script>
+
+}

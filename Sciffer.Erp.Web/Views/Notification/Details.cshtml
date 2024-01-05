@@ -1,0 +1,194 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.ref_pm_notification_vm
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ref_pm_notification</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.category_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.category_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.doc_number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.doc_number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.notification_type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.notification_type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.notification_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.notification_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.notification_description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.notification_description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.plant_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.plant_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.machine_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.machine_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.employee_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.employee_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.start_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.start_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.end_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.end_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.start_time)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.start_time)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.end_time)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.end_time)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.detail_problem)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.detail_problem)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.problem_attachment)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.problem_attachment)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.detail_solution)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.detail_solution)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.attended_by)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.attended_by)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.reviewed_by)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.reviewed_by)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_breakdown)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_breakdown)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.breakdown_start_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.breakdown_start_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.breakdown_end_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.breakdown_end_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.breakdown_start_time)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.breakdown_start_time)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.breakdown_end_time)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.breakdown_end_time)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.notification_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

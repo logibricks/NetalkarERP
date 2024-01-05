@@ -1,0 +1,88 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".loading").hide();
+        $('.mickey').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            maxHeight: '200',
+            enableCaseInsensitiveFiltering: true,
+            allowClear: true,
+            maximumResultsForSearch: 1,
+            numberDisplayed: 0,
+        });
+    });
+</script>
+
+<div class="loading">Loading &#8230;</div>
+<div class="form-horizontal">
+    <div class=row>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Item Code</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.item_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12"></label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <button class="searchbutton searchButton" id="search"> &nbsp; Run Report </button>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div id="searchresult">
+            @Html.Partial("Partial_FgBalanceReadyForDispatch", (object)ViewBag)
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+ //   $(function () {
+ //       $("#item_id").multiselect('selectAll', false);
+ //       $('#item_id').multiselect('updateButtonText');
+ //});
+    $("#search").click(function () {
+        AdvanceSearch();
+    });
+        function AdvanceSearch() {
+
+            var item_id = $("#item_id").val();
+
+            if ($('#item_id :selected').length > 0) {
+                var selectedItem = [];
+                $('#item_id :selected').each(function (i, selected) {
+                    selectedItem[i] = $(selected).val();
+                });
+                var Item = selectedItem + "";
+            }
+
+            $(".loading").show();
+            $.ajax({
+                url: "@Url.Action("Get_Partial", "SalesReport")",
+                method: "Post",
+                cache: false,
+                data: {
+                    entity: "get_fg_balance_ready_for_dispatch",
+                     item_id: Item
+                },
+                success: function (data) {
+                    $(".loading").hide();
+                    $('#searchresult').empty().append(data);
+                    //console.log(data);
+                },
+                error: function (http) {
+                    console.log(XMLHttpRequest);
+                }
+            });
+        }
+</script>
+<div class="modal"><!-- Place at bottom of page --></div>

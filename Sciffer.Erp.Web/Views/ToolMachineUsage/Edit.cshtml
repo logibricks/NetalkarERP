@@ -1,0 +1,183 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.ref_tool_machine_usage_VM
+@using Newtonsoft.Json;
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.tool_machine_usage_id)
+
+        <div class="col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.tool_id, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("tool_id", null, htmlAttributes: new { @class = "form-control", @disabled = "disabled" })
+                    @Html.ValidationMessageFor(model => model.tool_id, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.machine_id, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("machine_id", null, htmlAttributes: new { @class = "form-control", @disabled = "disabled" })
+                    @Html.ValidationMessageFor(model => model.machine_id, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row form-horizontal">
+        <div class="col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.tool_renew_type_id, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("tool_renew_type_id", null, htmlAttributes: new { @class = "form-control", @disabled = "disabled" })
+                    @Html.ValidationMessageFor(model => model.tool_renew_type_id, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.current_life_percentage, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.current_life_percentage, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                    @Html.ValidationMessageFor(model => model.current_life_percentage, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+        <div class="row form-horizontal">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.start_date_time, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.start_date_time, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.start_date_time, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.in_use, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <input type="checkbox" id="IN_USE" disabled="disabled">
+                        <input type="hidden" name="in_use" id="in_use" />
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading"></div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ItemUsageGrid">
+                                <thead>
+                                    <tr>
+                                        <th><label>Tool Machine Item Usage ID</label></th>
+                                        <th><label>Tool Machine Usage ID</label></th>
+                                        <th><label>Sr. No.</label></th>
+                                        <th><label>Item Id</label></th>
+                                        <th><label>Item Name</label></th>
+                                        <th><label>Life No. of Items</label></th>
+                                        <th><label>Per Unit Life Consumption</label></th>
+                                        <th><label>No. of Items Processed</label></th>
+                                        <th><label>Item Life Consumption</label></th>
+                                        <th><label>Consumption Percentage</label></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            var data = @Html.Raw(JsonConvert.SerializeObject(this.Model));
+
+            $("#in_use").val(data.in_use);
+            if (data.in_use == true) {
+                //Check
+                document.getElementById('IN_USE').setAttribute('checked', 'checked');
+            }
+            else {
+                //UnCheck
+                document.getElementById('IN_USE').removeAttribute('checked');
+            }
+            $("#IN_USE").checkboxpicker();
+
+            $("#machine_id").select2({
+                placeholder: "Select Machine",
+                allowClear: true
+            });
+
+            $("#tool_id").select2({
+                placeholder: "Select Tool",
+                allowClear: true
+            });
+
+            $("#tool_renew_type_id").select2({
+                placeholder: "Select Tool Renew Type",
+                allowClear: true
+            });
+
+            var tp = $("#ItemUsageGrid").DataTable();
+            var sr_no = tp.fnGetData().length+1;
+            var j=1;
+            $.each(data.ref_tool_machine_item_usage , function(key, value){
+                tp.fnAddData([value.tool_machine_item_usage_id, value.tool_machine_usage_id, sr_no, value.item_id,
+                            value.REF_ITEM.ITEM_NAME, value.life_no_of_items, value.per_unit_life_consumption,
+                            value.no_of_items_processed, value.item_life_consumption, value.item_life_consumption_percentage]);
+                j=j+1;
+                sr_no++;
+            });
+        })
+
+
+        $('#ItemUsageGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", bVisible: false },
+                     { sname: "b", bVisible: false },
+                     { sname: "c", bVisible: true },
+                     { sname: "d", bVisible: false },
+                     { sname: "e", bVisible: true },
+                     { sname: "f", bVisible: true },
+                     { sname: "g", bVisible: true },
+                     { sname: "h", bVisible: true },
+                     { sname: "i", bVisible: true },
+                     { sname: "g", bVisible: true },
+            ]
+
+        });
+    </script>
+}

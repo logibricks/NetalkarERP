@@ -1,0 +1,234 @@
+﻿
+@model Sciffer.Erp.Domain.ViewModel.ref_depreciation_run_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+<div class="loading">Loading &#8230;</div>
+@using (Html.BeginForm("Create", "Depreciationrun", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form_main", @id = "form_main" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        <div>@Html.ValidationSummary(true, "", new { @class = "text-danger" })</div>
+        @Html.HiddenFor(a => a.depreciation_run_id, new { @class = "primary_id hidden" })
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.document_numbering_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("document_numbering_id", (System.Web.Mvc.SelectList)ViewBag.category_list, new { @class = "form-control category validinput", @required = true, })
+                            @Html.ValidationMessageFor(model => model.document_numbering_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.dep_area_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("dep_area_id", (new System.Web.Mvc.SelectList(ViewBag.dep_area_list, "dep_area_id", "dep_area_code")), "--select--", htmlAttributes: new { @class = "form-control" , @onchange = "GetDepAreaDetails(this.value)" })
+                            @Html.ValidationMessageFor(model => model.dep_area_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.dep_frequency_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("dep_frequency_id", (System.Web.Mvc.SelectList)ViewBag.frequencylist, "---Select---", new { @class = "form-control validinput",@disabled = "disabled"})
+                            @Html.ValidationMessageFor(model => model.dep_frequency_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.dep_financial_year_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("dep_financial_year_id", (System.Web.Mvc.SelectList)ViewBag.financiallist, new { @class = "form-control validinput num",})
+                            @Html.ValidationMessageFor(model => model.dep_financial_year_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>              
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.asset_class_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("asset_class_id", (new System.Web.Mvc.SelectList(ViewBag.assetclassList, "asset_class_id", "asset_class_code")), "--select--", htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.asset_class_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.current_dep_till_date, htmlAttributes: new { Class = "control-label col-md-4 " })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.current_dep_till_date, new { htmlAttributes = new { @class = "form-control ", @onchange = "GetDepTillDate(this.value)" } })
+                            @Html.ValidationMessageFor(model => model.current_dep_till_date, "", new { Class = "text-danger" })
+                        </div>
+                    </div>
+                </div>          
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-sm-4">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.posting_for_last_run_date, htmlAttributes: new { Class = "control-label col-md-4 " })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.posting_for_last_run_date, new { htmlAttributes = new { @class = "form-control ", } })
+                            @Html.ValidationMessageFor(model => model.posting_for_last_run_date, "", new { Class = "text-danger" })
+                        </div>
+                    </div>
+                </div>  
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg12 col-sm-12">
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <input type="button" value="Save" class="btn btn-success pull-right" id="create1" name="create1" onclick="TabletoJeson();" />
+                        <input type="button" value="Save As Draft" class="btn btn-success pull-right" id="create" name="create" onclick="TabletoJeson();" />                       
+                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary pull-left" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+
+        $("#document_numbering_id").select2({
+            placeholder: "Select Category",
+            allowClear: true
+        });
+
+        $("#dep_frequency_id").select2({
+            placeholder: "Select Frequency",
+            allowClear: true
+        });
+
+        $("#dep_financial_year_id").select2({
+            placeholder: "Select Finacial Year",
+            allowClear: true
+        });
+
+        $("#asset_class_id").select2({
+            placeholder: "Select Asset Class",
+            allowClear: true
+        });
+
+        $("#dep_area_id").select2({
+            placeholder: "Select Dep Area",
+            allowClear: true
+        });
+        
+
+        $('#dep_financial_year_id').val("").trigger('change');
+        $('#dep_financial_year_id').html("");
+        $("#dep_financial_year_id").append($('<option></option>').val("").html(""));
+
+//DEP AREA Details************************************************************************************************************************************************************
+
+                        let _deparea_list =   @Html.Raw(JsonConvert.SerializeObject(ViewBag.depareadetails));
+                        function GetDepAreaDetails(id) {
+                        if (id != '') {
+                            let _row = _deparea_list.filter(a=>a.dep_area_id == id);
+                            var fin = _.uniq(_row,a=>a.financial_year_id)
+
+                        $('#dep_frequency_id').val(_row[0].frequency_id).trigger('change');                     
+                        $('#dep_financial_year_id').val("").trigger('change');
+                        $('#dep_financial_year_id').html("");
+                        $("#dep_financial_year_id").append($('<option></option>').val("").html(""));
+
+                        $.each(fin, function (index, dt) {
+                            $('#dep_financial_year_id').append('<option value=' + dt.financial_year_id + '>'  + dt.financial_year_name + '</option>');
+                        });
+
+                        }
+
+                        else
+                        {                         
+                        $('#dep_frequency_id').val('').trigger('change');                      
+                        $('#dep_financial_year_id').val("").trigger('change');
+                        $('#dep_financial_year_id').html("");
+                        $("#dep_financial_year_id").append($('<option></option>').val("").html(""));                 
+                        }
+                        }
+
+//DEP Till Date Validation************************************************************************************************************************************************************
+
+                        
+                        function GetDepTillDate(date) {
+                            if (date != '') {
+                                var val =0;
+                                var id =    $('#dep_area_id').val(); 
+                                var fin_id =    $('#dep_financial_year_id').val(); 
+                                let _row = _deparea_list.filter(a=>a.dep_area_id == id);
+                                var fin1 = _row.filter(x=>x.financial_year_id == fin_id);
+                                //var fin = _.uniq(fin1,a=>a.financial_year_id)
+                                for (a of fin1)
+                                {
+                                    if(a.dep_to_date == date)
+                                    {
+                                        var date1 = new Date();
+                                        var date2 = new Date(date);    
+                                        
+                                        if(date2 > date1)
+                                        {
+                                            swal("Till Date Should be less than Today's Date!!", "", "error");
+                                            return val = 1;
+                                        }
+                                       
+                                    }
+
+                                }
+
+                                if(val == 0)
+                                {
+                                    swal("", "Current Depreciation Till doesnot exist!!", "error");
+                                    $('#current_dep_till_date').val('');  
+                                    return false;
+                                }
+                               
+                            }
+                        }
+
+// CREATE ********************************************************************************************************************************************************************
+
+                        function TabletoJeson() {
+                          
+                            var obj = {
+                            };
+
+                            var arForm = $("#form_main").serializeArray();
+                            jQuery.each(arForm, function( i, formData ) {
+                                obj[formData.name]=formData.value;
+                          
+                            });
+
+                        
+                            $.ajax({
+                                url: '@Url.Action("Save", "Depreciationrun")',
+                                method: "Post",
+                                cache: false,
+                                async: false,
+                                data: { deprun:obj},
+                                success: function(data) {
+                    
+                                    location.href = '@Url.Action("Index", "Depreciationrun")';
+                  
+                                },
+                            });
+
+                        }
+
+
+</script>
+}
+

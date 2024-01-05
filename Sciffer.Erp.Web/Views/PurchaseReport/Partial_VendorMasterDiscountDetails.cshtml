@@ -1,0 +1,36 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<purchase_order_report_vm>("Editing")
+                        .Datasource(ds => ds.URL(Url.Action("Get_Purchase_Order_Report", "PurchaseReport") + "?entity=" + ViewBag.entity ).Adaptor(AdaptorType.UrlAdaptor))
+                        .AllowPaging().PageSettings(a => a.PageSize(20))
+                        .AllowFiltering()
+                            .FilterSettings(X => X.FilterType(FilterType.Excel))
+                        .ShowColumnChooser()
+                        .AllowSorting()
+                        .AllowScrolling()
+                        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "PurchaseReport", new { ctrlname = "VendorMasterDiscountDetails" })))
+                                            .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                    .ToolbarSettings(toolbar =>
+                    {
+                        toolbar.ShowToolbar().ToolbarItems(items =>
+                        {
+                            items.AddTool(ToolBarItems.Search);
+                            items.AddTool(ToolBarItems.ExcelExport);
+                            items.AddTool(ToolBarItems.PrintGrid);
+                        });
+                    })
+            .Columns(col =>
+            {
+                col.Field("vendor_code").Width("10%").HeaderText("Vendor Code").Add();
+                col.Field("vendor_name").Width("10%").HeaderText("Vendor Decription").Add();
+                col.Field("overall_discount").Width("10%").HeaderText("Overall Discount %").TextAlign(TextAlign.Right).Add();
+                col.Field("item_group_name").Width("10%").HeaderText("Item Group").Visible(true).Add();
+                col.Field("rate").Width("10%").HeaderText("Discount Rate").Visible(true).Add();
+
+            })
+            .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickp"); })
+                                                        ).Render();}
+@Html.EJ().ScriptManager()
+
+

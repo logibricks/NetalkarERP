@@ -1,0 +1,408 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<input type="search" class="search form-control" Search files and folders" id="s" style="width:23.5%;" placeholder="Search Purchase Report"/>
+<br/>
+<div style="min-width:430px;" id="hide">
+    <div class="row display-flex">
+        <div class="cube col-lg-3" id="1">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;font-size:12px;">
+                    Vendor Contact Details Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides vendor wise contact details data for email and phone</p>
+                </div>
+                    <div class="panel-footer" style="font-size:20px;">
+                        <a href="@Url.Action("VendorContactDetailsReport", "purchasereport")" target="_blank">Run Report</a>
+                    </div>
+            </div>
+        </div>
+     
+        <div class="cube col-lg-3" id="2">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;font-size:12px;">
+                    Vendor Payment Master List Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides details of banks, Payment Terms and Payment Cycle details</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("VendorPaymentMasterListReport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="23">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;font-size:12px;">
+                    Payments Expected To Vendors
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Payments Expected To Vendors</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("Paymentsexpectedtovendors", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="4">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color:#337ab7;color: #fff;font-size:12px;">
+                    Vendor Master Discount Details Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides overall discount and item group level discount defined in Vendor Master</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("VendorMasterDiscountDetailsReport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="5">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;font-size:12px;">
+                    Purchase Price List Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides Price List along with discount ( if any) defined in Item Master and Vendor Master</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("PurchasePriceListReport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="6">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;font-size:12px;">
+                    Purchase Requisition Summary Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides summary of Purchase Requistion to Purchase Order if PO being created</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("PurchaseRequisitionSummaryReport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="7">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;font-size:12px;">
+                    Purchase Requisition Detailed Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides summary of Purchase Requistion detail to Purchase Order if PO being created</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("PurchaseRequisitionDetailedReport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="8">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color:#337ab7;color: #fff;font-size:12px;">
+                    Open PR Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides details of open Purchase Requisitions as on a particular date</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("OpenPRReport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="9">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;font-size:12px;">
+                    Purchase Order Summary Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides summary of Purchase Orders with details of basic value, taxes and gross value</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("purchaseordersummaryreport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="10">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;font-size:12px;">
+                    Purchase Order Header Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides header level details for Purchase Orders along with vendor and quotaion deatils</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("purchaseorderheaderreport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="11">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;font-size:12px;">
+                    Purchase Order Item Level Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides detailed item level report for Purchase orders including item details, rate, quantity, delivery dates and taxes</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("PurchaseOrderItemLevelReport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="12">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color:#337ab7;color: #fff;font-size:12px;">
+                    Open PO Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides details of Open Purchase Orders as on a particular date</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("openporeport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="13">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;font-size:12px;">
+                    GRN Summary Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides vendor wise summary of GRN for a period</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("grnsummaryreport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="14">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;font-size:12px;">
+                    GRN Header Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides header level details of GRN including PO details, vendor details and gate entry details</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("grnheaderreport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="15">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;font-size:12px;">
+                    GRN Item Level Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides details of GRN including item details, rate, quantity and batch</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("grnitemlevelreport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3"  id="16">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color:#337ab7;color: #fff;font-size:12px;">
+                    GRN Pending for Excise Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides details of all GRN for which Incoming Tax is applicable but not made</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("grnpendingforexcisereport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="17">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;font-size:12px;">
+                    GRN Pending for Purchase Invoice Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides details of all GRN for which Purchase Invoice is pending</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("GRNPendingforPurchaseInvoiceReport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="18">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;font-size:12px;">
+                    Purchase Invoice Summary Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides summary of Purchase invoices Including vendor details, basic value, taxes, TDS and Gross value</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("purchaseinvoicesummaryreport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="19">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;font-size:12px;">
+                    Purchase Invoice Header Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides header level details for Purchase Invoice including PO details, vendor details</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("purchaseinvoiceheaderreport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="20">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color:#337ab7;color: #fff;font-size:12px;">
+                    Purchase Invoice Item Level Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides Item level detail report for Purchase Invoice including rate, quantity, gross value</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("purchaseinvoiceitemlevelreport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="21">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;font-size:12px;">
+                    LD Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides details of all GRN that have been received after the Delivery date mentioned in PO by calculating late deliveries</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("ldreport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="22">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;font-size:12px;">
+                    Purchase Return Summary Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides summary of Purchase Returns including vendor details, basic value, taxes, TDS and gross value</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("purchasereturnsummaryreport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="23">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;font-size:12px;">
+                    Purchase Return Header Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides header level details for Purchase Returns including PO details, vendor details</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("purchasereturnheaderreport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="24">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color:#337ab7;color: #fff;font-size:12px;">
+                    Purchase Return Item Level Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides item level detail report for Purchase Returns including rate, quantity, gross value</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("purchasereturnitemlevelreport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        <div class="cube col-lg-3" id="25">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;font-size:12px;">
+                    PO to PI Tracker Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">Provides Procurement tracker from Purchase Order to GRN to Incoming Tax to Purchase Invoice</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("potopitrackerreport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>
+        @*<div class="cube col-lg-3" id="26">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;font-size:12px;">
+                    PO to Payment Tracker Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:12px;">PO to Payment Tracker Report</p>
+                </div>
+                <div class="panel-footer" style="font-size:20px;">
+                    <a href="@Url.Action("potopaymenttrackerreport", "purchasereport")" target="_blank">Run Report</a>
+                </div>
+            </div>
+        </div>*@
+      
+        
+    </div>
+</div>
+
+<script>
+    
+
+    $(document).ready(function () {
+
+
+
+        $("#s").on("keyup click input", function () {
+            if (this.value.length > 0) {
+                $(".col-lg-3").show().filter(function () {
+                    return $(this).find('.name').text().toLowerCase().indexOf($("#s").val().toLowerCase()) == -1;
+                }).hide();
+            }
+            else {
+                $("#hide").show();
+            }
+        });
+        //$("#hide").click(function () {
+        //    $("p").toggle(1000);
+        //});
+        //$("#show").click(function () {
+        //    $("p").show();
+        //});
+        //.css('display', 'inline-bloc')
+    });
+</script>
+<style>
+    /*.cube {
+        float: left;
+        width: 270px;
+        height: 150px;
+    }*/
+
+</style>
+<style>
+    .row.display-flex {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+        .row.display-flex > [class*='col-'] {
+            display: flex;
+            flex-direction: column;
+        }
+
+    .panel {
+        height: 100%;
+        width: 100%;
+    }
+
+    .name {
+        font-size: 16px;
+    }
+    .panel-body{
+        height:70px;
+    }
+</style>

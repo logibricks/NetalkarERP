@@ -1,0 +1,84 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<ref_inventory_balanceVM>("Searching")
+        .Datasource(ds => { ds.Json((IEnumerable<object>)ViewBag.DataSource).RemoveURL(Url.Action("Delete", "InventoryBalance")).Adaptor(AdaptorType.RemoteSaveAdaptor); })
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).ShowDeleteConfirmDialog(true); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "InventoryBalance")))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("inventory_balance_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Add();
+            col.Field("category_id").Width("15%").HeaderText("Category ID").Width(100).Add();
+            col.Field("category_name").Width("15%").HeaderText("Category").Width(100).Add();
+            col.Field("doc_number").Width("15%").HeaderText("Document Number").Width(100).Add();
+            col.Field("posting_date").Width("15%").HeaderText("Posting date").Width(100).Format("{0:dd/MM/yyyy}").Add();
+            col.Field("hearder_remarks").Width("15%").HeaderText("Remarks").Width(100).Add();
+            col.Field("offset_account_id").Width("15%").HeaderText("Offset Account Id").Visible(false).Add();
+            col.Field("gl_ledger_code").Width("15%").HeaderText("Offset Account Code").Visible(false).Add();
+            col.Field("gl_ledger_name").Width("15%").HeaderText("Offset Account Name").Width(120).Add();
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit") {
+            location.href = "@Url.Action("Details", "InventoryBalance")?id=" + args.rowData.inventory_balance_id;
+        }
+        if (args.requestType == "add") {
+            location.href = "@Url.Action("Create", "InventoryBalance")";
+        }
+    }
+    function rightClick(args) {
+        location.href = "@Url.Action("Details", "InventoryBalance")?id=" + args.data.inventory_balance_id;
+    }
+    function Click(args) {
+        $('a').css('color', 'red');
+    }
+    $(document).ready(function () {
+        var doc_no = '@ViewBag.num';
+        if (doc_no != '') {
+            if (doc_no != 0) {
+                sweetAlert("", doc_no + " Saved successfully!", "success");
+            }
+        }
+    });
+
+</script>
+

@@ -1,0 +1,135 @@
+﻿@using Sciffer.Erp.Domain.Model
+@{
+    ViewBag.Title = "Index";
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<br /><br /><br />
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<ref_parameter_list_VM>("Grid")
+              .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.Datasource).RemoveURL(Url.Action("InlineDelete", "ParameterList")).InsertURL(Url.Action("InlineInsert", "ParameterList")).UpdateURL(Url.Action("InlineInsert", "ParameterList"))
+                       .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(10); })
+        .EnableAltRow()
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Add);
+                items.AddTool(ToolBarItems.Edit);
+                items.AddTool(ToolBarItems.ExcelExport);
+                items.AddTool(ToolBarItems.PrintGrid);
+
+            });
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "ParameterList" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "ParameterList" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "ParameterList" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("parameter_id").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("parameter_code").HeaderText("Parameter Code").ValidationRules(v => v.AddRule("required", true)).Add();
+            col.Field("parameter_desc").HeaderText("Parameter Description").ValidationRules(v => v.AddRule("required", true)).Add();
+            col.Field("parameter_range").HeaderText("Parameter Range").Add();
+            col.Field("is_blocked").HeaderText("Blocked").Visible(false).Add();
+        })
+        .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+
+    )
+</div>
+
+<script id="template" type="text/template">
+
+    <div>
+        <div class="row">
+
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="hidden" id="parameter_id" name="parameter_id" value="{{: parameter_id}}" class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Parameter Code *
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="text" id="parameter_code" name="parameter_code" value="{{: parameter_code}}" class="form-control" />
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Parameter Description *
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="text" id="parameter_desc" name="parameter_desc" value="{{: parameter_desc}}" class="form-control" />
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Parameter Range
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="text" id="parameter_range" name="parameter_range" value="{{: parameter_range}}" class="form-control" />
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Blocked
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <input type="checkbox" id="is_blocked" name="is_blocked">
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/javascript">
+    var flag = true;
+    function complete(args) {
+        //console.log(args);
+        if (args.requestType == "add") {
+            $('#is_blocked').checkboxpicker();
+        }
+        if (args.requestType == "beginedit") {
+            document.getElementById('parameter_code').setAttribute('disabled', 'disabled');
+            //console.log(args.rowData.is_blocked );
+            if (args.rowData.is_blocked == true) {
+                //Check
+                document.getElementById('is_blocked').setAttribute('checked', 'checked');
+            }
+            else {
+                //UnCheck
+                document.getElementById('is_blocked').removeAttribute('checked');
+            }
+            $('#is_blocked').checkboxpicker();
+        }
+
+        if (args.requestType == "save") {
+            if (args.data.text != undefined) {
+                sweetAlert("", args.data.text + " Parameter code already exists!", "error");
+                if (args.model.dataSource.dataSource.json[0].PrameterList_ID == null) {
+                    args.model.dataSource.dataSource.json = args.model.dataSource.dataSource.json.splice(1, args.model.dataSource.dataSource.json.length);
+                }
+            }
+            var gridObj = $("#Grid").ejGrid("instance");
+            gridObj.refreshContent();
+        }
+    }
+    function EndProcess() {
+        var gridObj = $("#Grid").ejGrid("instance");
+        gridObj.refreshContent();
+    }
+</script>
+

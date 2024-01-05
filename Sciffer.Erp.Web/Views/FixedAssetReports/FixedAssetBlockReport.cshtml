@@ -1,0 +1,74 @@
+﻿
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="form-horizontal">
+            <div class="x_content">
+                <div class=row>
+                    <div class="col-md-3 col-lg-3 col-xs-12">
+                        <label class="control-label col-md-5 col-lg-5 col-xs-12">From Date</label>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            <input type="date" id="fromDate" class="form-control radius" required="required">
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-lg-3 col-xs-12">
+                        <label class="control-label col-md-5 col-lg-5 col-xs-12">To Date</label>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            <input type="date" id="toDate" class="form-control radius" required="required">
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-lg-3 col-xs-12">
+                        <label class="control-label col-md-5 col-lg-5 col-xs-12">Fixed Asset</label>
+                            <input type="radio" id="wdv_slm" name="depretialtion_method" checked value="wdv_slm">
+                            <label for="wdv_slm">WDV/SLM</label>
+                            <input type="radio" id="wdv_slm_block" name="depretialtion_method" value="block">
+                            <label for="block">BLOCK</label><br>
+                    </div>
+                    <div class="col-md-3 col-lg-3 col-xs-12">
+                        <button class="searchbutton searchButton" id="search" onclick="DateCheckForFixedAsset()"> &nbsp; Run Report </button>
+                    </div>
+                    <input type="hidden" id="entity" value="getFixAssetBlockReport">
+                    <input type="hidden" id="partial_v" value="Partial_FixedAssetReport" />
+
+                </div>
+             </div>
+        </div>
+
+    </div>
+</div>
+<br />
+
+<div class="row">
+    <div id="searchresult">
+        @Html.Partial("Partial_FixedAssetReport", (object)ViewBag)
+    </div>
+    <div id="searchresult1">
+        @Html.Partial("Partial_FixedAssetBlockReport", (object)ViewBag)
+    </div>
+</div>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+         
+            $('#searchresult').show();
+            $('#searchresult1').hide();
+
+            $('input:radio[name=depretialtion_method]').change(function () {
+                if (this.value == 'wdv_slm') {
+                    $('#searchresult1').hide();
+                    $('#searchresult').show();
+                    $("#partial_v").val("Partial_FixedAssetReport");
+                }
+                else if (this.value == 'block') {
+                    $('#searchresult').hide();
+                    $('#searchresult1').show();
+                    $("#partial_v").val("Partial_FixedAssetBlockReport");
+                }
+            });
+
+        });
+
+
+
+    </script>
+

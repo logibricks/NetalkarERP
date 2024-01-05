@@ -1,0 +1,105 @@
+﻿<div class="panel panel-default">
+    <div class="panel-body">
+        @using (Html.BeginForm("Create", "GeneralLedger"))
+        {
+            @Html.AntiForgeryToken()
+        <br/>
+            <div class="form-horizontal">
+                <div class="col-sm-1"></div>
+                <div class="col-sm-10">
+                    <input type="hidden" name="gl_ledger_id" id="gl_ledger_id" />
+                    <div class="row">
+                        <label for="gl_account_type" class="col-sm-4 control-label">GL Account Type *</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("gl_account_type", (System.Web.Mvc.SelectList)ViewBag.accounttype, new { @class = "form-control validinput", @onchange = "FillGlParentLedger(this.value)" })
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+
+                        <label for="gl_ledger_code" class="col-sm-4 control-label">GL Ledger Code *</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" name="gl_ledger_code" id="gl_ledger_code" class="form-control num validinput" />
+                        </div>
+
+                    </div>
+                    <br />
+                    <div class="row">
+
+                        <label for="gl_ledger_name" class="col-sm-4 control-label">GL Ledger Name *</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="text" name="gl_ledger_name" id="gl_ledger_name" class="form-control validinput" />
+                        </div>
+
+                    </div>
+                    <br />
+                    <div class="row">
+                        <label for="gl_head_account" class="col-sm-4 control-label">Head/Account *</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("gl_head_account", new List<SelectListItem>
+                            {
+                            new SelectListItem{ Text="---Select---", Value = "" },
+                            new SelectListItem{ Text="Head", Value = "1" },
+                            new SelectListItem{ Text="Account", Value = "2" }
+                            }, new { @class = "form-control validinput" })
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+
+                        <label for="gl_parent_ledger_code" class="col-sm-4 control-label">GL Parent Ledger Code *</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("gl_parent_ledger", (System.Web.Mvc.SelectList)ViewBag.generalledger, new { @class = "form-control validinput", @onchange = "FillGlParentLedger(this.value)" })
+                        </div>
+                        <input type="hidden" name="gl_parent_ledger_code" id="gl_parent_ledger_code" />
+                    </div>
+                    <br />
+
+                    <div class="row">
+                        <label for="is_blocked" class="col-sm-4 control-label">Blocked</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <div class="checkbox">
+                                <input type="checkbox" name="is_blocked" id="is_blocked" />
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <input type="submit" value="Add Child" id="create" data-controller="GeneralLedger" class="btn btn-success" style="float:right" />
+
+                        </div>
+                    </div>
+                </div>
+                </div>
+        }
+    </div>
+</div>
+@*<div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>*@
+<script src="~/Scripts/requirevalidation.js"></script>
+<script>
+    $('#is_blocked').checkboxpicker();
+    $('#gl_account_type').val(@ViewBag.journal_entry.gl_account_type);
+    $('#gl_parent_ledger').val('@ViewBag.journal_entry.gl_parent_ledger_code');
+    $('#gl_parent_ledger_code').val('@ViewBag.journal_entry.gl_parent_ledger_code');
+    $("#gl_parent_ledger").select2({
+        maximumSelectionLength: 4,
+        placeholder: "Select GL Parent Code",
+        allowClear: true
+
+    });
+    $("#gl_parent_ledger").change(function () {
+        $('#gl_parent_ledger_code').val($(this).val());
+    })
+    $('#is_blocked').checkboxpicker().on('change', function () {
+        if ($(this).prop('checked')) {
+            $('#is_blocked').val('True');
+        }
+        else {
+            $('#is_blocked').val('False');
+        }
+        console.log($('#is_blocked').val());
+    });
+</script>

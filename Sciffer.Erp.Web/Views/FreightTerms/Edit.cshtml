@@ -1,0 +1,69 @@
+﻿@model Sciffer.Erp.Domain.Model.REF_FREIGHT_TERMS
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.FREIGHT_TERMS_ID)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.FREIGHT_TERMS_NAME, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FREIGHT_TERMS_NAME, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FREIGHT_TERMS_NAME, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-success" id="create" name="create" style="float:right" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript">
+    $("#create").click(function (e) {
+        e.preventDefault();
+        var freight = $('#FREIGHT_TERMS_NAME').val();
+        var id = $('#FREIGHT_TERMS_ID').val();
+        if (freight == "")
+        {
+            sweetAlert("", "Priority is required!", "error");
+        }
+        else {
+            $.ajax({
+                url: '/Freight_Terms/CheckDuplicate',
+                type: "GET",
+                dataType: "JSON",
+                asynch: true,
+                data: { st: freight, id: id },
+                success: function (output) {
+                    if (output != 0) {
+                        sweetAlert("", freight + " is already present in databse!", "error");
+                    }
+                    else {
+                        document.forms[0].submit();
+                    }
+                }
+            });
+        }
+    });
+</script>
+}

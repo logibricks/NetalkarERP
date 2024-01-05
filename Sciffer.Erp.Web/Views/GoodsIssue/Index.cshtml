@@ -1,0 +1,101 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<br /><br /><br />
+<div>   
+    @(Html.EJ().Grid<GOODS_ISSUE_VM>("Searching")
+        .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "GoodsIssue" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.WordExport);
+            items.AddTool(ToolBarItems.PdfExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "ProductionOrderIssue" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "ProductionOrderIssue" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "ProductionOrderIssue" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("goods_issue_id").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("category_name").HeaderText("Category").Visible(true).Add();
+            col.Field("goods_issue_number").HeaderText("Number").Add();
+            col.Field("posting_date").HeaderText("Posting Date").Format("{0:dd/MM/yyyy}").Add();
+            //col.Field("document_date").HeaderText("Document Date").Format("{0:dd/MM/yyyy}").Add();
+            //col.Field("plant_name").HeaderText("Plant").Visible(true).Add();
+            col.Field("item_name").HeaderText("Item Name").Visible(true).Add();
+            col.Field("item_quantity").HeaderText("Item Quantity").Visible(true).Add();
+            //col.Field("ref1").HeaderText("Reference").Visible(true).Add();
+            col.Field("mrn_number").HeaderText("MRN Number").Visible(true).Add();
+            //col.Field("remarks").HeaderText("REMARKS").Visible(false).Add();
+            //col.Field("attachment").HeaderText("Attachment").Width(150).Visible(false).Template("<a id='files' target='_blank' href='/Generic/Result?id={{:GOODS_ISSUE_ID}}&&cntrollername=GoodsIssue'>File</a>").Add();
+
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = "@Url.Action("Details", "GoodsIssue")?id=" + args.rowData.goods_issue_id;
+        }
+        if (args.requestType == "add") {
+            location.href = "@Url.Action("Create", "GoodsIssue")";
+        }
+    }
+    function rightClick(args) {
+        location.href = "@Url.Action("Details", "GoodsIssue")?id=" + args.data.goods_issue_id;
+    }
+    $(document).ready(function () {
+        var num = '@Html.ViewBag.num';
+        if (num != '') {
+            if (num != undefined) {
+                sweetAlert("", num + " Saved successfully.", "success");
+            }
+        }
+    });
+
+</script>
+
+
+
+
+
+
+
+

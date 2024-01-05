@@ -1,0 +1,35 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<report_plant_maintenanace>("Editing")
+                                                                           .Datasource(ds => ds.URL(Url.Action("GetMaintenancePlanCycleandFrequencyReport", "PlantMaintenanceReport") + "?entity=" + ViewBag.entity + "&plant_id=" + ViewBag.plant_id + "&machine_id=" + ViewBag.machine_id + "&maintenance_type_id=" + ViewBag.maintenance_type_id ).Adaptor(AdaptorType.UrlAdaptor))
+                                                                            .AllowPaging().PageSettings(a => a.PageSize(20))
+                                                                            .AllowFiltering()
+                                                                                .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                                            .ShowColumnChooser()
+                                                                            .AllowSorting()
+                                                                            .AllowScrolling()
+                                                                            .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "PlantMaintenanceReport", new { ctrlname = "MaintenancePlanParameterReport" })))
+                                                                            .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                                                        .ToolbarSettings(toolbar =>
+                                                                        {
+                                                                            toolbar.ShowToolbar().ToolbarItems(items =>
+                                                                            {
+                                                                                items.AddTool(ToolBarItems.Search);
+                                                                                items.AddTool(ToolBarItems.ExcelExport);
+                                                                                items.AddTool(ToolBarItems.PrintGrid);
+                                                                            });
+                                                                        })
+                                                                .Columns(col =>
+                                                                {
+                                                                    col.Field("doc_number").Width("15%").HeaderText("Document Number").Add();
+                                                                    col.Field("posting_date").Width("15%").HeaderText("Date").Format("{0:dd/MMM/yyyy}").Add();
+                                                                    col.Field("maintenance_name").Width("15%").HeaderText("Maintenance Type").Add();
+                                                                    col.Field("Machine").Width("15%").HeaderText("Machine").Add();
+                                                                    col.Field("Parameter").Width("15%").HeaderText("Parameter").Add();                                                              
+                                                                    col.Field("parameter_range").Width("15%").HeaderText("Range").Add();
+                                                                })
+                                                                .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickplan"); })
+                                                                ).Render();}
+@Html.EJ().ScriptManager()
+
+

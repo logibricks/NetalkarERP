@@ -1,0 +1,73 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.inv_revaluation_vm
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+   
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_CATEGORY.CATEGORY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_CATEGORY.CATEGORY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.inventory_revaluation_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.inventory_revaluation_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.inventory_revaluation_document_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.inventory_revaluation_document_date)
+        </dd>
+
+       
+        <dt>
+            @Html.DisplayNameFor(model => model.inventory_revaluation_number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.inventory_revaluation_number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.inventory_revaluation_remark)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.inventory_revaluation_remark)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.attachement)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.attachement)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" /> 
+            @Html.ActionLink("Back to List", "Index",null,new {@class="btn btn-primary" })
+        </div>
+    }
+</div>

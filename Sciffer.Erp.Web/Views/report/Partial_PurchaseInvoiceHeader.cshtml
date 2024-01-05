@@ -1,0 +1,78 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+
+
+
+@{(Html.EJ().Grid<Report_Purchase_Invoice_Header__vm>("Editing")
+                                                    .Datasource((IEnumerable<object>)ViewBag.datasource)
+                                                      .AllowPaging().PageSettings(a=>a.PageSize(20))
+                                                      .AllowFiltering()
+                                                          .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                      .ShowColumnChooser()
+                                                      .AllowSorting()
+                                                      .AllowScrolling()
+                                                      .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelForReport", "Generic", new { ctrlname = "SalesSummaryReport" }))
+                                                      .ExportToPdfAction(Url.Action("ExportToPdfForReport", "Generic", new { ctrlname = "SalesSummaryReport" })))
+                                                      .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                                  .ToolbarSettings(toolbar =>
+                                                  {
+                                                      toolbar.ShowToolbar().ToolbarItems(items =>
+                                                      {
+                                                          items.AddTool(ToolBarItems.Search);
+                                                          items.AddTool(ToolBarItems.ExcelExport);
+                                                          items.AddTool(ToolBarItems.PrintGrid);
+                                                      });
+                                                  })
+                                          .Columns(col =>
+                                          {
+                                              col.Field("Doc_Number").Width("10%").HeaderText("Doc Number").Add();
+                                              col.Field("DOc_Date").Width("10%").HeaderText("DOc Date").Add();
+                                              col.Field("Vendor_COde").Width("10%").HeaderText("Vendor COde").Visible(false).Add();
+                                              col.Field("vendor_Description").Width("10%").HeaderText("vendor Description").Visible(false).Add();
+                                              col.Field("Item_/_Service").Width("10%").HeaderText("Item / Service").Visible(false).Add();
+                                              col.Field("Nett_Value").Width("10%").HeaderText("Nett Value").Visible(false).Add();
+                                              col.Field("Gross_Value").Width("10%").HeaderText("Gross Value").Visible(false).Add();
+                                              col.Field("Business_Unit").Width("10%").HeaderText("Business Unit").Visible(false).Add();
+                                              col.Field("Plant").Width("10%").HeaderText("Plant").Visible(false).Add();
+                                              col.Field("Freight_Terms").Width("10%").HeaderText("Freight Terms").Visible(false).Add();
+                                              col.Field("Delivery_Date").Width("10%").HeaderText("Delivery Date").Visible(false).Add();
+                                              col.Field("PO_No").Width("10%").HeaderText("PO No").Visible(false).Add();
+                                              col.Field("PO_Date").Width("10%").HeaderText("PO Date").Visible(false).Add();
+                                              col.Field("Form").Width("10%").HeaderText("Form").Visible(false).Add();
+                                              col.Field("Payment_Cycle_Type").Width("10%").HeaderText("Payment Cycle Type").Visible(false).Add();
+                                              col.Field("Payment_Cycle").Width("10%").HeaderText("Payment Cycle").Visible(false).Add();
+                                              col.Field("Payment_Terms").Width("10%").HeaderText("Payment Terms").Visible(false).Add();
+
+                                          })
+                                          .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+                                          ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    @*$(function () {
+        var obj = @Html.Raw(Json.Encode(ViewBag.datasource));
+        console.log(obj);
+        $("#Editing").ejGrid({
+            dataSource: obj,
+            allowPaging: true,
+            //columns: [
+
+            //],
+            //dataBound : function(args){
+            //	for (var fld =0; fld < list.length; fld++ ) {
+            //	var column = { field: list[fld].value, headerText: list[fld].header, column: "", textAlign: "left", type: "string", visible: true, width: 75 };
+            //	this.model.columns.push(column); //add dynamic columns
+            //	}
+            //	this.columns(this.model.columns);
+            //}
+        });
+    });*@
+
+
+</script>
+
+

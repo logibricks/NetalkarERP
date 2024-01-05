@@ -1,0 +1,302 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.ref_dep_area_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm("Create", "DepreciationArea", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form_main", @id = "form_main" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        <div>@Html.ValidationSummary(true, "", new { @class = "text-danger" })</div>
+
+        @Html.HiddenFor(a => a.financial_year_id_selected, new { @class = "hidden" })
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <label for="dep_area_code" class="control-label col-md-4 col-sm-4 col-xs-12">Code *</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.dep_area_code, new { htmlAttributes = new { @class = "form-control removedisabled", } })
+                            @Html.ValidationMessageFor(model => model.dep_area_code, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <label for="dep_area_description" class="control-label col-md-4 col-sm-4 col-xs-12">Description *</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.dep_area_description, new { htmlAttributes = new { @class = "form-control removedisabled", } })
+                            @Html.ValidationMessageFor(model => model.dep_area_description, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <label for="financial_year_id" class="control-label col-md-4 col-sm-4 col-xs-12">Financial Year *</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("financial_year_id", (System.Web.Mvc.SelectList)ViewBag.financiallist, new { @class = "form-control validinput mickey num", @multiple = "multiple", @onchange = "GetPeriods(this.value)" })
+                            @Html.ValidationMessageFor(model => model.financial_year_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <label for="frequency_id" class="control-label col-md-4 col-sm-4 col-xs-12">Frequency *</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("frequency_id", (System.Web.Mvc.SelectList)ViewBag.frequencylist, "---Select---", new { @class = "form-control validinput", @onchange = "GetPeriods(this.value)" })
+                            @Html.ValidationMessageFor(model => model.frequency_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <label for="no_of_periods" class="control-label col-md-4 col-sm-4 col-xs-12">No. of Periods *</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.no_of_periods, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.financial_year_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <label for="financial_year_id" class="control-label col-md-4 col-sm-4 col-xs-12">Type *</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("dep_type_id", new List<SelectListItem>
+                                        {
+                                        new SelectListItem { Text = "", Value = "0" },
+                                        new SelectListItem { Text = "Posting to GL", Value = "1" },
+                                        new SelectListItem { Text = "Informative", Value = "2" }
+                                        }, new { @class = "form-control selectedbycategory dropdownClass", @onchange = "GetPosting(this.value);" })
+                            @Html.ValidationMessageFor(model => model.frequency_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <label for="financial_year_id" class="control-label col-md-4 col-sm-4 col-xs-12">Posting *</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("dep_posting_id", new List<SelectListItem>
+                                        {
+                                        new SelectListItem { Text = "", Value = "0" },
+                                        new SelectListItem { Text = "Direct to Asset", Value = "1" },
+                                        new SelectListItem { Text = "Accumulated Depreciation", Value = "2" }
+                                        }, new { @class = "form-control selectedbycategory dropdownClass" })
+                            @Html.ValidationMessageFor(model => model.frequency_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <label for="no_of_periods" class="control-label col-md-4 col-sm-4 col-xs-12">Period Code *</label>
+                        <div class="col-md-8 col-sm-8 col-xs-12" style="height: 200px; overflow-y: scroll;">
+                            <table class="table contacts table-responsive table-bordered table-striped" border="1" id="PeriodsCode">
+                                <thead>
+                                    <tr>
+                                        <th hidden>ID</th>
+                                        <th>Period Code</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="Create" class="btn btn-success pull-right" id="create" name="create" onclick="TabletoJeson();" />
+                <input type="hidden" name="periodsdetail" id="periodsdetail" />
+                @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary pull-left pr5" })
+            </div>
+        </div>
+    </div>
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        $("#frequency_id").select2({
+            placeholder: "Select Frequency",
+            allowClear: true
+        });
+        $("#dep_type_id").select2({
+            placeholder: "Select Type",
+            allowClear: true
+        });
+        $("#dep_posting_id").select2({
+            placeholder: "Select Posting",
+            allowClear: true
+        });
+
+    $('#PeriodsCode').DataTable({
+        "bPaginate": false,
+        "ordering": false,
+        "bfooter": false,
+        "info": false,
+        "bLengthChange": false,
+        "bAutoWidth": false,
+        "bFilter": false,
+        "bSort": false,
+        aoColumns: [
+                 { sname: "a", bVisible: false },
+                 { sname: "b"}]
+
+    });
+
+    function GetPeriods(id) {
+        var table = $('#PeriodsCode').DataTable();
+        var iddd = ""
+        var fin_array = [];
+        var fin_id = $("#financial_year_id").val();
+        var freq = $("#frequency_id").val();
+        for(a of fin_id)
+        {
+            let _fin_list =   @Html.Raw(JsonConvert.SerializeObject(ViewBag.financiallist));
+            var ids =  parseInt(a);
+            var fin = _fin_list.filter(a=>a.Value == ids );
+            fin_array.push({id:ids ,code:fin[0].Text})
+        }
+
+        iddd = $("#financial_year_id :selected").text();
+        if (iddd != '---Select---') {
+            if ($("#no_of_periods").val() == "") {
+
+            }
+            if (freq == "") {
+                $("#no_of_periods").val("");
+                table.fnClearTable();
+            }
+            else if (freq == 1) {
+                var len = fin_array.length
+                var l = len * 1
+                $("#no_of_periods").val(l);
+                table.fnClearTable();
+
+                for (x = 0; x < len ; x++)
+                {
+                    for (i = 1; i <=1 ; i++) {
+                        table.fnAddData([fin_array[x].id, fin_array[x].code + "-M" + i]);
+                    }
+                }
+
+            }
+
+            else if (freq == 3) {
+                var len = fin_array.length
+                var l = len * 12
+                $("#no_of_periods").val(l);
+                table.fnClearTable();
+
+                for (x = 0; x < len ; x++)
+                {
+                    for (i = 1; i <=12 ; i++) {
+                        table.fnAddData([fin_array[x].id, fin_array[x].code + "-M" + i]);
+                    }
+                }
+
+
+            }
+        }
+        else {
+            $("#no_of_periods").val("");
+            table.fnClearTable();
+        }
+
+    }
+
+        $("#financial_year_id").change(function(){
+            if ($('#financial_year_id :selected').length > 0) {
+                var selectedfin = [];
+                $('#financial_year_id :selected').each(function (i, selected) {
+                    selectedfin[i] = $(selected).val();
+                });
+                var fin_id = selectedfin + "";
+
+                $("#financial_year_id_selected").val(fin_id);
+
+            }
+        })
+
+        function GetPosting(id) {
+            if (id != 1) {
+                $("#dep_posting_id").val(0).trigger('change');
+                document.getElementById("dep_posting_id").disabled = true;
+            }
+            else {
+                $("#dep_posting_id").val(0).trigger('change');
+                document.getElementById("dep_posting_id").disabled = false;
+            }
+        }
+
+        function TabletoJeson() {
+            var DepParaArr = [];
+            var t = $('#PeriodsCode').DataTable()
+            var rowCount = t.fnGetData().length;
+            var obj = {
+            };
+
+            var arForm = $("#form_main").serializeArray();
+            jQuery.each(arForm, function( i, formData ) {
+                obj[formData.name]=formData.value;
+                obj.no_of_periods = $('#no_of_periods').val();
+                obj.financial_year_id_selected = $("#financial_year_id_selected").val();
+
+            });
+
+            for (i = 0; i < rowCount; i++) {
+
+                    DepParaArr.push({
+                        dep_area_posting_period_id : 0,
+                        financial_year_id : t.fnGetData(i)[0],
+                        posting_periods_code:  t.fnGetData(i)[1],
+                        from_date : "",
+                        to_date : "",
+                        is_active:true,
+                    });
+
+            }
+
+
+
+            $.ajax({
+                url: '@Url.Action("Create", "DepreciationArea")',
+                method: "Post",
+                cache: false,
+                async: false,
+                data: { depdata:obj, DepParaArr: DepParaArr },
+                success: function(data) {
+                    if (data.includes('saved') || data.includes('Saved')) {
+                        swal("", "Saved Successfully!", "success");
+                        location.href = '@Url.Action("Index", "DepreciationArea")';
+                    }
+                    if (data.includes('already')) {
+                        sweetAlert("Already Exists", data, "error");
+                        return false;
+                    }
+                    @*swal({
+                        title: "",
+                        text: "Saved Successfully!",
+                        type: "success"
+                    }, function() {
+                        location.href = '@Url.Action("Index", "DepreciationArea")';
+                    });*@
+                },
+            });
+
+        }
+
+    </script>
+
+}

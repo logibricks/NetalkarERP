@@ -1,0 +1,370 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<style type="text/css">
+    #dropZone {
+        background: gray;
+        padding: 50px;
+        text-align: center;
+        color: white;
+    }
+</style>
+<br />
+<div class="row">
+  
+    <label class="control-label col-sm-2">Select Transaction</label>
+    <div class="col-sm-6">
+        @Html.DropDownList("upload", new List<SelectListItem>
+        {
+            new SelectListItem{ Text="---Select---", Value = "0" },
+            new SelectListItem{ Text="Customer Master", Value = "customer" },
+            new SelectListItem{ Text="Vendor Master", Value = "vendor" },
+            new SelectListItem{ Text="Budget Master", Value = "budget" },
+            new SelectListItem{ Text="Chart of Accounts", Value = "GeneralLedger" },
+            new SelectListItem{ Text="Item Master", Value = "Item" },
+            new SelectListItem{ Text="Employee Balance", Value = "EmployeeBalance" },
+            new SelectListItem{ Text="Customer Balance", Value = "CustomerBalance" },
+            new SelectListItem{ Text="General Ledger Balance", Value = "GeneralLedgerBalance" },
+            new SelectListItem{ Text="Inventory Balance", Value = "InventoryBalance" },
+            new SelectListItem{ Text="Vendor Balance", Value = "VendorBalance" },
+            new SelectListItem{ Text="PriceList Customer", Value = "PriceListCustomer" },
+            new SelectListItem{ Text="PriceList Vendor", Value = "PriceListVendor" },
+            new SelectListItem{ Text="Goods Issue", Value = "GoodsIssue" },
+            new SelectListItem{ Text="AssetMasterData", Value = "AssetMasterData" },
+            new SelectListItem{ Text="InitialUpload", Value = "InitialUpload" },
+            new SelectListItem{ Text="Cycle Time", Value = "CycleTime" }
+            })
+    </div>
+    <div class="download col-sm-2">
+        <button class="btn btn-success" id="download">DownLoad File</button>
+    </div>
+</div>
+
+<div class="row" hidden id="Based_on_machine_code_div">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-3">
+        Based On Machine Code: <input id="Based_on_machine_code" type="checkbox" />
+    </div>
+    <div class="col-md-6">
+    </div>
+</div>
+
+<div class="row" hidden id="Based_on_Inital_upload_code_div">
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-3">
+        <input type="radio" id="wdv_slm" name="depretialtion_method" checked value="wdv_slm">
+        <label for="wdv_slm">WDV/SLM</label><br />
+        <input type="radio" id="wdv_slm_block" name="depretialtion_method" value="block">
+        <label for="block">BLOCK</label><br>
+    </div>
+    <div class="col-md-5">
+    </div>
+</div>
+
+<hr/>
+
+@*<form id="uploadFIle" enctype="multipart/form-data" action="@Url.Action("", "")" method="POST">
+    <input type="file" name="fileUpload" id="fileUpload" size="23" /><br />
+    <button>Upload!</button>
+</form>*@
+
+<form id="uploadFIle" enctype="multipart/form-data" action="@Url.Action("", "")" method="POST">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-6">
+        <input id="fileUpload"  name="fileUpload"  type="file" class="filestyle" data-buttonName="btn-primary" multiple>
+    </div>
+    <div class="col-sm-2">
+        <button class="btn btn-info">Upload!</button>
+    </div>
+</form>
+<hr/>
+<div class="loading">Loading&#8230;</div>
+
+@*<div class="row">
+    <div class="col-lg-12 col-sm-12">
+        <h4>Opening Balance Inventory</h4>
+        <hr />
+        <div id="dropZone">
+            <div class="dz-message" id="my-awesome-dropzone">
+                <h4>Click to Upload File.</h4>
+                @*<input name="file" type="file" accept=".xls,.xlsx" />
+                    <input type="button" onclick="excelCall()" value="Upload" />*@
+            @*</div>
+        </div>
+
+        <br>
+        Uploaded Files:
+        <ul id="uploadResult"></ul>
+    </div>
+</div>*@
+@section Scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+<script src="~/Scripts/bootstrap-filestyle.min.js"></script>
+<script>
+    $(".loading").hide();
+    var dd = "";
+    var url1, dropzoneValue;
+    $("#upload").select2({
+        maximumSelectionLength: 4,
+        placeholder: "Select Upload file",
+        allowClear: true
+    });
+    $("#upload").change(function () {
+        dd = $("#upload").val();
+        $("#Based_on_machine_code_div").hide();
+        $("#Based_on_Inital_upload_code_div").hide();
+
+        if (dd == 'vendor') {
+            url1 = '@Url.Action("UploadFiles", "VendorMaster")'
+        }
+        else if (dd == 'customer') {
+            url1 = '@Url.Action("UploadFiles", "CustomerMaster")'
+        }
+        else if (dd == 'budget') {
+            url1 = '@Url.Action("UploadFiles", "Budget")'
+        }
+        else if (dd == 'Item') {
+            url1 = '@Url.Action("UploadFiles", "ItemMaster")'
+        }
+        else if (dd == 'GeneralLedger') {
+            url1 = '@Url.Action("UploadFiles", "GeneralLedger")'
+        }
+        else if (dd == 'EmployeeBalance') {
+            url1 = '@Url.Action("UploadFiles", "EmployeeBalance")'
+        }
+        else if (dd == 'CustomerBalance') {
+            url1 = '@Url.Action("UploadFiles", "CustomerBalance")'
+        }
+        else if (dd == 'GeneralLedgerBalance') {
+            url1 = '@Url.Action("UploadFiles", "GenLedgerBalance")'
+        }
+        else if (dd == 'InventoryBalance') {
+            url1 = '@Url.Action("UploadFiles", "InventoryBalance")'
+        }
+        else if (dd == 'VendorBalance') {
+            url1 = '@Url.Action("UploadFiles", "VendorBalance")'
+        }
+        else if (dd == 'PriceListCustomer') {
+            url1 = '@Url.Action("UploadFiles", "PriceListCustomer")'
+        }
+        else if (dd == 'PriceListVendor') {
+            url1 = '@Url.Action("UploadFiles", "PriceList")'
+        }
+        else if (dd == 'GoodsIssue') {
+            url1 = '@Url.Action("UploadFiles", "GoodsIssue")'
+        }
+        else if (dd == 'AssetMasterData') {
+            $("#Based_on_machine_code_div").show(1000);
+            url1 = '@Url.Action("UploadFiles", "AssetMasterData")'
+        }
+        else if (dd == 'InitialUpload') {
+            $("#Based_on_Inital_upload_code_div").show(1000);
+            url1 = '@Url.Action("UploadFiles", "InitialUpload")'
+        }
+        else if (dd == 'CycleTime') {
+            url1 = '@Url.Action("UploadFiles", "CycleTime")'
+        }
+
+    })
+    $('#download').click(function () {
+        if (dd == "" || dd=="0") {
+            sweetAlert("", "Select Transaction ", "error");
+        }
+        if (dd == "AssetMasterData" && $('#Based_on_machine_code').is(':checked') == true)
+        {
+            dd = "AssetMasterDataWithBaseOnMachineCode";
+            window.location.href = '@Url.Action("downloadFile", "UploadFiles")?dd=' + dd;
+            dd = "AssetMasterData";
+        } else if (dd == "AssetMasterData" && $('#Based_on_machine_code').is(':checked') == false)
+        {
+            dd = "AssetMasterDataWithoutBaseOnMachineCode";
+            window.location.href = '@Url.Action("downloadFile", "UploadFiles")?dd=' + dd;
+            dd = "AssetMasterData";
+        }
+        else if (dd=="CycleTime")
+        {
+            dd = "CycleTime";
+            window.location.href = '@Url.Action("downloadFile", "UploadFiles")?dd=' + dd;
+            dd = "CycleTime";
+        }
+        else if (dd == "InitialUpload") {
+            var depretialtion_method_val = $("input[name='depretialtion_method']:checked").val();
+            if ($("input[name='depretialtion_method']:checked").val() != undefined) {
+
+                if (depretialtion_method_val == "wdv_slm")
+                {
+                    dd = "IntialUploadWithWDV_SLM";
+                }
+                if (depretialtion_method_val == "block") {
+                    dd = "InitialUploadWith_BLOCK";
+                }
+            }
+
+            window.location.href = '@Url.Action("downloadFile", "UploadFiles")?dd=' + dd;
+            dd = "InitialUpload";
+        }
+    });
+
+    $('#uploadFIle').submit(function (e) {
+        e.preventDefault(); // stop the standard form submission
+        $(".loading").show();
+
+        if (dd == 'AssetMasterData'){
+            var sended_flags = SendIsBasedOnMachineCodeToData();
+        }
+        if (dd == 'InitialUpload') {
+            var sended_flags = SendIsInitialUploadBasedOnWDV_SLMToData();
+        }
+
+
+
+        $.ajax({
+            url: url1,
+            type: this.method,
+            data: new FormData(this),
+            //cache: false,
+            contentType: false,
+            cache : false,
+            processData: false,
+            success: function (i, file, response, time) {
+                $(".loading").hide();
+                console.log(response);
+                if (!i.includes("Failed")) {
+                    sweetAlert("", 'File Upload Sucessfully', "success");
+                } else {
+                    sweetAlert("", response.responseJSON + '' + file, "error");
+                }
+
+            },
+            error: function (file, response) {
+                $(".loading").hide();
+                sweetAlert("", "Please Connect With Developer", "error");
+                //file.previewElement.classList.add("dz-error");
+            }
+        });
+    });
+
+    function SendIsBasedOnMachineCodeToData() {
+        var Data ;
+        if (dd == 'AssetMasterData')
+        {
+            var Data = "";
+            $.ajax({
+                url: '@Url.Action("GetIsBasedOn", "AssetMasterData")',
+                type: "Post",
+                dataType: "JSON",
+                async: false,
+                data: { is_based_on_asset_code_val: $('#Based_on_machine_code').is(':checked') },
+                success: function (item) {
+                     Data = item;
+                }
+            });
+        }
+        return Data;
+    }
+
+    function SendIsInitialUploadBasedOnWDV_SLMToData() {
+        var Data1;
+        if (dd == 'InitialUpload') {
+            var Data1 = "";
+            $.ajax({
+                url: '@Url.Action("GetIsBasedOn", "InitialUpload")',
+                type: "Post",
+                dataType: "JSON",
+                async: false,
+                data: { is_based_depretialtion_method_val: $("input[name='depretialtion_method']:checked").val() },
+                success: function (item) {
+                    Data1 = item;
+                }
+            });
+        }
+        return Data1;
+    }
+
+    //window.onload = function () {
+
+    //    document.getElementById('uploader').onsubmit = function () {
+    //        if (dd == "" || dd=="0") {
+    //            sweetAlert("", "Select Transaction ", "error");
+
+    //        }
+    //        else {
+    //            var formdata = new FormData();
+    //            var fileInput = document.getElementById('fileInput');
+    //            for (i = 0; i < fileInput.files.length; i++) {
+    //                formdata.append(fileInput.files[i].name, fileInput.files[i]);
+    //            }
+    //            var xhr = new XMLHttpRequest();
+    //            xhr.open('POST', url1);
+
+    //            xhr.send(formdata);
+    //            xhr.onreadystatechange = function (response) {
+    //                if (xhr.readyState == 4 && xhr.status == 200) {
+    //                    var x = xhr.responseText;
+    //                    if (xhr.responseText == '"0 - "') {
+    //                        sweetAlert("", "Successsfully uploaded!", "success");
+    //                    }
+    //                    else {
+    //                        sweetAlert("", xhr.responseText, "error");
+    //                    }
+    //                }
+    //            }
+    //            return false;
+    //        }
+
+    //    }
+    //}
+    //$(function () {
+    //    $('#dropZone').filedrop({
+    //        url: url1,
+    //        paramname: 'files',
+    //        maxFiles: 5,
+    //        dragOver: function () {
+    //            $('#dropZone').css('background', 'blue');
+    //        },
+    //        dragLeave: function () {
+    //            $('#dropZone').css('background', 'gray');
+    //        },
+    //        drop: function () {
+    //            $('#dropZone').css('background', 'gray');
+    //        },
+    //        afterAll: function () {
+    //            $('#dropZone').html('');
+
+    //        },
+    //        uploadFinished: function (i, file, response, time) {
+
+    //            if (response.Status == "Failed") {
+    //                sweetAlert("File cannot be uploaded", "Error found " + response.text, "error");
+    //            }
+    //            if (response.Status == "Success") {
+    //                $('#uploadResult').append('<li>' + file.name + '</li>');
+    //                sweetAlert("", 'File Upload Sucessfully', "success");
+    //            }
+    //            if (response.errorMessage != "") {
+    //                //console.log(response.error);
+    //                sweetAlert("File cannot be uploaded", response.errorMessage, "error");
+    //            }
+    //            if (response.error.length > 0) {
+    //                for (i = 0 ; i < response.error.length ; i++) {
+    //                    if (response.error[i] != null) {
+    //                        swal({
+    //                            title: "File cannot be uploaded !" + "<br/>" + "<span style='font-size:16px'>" + response.text + " " + "Error found " + "</span>",
+    //                            text: "Error is" + " " + "<small style='color:#F8BB86'>" + response.error[i] + "</small>",
+    //                            html: true,
+    //                            type: "error",
+    //                        });
+    //                    }
+    //                }
+    //            }
+
+    //        }
+    //    });
+    //});
+
+</script>
+    }

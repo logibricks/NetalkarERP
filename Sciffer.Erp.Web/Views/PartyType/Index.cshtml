@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.Model.ref_party_type>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+<p>
+    <a href="@Url.Action("Create", "PartyType")" data-toggle="modal" class="btn-circle btn-lg btn-primary"><span class="glyphicon glyphicon-plus"></span> </a>
+</p>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <table id="example" class="table table-striped responsive-utilities jambo_table table-bordered">
+                <thead>
+                    <tr class="headings">
+                        <th>
+                            @Html.DisplayNameFor(model => model.party_type_name)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                @foreach (var item in Model)
+                {
+                    <tbody>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.party_type_name)
+                            </td>
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.party_type_id })
+                                @Html.ActionLink("Details", "Details", new { id = item.party_type_id })
+                                @Html.ActionLink("Delete", "Delete", new { id = item.party_type_id })
+                            </td>
+                        </tr>
+                    </tbody>
+                }
+
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,250 @@
+﻿using Sciffer.Erp.Domain.Model;
+using Sciffer.Erp.Domain.ViewModel;
+using Syncfusion.JavaScript.Models;
+using Syncfusion.XlsIO;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Web;
+
+namespace Sciffer.Erp.Service.Interface
+{
+    public interface IGenericService : IDisposable
+    {
+        string Get_PlantShift(int plant_id, TimeSpan time);
+        string Get_DateDiff_for_malfunction(int notification_id);
+        string GetOperator(int userid);
+        string GetEMpOperator(int userid);
+        string GetMulOperator(string attendedby_id);
+        string Get_UserMobileNumber(int plant_id);
+        string GetFilePathForImage1(string controller, HttpPostedFileBase files, string employee_code);
+        void SendMail(string send_to, string send_cc, string send_bcc, string body, string subject);
+        List<incentive_status> GetIncenticeStatus(string entity, string plant_id, DateTime from_date, DateTime to_date);
+        List<ref_task_periodicity> GetPeriodicitylist();
+        List<ref_task_type> GetTaskTypeList();
+        List<REF_PAYMENT_CYCLE_TYPE> GetPaymentCycleTypeList();
+        List<REF_UOM> GetUOMList();
+        List<ref_easy_hr_data> GetEasyHRData();
+        List<ref_cancellation_reason_vm> GetCANCELLATIONReason(string module_form_code);
+        List<ref_tax_vm> GetWithinState(int id);
+        List<inv_item_batch_detail_tag_vm> GetTagList();
+        List<document_numbring> GetCategoryListByModule(string code);
+        List<Ref_item_VM> GetJobWorkInItem();
+        List<Ref_item_VM> GetRMItemList();
+        string GetCompanyName();
+        IWorkbook GetExcelWorkBook(GridProperties obj, object DataSource, string ctrlname);
+        List<ref_dashboard_vm> GetDashboardList(int user_id);
+        List<ref_document_numbring> GetCategoryListByPlant(int id, int plant_id);
+        int? GetGSTCustomerTypeforGRN(int id);
+        string GetFilePathForImage(string controller, HttpPostedFileBase files, string employee_code);
+        List<REF_VENDOR_CATEGORY> GetVendorCategory();
+        List<ref_module_form> GetModuleForm(int id);
+        List<REF_STORAGE_LOCATION> GetAllStorageLocation(int id);
+        List<REF_PAYMENT_CYCLE> GetPaymentCycle(int id);
+        List<REF_STATE> GetState(int id);
+        int CheckDuplicate(string st, string st1, string name1, string ctrlname, int id);
+        string GetFilePath(string controller, HttpPostedFileBase files);
+        List<ref_document_numbring> GetCategoryList(int id);
+        string GetDocumentNumbering(int id);
+        REF_CUSTOMER_VM GetBuyerDetails(int id);
+        int GetUnitofItem(int id);
+        Ref_item_VM GetUserDescriptionForItem(int id);
+        int GetItemId(string code);
+        int GetCustomerId(string code);
+        int? GetGLId(string code);
+        int GetVendorId(string code);
+        int GetTaxElementId(string code);
+        List<tax_vm> GetTaxCalculation(string entity, string st, double amt, DateTime dt, int tds_code_id);
+        List<credit_debit_vm> GetCreditDebit(string ent, int customer_id, double total_value, double basic_value, string item_sales_gl, int tds_code_id, DateTime posting_date, double round_off);
+        int GetUOMIDByitemid(int id);
+        REF_VENDOR_VM VendorDetail(int id);
+        string GetAttachment(int id, string ctrl);
+        List<ref_priority_vm> GetPriorityByForm(int id);
+        List<ref_ledger_account_type_vm> GetLedgerAccountTypeByItem(int entity_type_id, int item_category_id, int? item_type_id);
+        List<ref_ledger_account_type_vm> GetLedgerAccountType(int entity_type_id, int entity_id, int? item_type_id);
+        int GetInstructionID(string name);
+        int GetFinancialYearID(string code);
+        int GetEmployeeID(string code);
+        int GetEmployeeIdFromUser(int user_id);
+        int GetPlantID(string name);
+        int GetTaxId(string code);
+        int GetBankId(string code);
+        List<ref_ledger_vm> GetLedgerAccount(int id);
+        int GetCustomerCategoryId(string name);
+        int GetOrgId(string name);
+        int GetStateID(string name);
+        int GetTerritoryId(string name);
+        int GetSalesRMID(string name);
+        int GetCustomerParentId(string name);
+        int GetFreightId(string name);
+        int GetPriorityId(string name);
+        int GetCurrencyId(string name);
+        int GetPaymentTermId(string name);
+        int GetPaymentCycleTypeId(string name);
+        int GetPaymentCycleId(string name);
+        int GetItemCategoryId(string name);
+        int GetLedgerAccountTypeId(string name, int entity_type_id);
+        int GetVendorCategoryId(string name);
+        int GetVendorParentId(string name);
+        int GetItemTypeId(string name);
+        int GetItemGroupId(string name);
+        int GetBrandId(string name);
+        int GetUoMId(string name);
+        int GetItemValuationId(string name);
+        int GetItemAccountingId(string name);
+        int GetExcisecategoryid(string name);
+        int GetShelfLifeId(string name);
+        DataTable ToDataTable<T>(List<T> items);
+        List<REF_CUSTOMER_VM> GetCustomerList();
+        List<ref_tax_vm> GetTaxList();
+        List<Ref_item_VM> GetItemList();
+        List<ref_mfg_process_vm> GetProcessList();
+        List<payment_terms_vm> GetPaymentTermsList();
+        List<REF_PLANT_VM> GetPlantList();
+        List<ref_business_unit_vm> GetBusinessUnitList();
+        List<storage_vm> GetStorageLocationList(int id);
+        List<REF_ITEM_CATEGORYVM> GetItemCategoryList();
+        List<Ref_item_VM> GetItemListByType();
+        List<tds_codeVM> GetTDSCodeList();
+        int GetTdsCodeId(string code);
+        List<ref_hsn_code_vm> GetHSNList();
+        List<REF_EMPLOYEE_VM> GetSalesRM();
+        List<REF_VENDOR_VM> GetVendorList();
+        List<ref_status> GetStatusList(string form);
+        List<ref_item_parameter> GetParameter();
+        List<ref_machine_category_VM> GetMachineCategoryList();
+        List<ref_machine_master_VM> GetMachineList(int id);
+        List<ref_machine_master_VM> GetallMachineList();
+        Ref_item_VM GetItemsDetail(int id);
+        List<ref_bank_account_vm> GetBankAccountByBank(int id);
+        List<REF_PAYMENT_TYPE> GetPaymentTypeList();
+        List<REF_CURRENCY> GetCurrencyList();
+        List<ref_bank_vm> GetBankList();
+        List<REF_FREIGHT_TERMS> GetFreightTermsList();
+        object GetEntityDetailByEntity(string entity);
+        string CheckValidation(string entity, int id, DateTime posting_date);
+        List<ref_ledger_account_type_vm> getOffsetAccount(string ledger_account_type_name, int ledger_account_type_id);
+        List<REF_ENTITY_TYPE> GetEntityList();
+        List<ref_bank_vm> GetBankForSearchingDropdown();
+        List<ref_ledger_vm> GetGLForSearchingDropdown();
+        List<REF_CUSTOMER_VM> GetCustomerforsearchdropdown();
+        List<ref_bank_vm> GetBankforSearchDropdown();
+        List<ref_cost_center> GetCostCenter();
+        List<REF_PLANT> GetPlantCode();
+        List<REF_EMPLOYEE> GetEmployeeCode();
+        List<ref_cancellation_reason_vm> GetCANCELLATIONList(int module_form_id);
+        List<ref_ledger_vm> GetInventoryAccount(int id);
+        List<ref_ledger_vm> GetConsumptionAccount(int id);
+        List<pur_grnVM> GetGrnListByItemID(int item_id, int plant_id);
+        List<REF_EMPLOYEE_VM> GetEmployeeList(int id);
+        List<REF_EMPLOYEE_VM> GetOpertorList(int id);
+
+        List<Ref_item_VM> GetCatWiesItemList(int itemcatId);
+        List<GetBatchForGoodsIssue> BatchListWithQuantity(int item_id, int plant_id, int sloc_id, string entity);
+        Ref_item_VM GetUomOrQualityManage(int id);
+        List<ref_cash_account_VM> GetCashAccount();
+        bool CHKDupMachineCode(string machineCode);
+        double Get_Current_Balance(string entity, int entity_type_id, int entity_id, DateTime start_date);
+        List<ref_user_management_vm> GetUserList();
+        Item_Current_balance Get_Item_Current_Balance(string ent, int itemid, int plantid, int slocid, int bucketid);
+        List<ref_gst_applicability> GetGSTApplicability();
+        List<ref_gst_customer_type> GetGSTCustomerVendorType();
+        List<ref_sac_vm> GetSACList();
+        List<ref_gst_tds_code_vm> GetGSTTDSCodeList();
+        int GetItemType_id(int item_id);
+        List<hsn_sac> Get_hsn_sac(int item_type_id);
+        List<hsn_sac> Get_hsn_saclist(int item_id);
+        List<ref_machine_master_VM> GetMachineListOnProcessId(int item_id);
+        int? plantby_doc_no(int category_id);
+        List<ref_document_list> GetDocumentListinGI(string document_code, int plant_id);
+        List<SubProdOrderDetailVM> getDocumentSelectedDetails(string document_code, int id);
+        int GetplantIDByCode(string document_code, int document_id);
+        double? getBatchQuantityUsingItemSlocPlant(int sloc_id, int plant_id, int item_id, DateTime posting_date);
+        List<ref_tax_vm> GetTaxByRCM(int id);
+        List<Ref_permit_template_VM> GetTempList();
+        List<Ref_checkpoints_VM> GetCheckpointList(int id);
+        List<Ref_checkpoints_VM> GetScenarioList(int id);
+        List<REF_NOTIFICATION_TYPE> GetNotificationType();
+        List<ref_machine_master_VM> GetMachineListFromPlant(int id);
+        List<ref_document_numbring> CategoryListByPlant(int id, int plant_id);
+        int getDocumentId(string document_code, string document_number);
+        int getDocumentDetailId(string document_code, int item_id);
+        int GetCategoryByModuleFormAndPlant(int module_form_id, int plant_id);
+        int GetSlocId(string code);
+        double? getBatchQuantityUsingItemSlocPlant(int sloc_id, int plant_id, int item_id, int bucket_id);
+        int? GetOperatorEmployeeId(int user_id);
+        List<ref_mfg_process_vm> GetOperationList();
+        List<create_stock_sheet> PlantwiseCreateStockSheet(int plant_id);
+        List<update_stock_count_vm> GetUpdateStockDocList(int id);
+        List<fin_credit_debit_note_vm> GetTaxRate(int id);
+        List<fin_credit_debit_transaction_vm> GetSalesPurchaseInvoicedetails(string entity_id, int id);
+        List<ref_mfg_operator_incentive_appl_vm> GetAllUserForIncApp(string user_id);
+        List<ref_mfg_multi_machining_vm> GetAllMachineForMultiMac(string entity);
+        List<ref_shifts_vm> GetShiftlist();
+        List<operator_incentive_summary_vm> GetOperatorIncentiveSummary(DateTime? from_date, DateTime? to_date, int? user_id);
+        List<operator_incentive_detail_vm> GetOperatorIncentiveDetail(DateTime? from_date, DateTime? to_date, int? user_id);
+        List<ref_mfg_incentive_benchmark_vm> GetInsentiveBenchmarkDetail(string entity_id);
+        List<operator_incentive_vm> GetOperatorIncentive(string entity, DateTime? from_date, DateTime? to_date, string plant_id);
+        List<operator_incentive_summary_vm> GetOperatorIncentiveSummaryDHB(string entity, DateTime? from_date, DateTime? to_date, string plant_id);
+        List<ref_shifts_vm> GetShiftfromPlant(int id, DateTime posting_date);
+        List<ref_machine_master_VM> GetMachineListByProcess(int process_id);
+        List<ref_incentive_status> GetIncentiveStatuslist();
+        List<Report_incentive_vm> ComputeIncentive(int start_date_shift_id, int end_date_shift_id, DateTime from_date, DateTime to_date, string plant_id);
+        List<ref_mfg_multi_machining> GetMultiMachining();
+        List<ref_mfg_incentive_holiday> GetHolidayList();
+        List<Report_incentive_vm> GetAllIncentiveDetailandSummary(int start_date_shift_id, int end_date_shift_id, DateTime from_date, DateTime to_date, string plant_id);
+
+
+        List<Report_incentive_vm> GetAllViewIncentiveSummary(int start_date_shift_id, int end_date_shift_id, DateTime from_date, DateTime to_date, string plant_id);
+
+
+        List<ref_asset_class> GetAssetClass();
+        List<ref_asset_group> GetAssetGroup();
+        List<REF_COUNTRY> GetCountryList();
+        List<ref_asset_class_depreciation_vm> GetAssetClassDepreciationList();
+        List<ref_asset_master_data> GetAssetMasterData();
+        List<fin_ledger_capitalization_detail_vm> ForCapitalizationeDetail(int entity_type_id, int entity_id);
+        List<ref_dep_area_vm> GetDepList();
+        List<ref_dep_area_vm> GETDEPRECIATIONAREA();
+        List<ref_ledger_account_type_vm> GetLedgerAccountTypeName();
+        string GetFilePathForImage(string controller, HttpPostedFileBase files);
+        List<ref_dep_area_vm> GetDepListForDepRun();
+        List<prod_plan_detail> GetProdPlanDetails();
+        List<prod_downtime> GetProdDownTimeDetails();
+        List<Ref_item_VM> get_childitem_list(string entity, int parent_item_id);
+        List<ref_level> GetLevelList();
+
+        List<ref_user_management_vm> Get_User_Production_Supervisor();
+
+        List<ref_shifts_vm> GetShiftTimefromShift(int id);
+
+        List<Ref_item_VM> GetItemListRMCategorywise();
+        int GetCheck_Inventory(int item_id, int plant_id, int storage_location_id, int bucket_id, decimal quantity);
+        List<Ref_item_VM> GetItemListOnlyRMCategory(int categoryid);
+        List<ref_ledger_vm> GetLedgerAccountOnlyActive(int id);
+
+        List<ref_machine_master_VM> GetMachineListWithOperationAndUser(int userId);
+        List<ref_user_management_vm> GetOperatorList();
+
+        List<ref_document_numbring> GetCategoryListForShiftWise(string code);
+
+        List<ref_machine_master_VM> GetMachineListWithPlant(int plantId);
+
+        int GetReOrderLevelBy_id(int item_id);
+
+        List<ref_asset_master_data> GetAssetMasterDataForDropDown();
+
+        List<Ref_item_VM> GetItemListForReOrder();
+        int GetReOrderCount();
+        List<ref_shifts_vm> GetShiftfromPlant(int id);
+        List<ref_plan_breakdown_order_VM> GetAttendedByList(int? id);
+        List<Ref_item_VM> GetItemList3();
+        List<ref_document_numbring> GetCategoryListByPlant1(int id);
+
+        List<ref_shifts_vm> GetShiftdesclist();
+        List<ref_machine_master_VM> GetMachineListWithOperationAndUserForTemp(int userId);
+
+        List<Ref_item_VM> GetRMAndFGItemList();
+
+    }
+}

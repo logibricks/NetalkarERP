@@ -1,0 +1,61 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+
+@{
+    (Html.EJ().Grid<Report_NCRejection_vm>("Editing")
+    .Datasource(ds => ds.URL(Url.Action("Get_report_production", "ProductionReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&plant_id=" + ViewBag.plant_id + "&item_id=" + ViewBag.item_id + "&is_qc_remark=" + ViewBag.is_qc_remark).Adaptor(AdaptorType.UrlAdaptor))
+    //.Datasource((IEnumerable<object>)ViewBag.datasource)
+    .AllowPaging().PageSettings(a => a.PageSize(50))
+    .AllowFiltering()
+    .FilterSettings(X => X.FilterType(FilterType.Excel))
+    .ShowColumnChooser()
+    .AllowScrolling()
+    .AllowResizing()
+    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "ProductionReport", new { ctrlname = "ProductionReportNCRejection" })))
+    .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+    .ToolbarSettings(toolbar =>
+    {
+        toolbar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Search);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        });
+    })
+
+    .Columns(col =>
+    {
+        //col.Field("machine_id").HeaderText("Date").Width("16%").Add();
+        col.Field("machine_code").Width("15%").HeaderText("Machine Code").Add();
+        col.Field("machine_name").Width("15%").HeaderText("Machine Name").Add();
+        //col.Field("item_id").Width("15%").HeaderText("Non-Conforming Details").Add();
+        col.Field("item_name").Width("15%").HeaderText("Item Name").Add();
+        col.Field("item_code").Width("15%").HeaderText("Item Code").Add();
+        col.Field("task_time").Width("15%").HeaderText("Task Time").Add();
+        //col.Field("shift_desc").Width("15%").HeaderText("Shift Desc.").Add();
+        col.Field("shift_a_ok_qty").Width("15%").HeaderText("Shift A ok qty").Add();
+        col.Field("shift_b_ok_qty").Width("15%").HeaderText("Shift B ok qty").Add();
+        col.Field("shift_c_ok_qty").Width("15%").HeaderText("Shift C ok qty").Add();
+    })
+    .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick"); })
+    )
+    .Render();
+}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1) {
+            this.model["from_date"] = $("#fromDate").val();
+            this.model["to_date"] = $("#toDate").val();
+        }
+    }
+
+</script>
+
+
+
+

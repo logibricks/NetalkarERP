@@ -1,0 +1,137 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.mickey').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            maxHeight: '200',
+            enableCaseInsensitiveFiltering: true,
+            allowClear: true,
+            maximumResultsForSearch: 1,
+            numberDisplayed: 0,
+        });
+    });
+</script>
+
+
+<div class="loading">Loading &#8230;</div>
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="form-horizontal">
+            <div class="x_content">
+                <div class=row>
+                    <div class="col-md-4 col-lg-4 col-xs-12">
+                        <label class="control-label col-md-5 col-lg-5 col-xs-12">From Date</label>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            <input type="date" id="from_date" class="form-control radius" required="required">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-4 col-xs-12">
+                        <label class="control-label col-md-5 col-lg-5 col-xs-12">To Date</label>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            <input type="date" id="to_date" class="form-control radius">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-4 col-xs-12">
+                        <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                            <label></label>
+                        </div>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            <button class="searchbutton searchButton" id="search"> &nbsp; Run Report </button>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class=row>
+                    <div class="col-md-4 col-lg-4 col-xs-12">
+                        <label class="control-label col-md-5 col-lg-5 col-xs-12">Plant</label>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plant_list, new { @class = "form-control mickey", multiple = "multiple" })
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-4 col-xs-12">
+                        <label class="control-label col-md-5 col-lg-5 col-xs-12">Item Category</label>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            @Html.DropDownList("item_category_id", (System.Web.Mvc.SelectList)ViewBag.item_category_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-4 col-xs-12">
+                        <label class="control-label col-md-5 col-lg-5 col-xs-12">Item Code</label>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.item_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_content">
+            <div id="searchresult">
+                @Html.Partial("Partial_InventoryRevalaution", (object)ViewBag)
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+    $("#search").click(function () {
+        AdvanceSearch();
+    });
+ 
+    document.getElementById('from_date').valueAsDate = new Date();
+    document.getElementById('to_date').valueAsDate = new Date();
+    function AdvanceSearch() {
+        var fromDate = $("#from_date").val();
+        var toDate = $("#to_date").val();       
+        if ($('#item_id :selected').length > 0) {
+            var selectedItem = [];
+            $('#item_id :selected').each(function (i, selected) {
+                selectedItem[i] = $(selected).val();
+            });
+            var Item = selectedItem + "";
+        }
+        if ($('#plant_id :selected').length > 0) {
+            var selectedSloc = [];
+            $('#plant_id :selected').each(function (i, selected) {
+                selectedSloc[i] = $(selected).val();
+            });
+            var plant = selectedSloc + "";
+        }
+        if ($('#item_category_id :selected').length > 0) {
+            var selectedItemCategory = [];
+            $('#item_category_id :selected').each(function (i, selected) {
+                selectedItemCategory[i] = $(selected).val();
+            });
+            var Item_Category = selectedItemCategory + "";
+        }
+        $(".loading").show();
+        $.ajax({
+            url: '@Url.Action("Get_Partial", "InventoryReport")',
+            method: "Post",
+            cache: false,
+            data: { entity: "getinventoryrevaluationreport", from_date: fromDate, to_date: toDate, plant_id: plant == "" ? "-1" : plant, sloc_id: '-1', bucket_id: '-1', item_id: Item, item_category_id: Item_Category, reason_code_id: '-1', sloc_id1: "-1", bucket_id1: "-1" },
+            success: function (data) {
+                $(".loading").hide();
+                $('#searchresult').empty().append(data);
+            },
+            error: function (http) {
+                console.log(XMLHttpRequest);
+            }
+        });
+    }   
+    </script>
+}
+<div class="modal"><!-- Place at bottom of page --></div>

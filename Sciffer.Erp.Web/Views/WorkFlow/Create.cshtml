@@ -1,0 +1,180 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.workflowVM
+
+@{
+    ViewBag.Title = "Create";
+}
+
+
+<h2>Create</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.document_type_id, "Document Type", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("document_type_id", (System.Web.Mvc.SelectList)ViewBag.document_type_list, "---Select---", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.document_type_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.category_id, "Category", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("CATEGORY_ID", (System.Web.Mvc.SelectList)ViewBag.category_list, "---Select---", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.has_value, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.has_value)
+                    @Html.ValidationMessageFor(model => model.has_value, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.value_from, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.value_from, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.value_from, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.value_to, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.value_to, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.value_to, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.no_of_approval, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.no_of_approval, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.no_of_approval, "", new { @class = "text-danger" })
+                <input type="hidden" id="setName" name="setName" />
+                <input type="hidden" id="userId" name="userId" />
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="button" class="btn btn-primary" id="btn_add_more_row"><span class="glyphicon glyphicon-plus-sign" id="add_approval_set"></span></button>
+            </div>
+        </div>
+
+
+        <div class="row collapse" id="workflow_detail_div">
+            <div class="form-group">
+                <div class="col-md-10 col-md-offset-2">
+                    <button type="button" id="btn_close_row" class="close"><span>&times;</span></button>
+                    <table class="table table-bordered table-condensed" id="ContactGrid">
+                        <thead>
+                            <tr>
+                                <th hidden><label>ID</label></th>
+                                <th><label>Set No.</label></th>
+                                <th> <label>Set Name</label></th>
+                                <th><label>Users</label></th>
+                                <th hidden><label>User ID</label></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-11 col-md-1">
+                <input type="submit" id="btn_submit"  value="Create" class="btn btn-success" />
+            </div>
+        </div>
+
+    </div>
+}
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+<script src="~/Scripts/bootstrap.js"></script>
+
+}
+
+
+<script>
+    $(document).ready(function () {
+        $('#has_value').checkboxpicker();
+        $('#btn_add_more_row').click(function () {
+            $('#ContactGrid tbody').empty();
+            var num = $('#no_of_approval').val();
+            var st = "";
+            if (num != '') {
+                $.ajax({
+                    url: '@Url.Action("UserList", "Workflow")',
+                    type: 'post',
+                    contentType: 'application/json',
+                    success: function (user) {
+                         $('#workflow_detail_div').removeClass('collapse');
+                         $(user).each(function (index, u) {
+                             st = st + '<option value="'+u.USER_ID+'">' + u.USER_NAME + '</option>';
+                        });
+
+                        for (var i = 1; i <= num; i++) {
+                            $('#ContactGrid').append('<tbody><tr><td><label class="lbl_sn" id="lbl_sn' + i + '" >' + i + '</label></td><td><input type="text" name="txt_set_name" id="txt_set_name' + i + '" class="form-control" /></td><td><div class="form-group text-center"><div class="col-md-12 col-sm-12 col-xs-12"><select class="form-control users" id="users'+i+'" multiple="multiple">' + st + '</select></div></div></td></tr></tbody>');
+                        }
+                        $('.users').multiselect({ includeSelectAllOption: true });
+                    }
+                });
+            }
+            else {
+                alert('please enter no. of approvals');
+            }
+        });
+
+        $('#btn_close_row').click(function () {
+            $('#workflow_detail_div').addClass('collapse');
+        });
+
+        $('#btn_submit').click(function (e) {
+            var num = $('#no_of_approval').val();
+            $('#setName').val('');
+            $('#userId').val('');
+            e.preventDefault();
+            var u = [];
+            var setname = [];
+            for (var i = 1; i <= num; i++) {
+                setname.push(i+'~'+$('#txt_set_name' + i).val());
+                var s = "";
+                $('#users'+i+' option:selected').each(function () {
+                    s = s + i + '-' + $(this).val()+'~';
+                });
+                u.push(s);
+            }
+            $('#setName').val(setname);
+            $('#userId').val(u);
+            document.forms[0].submit();
+        });
+
+
+    });
+</script>
+
+

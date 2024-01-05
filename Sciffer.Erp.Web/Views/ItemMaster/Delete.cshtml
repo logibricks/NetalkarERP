@@ -1,0 +1,312 @@
+﻿@model Sciffer.Erp.Domain.Model.REF_ITEM
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>REF_ITEM</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_BRAND.BRAND_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_BRAND.BRAND_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_EXCISE_CATEGORY.EXCISE_CATEGORY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_EXCISE_CATEGORY.EXCISE_CATEGORY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_ITEM_ACCOUNTING.ITEM_ACCOUNTING_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_ITEM_ACCOUNTING.ITEM_ACCOUNTING_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_ITEM_CATEGORY.ITEM_CATEGORY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_ITEM_CATEGORY.ITEM_CATEGORY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_ITEM_GROUP.ITEM_GROUP_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_ITEM_GROUP.ITEM_GROUP_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_ITEM_VALUATION.ITEM_VALUATION_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_ITEM_VALUATION.ITEM_VALUATION_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_PRIORITY.PRIORITY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_PRIORITY.PRIORITY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_UOM.UOM_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_UOM.UOM_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_UOM1.UOM_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_UOM1.UOM_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_UOM2.UOM_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_UOM2.UOM_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_UOM3.UOM_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_UOM3.UOM_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_UOM4.UOM_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_UOM4.UOM_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_UOM5.UOM_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_UOM5.UOM_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_UOM6.UOM_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_UOM6.UOM_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_USER.USER_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_USER.USER_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_VENDOR.VENDOR_CODE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_VENDOR.VENDOR_CODE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ITEM_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ITEM_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ITEM_CODE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ITEM_CODE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ITEM_LENGTH)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ITEM_LENGTH)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ITEM_WIDTH)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ITEM_WIDTH)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ITEM_HEIGHT)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ITEM_HEIGHT)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ITEM_VOLUME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ITEM_VOLUME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ITEM_WEIGHT)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ITEM_WEIGHT)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IS_BLOCKED)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IS_BLOCKED)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CREATED_ON)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CREATED_ON)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.QUALITY_MANAGED)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.QUALITY_MANAGED)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BATCH_MANAGED)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BATCH_MANAGED)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SHELF_LIFE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SHELF_LIFE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.VENDOR_PART_NUMBER)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.VENDOR_PART_NUMBER)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MRP)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MRP)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MINIMUM_LEVEL)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MINIMUM_LEVEL)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MAXIMUM_LEVEL)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MAXIMUM_LEVEL)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REORDER_LEVEL)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REORDER_LEVEL)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REORDER_QUANTITY)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REORDER_QUANTITY)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EXCISE_CHAPTER_NO)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EXCISE_CHAPTER_NO)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ADDITIONAL_INFORMATION)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ADDITIONAL_INFORMATION)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

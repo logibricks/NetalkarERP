@@ -1,0 +1,252 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<input type="search" class="search form-control" placeholder="Search Quality Report" id="s" ; style="width:23.5%;">
+<br />
+<div id="hide">
+    <div class="row display-flex">
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;">
+                    QC Lot Summary Report
+                </div>
+                <div class="panel-body">
+                    <p>QC Lot Summary Report</p>
+                </div>
+                <a href="@Url.Action("QCLotSummaryReport", "QualityReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;">
+                    QC Parameters Report
+                </div>
+                <div class="panel-body">
+                    <p>QC Parameters Report </p>
+                </div>
+                <a href="@Url.Action("QCParametersReport", "QualityReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;">
+                    QC Usage Decision Report
+                </div>
+                <div class="panel-body">
+                    <p>QC Usage Decision Report </p>
+                </div>
+                <a href="@Url.Action("QCUsageDecisionReport", "QualityReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color: #337ab7;color: #fff;">
+                    QC Lot Shelf Life Report
+                </div>
+                <div class="panel-body">
+                    <p>QC Lot Shelf Life Report</p>
+                </div>
+                <a href="@Url.Action("QCLOTShelfLifeReport", "QualityReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;">
+                    Shelf Life Expired Report
+                </div>
+                <div class="panel-body">
+                    <p>Shelf Life Expired Report </p>
+                </div>
+                <a href="@Url.Action("ShelfLifeExpiredReport", "QualityReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;">
+                    Shelf Life about to Expire Report
+                </div>
+                <div class="panel-body">
+                    <p>Shelf Life about to Expire Report</p>
+                </div>
+                <a href="@Url.Action("ShelfLifeAbouttoExpireReport", "QualityReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;">
+                    Batch Revalidation Report
+                </div>
+                <div class="panel-body">
+                    <p>Batch Revalidation Report</p>
+                </div>
+                <a href="@Url.Action("BatchRevalidatedReport", "QualityReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color: #337ab7;color: #fff;">
+                    Material Consumed Post Expiry Report
+                </div>
+                <div class="panel-body">
+                    <p>Material Consumed Post Expiry Report</p>
+                </div>
+                <a href="@Url.Action("MATERIAL_CONSUMED_POST_EXPIRYReport", "QualityReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;">
+                    Item Master QC parameters Report
+                </div>
+                <div class="panel-body">
+                    <p>Item Master QC parameters Report </p>
+                </div>
+                <a href="@Url.Action("ITEM_MASTERQCPARAMETERSReport", "QualityReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;">
+                    Batch Revalidation Count Report
+                </div>
+                <div class="panel-body">
+                    <p>Batch Revalidation Count Report</p>
+                </div>
+                <a href="@Url.Action("BatchRevalidationCountReport", "QualityReport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;">
+                    Quality Control Parameters Report
+                </div>
+                <div class="panel-body">
+                    <p>Quality Control Parameters Report</p>
+                </div>
+                <a href="@Url.Action("QualityControlParamReport", "inventoryreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color: #337ab7;color: #fff;">
+                    Operator Parameters Report
+                </div>
+                <div class="panel-body">
+                    <p>Operator Quality Parameters Report</p>
+                </div>
+                <a href="@Url.Action("OperatorQualityParamReport", "inventoryreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/requirevalidation.js"></script>
+<script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+            $(document).ready(function () {
+                $("#s").on("keyup click input", function () {
+                    if (this.value.length > 0) {
+                        $(".col-lg-3").show().filter(function () {
+                            return $(this).find('.name').text().toLowerCase().indexOf($("#s").val().toLowerCase()) == -1;
+                        }).hide();
+                    }
+                    else {
+                        $(".col-lg-3").show();
+                    }
+                });
+
+            });
+    </script>
+    <style>
+        .row.display-flex {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+            .row.display-flex > [class*='col-'] {
+                display: flex;
+                flex-direction: column;
+            }
+
+        .panel {
+            height: 100%;
+            width: 100%;
+        }
+
+        .name {
+            font-size: 15px;
+            background-color: #5cb85c;
+            color: #fff;
+        }
+
+        .panel-heading {
+            height: 38px;
+        }
+
+        .panel-body {
+            height: 90px;
+        }
+
+        p {
+            font-size: 13px;
+        }
+
+        .panel-footer {
+            font-size: 15px;
+            color: #000;
+            height: 40px;
+        }
+
+        }
+        </style>
+    

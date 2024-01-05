@@ -1,0 +1,138 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.ref_tool_operation_map_vm
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="row form-horizontal">
+    <hr />
+    <div id="ParameterData"></div>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <div class="col-sm-6">
+        <div class="form-group">
+            @Html.LabelFor(model => model.process_id, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.DropDownList("process_id", (System.Web.Mvc.SelectList)ViewBag.process_id, "---Select---", htmlAttributes: new { @class = "form-control validinput", @required = true, })
+                @Html.ValidationMessageFor(model => model.process_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            @Html.LabelFor(model => model.crankshaft_id, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.DropDownList("crankshaft_id", (System.Web.Mvc.SelectList)ViewBag.crankshaft_id, "---Select---", htmlAttributes: new { @class = "form-control validinput", @required = true, })
+                @Html.ValidationMessageFor(model => model.crankshaft_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            @Html.LabelFor(model => model.tool_id, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.DropDownList("tool_id", (System.Web.Mvc.SelectList)ViewBag.tool_id, "---Select---", htmlAttributes: new { @class = "form-control validinput", @required = true, })
+                @Html.ValidationMessageFor(model => model.tool_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            @Html.LabelFor(model => model.tool_usage_type_id, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.DropDownList("tool_usage_type_id", (System.Web.Mvc.SelectList)ViewBag.tool_usage_type_id, "---Select---", htmlAttributes: new { @class = "form-control validinput", @required = true, })
+                @Html.ValidationMessageFor(model => model.tool_usage_type_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="form-group">
+            @Html.LabelFor(model => model.tool_category_id, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.DropDownList("tool_category_id", (System.Web.Mvc.SelectList)ViewBag.tool_category_id, "---Select---", htmlAttributes: new { @class = "form-control validinput", @required = true, })
+                @Html.ValidationMessageFor(model => model.tool_category_id, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6" id="is_blocked">
+        <div class="form-group">
+            @Html.LabelFor(model => model.is_blocked, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+            <div class="col-md-8 col-sm-8 col-xs-12">
+                @Html.EditorFor(model => model.is_blocked, new { htmlAttributes = new { @class = "form-control", } })
+                @Html.ValidationMessageFor(model => model.is_blocked, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    @*<div class="col-sm-6">
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4 col-xs-12">Is Block</label>
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    <input type="checkbox" id="is_blocked" />
+
+                </div>
+            </div>
+        </div>*@
+</div>
+
+    <br />
+    <hr />
+
+    <div class="row">
+        
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-success" data-controller="MapToolOperationController" style="float:right" id="create" name="create" />
+            </div>
+        </div>
+
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#process_id").select2({
+                placeholder: "Select Process",
+                allowClear: true
+            });
+
+            $("#crankshaft_id").select2({
+                placeholder: "Select Crankshaft",
+                allowClear: true
+            });
+            
+            $("#tool_id").select2({
+                placeholder: "Select Tool",
+                allowClear: true
+            });
+
+            $("#tool_usage_type_id").select2({
+                placeholder: "Select Usage Type",
+                allowClear: true
+            });
+
+            $("#tool_category_id").select2({
+                placeholder: "Select Category",
+                allowClear: true
+            });
+        })
+
+        
+
+    </script>
+} 

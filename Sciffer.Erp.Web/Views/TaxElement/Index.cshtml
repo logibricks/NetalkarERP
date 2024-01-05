@@ -1,0 +1,79 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<tax_elementVM>("Searching")
+       .Datasource(ds => { ds.Json((IEnumerable<object>)ViewBag.DataSource).RemoveURL(Url.Action("Delete", "TaxElement")).Adaptor(AdaptorType.RemoteSaveAdaptor); })
+       .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).ShowDeleteConfirmDialog(true); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "TaxElement" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "TaxElement" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "TaxElement" })))
+        .AllowSorting()
+        .AllowPaging().PageSettings(a => a.PageSize(20))
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+         .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("tax_element_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("tax_type").Width("15%").HeaderText("Tax Type").Add();
+            col.Field("tax_element_code").Width("15%").HeaderText("Tax Element Code").Add();
+            col.Field("tax_element_description").Width("15%").HeaderText("Tax Element Description").Add();
+            col.Field("purchase_gl_name").Width("15%").HeaderText("Purchase GL").Add();
+            col.Field("sales_gl_name").Width("15%").HeaderText("Sales GL").Add();
+            col.Field("is_blocked").Width("15%").HeaderText("Block").Width(150).Visible(false).Add();
+            col.Field("is_rcm").Width("15%").HeaderText("RCM").Width(150).Visible(false).Add();
+            col.Field("no_setoff_gl_name").Width("15%").HeaderText("No Setoff GL").Width(150).Visible(false).Add();
+            col.Field("on_hold_gl_name").Width("15%").HeaderText("On Hold GL").Width(150).Visible(false).Add();
+            col.Field("rcm_asset_gl_name").Width("15%").HeaderText("RCM Asset GL").Width(150).Visible(false).Add();
+            col.Field("rcm_liability_gl_name").Width("15%").HeaderText("RCM Liability GL").Width(150).Visible(false).Add();
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = '@Url.Action("Edit", "TaxElement")?id='+args.rowData.tax_element_id;
+        }
+        if (args.requestType == "add") {
+            location.href = '@Url.Action("Create", "TaxElement")';
+        }
+    }
+    function rightClick(args) {
+        location.href = '@Url.Action("Details", "TaxElement")?id=' +args.data.tax_element_id;
+    }
+
+</script>
+

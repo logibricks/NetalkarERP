@@ -1,0 +1,42 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_tax
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>ref_tax</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.tax_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tax_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tax_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tax_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_bloacked)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_bloacked)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.tax_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

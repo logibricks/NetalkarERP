@@ -1,0 +1,45 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+
+@{(Html.EJ().Grid<report_inventory_vm>("Editing")
+           .Datasource(ds => ds.URL(Url.Action("GetInventoryReport", "InventoryReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&plant_id=" + ViewBag.plant_id + "&sloc_id=" + ViewBag.sloc_id + "&item_id=" + ViewBag.item_id + "&item_category_id=" + ViewBag.item_category_id + "&bucket_id=" + ViewBag.bucket_id ).Adaptor(AdaptorType.UrlAdaptor))
+                  
+                    .AllowPaging().PageSettings(a => a.PageSize(20))
+                    .AllowFiltering()
+                        .FilterSettings(X => X.FilterType(FilterType.Excel))
+                    .ShowColumnChooser()
+                    .AllowSorting()
+                    .AllowScrolling()
+                    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "InventoryReport", new { ctrlname = "WithInPlantTransferReport" })))
+                                        .ScrollSettings(scroll => { scroll.Width("100%").Height("50%"); })
+
+                .ToolbarSettings(toolbar =>
+                {
+                    toolbar.ShowToolbar().ToolbarItems(items =>
+                    {
+                        items.AddTool(ToolBarItems.Search);
+                        items.AddTool(ToolBarItems.ExcelExport);
+                        items.AddTool(ToolBarItems.PrintGrid);
+                    });
+                })
+        .Columns(col =>
+        {
+            col.Field("category").Width("15%").HeaderText("Doc Number").Add();
+            col.Field("document_no").Width("15%").HeaderText("Doc Number").Add();
+            col.Field("posting_date").Width("15%").HeaderText("Doc Date").Format("{0:dd/MMM/yyyy}").Add();
+            col.Field("header_remarks").Width("15%").HeaderText("Header Remarks").Visible(false).Add();
+            col.Field("plant_name").Width("15%").HeaderText("Plant").Add();
+            col.Field("storage_location_name").Width("15%").HeaderText("Sending Sloc").Add();
+            col.Field("storage_location_name1").Width("15%").HeaderText("Receiving Sloc").Add();
+            col.Field("bucket_name").Width("15%").HeaderText("Sending Bucket").Add();
+            col.Field("bucket_name1").Width("15%").HeaderText("Receiving Bucket").Add();
+            col.Field("item_code").Width("15%").HeaderText("Item Code").Add();
+            col.Field("item_name").Width("15%").HeaderText("Item Description").Add();
+            col.Field("batch_number").Width("15%").HeaderText("Batch").Add();
+            col.Field("quantity").Width("15%").HeaderText("Qty").Format("{0:n2}").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+            col.Field("uom_name").Width("15%").HeaderText("UoM").Visible(true).Add();
+
+        }).ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicki"); })).Render();}
+    @Html.EJ().ScriptManager()
+
+
+

@@ -1,0 +1,45 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+
+
+
+@{(Html.EJ().Grid<Report_InventoryledgerDetailed_vm>("Editing")
+                        .Datasource(ds => ds.URL(Url.Action("GetInventoryReport", "InventoryReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&plant_id=" + ViewBag.plant_id + "&sloc_id=" + ViewBag.sloc_id + "&item_id=" + ViewBag.item_id + "&item_category_id=" + ViewBag.item_category_id + "&bucket_id=" + ViewBag.bucket_id + "&reason_code_id=" + ViewBag.reason_code_id).Adaptor(AdaptorType.UrlAdaptor))
+                            .AllowPaging().PageSettings(a => a.PageSize(20))
+                                .AllowFiltering()
+                                    .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                .ShowColumnChooser()
+                                .AllowSorting()
+                                .AllowScrolling()
+                                .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "InventoryReport", new { ctrlname = "InventoryledgerDetailedReport" })))
+                                .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                            .ToolbarSettings(toolbar =>
+                            {
+                                toolbar.ShowToolbar().ToolbarItems(items =>
+                                {
+                                    items.AddTool(ToolBarItems.Search);
+                                    items.AddTool(ToolBarItems.ExcelExport);
+                                    items.AddTool(ToolBarItems.PrintGrid);
+                                });
+                            })
+                    .Columns(col =>
+                    {
+                        col.Field("item_code").Width("15%").HeaderText("Item Code").Add();
+                        col.Field("Item").Width("15%").HeaderText("Item Description ").Add();
+                        col.Field("document_type_code").Width("15%").HeaderText("Source Doc ").Add();
+                        col.Field("Doc_Category").Width("15%").HeaderText("Doc Category").Add();
+                        col.Field("Doc_Number").Width("15%").HeaderText("Doc Number").Add();
+                        col.Field("posting_date").Width("15%").HeaderText("Posting Date").Format("{0:dd/MMM/yyyy}").Add();
+                        col.Field("plant").Width("15%").HeaderText("Plant").Add();
+                        col.Field("Sloc").Width("15%").Visible(ViewBag.reason_code_id == "2" ? false : true).HeaderText("Sloc").Add();
+                        col.Field("bucket_name").Width("15%").Visible(ViewBag.reason_code_id == "2" ? false : true).HeaderText("Bucket").Add();
+                        col.Field("item_quantity").Width("15%").HeaderText("Qty").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                        col.Field("rate").Width("15%").HeaderText("Rate").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                        col.Field("value").Width("15%").HeaderText("Value").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+
+                    })
+                        .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicki"); })
+                                                            ).Render();}
+@Html.EJ().ScriptManager()

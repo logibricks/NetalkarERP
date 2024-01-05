@@ -1,0 +1,75 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.Model.Ref_permit_template>
+@using Sciffer.Erp.Domain.Model
+
+
+@{
+    ViewBag.Title = "index";
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<br /><br /><br />
+<div>
+     @(Html.EJ().Grid<Ref_permit_template>("Searching")
+         .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "PermitTemplate" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .ContextMenuSettings(contextMenu =>
+        {
+            contextMenu.EnableContextMenu();
+            contextMenu.DisableDefaultItems();
+            contextMenu.CustomContextMenuItems(new List<Syncfusion.JavaScript.Models.CustomContexMenuItems>() { new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu", Text = "Print Report" } }); // CustomContext menu items
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "PermitTemplate" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "PermitTemplate" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "PermitTemplate" })))
+        .AllowSorting()
+        .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+         .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+
+
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("permit_template_id").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("permit_template_no").HeaderText("Permit Template No").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("permit_category").HeaderText("Permit Category").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("is_blocked").HeaderText("Blocked").Visible(false).Add();
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+
+</div>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = '@Url.Action("Edit", "PermitTemplate")?id=' + args.rowData.permit_template_id;
+        }
+        if (args.requestType == "add") {
+            location.href = '@Url.Action("Create", "PermitTemplate")';
+        }
+    }
+    function rightClick(args) {
+        location.href = '@Url.Action("Details", "PermitTemplate")?id=' + args.data.permit_template_id;
+    }
+</script>

@@ -1,0 +1,346 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm("Create", "ShiftWiseProduction", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form_main", @id = "form_main" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        <div>@Html.ValidationSummary(true, "", new { @class = "text-danger" })</div>
+
+        <div class="form-group">
+            <div class="row">
+                <label class="control-label col-md-1">
+                    Date <span class="required">*</span>
+                </label>
+                <div class="col-md-3">
+                    <input type="date" class="form-control col-md-7 col-xs-12" id="prod_date" disabled>
+                </div>
+            </div>
+            <br />
+            <br />
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table table-responsive table-bordered table-striped" id="upload">
+                        <thead>
+                            <tr>
+                                <th hidden><label>id</label></th>
+                                <th><label>Sr.No.</label></th>
+                                @*<th><label>Date</label></th>*@
+                                <th hidden><label>machine_id</label></th>
+                                <th><label>Machine Code</label></th>
+                                <th hidden><label>plant_id</label></th>
+                                <th><label>Plant Code</label></th>
+                                <th><label>Target Qty</label></th>
+                                <th hidden><label>shift_id</label></th>
+                                <th><label>Shift Code</label></th>
+                                @*<th hidden><label>supervisor_id</label></th>
+                                <th><label>Supervisor Code</label></th>*@
+                                <th><label>Action</label></th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg12 col-sm-12">
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <input type="button" value="Update" data-controller="ShiftWiseProduction" class="btn btn-success pull-right" id="create" name="create" onclick="TabletoJeson();" />
+                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary pull-left" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" onclick="clearmodel();">&times;</button>
+                    <h4 class="modal-title">Details</h4>
+                </div>
+                <div class="modal-body" style="max-height:500px;overflow:auto">
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                Machine <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                @Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.machine_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12", @style = "width: 100%;" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                Plant <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plant_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12", @style = "width: 100%;" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                Target Qty <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="target_qty" style="text-align:right">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                Shift
+                            </label>
+                            <div class="col-md-7">
+                                @Html.DropDownList("shift_id", (System.Web.Mvc.SelectList)ViewBag.shift_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12", @style = "width: 100%;" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+             
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <input type="hidden" id="srno" />
+                    <input type="hidden" id="datehidden" />
+                    <input type="hidden" id="shift_wise_production_detail_id" />
+                    <input type="hidden" id="id" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                    <button type="button" class="add btn btn-primary">Add</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+
+        var upload = @Html.Raw(JsonConvert.SerializeObject(ViewBag.details));
+
+        $("#plant_id").select2({
+            placeholder: "Select Plant",
+            allowClear: true
+        });
+
+        $("#machine_id").select2({
+            placeholder: "Select Machine",
+            allowClear: true
+        });
+
+        $("#shift_id").select2({
+            placeholder: "Select Shift",
+            allowClear: true
+        });
+
+        
+
+        function clearmodel() {
+            $("#plant_id").val('').trigger("change");
+            $("#target_qty").val('');
+            $("#machine_id").val('').trigger("change");
+
+        }
+
+        $('#upload').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", sWidth: "15%",bVisible: false },
+                     { sname: "a1", sWidth: "1%",bVisible: true },
+                     //{ sname: "b", sWidth: "5%",bVisible: true },
+                     { sname: "c", sWidth: "15%",bVisible: false },
+                     { sname: "d", sWidth: "15%",bVisible: true },
+                     { sname: "e", sWidth: "10%" ,bVisible: false},
+                     { sname: "f", sWidth: "15%", bVisible: true},
+                     { sname: "g", sWidth: "5%","sClass":"numericCol",bVisible: true },
+                     { sname: "h", sWidth: "15%",bVisible: false },
+                     { sname: "i", sWidth: "10%" ,bVisible: true},
+                     //{ sname: "j", sWidth: "15%",bVisible: false },
+                     //{ sname: "k", sWidth: "10%" ,bVisible: true},
+                     {
+                        sname: "l", sWidth: "1%",
+                        bSortable: false,
+                        mRender: function (data, type, full) {
+                        return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit"  />';
+                     }
+
+                     },
+
+            ]
+
+        });
+
+
+        $(document).ready(function () {
+
+        var t1 = $('#upload').DataTable();
+        var rowCount = t1.fnGetData().length - 1;
+
+        $.each(upload,function(key,value){
+
+            if(value.shift_id == null)
+            {
+                value.shift_id = 0;
+            }
+            if(value.shift_code == null)
+            {
+                value.shift_id = "";
+            }
+
+            t1.fnAddData([value.shift_wise_production_detail_id,key + 1,value.machine_id,value.machine_code,value.plant_id,value.plant_code,parseFloat(value.target_qty).toFixed(2),value.shift_id,value.shift_code,'']);
+            rowCount + 1;
+
+            $("#prod_date").val(value.prod_dates);
+
+        });
+
+        });
+
+
+
+        $('#upload').on('click', '.edit', function () {
+
+            var t = $('#upload').dataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            $('#myModal').modal('show');
+            $("#srno").val(t.fnGetData(id)[1]);
+            $("#id").val(t.fnGetData(id)[0]);
+            $("#plant_id").val(t.fnGetData(id)[4]).trigger('change');
+            $("#machine_id").val(t.fnGetData(id)[2]).trigger('change');
+            $("#shift_id").val(t.fnGetData(id)[7]).trigger('change');
+           // $("#supervisor_id").val(t.fnGetData(id)[9]).trigger('change');
+            $("#shift_wise_production_detail_id").val(t.fnGetData(id)[0]).trigger('change');
+            $('#target_qty').val(t.fnGetData(id)[6]);
+
+        });
+
+        $(".add").on("click", function (event) {
+
+            var st = $('#upload').dataTable();
+            var rowCount = st.fnGetData().length;
+            var plant_id = $("#plant_id").val();
+            var plant_code = $("#plant_id").find("option:selected").text();
+            var machine_id = $("#machine_id").val();
+            var machine_name = $("#machine_id").find("option:selected").text();
+            var qty = $("#target_qty").val();
+            var shift_wise_production_detail_id = $("#shift_wise_production_detail_id").val();
+            var shift_id = $("#shift_id").val();
+            var shift_code = $("#shift_id").find("option:selected").text();
+            //var supervisor_id = $("#supervisor_id").val();
+            //var supervisor_code = $("#supervisor_id").find("option:selected").text();
+            var id = $("#id").val();
+            if(plant_id == "")
+            {
+                swal("", "Select Plant", "error");
+                return false;
+            }
+            if(machine_id == "")
+            {
+                swal("", "Select Machine", "error");
+                return false;
+            }
+            if(shift_id == "")
+            {
+                swal("", "Select Shift", "error");
+                return false;
+            }
+            if(qty <= 0)
+            {
+                swal("", "Target Qty should be greater than zero!!", "error");
+                return false;
+            }
+
+            //if(supervisor_id == "" )
+            //{
+            //    supervisor_code = "";
+            //}
+
+
+            for (i = 0; i < rowCount; i++) {
+
+
+                if(plant_id == st.fnGetData(i)[4] && machine_id == st.fnGetData(i)[2] && shift_id == st.fnGetData(i)[7] && id != st.fnGetData(i)[0] )
+                {
+
+                    swal("", "Duplicate Exist for date : " + $("#prod_date").val(), "error");
+                    return false;
+                }
+            }
+
+            var sr = $("#srno").val();
+                var cc = $("#srno").val();
+                cc = parseInt(cc) - 1;
+                st.fnUpdate([shift_wise_production_detail_id,sr, machine_id,machine_name,plant_id,plant_code,parseFloat(qty).toFixed(2),shift_id,shift_code,''], cc)
+                $('#myModal').modal('hide');
+
+        });
+
+//Update*********************************************************************************************************************************************************
+
+        function TabletoJeson() {
+            var DepParaArr = [];
+            var t = $('#upload').DataTable()
+            var rowCount = t.fnGetData().length;
+
+            for (i = 0; i < rowCount; i++) {
+
+                DepParaArr.push({
+                    shift_wise_production_detail_id : t.fnGetData(i)[0],
+                    prod_dates: $("#prod_date").val(),
+                    machine_id:  t.fnGetData(i)[2],
+                    plant_id: t.fnGetData(i)[4],
+                    target_qty : t.fnGetData(i)[6],
+                    shift_id: t.fnGetData(i)[7],
+                   // supervisor_id: t.fnGetData(i)[9],
+                    is_active:true,
+                });
+
+            }
+
+            $.ajax({
+                url: '@Url.Action("Save", "ShiftWiseProduction")',
+                method: "Post",
+                cache: false,
+                async: false,
+                data: { DepParaArr: DepParaArr },
+                success: function(data) {
+
+                    location.href = '@Url.Action("Index", "ShiftWiseProduction")';
+
+                },
+            });
+
+        }
+    </script>
+}
+<style>
+    .numericCol {
+        text-align: right;
+    }
+</style>

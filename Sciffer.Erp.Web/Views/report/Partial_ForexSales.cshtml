@@ -1,0 +1,98 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+
+
+
+@{(Html.EJ().Grid<Report_Forex_Sales__VM>("Editing")
+                                      .Datasource((IEnumerable<object>)ViewBag.datasource)
+                                        .AllowPaging().PageSettings(a=>a.PageSize(20))
+                                        .AllowFiltering()
+                                            .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                        .ShowColumnChooser()
+                                        .AllowSorting()
+                                        .AllowScrolling()
+                                        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelForReport", "Generic", new { ctrlname = "SalesSummaryReport" }))
+                                        .ExportToPdfAction(Url.Action("ExportToPdfForReport", "Generic", new { ctrlname = "SalesSummaryReport" })))
+                                        .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                    .ToolbarSettings(toolbar =>
+                                    {
+                                        toolbar.ShowToolbar().ToolbarItems(items =>
+                                        {
+                                            items.AddTool(ToolBarItems.Search);
+                                            items.AddTool(ToolBarItems.ExcelExport);
+                                            items.AddTool(ToolBarItems.PrintGrid);
+                                        });
+                                    })
+
+                                        .ShowSummary()
+
+                                    .SummaryRow(row =>
+                                    {
+                                        row.Title("Total").SummaryColumns(col =>
+                                        {
+                                            col.SummaryType(SummaryType.Sum).DisplayColumn("AMount_in_Doc_Currency").DataMember("AMount_in_Doc_Currency").Format("{0:n2}").Add();
+                                            col.SummaryType(SummaryType.Sum).DisplayColumn("Amount_in_Local_Currency").DataMember("Amount_in_Local_Currency").Format("{0:n2}").Add();
+                                        }).Add();
+                                    })
+                            .Columns(col =>
+                            {
+                                col.Field("bill_to_party_description").Width("10%").HeaderText("Bill To Party Description").Add();
+                                col.Field("billing_city").Width("10%").HeaderText("Billing City").Add();
+                                col.Field("billing_Country").Width("10%").HeaderText("Billing Country").Visible(false).Add();
+                                col.Field("Priority").Width("10%").HeaderText("Priority").Visible(false).Add();
+                                col.Field("control_account").Width("10%").HeaderText("Control Account").Visible(false).Add();
+                                col.Field("ship_to_party").Width("10%").HeaderText("Ship To Party").Visible(false).Add();
+                                col.Field("ship_to_party_description").Width("10%").HeaderText("Ship To Party Description").Visible(false).Add();
+                                col.Field("shipping_city").Width("10%").HeaderText("Shipping City").Visible(false).Add();
+                                col.Field("shipping_COuntry").Width("10%").HeaderText("Shipping Country").Visible(false).Add();
+                                col.Field("business_unit").Width("10%").HeaderText("Business Unit").Visible(false).Add();
+                                col.Field("plant").Width("10%").HeaderText("Plant").Visible(false).Add();
+                                col.Field("so_number").Width("10%").HeaderText("So Number").Visible(false).Add();
+                                col.Field("so_date").Width("10%").HeaderText("So Date").Visible(false).Add();
+                                col.Field("Document_category").Width("10%").HeaderText("Document Category").Visible(false).Add();
+                                col.Field("document_no").Width("10%").HeaderText("Document No").Visible(false).Add();
+                                col.Field("posting_date").Width("10%").HeaderText("Posting Date").Visible(false).Add();
+                                col.Field("customer_po_number").Width("10%").HeaderText("Customer Po Number").Visible(false).Add();
+                                col.Field("customer_po_dat").Width("10%").HeaderText("Customer Po Date").Visible(false).Add();
+                                col.Field("sales_RM").Width("10%").HeaderText("Sales Rm").Visible(false).Add();
+                                col.Field("Freight_terms").Width("10%").HeaderText("Freight Terms").Visible(false).Add();
+                                col.Field("sales_against_form").Width("10%").HeaderText("Sales Against Form").Visible(false).Add();
+                                col.Field("territory").Width("10%").HeaderText("Territory").Visible(false).Add();
+                                col.Field("payment_terms").Width("10%").HeaderText("Payment Terms").Visible(false).Add();
+                                col.Field("currency").Width("10%").HeaderText("Currency").Visible(false).Add();
+                                col.Field("Forex_rate").Width("10%").HeaderText("Forex Rate").Visible(false).Add();
+                                col.Field("AMount_in_Doc_Currency").Width("10%").HeaderText("Amount In Doc Currency").Visible(false).Add();
+                                col.Field("Amount_in_Local_Currency").Width("10%").HeaderText("Amount In Local Currency").Visible(false).Add();
+
+                            })
+                            .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+                            ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    @*$(function () {
+        var obj = @Html.Raw(Json.Encode(ViewBag.datasource));
+        console.log(obj);
+        $("#Editing").ejGrid({
+            dataSource: obj,
+            allowPaging: true,
+            //columns: [
+
+            //],
+            //dataBound : function(args){
+            //	for (var fld =0; fld < list.length; fld++ ) {
+            //	var column = { field: list[fld].value, headerText: list[fld].header, column: "", textAlign: "left", type: "string", visible: true, width: 75 };
+            //	this.model.columns.push(column); //add dynamic columns
+            //	}
+            //	this.columns(this.model.columns);
+            //}
+        });
+    });*@
+
+
+</script>
+

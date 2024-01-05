@@ -1,0 +1,214 @@
+﻿@using Sciffer.Erp.Domain.Model
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+@*<script src="@Url.Content("~/Scripts/requirevalidation.js")"></script>*@
+
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<ref_hsn_code>("Grid")
+         .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.Datasource).RemoveURL(Url.Action("InlineDelete", "HSN")).InsertURL(Url.Action("InlineInsert", "HSN")).UpdateURL(Url.Action("InlineInsert", "HSN"))
+                       .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(10); })
+        .EnableAltRow()
+
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.Update);
+            items.AddTool(ToolBarItems.Cancel);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "HSN" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("hsn_code_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Width(80).Add();
+            col.Field("hsn_code").Width("15%").HeaderText("HSN Code").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("hsn_code_description").Width("15%").HeaderText("HSN Description").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("within_state_tax_id").Width("15%").HeaderText("Within State Tax ID").ValidationRules(val => val.AddRule("required", true)).Visible(false).Add();
+            col.Field("within_state_tax_name").Width("15%").HeaderText("Within State Tax Code").Add();
+            col.Field("inter_state_tax_id").Width("15%").HeaderText("Inter State Tax ID").ValidationRules(val => val.AddRule("required", true)).Visible(false).Add();
+            col.Field("inter_state_tax_name").Width("15%").HeaderText("Inter State Tax Code").Add();
+            col.Field("is_blocked").Width("15%").HeaderText("Blocked").Visible(false).Add();
+        }).ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+</div>
+<script id="template" type="text/template">
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-xs-12">
+            <input type="hidden" id="hsn_code_id" name="bank_id" value="{{: hsn_code_id}}" class="form-control" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                @Html.Label("hsn_code", "HSN Code *", new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    <input type="number" id="hsn_code" name="hsn_code" value="{{: hsn_code}}" class="form-control validinput hsncode" />
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+                @Html.Label("hsn_code_description", "Description *", new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    <input type="text" id="hsn_code_description" name="hsn_code_description" value="{{: hsn_code_description}}" class="form-control" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                @Html.Label("within_state_tax_id", "Within State Tax Code", new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    @Html.DropDownList("within_state_tax_id", (System.Web.Mvc.SelectList)ViewBag.within_state, "---Select---", new { @class = "form-control", })
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="form-group">
+                @Html.Label("inter_state_tax_id", "Inter State Tax Code", new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    @Html.DropDownList("inter_state_tax_id", (System.Web.Mvc.SelectList)ViewBag.inter_state, "---Select---", new { @class = "form-control", })
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                @Html.Label("is_blocked", "Blocked", new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    <input type="checkbox" name="is_blocked" value="{{:is_blocked}}" class="form-control" id="is_blocked">
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+
+    <script type="text/javascript">
+        //$(function () {
+        //    $.validator.addMethod("customendcheck", function (value, element, params) {
+        //        var a = $('#hsn_code').val();
+        //        return a.length == 8;
+        //    }, "Invalid HSN Code!");
+        //});
+        //var flag = true;
+        //function complete(args) {
+
+        //    if (args.requestType == "beginedit") {
+        //        document.getElementById('hsn_code').setAttribute('disabled', 'disabled');
+
+        //        document.getElementById('hsn_code_description').setAttribute('disabled', 'disabled');
+        //        if (args.rowData.is_blocked == true) {
+        //            document.getElementById("is_blocked").setAttribute('checked', 'checked');
+        //        }
+
+        //        else {
+        //            document.getElementById("is_blocked").removeAttribute('checked');
+        //        }
+        //        $("#is_blocked").checkboxpicker();
+        //    }
+        //    if (args.requestType == "add") {
+        //        $("#is_blocked").checkboxpicker();
+        //    }
+
+        //    if (args.requestType == "save") {
+        //        if (args.data.text == 'duplicate') {
+        //            sweetAlert("", "HSN already exists!", "error");
+        //            if (args.model.dataSource.dataSource.json[0].hsn_code_id == null) {
+        //                args.model.dataSource.dataSource.json = args.model.dataSource.dataSource.json.splice(1, args.model.dataSource.dataSource.json.length);
+        //            }
+        //        }
+        //        var gridObj = $("#Grid").ejGrid("instance");
+        //        gridObj.refreshContent();
+        //    }
+        //}
+
+        //function EndProcess() {
+        //    var gridObj = $("#Grid").ejGrid("instance");
+        //    gridObj.refreshContent();
+        //}
+
+    $(function () {
+        $.validator.addMethod("customendcheck", function (value, element, params) {
+            var a = $('#hsn_code').val();
+            return a.length==8;
+        }, "Invalid HSN Code!");
+    });
+    var flag = true;
+    function complete(args) {
+
+        if (args.requestType == "beginedit") {
+            document.getElementById('hsn_code').setAttribute('disabled', 'disabled');
+            document.getElementById('hsn_code_description').setAttribute('disabled', 'disabled');
+            $("#within_state_tax_id").val(args.rowData.within_state_tax_id);
+            $("#inter_state_tax_id").val(args.rowData.inter_state_tax_id);
+            if (args.rowData.is_blocked == true) {
+                document.getElementById("is_blocked").setAttribute('checked', 'checked');
+            }
+
+            else {
+                document.getElementById("is_blocked").removeAttribute('checked');
+            }
+            $("#is_blocked").checkboxpicker();
+        }
+        if (args.requestType == "add") {
+            $("#is_blocked").checkboxpicker();
+        }
+
+        if (args.requestType == "save") {
+            if (args.data.text == 'duplicate') {
+                sweetAlert("", "HSN already exists!", "error");
+                if (args.model.dataSource.dataSource.json[0].hsn_code_id == null) {
+                    args.model.dataSource.dataSource.json = args.model.dataSource.dataSource.json.splice(1, args.model.dataSource.dataSource.json.length);
+                }
+            }
+            var gridObj = $("#Grid").ejGrid("instance");
+            gridObj.refreshContent();
+        }
+    }
+
+    function EndProcess() {
+        var gridObj = $("#Grid").ejGrid("instance");
+        gridObj.refreshContent();
+    }
+</script>
+}
+<script>
+    $(document).ready(function () {
+        $("#header_content").html("HSN");
+        //$("#hsn_code").on('keypress', function () {
+        //    if ($(this).val().length > 8) {
+        //        alert("error message");
+        //        return false;
+        //    }
+        //});
+    })
+</script>
+

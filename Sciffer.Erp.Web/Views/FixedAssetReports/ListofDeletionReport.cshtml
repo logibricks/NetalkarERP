@@ -1,0 +1,52 @@
+﻿
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="form-horizontal">
+            <div class="x_content">
+                <div class=row>
+                    <div class="col-md-3 col-lg-3 col-xs-12">
+                        <label class="control-label col-md-5 col-lg-5 col-xs-12">From Date*</label>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            <input type="date" id="fromDate" class="form-control radius" required="required">
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-lg-3 col-xs-12">
+                        <label class="control-label col-md-5 col-lg-5 col-xs-12">To Date*</label>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            <input type="date" id="toDate" class="form-control radius" required="required">
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-lg-3 col-xs-12">
+                        <label class="control-label col-md-5 col-lg-5 col-xs-12">Asset Class</label>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            @Html.DropDownList("asset_class_id", (System.Web.Mvc.SelectList)ViewBag.asset_class_list, htmlAttributes: new { @class = "form-control validinput asset_class_id", @required = true })
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-lg-3 col-xs-12">
+                        <label class="control-label col-md-5 col-lg-5 col-xs-12">Asset Group</label>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            @Html.DropDownList("asset_group_id", (System.Web.Mvc.SelectList)ViewBag.asset_group_list, htmlAttributes: new { @class = "form-control validinput asset_group_id", @required = true })
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class=row>
+                    <div class="col-md-3 col-lg-3 col-xs-12 pull-right">
+                        <div class="col-md-5 col-lg-5 col-xs-12"></div>
+                        <div class="col-md-7 col-lg-7 col-xs-12">
+                            <button class="searchbutton searchButton btn-success" id="search" onclick="DateCheckForFixedAsset()"> &nbsp; Run Report </button>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="entity" value="getListofDeletionsReport">
+                <input type="hidden" id="partial_v" value="Partial_ListofDeletions" />
+            </div>
+        </div>
+
+    </div>
+</div>
+<br />
+<div class="row" id="searchresult">
+    @Html.Partial("Partial_ListofDeletions", (object)ViewBag)
+</div>

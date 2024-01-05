@@ -1,0 +1,280 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.REF_ITEM_CATEGORYVM
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(x => x.ITEM_CATEGORY_ID)
+ 
+    <div class="row">
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.ITEM_CATEGORY_NAME, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    @Html.EditorFor(model => model.ITEM_CATEGORY_NAME, new { htmlAttributes = new { @class = "form-control num validinput removedisabled", @disabled = "disabled" } })
+                    @Html.ValidationMessageFor(model => model.ITEM_CATEGORY_NAME, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.ITEM_CATEGORY_DESCRIPTION, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    @Html.EditorFor(model => model.ITEM_CATEGORY_DESCRIPTION, new { htmlAttributes = new { @class = "form-control num1 validinput" } })
+                    @Html.ValidationMessageFor(model => model.ITEM_CATEGORY_DESCRIPTION, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.item_type_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    @Html.DropDownList("item_type_id", (System.Web.Mvc.SelectList)ViewBag.item_type_list, "---Select---", htmlAttributes: new { @class = "form-control  validinput removedisabled", @disabled = "disabled", @required = true })
+                    @Html.ValidationMessageFor(model => model.item_type_id, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.is_blocked, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    @Html.EditorFor(model => model.is_blocked, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.is_blocked, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.prefix_sufix_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    @Html.DropDownList("prefix_sufix_id", new List<SelectListItem>                                     {
+                                        new SelectListItem{ Text="Prefix", Value = "1" },
+                                        new SelectListItem{ Text="Suffix", Value = "2"}
+                                     }, "--Select--", new { @class = "form-control compare_col_name2 removedisabled", @disabled = "disabled" })
+                    @Html.ValidationMessageFor(model => model.prefix_sufix_id, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    @Html.EditorFor(model => model.prefix_sufix, new { htmlAttributes = new { @class = "form-control compare_col_name3 removedisabled", @disabled = "disabled" } })
+                    @Html.ValidationMessageFor(model => model.prefix_sufix, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-3">
+            <div class="form-group">
+                @Html.LabelFor(model => model.from_number, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    @Html.EditorFor(model => model.from_number, new { htmlAttributes = new { @class = "form-control removedisabled", @type = "number", @disabled = "disabled" } })
+
+                    @Html.ValidationMessageFor(model => model.from_number, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-3">
+            <div class="form-group">
+                @Html.LabelFor(model => model.current_number, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    @Html.EditorFor(model => model.current_number, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                    @Html.ValidationMessageFor(model => model.current_number, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Ledger Account Detail</div>
+        <div class="panel-body">
+            <div id="sectionA" class="tab-pane fade  in active" style="margin-top:10px;">
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-responsive table-bordered table-striped" id="LedgerGrid">
+                            <thead>
+                                <tr>
+                                    <th><label>Sr. No.</label></th>
+                                    <th hidden><label>ID</label></th>
+                                    <th><label>GL Account Type</label></th>
+                                    <th hidden><label>Ledger Code *</label></th>
+                                    <th><label>GL Account *</label></th>
+                                    <th hidden><label>Action</label></th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="hidden" id="ledgeraccounttype" name="ledgeraccounttype" />
+            <input type="submit" value="Update" data-id="@Model.ITEM_CATEGORY_ID" data-controller="ItemCategory" class="btn btn-success" onclick="TabletoJeson();" id="create" name="create" style="float:right" />
+        </div>
+    </div>
+</div>
+}
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">GL Account</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" id="gllable" name="gllabel"></label>
+                        <div class="col-md-7">
+                            @Html.DropDownList("glid", (System.Web.Mvc.SelectList)ViewBag.generalleder, "---Select---", new { @class = "form-control col-md-7 col-xs-12" })
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <input type="hidden" id="srno1" />
+                    <input type="hidden" id="ledger_account_type_id" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel1();">Close</button>
+                    <button type="button" class="btn btn-primary" id="addgl" onclick="UpdateGL();" name="addgl">Add</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="~/Scripts/requirevalidation.js"></script>
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $('#is_blocked').checkboxpicker();
+        $(document).ready(function () {
+            $("#glid").select2({
+                placeholder: "Select GL",
+                allowClear: true
+            });
+            GetLedgerAccountType()
+        });
+        function GetLedgerAccountType() {
+            $.ajax({
+                url: "@Url.Action("GetLedgerAccountTypeByItem", "ItemCategory")",
+                type: "GET",
+                dataType: "JSON",
+                data: { entity_type_id: 4, item_category_id: $("#ITEM_CATEGORY_ID").val(), item_type_id: $("#item_type_id").val() },
+                success: function (Payment_Cycle) {
+                    var t = $('#LedgerGrid').DataTable();
+                    t.fnClearTable();
+                    var sr_no = t.fnGetData().length + 1;
+
+                    $.each(Payment_Cycle, function (i, cycle) {
+                        t.fnAddData([sr_no, cycle.ledger_account_type_id, cycle.ledger_account_type_name, '<label class="ledger_grid" id="ledger_code' + sr_no + '">' + cycle.gl_ledger_id + '</label>', '<label class="ledger_grid" id="ledger_name' + sr_no + '">' + cycle.gl_ledger_code + "-" + cycle.gl_ledger_name + '</label>', ''
+                        ]);
+                        sr_no++;
+                    });
+                }
+            });
+        }
+
+        //$('#LedgerGrid').on('click', '.edit1', function () {
+        //    var t = $('#LedgerGrid').DataTable();
+        //    var id = $(this).parent('td').parent('tr').index();
+        //    $('#myModal').modal('show');
+        //    $("#gllable").text(t.fnGetData(id)[2]);
+        //    $("#srno1").val(t.fnGetData(id)[0]);
+        //    var tx = t.fnGetData(id)[3];
+        //    var txx = $(tx).text();
+        //    var tx1 = t.fnGetData(id)[4];
+        //    var txx1 = $(tx1).text();
+        //    if (txx == "") {
+        //        $("#glid").val("").trigger('change');
+        //    }
+        //    else {
+        //        $("#glid").val(txx).trigger('change');
+        //    }
+        //    $("#ledger_account_type_id").val(t.fnGetData(id)[1]);
+        //});
+
+        $('#LedgerGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a", sWidth: "7%" },
+                     { sname: "b", bVisible: false },
+                     { sname: "c" },
+                     { sname: "d", bVisible: false },
+                     { sname: "e" },
+                     {
+                         sname: "f", sWidth: "8%",bVisible: false,
+                         bSortable: false,
+                         mRender: function (data, type, full) {
+                             return '<img class="edit1" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" />';
+                         }
+                     }]
+
+        });
+
+        function UpdateGL() {
+            var gl = $("#glid").val();
+            var ledger_account_type_name = $("#gllable").text();
+           if (gl == "") {
+                sweetAlert("", "Please select Account!", "error");
+            }
+            else {
+                var t = $('#LedgerGrid').DataTable();
+                var rowCount = t.fnGetData().length;
+                var srno = parseInt($("#srno1").val());
+                var gl_name = $("#glid").find("option:selected").text();
+                var gl_code = $("#glid").val();
+                var ledger_account_type_id = $("#ledger_account_type_id").val();
+                var cc = parseInt($("#srno").val());
+                t.fnUpdate([srno, ledger_account_type_id, ledger_account_type_name, '<label class="ledger_grid" id="ledger_code' + srno + '">' + gl_code + '</label>', '<label class="ledger_grid" id="ledger_name' + srno + '">' + gl_name + '</label>', ''], srno - 1)
+                $("#glid").val("").trigger('change');
+                $('#myModal').modal('hide');
+            }
+        }
+
+        function TabletoJeson() {
+            var t1 = $('#LedgerGrid').DataTable()
+            var rowCount1 = t1.fnGetData().length;
+            var str2;
+            var str3;
+            for (i = 0; i < rowCount1; i++) {
+                str3 = t1.fnGetData(i)[1] + ",";
+                var tx = t1.fnGetData(i)[3];
+                var txx = $(tx).text();
+                str3 = str3 + txx + ",";
+                if (i == 0) {
+                    str2 = str3 + "~"
+                }
+                else {
+                    str2 = str2 + str3 + "~";
+                }
+            }
+            document.getElementsByName("ledgeraccounttype")[0].value = str2;
+        }
+
+    </script>
+}

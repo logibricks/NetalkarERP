@@ -1,0 +1,89 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<report_production_vm>("Editing")
+                                        .Datasource(ds => ds.URL(Url.Action("Get_report_production", "ProductionReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + " &to_date=" + ViewBag.to_date + " &plant_id=" + ViewBag.shift_id + " &machine_id=" + ViewBag.machine_id + " &item_id=" + ViewBag.item_id + " &user_id=" + ViewBag.user_id + "&is_qc_remark=" + ViewBag.is_qc_remark).Adaptor(AdaptorType.UrlAdaptor))
+                                            //.Datasource((IEnumerable<object>)ViewBag.datasource)
+                                            .AllowPaging().PageSettings(a => a.PageSize(20))
+                                            .AllowFiltering()
+                                            .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                            .ShowColumnChooser()
+                                            .AllowSorting()
+                                            .AllowScrolling()
+                                            .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "ProductionReport", new { ctrlname = "Userwiseproductionreport" })))
+                                            .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                        .ToolbarSettings(toolbar =>
+                                        {
+                                            toolbar.ShowToolbar().ToolbarItems(items =>
+                                            {
+                                                items.AddTool(ToolBarItems.Search);
+                                                items.AddTool(ToolBarItems.ExcelExport);
+                                                items.AddTool(ToolBarItems.PrintGrid);
+                                            });
+                                        })
+                                .Columns(col =>
+                                {
+                                    col.Field("task_time").HeaderText("Date").Width("16%").Format("{0:dd-MMMM-yyyy }").Add();
+                                    col.Field("user_code").Width("15%").HeaderText("User Code").Add();
+                                    col.Field("user_name").Width("15%").HeaderText("User Name").Add();
+                                   col.Field("shift_code").Width("15%").HeaderText("Shift Name").Add();
+                                  col.Field("machine_code").Width("15%").HeaderText("Machine Code").Add();
+                                    col.Field("machine_name").Width("15%").HeaderText("Machine Description").Add();
+                                    col.Field("item_code").Width("15%").HeaderText("Item Code").Add();
+                                    col.Field("item_name").Width("15%").HeaderText("Item Description").Add();
+                                  //col.Field("prod_order_no").Width("15%").HeaderText("Production Order").Add();
+                                  col.Field("OK_Qty").Width("15%").HeaderText("OK Qty").Add();
+                                    col.Field("Rejected_Qty").Width("15%").HeaderText("Rejected Qty").Add();
+                                    col.Field("Total_Qty").Width("15%").HeaderText("Total Qty").Add();
+
+
+                                })
+                                .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick"); })
+                                ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+    function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1) {
+            if ($('#plant_id :selected').length > 0) {
+                var selectedplantid = [];
+                $('#plant_id :selected').each(function (i, selected) {
+                    selectedplantid[i] = $(selected).val();
+                });
+                var plantid = selectedplantid + "";
+            }
+            if ($('#machine_id :selected').length > 0) {
+                var selectedmachineid = [];
+                $('#machine_id :selected').each(function (i, selected) {
+                    selectedmachineid[i] = $(selected).val();
+                });
+                var machineid = selectedmachineid + "";
+            }
+            if ($('#item_id :selected').length > 0) {
+                var selecteditemid = [];
+                $('#item_id :selected').each(function (i, selected) {
+                    selecteditemid[i] = $(selected).val();
+                });
+                var itemid = selecteditemid + "";
+            }
+            if ($('#user_id :selected').length > 0) {
+                var selecteduser_id = [];
+                $('#user_id :selected').each(function (i, selected) {
+                    selecteduser_id[i] = $(selected).val();
+                });
+                var userid = selecteduser_id + "";
+            }
+            
+            this.model["item_id"] = itemid;
+            this.model["plant_id"] = plantid;
+            this.model["machine_id"] = machineid;
+            this.model["user_id"] = userid;
+            this.model["from_date"] = $("#fromDate").val();
+            this.model["to_date"] = $("#toDate").val();
+
+        }
+
+    }
+</script>
+
+

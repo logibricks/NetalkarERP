@@ -1,0 +1,82 @@
+﻿
+@model IEnumerable<Sciffer.Erp.Domain.Model.REF_SALUTATION>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<p>
+    <a href="@Url.Action("Create", "Salutation")" data-toggle="modal" class="btn-circle btn-lg btn-primary"><span class="glyphicon glyphicon-plus"></span> </a>
+</p>
+<div class="row">
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <table id="example" class="table table-striped responsive-utilities jambo_table table-bordered">
+                <thead>
+                    <tr class="headings">
+
+
+                        <th>
+                            @Html.DisplayNameFor(model => model.salutation_name)
+                        </th>
+
+                        <th>Actions</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="even pointer">
+
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.salutation_name)
+                            </td>
+
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { id = item.salutation_id }) |
+                                @Html.ActionLink("Details", "Details", new { id = item.salutation_id }) |
+                                @Html.ActionLink("Delete", "Delete", new { id = item.salutation_id })
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

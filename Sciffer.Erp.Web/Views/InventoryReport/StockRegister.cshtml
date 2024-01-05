@@ -1,0 +1,53 @@
+﻿<div class="form-horizontal">
+    <div class=row>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Item</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+
+                @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.item_list, htmlAttributes: new { @class = "form-control mickey item_id", multiple = "multiple" })
+
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Challan From Date</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <input type="date" id="fromDate" class="form-control" required="required">
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Challan To Date</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <input type="date" id="toDate" class="form-control radius" required="required">
+            </div>
+        </div>  
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <div class="col-md-5 col-lg-5 col-xs-12">
+                <input type="hidden" id="entity" value="getstockregisterchallan" />
+                <input type="hidden" id="partial" value="Partial_StockRegister" />
+                <label></label>
+            </div>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <button class="searchbutton searchButton" id="search" onclick="DateChecki()"> &nbsp; Run Report </button>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <span style="color:red;font-size:15px;" class="control-label col-md-12 col-lg-12 col-xs-12">Report will take longer time to load if date filters are not applied. Pls use date filter effectively.</span>
+
+        </div>
+    </div>
+</div>
+
+
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+
+        <div id="searchresult">
+            @Html.Partial("Partial_StockRegister", (object)ViewBag)
+        </div>
+    </div>
+
+</div>

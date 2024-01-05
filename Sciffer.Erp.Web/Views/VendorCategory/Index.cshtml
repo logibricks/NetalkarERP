@@ -1,0 +1,106 @@
+﻿@using Sciffer.Erp.Domain.Model
+
+@{
+    ViewBag.Title = "Index";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<br /><br /><br />
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<REF_VENDOR_CATEGORY>("Grid")
+        .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.Datasource).RemoveURL(Url.Action("InlineDelete", "VendorCategory")).InsertURL(Url.Action("InlineInsert", "VendorCategory")).UpdateURL(Url.Action("InlineInsert", "VendorCategory"))
+                       .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true); })
+         .EnableAltRow()
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+
+            items.AddTool(ToolBarItems.Update);
+            items.AddTool(ToolBarItems.Cancel);
+            items.AddTool(ToolBarItems.ExcelExport);
+           
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "VendorCategory" })))         
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("VENDOR_CATEGORY_ID").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Width(80).Add();
+            col.Field("VENDOR_CATEGORY_NAME").Width("15%").HeaderText("Vendor Category").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("is_blocked").Width("15%").HeaderText("Is Blocked").Visible(false).Add();
+
+        })
+                .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+
+    
+</div>
+<script id="template" type="text/template">
+
+    <div class="row">
+        <input type="hidden" id="VENDOR_CATEGORY_ID" name="VENDOR_CATEGORY_ID" value="{{: VENDOR_CATEGORY_ID}}" class="form-control" />
+    </div>
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Vendor Category *
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="text" id="VENDOR_CATEGORY_NAME" name="VENDOR_CATEGORY_NAME" class="form-control" value="{{:VENDOR_CATEGORY_NAME}}">
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Blocked
+            </div>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <input type="checkbox" id="is_blocked" name="is_blocked">
+            </div>
+        </div>
+</script>
+<script>
+    var flag = true;
+    function complete(args) {
+        if (args.requestType == "add") {
+            $('#is_blocked').checkboxpicker();
+        }
+        if (args.requestType == "save") {
+            if (args.data.text == 'duplicate') {
+                sweetAlert("", "Vendor category already exists!", "error");
+                if (args.model.dataSource.dataSource.json[0].VENDOR_CATEGORY_ID == null) {
+                    args.model.dataSource.dataSource.json = args.model.dataSource.dataSource.json.splice(1, args.model.dataSource.dataSource.json.length);
+                }
+            }
+            var gridObj = $("#Grid").ejGrid("instance");
+            gridObj.refreshContent();
+        }
+        if (args.requestType == "beginedit") {
+            $("#VENDOR_CATEGORY_NAME").attr('disabled', 'disabled');
+            if (args.rowData.is_blocked == true) {
+                //Check
+                document.getElementById('is_blocked').setAttribute('checked', 'checked');
+            }
+            else {
+                //UnCheck
+                document.getElementById('is_blocked').removeAttribute('checked');
+            }
+            $('#is_blocked').checkboxpicker();
+        }
+    }
+    function EndProcess() {
+        var gridObj = $("#Grid").ejGrid("instance");
+        //console.log(gridObj);
+        gridObj.refreshContent();
+    }
+</script>

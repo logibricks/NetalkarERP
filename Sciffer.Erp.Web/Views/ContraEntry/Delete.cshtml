@@ -1,0 +1,144 @@
+﻿@model Sciffer.Erp.Domain.Model.contra_entry
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>contra_entry</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.document_numbering_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.document_numbering_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.posting_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.posting_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.document_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.document_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ref_doc_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ref_doc_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.curreny_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.curreny_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.header_remarks)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.header_remarks)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.transfer_funds_from)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.transfer_funds_from)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.transfer_frund_to)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.transfer_frund_to)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.transfer_amount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.transfer_amount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.current_balance_from)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.current_balance_from)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.current_balance_to)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.current_balance_to)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.reamrks)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.reamrks)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.attachment)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.attachment)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_active)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

@@ -1,0 +1,67 @@
+﻿@*<style>
+        .cols-sample-area {
+            height: 440px;
+        }
+    </style>*@
+
+@(Html.EJ().TreeGrid("TreeGridContainer")
+          .TreeColumnIndex(1)
+          .AllowColumnResize(true)
+          .AllowPaging(true)
+          .IsResponsive(true)
+          .IdMapping("entity_id")
+          .ParentIdMapping("parent_id")
+          .ChildMapping("Children")
+          .AllowSorting(true)
+          .AllowMultiSorting(true)
+          .ShowColumnChooser(true)
+           .Mappers(map => map.ExportToExcelAction(Url.Action("ExportTreeGridModel", "AccountsReport", new { ctrlname = ViewBag.ctrlname })))
+          .Columns(co =>
+          {
+              co.Field("entity_code").HeaderText(ViewBag.entity_code).Add();
+              co.Field("entity_name").HeaderText(ViewBag.entity_name).Add();
+              co.Field("document_type_name").HeaderText("Document Type").Add();
+              co.Field("source_document_no").HeaderText("Document No").Add();
+              co.Field("posting_date").HeaderText("Posting Date").Format("{0:dd/MMM/yyyy}").FilterEditType(TreeGridFilterEditType.Datepicker).Add();
+              co.Field("day_diff").HeaderText("Days(Ageing)").TextAlign(TextAlign.Right).Add();
+              co.Field("total").HeaderText("Balance Total").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+              co.Field("not_due").HeaderText("Not Due").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+              co.Field("total_due").HeaderText("Total Overdue").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+              co.Field("thirty_days").HeaderText("Overdue 0-30 Days").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+              co.Field("sixty_days").HeaderText("Overdue 31-60 Days").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+              co.Field("ninety_days").HeaderText("Overdue 61-90 Days").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+              co.Field("one_twenty_days").HeaderText("Overdue 91-120 Days").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+              co.Field("one_fifty_days").HeaderText("Overdue 121-150 Days").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+              co.Field("one_eighty_days").HeaderText("Overdue 151-180 Days").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+              co.Field("sixty_five_days").HeaderText("Overdue 181-365 Days").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+              co.Field("three_sixty_five_days").HeaderText("More Than 365 Days").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+          }
+          )
+           .IsResponsive(true)
+              .ToolbarSettings(tool =>
+              {
+                  tool.ShowToolbar(true);
+                  tool.ToolbarItems(new List<TreeGridToolBarItems>()
+                 {
+                      TreeGridToolBarItems.ExcelExport,
+                 });
+              }).ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick"); })
+             .Datasource(ViewBag.datasource)
+
+)
+@Html.EJ().ScriptManager()
+<script type="text/javascript">   
+    $(function () {
+        $("#TreeGridContainer").ejTreeGrid({
+            enableCollapseAll: true,
+        });
+    });
+    function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1)
+        {
+            this.model["entity"] = $("#entity").val();
+            this.model["from_date"] = $("#fromDate").val();
+        }
+
+    }
+</script>

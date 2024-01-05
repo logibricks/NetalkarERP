@@ -1,0 +1,75 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+
+@{
+    (Html.EJ().Grid<report_production_vm>("Editing")
+    .Datasource(ds => ds.URL(Url.Action("Get_report_production", "ProductionReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&machine_id=" + ViewBag.machine_id + "&item_id=" + ViewBag.item_id + "&is_qc_remark=" + ViewBag.is_qc_remark).Adaptor(AdaptorType.UrlAdaptor))
+
+    .AllowPaging().PageSettings(a => a.PageSize(20))
+    .AllowFiltering()
+    .FilterSettings(X => X.FilterType(FilterType.Excel))
+    .ShowColumnChooser()
+    .AllowSorting()
+    .AllowScrolling()
+    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "ProductionReport", new { ctrlname = "BreakdownOrder" })))
+    .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+    .ToolbarSettings(toolbar =>
+    {
+        toolbar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Search);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        });
+    })
+    .Columns(col =>
+    {
+        col.Field("doc_number").HeaderText("Document Number").Add();
+        col.Field("actual_start_date1").HeaderText("Actual Start Date ").Add();
+        col.Field("actual_finish_date1").HeaderText("Break Down End Date").Add();
+        col.Field("actual_start_time1").HeaderText("Break Down Start Time ").Add();
+        col.Field("actual_end_time1").HeaderText("Break Down End Time").Add();
+        col.Field("item_name").HeaderText("Item Name").Add();
+        col.Field("MinuteDiff").HeaderText("Breakdown Time (Min)").Add();
+        col.Field("Cycle_Time_Minute").HeaderText("Cycle Time (Min)").Add();
+        col.Field("production_loss_qty").HeaderText("Production Loss").Add();
+        //col.Field("Time_Difference").HeaderText("Time Difference (Min)").Add(); 
+
+    })
+    .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicki"); })
+    ).Render();
+}
+@Html.EJ().ScriptManager()
+
+<br />
+
+<script type="text/javascript">
+
+    function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1) {
+
+            if ($('#machine_id :selected').length > 0) {
+                var selectedmachineid = [];
+                $('#machine_id :selected').each(function (i, selected) {
+                    selectedmachineid[i] = $(selected).val();
+                });
+                var machineid = selectedmachineid + "";
+            }
+
+            if ($('#item_id :selected').length > 0) {
+                var selecteditemid = [];
+                $('#item_id :selected').each(function (i, selected) {
+                    selecteditemid[i] = $(selected).val();
+                });
+                var itemid = selecteditemid + "";
+            }
+
+            this.model["from_date"] = $("#fromDate").val();
+            this.model["to_date"] = $("#toDate").val();
+            this.model["item_id"] = itemid;
+            this.model["machine_id"] = machineid;
+
+        }
+    }
+
+</script>

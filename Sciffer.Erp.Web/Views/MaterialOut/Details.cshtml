@@ -1,0 +1,90 @@
+﻿@model Sciffer.Erp.Domain.Model.inv_material_out
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>inv_material_out</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_BUSINESS_UNIT.BUSINESS_UNIT_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_BUSINESS_UNIT.BUSINESS_UNIT_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ref_document_numbring.category)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ref_document_numbring.category)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_EMPLOYEE.employee_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_EMPLOYEE.employee_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_PLANT.PLANT_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_PLANT.PLANT_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_VENDOR.VENDOR_CODE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_VENDOR.VENDOR_CODE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.document_number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.document_number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.posting_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.posting_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ge_number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ge_number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ge_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ge_date)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.material_out_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,433 @@
+﻿
+@model Sciffer.Erp.Domain.ViewModel.fin_ledger_capitalization_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+<div class="loading">Loading &#8230;</div>
+@using (Html.BeginForm("Create", "Capitalization", FormMethod.Post, new { enctype = "multipart/form-data", @class = "form_main", @id = "form_main" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        <div>@Html.ValidationSummary(true, "", new { @class = "text-danger" })</div>
+        @Html.HiddenFor(a => a.fin_ledger_capitalization_id, new { @class = "primary_id hidden" })
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.document_numbering_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @Html.DropDownList("document_numbering_id", (System.Web.Mvc.SelectList)ViewBag.category_list, new { @class = "form-control category validinput", @required = true, })
+                            @Html.ValidationMessageFor(model => model.document_numbering_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.posting_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control postingdocumentdate validinput", @required = true } })
+                            @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.asset_code_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @Html.DropDownList("asset_code_id", (System.Web.Mvc.SelectList)ViewBag.assetcodeList, "--select--", htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.asset_code_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.capitalization_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @Html.EditorFor(model => model.capitalization_date, new { htmlAttributes = new { @class = "form-control validinput", @required = true } })
+                            @Html.ValidationMessageFor(model => model.capitalization_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.gl_ledger_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @Html.DropDownList("gl_ledger_id", Enumerable.Empty<SelectListItem>(), "---Select---", new { @class = "form-control", @onchange = "GetDetails(this.value)" })
+                            @Html.ValidationMessageFor(model => model.gl_ledger_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">Detail</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="table-responsive">
+                                <table class="table table-responsive table-bordered table-striped pull-left" id="grid">
+                                    <thead>
+                                        <tr>
+                                            <th><label>fin_ledger_detail_id</label></th>
+                                            <th><label>Sr No.</label></th>
+                                            <th><label>document_type_id</label></th>
+                                            <th><label>Doc Type</label></th>
+                                            <th><label>Doc No.</label></th>
+                                            <th><label>Posting Date</label></th>
+                                            <th><label>Vendor</label></th>
+                                            <th><label>PO</label></th>
+                                            <th><label>po_id</label></th>
+                                            <th><label>JE No.</label></th>
+                                            <th><label>Amount</label></th>
+                                            <th><label>sub_ledger_id</label></th>
+                                            <th><label>gl_ledger_id</label></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg12 col-sm-12">
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <label class="" style="position:absolute;top:20%;left:73%;font-size:25px">Total Capitalization Amount</label>
+                        <input type="text" class="pull-right" value="0" id="net_value" name="net_value" style="font-size: 15px; width: 120px;" disabled />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg12 col-sm-12">
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <input type="button" value="Create" class="btn btn-success pull-right" id="create" name="create" onclick="TabletoJeson();" />
+                        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary pull-left" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade " id="myModal1" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content ">
+                <div class="modal-header ">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Purchase Order</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="Capitalization">
+                                <thead>
+                                    <tr>
+                                        <th><label>fin_ledger_detail_id</label></th>
+                                        <th><label>Sr No.</label></th>
+                                        <th><label>document_type_id</label></th>
+                                        <th><label>Doc Type</label></th>
+                                        <th><label>Doc No.</label></th>
+                                        <th><label>Posting Date</label></th>
+                                        <th><label>Vendor</label></th>
+                                        <th><label>PO</label></th>
+                                        <th><label>po_id</label></th>
+                                        <th><label>JE No.</label></th>
+                                        <th><label>Amount</label></th>
+                                        <th><label>Select</label></th>
+                                        <th><label>sub_ledger_id</label></th>
+                                        <th><label>gl_ledger_id</label></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    @*<button type="button" class="addSALES btn btn-primary" disabled="disabled">Add</button>*@
+                    <input type="button" value="Add" class="add btn btn-primary pull-right" id="Add" name="Add" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript">
+
+                        $("#document_numbering_id").select2({
+                            placeholder: "Select Category",
+                            allowClear: true
+                        });
+
+                        $("#gl_ledger_id").select2({
+                            placeholder: "Select GL",
+                            allowClear: true
+                        });
+
+                        $("#asset_code_id").select2({
+                            placeholder: "Select Asset Code",
+                            allowClear: true
+                        });
+
+
+
+                        $(document).ready(function(){
+
+                            document.getElementById('posting_date').valueAsDate = new Date();
+
+                            FillDescription("Account");
+
+                            function FillDescription(txt) {
+
+                                if (txt != '') {
+                                    $('#gl_ledger_id').val("").trigger('change');
+                                    $('#gl_ledger_id').html("");
+                                    $("#gl_ledger_id").append($('<option></option>').val("").html(""));
+                                    $.ajax({
+                                        url: "@Url.Action("GetEntityType", "Generic")?name=" + "Account",
+                                        method: 'get',
+                                    async: false,
+                                    success: function (data) {
+                                        $.each(data, function (index, dt) {
+                                            $('#gl_ledger_id').append('<option value=' + dt.id + '>' + dt.code + '/' + dt.name + '</option>');
+                                        });
+                                    }
+                                });
+                            }
+                        else {
+                            $('#gl_ledger_id').val("").trigger('change');
+                        }
+                        }
+                        });
+
+
+        $(".add").on("click", function (event) {
+            var t = $('#Capitalization').DataTable();
+            var grid = $('#grid').DataTable();
+
+            var rowCount = t.fnGetData().length;
+            var gridCount = grid.fnGetData().length;
+            var obj = {
+            };
+
+            var arForm = $("#form_main").serializeArray();
+            jQuery.each(arForm, function (i, formData) {
+                obj[formData.name] = formData.value;
+
+            });
+
+            for (i = 0; i < rowCount; i++) {
+
+                var chk = "chk" + i;
+                var xx = document.getElementById(chk);
+                if (xx.checked) {
+
+                    grid.fnAddData([t.fnGetData(i)[0], gridCount + 1, t.fnGetData(i)[2], t.fnGetData(i)[3], t.fnGetData(i)[4], t.fnGetData(i)[5], t.fnGetData(i)[6], t.fnGetData(i)[7], t.fnGetData(i)[8], t.fnGetData(i)[9], parseFloat(t.fnGetData(i)[10]).toFixed(2), t.fnGetData(i)[12], t.fnGetData(i)[13]]);
+                    gridCount++;
+                }
+            }
+            getnetTotal();
+            $('#myModal1').modal('hide');
+        });
+
+        function getnetTotal() {
+            var t = $('#grid').dataTable();;
+            var rowCount = t.fnGetData().length;
+            var total = 0;
+            for (var i = 0; i < rowCount; i++) {
+                total = parseFloat(total) + parseFloat(t.fnGetData(i)[10]);
+            }
+            $("#net_value").val(parseFloat(total).toFixed(2));
+        }
+//************************************************************************************************************************************************************
+
+                        function GetDetails(id) {
+                            if (id != '') {
+                                var entity_type_id = 7;
+                                var gl_ledger_id = id;
+                                if (gl_ledger_id != '') {
+                                    var t = $('#Capitalization').dataTable();
+                                    t.fnClearTable();
+                                    $.ajax({
+                                        url: '@Url.Action("ForCapitalizationeDetail", "Generic")',
+                                        type: "GET",
+                                        dataType: "json",
+                                        data: { entity_type_id: entity_type_id, entity_id: gl_ledger_id },
+                                        success: function (data)
+                                        {
+
+                                            var i = 0;
+                                            $.each(data, function (i, cycle) {
+
+                                                t.fnAddData([cycle.fin_ledger_detail_id, cycle.rowIndex, cycle.document_type_id, cycle.document_type_name, cycle.source_document_no, cycle.ledger_date, cycle.vendor_name, cycle.po_no, cycle.po_id, cycle.document_no, parseFloat(cycle.amount_local).toFixed(2), '<input type="checkbox" id=chk' + i + ' class="check" >', cycle.sub_ledger_id, cycle.gl_ledger_id]);
+
+                                            });
+                                            $('#myModal1').modal('show');
+                                        }
+                                    });
+                                }
+
+                            }
+                        }
+
+        //Capitalization *********************************************************************************************************************************************************
+
+                            $('#Capitalization').DataTable({
+                            "bPaginate": false,
+                            "ordering": false,
+                            "bfooter": false,
+                            "info": false,
+                            "bLengthChange": false,
+                            "bAutoWidth": false,
+                            "bFilter": false,
+                            "bSort": false,
+                            aoColumns: [
+
+                                { sname: "a", bVisible: false},
+                                { sname: "b", bVisible: true  },
+                                { sname: "d", bVisible: false  },
+                                { sname: "e", bVisible: true },
+                                { sname: "f", bVisible: true },
+                                { sname: "g", bVisible: true, sClass: "right" },
+                                { sname: "h", bVisible: true },
+                                { sname: "i", bVisible: true },
+                                { sname: "j", bVisible: false},
+                                { sname: "k", bVisible: true },
+                                { sname: "l", bVisible: true, sClass: "takeToRight " },
+                                { sname: "c", bVisible: true },
+                                { sname: "m", bVisible: false },
+                                { sname: "n", bVisible: false },
+
+                            ]
+
+                            });
+
+                         $('#grid').DataTable({
+                            "bPaginate": false,
+                            "ordering": false,
+                            "bfooter": false,
+                            "info": false,
+                            "bLengthChange": false,
+                            "bAutoWidth": false,
+                            "bFilter": false,
+                            "bSort": false,
+                            aoColumns: [
+
+                                { sname: "a", bVisible: false },
+                                { sname: "b", bVisible: true },
+                                //{ sname: "c", bVisible: true,},
+                                { sname: "d", bVisible: false },
+                                { sname: "e", bVisible: true },
+                                { sname: "f", bVisible: true },
+                                { sname: "g", bVisible: true, sClass: "right" },
+                                { sname: "h", bVisible: true },
+                                { sname: "i", bVisible: true },
+                                { sname: "j", bVisible: false },
+                                { sname: "k", bVisible: true },
+                                { sname: "l", bVisible: true, sClass: "takeToRight" },
+                                { sname: "m", bVisible: false },
+                                { sname: "n", bVisible: false },
+
+                            ]
+
+                         });
+
+
+//Create*********************************************************************************************************************************************************
+
+                        function TabletoJeson() {
+                             var DepParaArr = [];
+                            var t = $('#Capitalization').DataTable();
+                            var t = $('#grid').DataTable();
+                                var rowCount = t.fnGetData().length;
+                                var obj = {
+                                };
+
+                            var arForm = $("#form_main").serializeArray();
+                            var capatalizeDate=arForm[5].value;
+                            var postingDate=arForm[3].value;
+                            if (capatalizeDate == '') {
+                                swal("", "Capitalization Date cannot be left blank!", "error");
+                                return false;
+                            }
+
+                            if (capatalizeDate > postingDate) {
+                                swal("", "Capitalization Date cannot Greater Than Posting Date!", "error");
+                                return false;
+                            }
+
+                            jQuery.each(arForm, function (i, formData) {
+                                obj[formData.name] = formData.value;
+
+                            });
+
+                            for (i = 0; i < rowCount; i++)
+                            {
+                                DepParaArr.push({
+                                    fin_ledger_capitalization_detail_id: 0,
+                                    fin_ledger_detail_id: t.fnGetData(i)[0],
+                                    rowIndex: t.fnGetData(i)[1],
+                                    document_type_id: t.fnGetData(i)[2],
+                                    document_type_name: t.fnGetData(i)[3],
+                                    source_document_no: t.fnGetData(i)[4],
+                                    ledger_date: t.fnGetData(i)[5],
+                                    vendor_name: t.fnGetData(i)[6],
+                                    po_no: t.fnGetData(i)[7],
+                                    po_id: t.fnGetData(i)[8],
+                                    document_no: t.fnGetData(i)[9],
+                                    amount_local: t.fnGetData(i)[10],
+                                    sub_ledger_id: t.fnGetData(i)[11],
+                                    gl_ledger_id: t.fnGetData(i)[12],
+                                    is_active: true,
+
+                                });
+
+                            }
+
+                            $.ajax({
+                                url: '@Url.Action("Save", "Capitalization")',
+                                method: "Post",
+                                cache: false,
+                                async: false,
+                                data: { Capdata: obj, DepParaArr: DepParaArr },
+                                success: function (data) {
+                                    if (data.includes("Saved")) {
+                                        swal({
+                                            title: "",
+                                            text: "Saved Successfully!",
+                                            type: "success"
+                                        }, function () {
+                                            location.href = '@Url.Action("Index", "Capitalization")';
+                                        });
+                                    }
+                                    else {
+                                        swal({
+                                            title: "Error",
+                                            text: data,
+                                            type: "error"
+                                        }, function () {
+                                            location.href = '@Url.Action("Index", "Capitalization")';
+                                        });
+                                    }
+                                },
+                            });
+                        }
+
+</script>
+}

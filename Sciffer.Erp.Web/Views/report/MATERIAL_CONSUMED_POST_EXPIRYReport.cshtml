@@ -1,0 +1,185 @@
+﻿
+
+@using Sciffer.Erp.Domain.ViewModel
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.mickey').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            maxHeight: '200',
+            enableCaseInsensitiveFiltering: true,
+            allowClear: true,
+            maximumResultsForSearch: 1,
+            numberDisplayed: 0,
+        });
+    });
+</script>
+
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel panel">
+            <div class="x_title">
+                <h2 style="font-size:18px">
+                    MATERIAL CONSUMED POST EXPIRY Report
+                </h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="form-horizontal">
+                <div class="x_content">
+                    <div class=row>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">From Date</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <input type="date" id="from_date" class="form-control radius" required="required">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">To Date</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <input type="date" id="to_date" class="form-control radius">
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                                <label></label>
+                            </div>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                <button class="searchbutton searchButton" id="search"> &nbsp; Run Report </button>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class=row>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">Plant</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                @Html.DropDownList("plant", (System.Web.Mvc.SelectList)ViewBag.plant_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">Item Category</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                @Html.DropDownList("item_category_id", (System.Web.Mvc.SelectList)ViewBag.item_category_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">Item Code</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.item_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class=row>
+                        <div class="col-md-4 col-lg-4 col-xs-12">
+                            <label class="control-label col-md-5 col-lg-5 col-xs-12">Reason Code</label>
+                            <div class="col-md-7 col-lg-7 col-xs-12">
+                                @Html.DropDownList("reason_id", (System.Web.Mvc.SelectList)ViewBag.reason_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel panel">
+            <div class="x_title">
+                <h2 style="font-size:18px"></h2>
+                <ul class="nav navbar-right panel_toolbox">
+                    <li>
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </li>
+                </ul>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div id="searchresult">
+                    @Html.Partial("Partial_MATERIAL_CONSUMED_POST_EXPIRY", (object)ViewBag)
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+
+
+<script type="text/javascript">
+    $("#search").click(function () {
+        AdvanceSearch();
+    });
+    document.getElementById('from_date').valueAsDate = new Date();
+    document.getElementById('toDate').valueAsDate = new Date();
+    function AdvanceSearch() {
+        var fromDate = $("#from_date").val();
+        var item_category = $("#item_category_id").val();
+        var plant = $("#plant").val();
+        var toDate = $("#to_date").val();
+        if ($('#item_category_id :selected').length > 0) {
+            var selectedItemCategory = [];
+            $('#item_category_id :selected').each(function (i, selected) {
+                selectedItemCategory[i] = $(selected).val();
+            });
+            var ItemCategory = selectedItemCategory + "";
+        }
+
+
+        if ($('#plant :selected').length > 0) {
+            var selectedPlant = [];
+            $('#plant :selected').each(function (i, selected) {
+                selectedPlant[i] = $(selected).val();
+            });
+            var Plants = selectedPlant + "";
+        }
+
+        if ($('#item_id :selected').length > 0) {
+            var selectedItem = [];
+            $('#item_id :selected').each(function (i, selected) {
+                selectedItem[i] = $(selected).val();
+            });
+            var Item = selectedItem + "";
+        }
+        if ($('#reason_id :selected').length > 0) {
+            var selectedReason = [];
+            $('#reason_id :selected').each(function (i, selected) {
+                selectedReason[i] = $(selected).val();
+            });
+            var Reason = selectedReason + "";
+        }
+
+        $.ajax({
+            url: '/Report/GetMATERIAL_CONSUMED_POST_EXPIRYReport',
+            method: "Post",
+            cache: false,
+            data: { fromDate: fromdate,to_date:todate,plant: Plants, item_id: Item,reason:Reason,itemcategory:ItemCategory },
+            success: function (data) {
+                $(".loading").hide();
+                $('#searchresult').empty().append(data);
+                //console.log(data);
+            },
+            error: function (http) {
+                console.log(XMLHttpRequest);
+            }
+        });
+    }
+</script>
+<div class="modal"><!-- Place at bottom of page --></div>

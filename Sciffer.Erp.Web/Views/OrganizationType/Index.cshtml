@@ -1,0 +1,138 @@
+﻿<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+@using Sciffer.Erp.Domain.Model
+
+@{
+    ViewBag.Title = "Index";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<br/>
+<br />
+<br />
+<div style="margin-top:10px">
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<REF_ORG_TYPE>("Grid")
+        .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.datasource).RemoveURL(Url.Action("InlineDelete", "OrganizationType")).InsertURL(Url.Action("InlineInsert", "OrganizationType")).UpdateURL(Url.Action("InlineInsert", "OrganizationType"))
+                       .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true).ShowConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(10); })
+        .EnableAltRow()
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Add);
+                items.AddTool(ToolBarItems.Edit);
+                // items.AddTool(ToolBarItems.Delete);
+                items.AddTool(ToolBarItems.Update);
+                items.AddTool(ToolBarItems.Cancel);
+                items.AddTool(ToolBarItems.ExcelExport);
+                items.AddTool(ToolBarItems.PrintGrid);
+
+            });
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "OrganizationType" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+
+        .Columns(col =>
+        {
+
+            col.Field("ORG_TYPE_ID").Width("15%").HeaderText("ID").Visible(false).IsPrimaryKey(true).Width(80).Add();
+            col.Field("ORG_TYPE_NAME").Width("15%").HeaderText("Organization Type").TextAlign(TextAlign.Left).ValidationRules(v => v.AddRule("required", true)).Add();
+            col.Field("is_blocked").Width("15%").HeaderText("Blocked").Visible(false).Add();
+        })
+
+        .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+</div>
+<style>
+    .form-control{
+        height: 31.8182px;
+    }
+</style>
+<script id="template" type="text/template">
+
+    <div>
+        <div class="row">
+           
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="hidden" id="ORG_TYPE_ID" name="ORG_TYPE_ID" value="{{: ORG_TYPE_ID}}" class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                Organization Type *
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="text" id="ORG_TYPE_NAME" name="ORG_TYPE_NAME" value="{{: ORG_TYPE_NAME}}" class="form-control" />
+            </div>
+        </div>
+
+        <br />
+        <div class="row">
+
+            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="text-align: right;">
+                Blocked:
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <input type="checkbox" name="is_blocked"  class="form-control" id="is_blocked">
+            </div>
+
+
+        </div>
+
+
+    </div>
+</script>
+
+<script type="text/javascript">
+    var flag = true;
+   
+    function complete(args) {
+
+        if (args.requestType == "add") {
+            $("#is_blocked").checkboxpicker();
+        }
+
+        if (args.requestType == "beginedit")
+        {
+            document.getElementById('ORG_TYPE_NAME').setAttribute('disabled', 'disabled');
+            if (args.rowData.is_blocked == true) {
+                document.getElementById("is_blocked").setAttribute('checked', 'checked');
+            }
+            else {
+                document.getElementById("is_blocked").removeAttribute('checked','checked');
+            }
+            $("#is_blocked").checkboxpicker();
+
+        }
+        if (args.requestType == "save") {
+            if (args.data.text == 'duplicate') {             
+                sweetAlert("", "Organization type already exists", "error");
+                if (args.model.dataSource.dataSource.json[0].ORG_TYPE_ID == null)
+                {
+                    args.model.dataSource.dataSource.json = args.model.dataSource.dataSource.json.splice(1, args.model.dataSource.dataSource.json.length);
+                }              
+            }
+            var gridObj = $("#Grid").ejGrid("instance");
+            gridObj.refreshContent();
+           
+
+        }
+       
+
+    }
+    function EndProcess() {
+        var gridObj = $("#Grid").ejGrid("instance");
+        console.log(gridObj);
+        gridObj.refreshContent();
+    }
+</script>

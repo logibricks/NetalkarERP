@@ -1,0 +1,58 @@
+﻿<div class="form-horizontal">
+    <div class=row>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Item Code</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.item_list, htmlAttributes: new { @class = "form-control validinput mickey item_id", multiple = "multiple", @required = true })
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">All / Pending </label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @*<label><input type="radio" id="all_pending" name="all_pending" value="Pending">Pending</label>*@
+                @Html.DropDownList("all_pending", new List<SelectListItem>
+                            {
+
+                                new SelectListItem { Text = "Pending", Value = "Pending" },
+                                 new SelectListItem { Text = "All", Value = "All" }
+                            }, new { @class = "form-control sales_rm" })
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12"></label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <input type="hidden" id="entity" value="get_challan_summary" />
+                <input type="hidden" id="partial" value="Partial_ChallanSummaryReport" />
+                <button class="searchbutton searchButton" id="search" onclick="DateCheck()"> &nbsp; Run Report </button>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class=row>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Challan From Date</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <input type="date" name="fromDate" id="fromDate" class="form-control" required="required">
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Challan To Date</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <input type="date" name="toDate" id="toDate" class="form-control radius" required="required">
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <span style="color:red;font-size:15px;" class="control-label col-md-12 col-lg-12 col-xs-12">Report will take longer time to load if date filters are not applied. Pls use date filter effectively.</span>
+
+        </div>
+    </div>
+    <br />
+</div>
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div id="searchresult">
+            @Html.Partial("Partial_ChallanSummaryReport", (object)ViewBag)
+        </div>
+    </div>
+</div>

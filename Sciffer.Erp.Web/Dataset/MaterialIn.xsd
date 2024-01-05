@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="MaterialIn" targetNamespace="http://tempuri.org/MaterialIn.xsd" xmlns:mstns="http://tempuri.org/MaterialIn.xsd" xmlns="http://tempuri.org/MaterialIn.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="MaterialIn" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="MaterialIn" msprop:Generator_UserDSName="MaterialIn">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="inv_material_in" msprop:Generator_TableClassName="inv_material_inDataTable" msprop:Generator_TableVarName="tableinv_material_in" msprop:Generator_TablePropName="inv_material_in" msprop:Generator_RowDeletingName="inv_material_inRowDeleting" msprop:Generator_RowChangingName="inv_material_inRowChanging" msprop:Generator_RowEvHandlerName="inv_material_inRowChangeEventHandler" msprop:Generator_RowDeletedName="inv_material_inRowDeleted" msprop:Generator_UserTableName="inv_material_in" msprop:Generator_RowChangedName="inv_material_inRowChanged" msprop:Generator_RowEvArgName="inv_material_inRowChangeEvent" msprop:Generator_RowClassName="inv_material_inRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="material_in_id" msprop:Generator_ColumnVarNameInTable="columnmaterial_in_id" msprop:Generator_ColumnPropNameInRow="material_in_id" msprop:Generator_ColumnPropNameInTable="material_in_idColumn" msprop:Generator_UserColumnName="material_in_id" type="xs:string" minOccurs="0" />
+              <xs:element name="document_number" msprop:Generator_ColumnVarNameInTable="columndocument_number" msprop:Generator_ColumnPropNameInRow="document_number" msprop:Generator_ColumnPropNameInTable="document_numberColumn" msprop:Generator_UserColumnName="document_number" type="xs:string" minOccurs="0" />
+              <xs:element name="posting_date" msprop:Generator_ColumnVarNameInTable="columnposting_date" msprop:Generator_ColumnPropNameInRow="posting_date" msprop:Generator_ColumnPropNameInTable="posting_dateColumn" msprop:Generator_UserColumnName="posting_date" type="xs:string" minOccurs="0" />
+              <xs:element name="vendor_name" msprop:Generator_ColumnVarNameInTable="columnvendor_name" msprop:Generator_ColumnPropNameInRow="vendor_name" msprop:Generator_ColumnPropNameInTable="vendor_nameColumn" msprop:Generator_UserColumnName="vendor_name" type="xs:string" minOccurs="0" />
+              <xs:element name="busienss_unit" msprop:Generator_ColumnVarNameInTable="columnbusienss_unit" msprop:Generator_ColumnPropNameInRow="busienss_unit" msprop:Generator_ColumnPropNameInTable="busienss_unitColumn" msprop:Generator_UserColumnName="busienss_unit" type="xs:string" minOccurs="0" />
+              <xs:element name="plant_name" msprop:Generator_ColumnVarNameInTable="columnplant_name" msprop:Generator_ColumnPropNameInRow="plant_name" msprop:Generator_ColumnPropNameInTable="plant_nameColumn" msprop:Generator_UserColumnName="plant_name" type="xs:string" minOccurs="0" />
+              <xs:element name="ge_number" msprop:Generator_ColumnVarNameInTable="columnge_number" msprop:Generator_ColumnPropNameInRow="ge_number" msprop:Generator_ColumnPropNameInTable="ge_numberColumn" msprop:Generator_UserColumnName="ge_number" type="xs:string" minOccurs="0" />
+              <xs:element name="ge_date" msprop:Generator_ColumnVarNameInTable="columnge_date" msprop:Generator_ColumnPropNameInRow="ge_date" msprop:Generator_ColumnPropNameInTable="ge_dateColumn" msprop:Generator_UserColumnName="ge_date" type="xs:string" minOccurs="0" />
+              <xs:element name="employee_name" msprop:Generator_ColumnVarNameInTable="columnemployee_name" msprop:Generator_ColumnPropNameInRow="employee_name" msprop:Generator_ColumnPropNameInTable="employee_nameColumn" msprop:Generator_UserColumnName="employee_name" type="xs:string" minOccurs="0" />
+              <xs:element name="company_name" msprop:Generator_ColumnVarNameInTable="columncompany_name" msprop:Generator_ColumnPropNameInRow="company_name" msprop:Generator_ColumnPropNameInTable="company_nameColumn" msprop:Generator_UserColumnName="company_name" type="xs:string" minOccurs="0" />
+              <xs:element name="company_address" msprop:Generator_ColumnVarNameInTable="columncompany_address" msprop:Generator_ColumnPropNameInRow="company_address" msprop:Generator_ColumnPropNameInTable="company_addressColumn" msprop:Generator_UserColumnName="company_address" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="inv_material_in_detail" msprop:Generator_TableClassName="inv_material_in_detailDataTable" msprop:Generator_TableVarName="tableinv_material_in_detail" msprop:Generator_TablePropName="inv_material_in_detail" msprop:Generator_RowDeletingName="inv_material_in_detailRowDeleting" msprop:Generator_RowChangingName="inv_material_in_detailRowChanging" msprop:Generator_RowEvHandlerName="inv_material_in_detailRowChangeEventHandler" msprop:Generator_RowDeletedName="inv_material_in_detailRowDeleted" msprop:Generator_UserTableName="inv_material_in_detail" msprop:Generator_RowChangedName="inv_material_in_detailRowChanged" msprop:Generator_RowEvArgName="inv_material_in_detailRowChangeEvent" msprop:Generator_RowClassName="inv_material_in_detailRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="material_in_detail_id" msdata:Caption="material_out_detail_id" msprop:Generator_ColumnVarNameInTable="columnmaterial_in_detail_id" msprop:Generator_ColumnPropNameInRow="material_in_detail_id" msprop:Generator_ColumnPropNameInTable="material_in_detail_idColumn" msprop:Generator_UserColumnName="material_in_detail_id" type="xs:string" minOccurs="0" />
+              <xs:element name="material_in_id" msdata:Caption="material_out_id" msprop:Generator_ColumnVarNameInTable="columnmaterial_in_id" msprop:Generator_ColumnPropNameInRow="material_in_id" msprop:Generator_ColumnPropNameInTable="material_in_idColumn" msprop:Generator_UserColumnName="material_in_id" type="xs:string" minOccurs="0" />
+              <xs:element name="item_name" msprop:Generator_ColumnVarNameInTable="columnitem_name" msprop:Generator_ColumnPropNameInRow="item_name" msprop:Generator_ColumnPropNameInTable="item_nameColumn" msprop:Generator_UserColumnName="item_name" type="xs:string" minOccurs="0" />
+              <xs:element name="user_description" msprop:Generator_ColumnVarNameInTable="columnuser_description" msprop:Generator_ColumnPropNameInRow="user_description" msprop:Generator_ColumnPropNameInTable="user_descriptionColumn" msprop:Generator_UserColumnName="user_description" type="xs:string" minOccurs="0" />
+              <xs:element name="uom_name" msprop:Generator_ColumnVarNameInTable="columnuom_name" msprop:Generator_ColumnPropNameInRow="uom_name" msprop:Generator_ColumnPropNameInTable="uom_nameColumn" msprop:Generator_UserColumnName="uom_name" type="xs:string" minOccurs="0" />
+              <xs:element name="batch_number" msprop:Generator_ColumnVarNameInTable="columnbatch_number" msprop:Generator_ColumnPropNameInRow="batch_number" msprop:Generator_ColumnPropNameInTable="batch_numberColumn" msprop:Generator_UserColumnName="batch_number" type="xs:string" minOccurs="0" />
+              <xs:element name="storage_location_name" msprop:Generator_ColumnVarNameInTable="columnstorage_location_name" msprop:Generator_ColumnPropNameInRow="storage_location_name" msprop:Generator_ColumnPropNameInTable="storage_location_nameColumn" msprop:Generator_UserColumnName="storage_location_name" type="xs:string" minOccurs="0" />
+              <xs:element name="bucket_name" msprop:Generator_ColumnVarNameInTable="columnbucket_name" msprop:Generator_ColumnPropNameInRow="bucket_name" msprop:Generator_ColumnPropNameInTable="bucket_nameColumn" msprop:Generator_UserColumnName="bucket_name" type="xs:string" minOccurs="0" />
+              <xs:element name="quantity" msprop:Generator_ColumnVarNameInTable="columnquantity" msprop:Generator_ColumnPropNameInRow="quantity" msprop:Generator_ColumnPropNameInTable="quantityColumn" msprop:Generator_UserColumnName="quantity" type="xs:string" minOccurs="0" />
+              <xs:element name="reason" msprop:Generator_ColumnVarNameInTable="columnreason" msprop:Generator_ColumnPropNameInRow="reason" msprop:Generator_ColumnPropNameInTable="reasonColumn" msprop:Generator_UserColumnName="reason" type="xs:string" minOccurs="0" />
+              <xs:element name="er_date" msprop:Generator_ColumnVarNameInTable="columner_date" msprop:Generator_ColumnPropNameInRow="er_date" msprop:Generator_ColumnPropNameInTable="er_dateColumn" msprop:Generator_UserColumnName="er_date" type="xs:string" minOccurs="0" />
+              <xs:element name="balance_qty" msprop:Generator_ColumnVarNameInTable="columnbalance_qty" msprop:Generator_ColumnPropNameInRow="balance_qty" msprop:Generator_ColumnPropNameInTable="balance_qtyColumn" msprop:Generator_UserColumnName="balance_qty" type="xs:string" minOccurs="0" />
+              <xs:element name="mo_document_number" msprop:Generator_ColumnVarNameInTable="columnmo_document_number" msprop:Generator_ColumnPropNameInRow="mo_document_number" msprop:Generator_ColumnPropNameInTable="mo_document_numberColumn" msprop:Generator_UserColumnName="mo_document_number" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:annotation>
+    <xs:appinfo>
+      <msdata:Relationship name="inv_material_in_inv_material_in_detail" msdata:parent="inv_material_in" msdata:child="inv_material_in_detail" msdata:parentkey="material_in_id" msdata:childkey="material_in_id" msprop:Generator_UserChildTable="inv_material_in_detail" msprop:Generator_ChildPropName="Getinv_material_in_detailRows" msprop:Generator_UserRelationName="inv_material_in_inv_material_in_detail" msprop:Generator_ParentPropName="inv_material_inRow" msprop:Generator_RelationVarName="relationinv_material_in_inv_material_in_detail" msprop:Generator_UserParentTable="inv_material_in" />
+    </xs:appinfo>
+  </xs:annotation>
+</xs:schema>

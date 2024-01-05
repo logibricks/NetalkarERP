@@ -1,0 +1,83 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+
+@{
+    ViewBag.Title = "Index1";
+}
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<ref_fin_template_vm>("Searching")
+
+        .Datasource((IEnumerable<object>)ViewBag.DataSource)
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "FinancialTemplate" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%").Height("Auto"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("template_id").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("template_name").HeaderText("Template Name").Visible(true).Add();
+            col.Field("t_format2").HeaderText("T Format").Add();
+            col.Field("created_ts").HeaderText("Created Date").Format("{0:dd/MM/yyyy}").Add();
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = "@Url.Action("Edit", "FinancialTemplate")?id=" + args.rowData.template_id;
+        }
+        if (args.requestType == "add") {
+            location.href = "@Url.Action("Create", "FinancialTemplate")";
+        }
+    }
+    function rightClick(args) {
+        location.href = "@Url.Action("Details", "FinancialTemplate")?id=" + args.data.template_id;
+    }
+    $(document).ready(function () {
+        var num = '@Html.ViewBag.num';
+        if (num != '') {
+            if (num != undefined) {
+                sweetAlert("", num + " Saved successfully.", "success");
+            }
+        }
+    });
+
+</script>
+
+
+
+
+
+
+
+

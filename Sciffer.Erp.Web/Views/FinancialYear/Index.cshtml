@@ -1,0 +1,133 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.Model.REF_FINANCIAL_YEAR>
+@using Sciffer.Erp.Domain.Model
+@{
+    ViewBag.Title = "Index";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<br /><br /><br />
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<REF_FINANCIAL_YEAR>("Grid")
+                 .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.Datasource).RemoveURL(Url.Action("InlineDelete", "FinancialYear")).InsertURL(Url.Action("InlineInsert", "FinancialYear")).UpdateURL(Url.Action("InlineInsert", "FinancialYear"))
+                       .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true); })
+        .EnableAltRow().AllowPaging()
+        .PageSettings(p => { p.PageSize(12); })
+        .EnableAltRow()
+        .ToolbarSettings(toolbar =>
+        {
+            toolbar.ShowToolbar().ToolbarItems(items =>
+            {
+                items.AddTool(ToolBarItems.Edit);              
+                items.AddTool(ToolBarItems.Update);
+                items.AddTool(ToolBarItems.Cancel);
+                items.AddTool(ToolBarItems.ExcelExport);               
+                items.AddTool(ToolBarItems.PrintGrid);
+            });
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "FinancialYear" })))       
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+         .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("FINANCIAL_YEAR_ID").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Width(80).Add();
+            col.Field("FINANCIAL_YEAR_NAME").Width("15%").HeaderText("Financial Year").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("FINANCIAL_YEAR_FROM").Width("15%").HeaderText("From Date").Format("{0:dd/MM/yyyy}").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("FINANCIAL_YEAR_TO").Width("15%").HeaderText("To Date").Format("{0:dd/MM/yyyy}").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("is_blocked").Width("15%").HeaderText("Is Blocked").Visible(false).Add();
+        })
+        .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+</div>
+
+<script id="template" type="text/template">
+
+    <div>
+        <div class="row">
+
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="hidden" id="FINANCIAL_YEAR_ID" name="FINANCIAL_YEAR_ID" value="{{: FINANCIAL_YEAR_ID}}" class="form-control" />
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+               Financial Year *
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="text" id="FINANCIAL_YEAR_NAME" name="FINANCIAL_YEAR_NAME" value="{{: FINANCIAL_YEAR_NAME}}" class="form-control" />
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                From Date *
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="date" id="FINANCIAL_YEAR_FROM" name="FINANCIAL_YEAR_FROM" value="{{: FINANCIAL_YEAR_FROM}}" class="form-control" />
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                 To Date *
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="date" id="FINANCIAL_YEAR_TO" name="FINANCIAL_YEAR_TO" value="{{: FINANCIAL_YEAR_TO}}" class="form-control" />
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/javascript">
+    var flag = true;
+    Date.prototype.addYears = function (n) {
+        var now = new Date();
+        return new Date(now.setFullYear(now.getFullYear() + n));
+    };
+    function complete(args) {
+        if (args.requestType == "beginedit") {
+            function convert(str) {
+                var date = new Date(str),
+                    mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+                    day = ("0" + date.getDate()).slice(-2);
+                return [date.getFullYear(), mnth, day].join("-");
+            }
+            document.getElementById('FINANCIAL_YEAR_NAME').setAttribute('disabled', 'disabled');
+            document.getElementById('FINANCIAL_YEAR_FROM').setAttribute('disabled', 'disabled');
+            document.getElementById('FINANCIAL_YEAR_TO').setAttribute('disabled', 'disabled');
+
+           
+            //document.getElementById('BUSINESS_UNIT_DESCRIPTION').setAttribute('disabled', 'disabled');
+           
+            $('#FINANCIAL_YEAR_TO').val(convert(args.rowData.FINANCIAL_YEAR_TO));
+            $('#FINANCIAL_YEAR_FROM').val(convert(args.rowData.FINANCIAL_YEAR_FROM));
+
+        }
+        if (args.requestType == "save") {
+          //  console.log(args.rowData.from_date.addYears(1));
+            if (args.data.text == 'duplicate') {
+                sweetAlert("", "Financial year already exists!", "error");
+                if (args.model.dataSource.dataSource.json[0].FINANCIAL_YEAR_ID == null) {
+                    args.model.dataSource.dataSource.json = args.model.dataSource.dataSource.json.splice(1, args.model.dataSource.dataSource.json.length);
+                }
+            }
+            var gridObj = $("#Grid").ejGrid("instance");
+            gridObj.refreshContent();
+        }
+    }
+
+    function EndProcess() {
+        var gridObj = $("#Grid").ejGrid("instance");
+        //console.log(gridObj);
+        gridObj.refreshContent();
+    }
+</script>
+

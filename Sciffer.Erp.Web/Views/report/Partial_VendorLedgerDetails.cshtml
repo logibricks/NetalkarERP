@@ -1,0 +1,62 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+
+
+
+@{(Html.EJ().Grid<Report_VendorLedgerDetails_vm>("Editing")
+                            .Datasource((IEnumerable<object>)ViewBag.datasource)
+                                .AllowScrolling()
+                                .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelForReport", "Generic", new { ctrlname = "VendorLedgerDetails" }))
+                                .ExportToPdfAction(Url.Action("ExportToPdfForReport", "Generic", new { ctrlname = "VendorLedgerDetails" })))
+                                .ScrollSettings(scroll => { scroll.Width("100%").Height("50%"); })
+
+                            .ToolbarSettings(toolbar =>
+                            {
+                                toolbar.ShowToolbar()
+                               //  .CustomToolbarItems(new List<object> {  new Syncfusion.JavaScript.Models.CustomToolbarItem() { TemplateID = "#Excel" } })
+                                .ToolbarItems(items =>
+                                {
+                                    items.AddTool(ToolBarItems.Search);
+                                    items.AddTool(ToolBarItems.ExcelExport);
+                                    items.AddTool(ToolBarItems.PrintGrid);
+                                });
+                            }).ShowColumnChooser()
+                    .Columns(col =>
+                    {
+                        col.Field("document_category").Width("10%").HeaderText("Document Category").Add();
+                        col.Field("doc_number").Width("10%").HeaderText("Document Number").Add();
+                        col.Field("posting_date").Format("{0:dd/MM/yyyy}").Width("10%").HeaderText("Posting Date").Add();
+                        col.Field("document_date").Format("{0:dd/MM/yyyy}").Width("10%").HeaderText("Document Date").Add();
+                        col.Field("due_date").Format("{0:dd/MM/yyyy}").Width("10%").HeaderText("Due Date").Add();
+                        col.Field("ref1").Width("10%").HeaderText("Ref1").Visible(false).Add();
+                        col.Field("ref2").Width("10%").HeaderText("Ref2").Visible(false).Add();
+                        col.Field("ref3").Width("10%").HeaderText("Ref3").Visible(false).Add();
+                        col.Field("description").Width("10%").HeaderText("Description").Add();
+                        col.Field("currency").Width("10%").HeaderText("Currency").Add();
+                        col.Field("dr_fc").Width("10%").HeaderText("Dr FC").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(false).Add();
+                        col.Field("cr_fc").Width("10%").HeaderText("Cr FC").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(false).Add();
+                        col.Field("dr_lc").Width("10%").HeaderText("Dr LC").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                        col.Field("cr_lc").Width("10%").HeaderText("Cr LC").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                        col.Field("balance").Width("10%").HeaderText("Balance").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                        col.Field("cost_center").Width("10%").HeaderText("Cost Center").Add();
+                        col.Field("line_remarks").Width("10%").HeaderText("Line Remarks").Add();
+                    })
+                    .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+                    ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+
+@*<script id="Excel" type="text/template">
+    <a href="javascript:void()" id="export_to_excel" style="text-decoration:none;"><img src="/images/export.PNG" class="image-responsive" /></a>
+    
+</script>*@
+
+<script>
+  
+
+</script>
+
+

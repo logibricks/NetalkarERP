@@ -1,0 +1,1367 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.pur_pi_return_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+@using (Html.BeginForm("Create", "PurchaseReturn", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal" style="margin-top:10px;">
+        <div id="pidetail" hidden></div>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.category_list, "---Select---", new { @class = "form-control category validinput setPlant", @required = true, @onchange = "GetStorage(this.value)" })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.posting_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control postingdocumentdate validinput", @required = true, @onchange = "CalculateTax();" } })
+                            @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.vendor_id, "Vendor *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("vendor_id", (System.Web.Mvc.SelectList)ViewBag.vendor_list, "---Select---", new { @class = "form-control validinput", @onchange = "GetVendorDetails(this.value)" })
+                            @Html.ValidationMessageFor(model => model.vendor_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.storage_location_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("storage_location_id", Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control " })
+                            @Html.ValidationMessageFor(model => model.storage_location_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.net_value, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-5 col-sm-5 col-xs-12">
+                            @Html.EditorFor(model => model.net_value, new { htmlAttributes = new { @class = "form-control right validinput removedisabled", @disabled = "disabled", @type = "number" } })
+                            @Html.ValidationMessageFor(model => model.net_value, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            @Html.DropDownList("net_currency_id", (System.Web.Mvc.SelectList)ViewBag.currency_list, new { @class = "form-control removedisabled", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.net_currency_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.gross_value, "Gross Value", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-5 col-sm-5 col-xs-12">
+                            @Html.EditorFor(model => model.gross_value, new { htmlAttributes = new { @class = "form-control right validinput removedisabled", @disabled = "disabled", @type = "number" } })
+                            @Html.ValidationMessageFor(model => model.gross_value, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            @Html.DropDownList("gross_currency_id", (System.Web.Mvc.SelectList)ViewBag.currency_list, new { @class = "form-control removedisabled", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.gross_currency_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">General</a></li>
+                <li><a data-toggle="tab" href="#sectionB">Line Item</a></li>
+                <li><a data-toggle="tab" href="#sectionC">Vendor</a></li>
+                <li><a data-toggle="tab" href="#sectionD">Accounting</a></li>
+                <li><a data-toggle="tab" href="#sectionE">Information</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.business_unit_id, "Business Unit *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("business_unit_id", (System.Web.Mvc.SelectList)ViewBag.business_list, "---Select---", new { @class = "form-control validinput" })
+                                    @Html.ValidationMessageFor(model => model.business_unit_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.plant_id, "Plant *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plant_list, "---Select---", new { @class = "form-control validinput removedisabled selectedbycategory", @disabled = "disabled" })
+                                    @Html.ValidationMessageFor(model => model.plant_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.freight_terms_id, "Freight Terms *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("freight_terms_id", (System.Web.Mvc.SelectList)ViewBag.freight_list, "---Select---", new { @class = "form-control validinput" })
+                                    @Html.ValidationMessageFor(model => model.freight_terms_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionB" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <button type="button" class="btn btn-primary pull-right" id="btn_add_sal"><span class="glyphicon glyphicon-plus"></span></button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid"> </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <input type="hidden" id="original_value" />
+                            <input type="hidden" id="tds_value" />
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="table-responsive">
+                                <table class="table table-responsive table-bordered table-striped" id="TaxGrid"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionC" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.billing_address, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.billing_address, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.billing_address, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.billing_city, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.billing_city, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.billing_city, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.billing_pincode, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.billing_pincode, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.billing_pincode, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.country_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("country_id", (System.Web.Mvc.SelectList)ViewBag.country_list, "---Select---", new { @class = "form-control removedisabled", @disabled = "disabled" })
+                                    @Html.ValidationMessageFor(model => model.country_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.billing_state_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("billing_state_id", (System.Web.Mvc.SelectList)ViewBag.state_list, "---Select---", new { @class = "form-control removedisabled", @disabled = "disabled" })
+                                    @Html.ValidationMessageFor(model => model.billing_state_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.email_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.email_id, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.email_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.gst_in, "GSTIN", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.gst_in, new { htmlAttributes = new { @class = "form-control removedisabled validinput", } })
+                                    @Html.ValidationMessageFor(model => model.gst_in, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.gst_vendor_type_id, "GST vendor type", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("gst_vendor_type_id", (System.Web.Mvc.SelectList)ViewBag.gst_list, "---Select---", new { @class = "form-control removedisabled validinput", })
+                                    @Html.ValidationMessageFor(model => model.gst_vendor_type_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionD" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.payment_cycle_type_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("payment_cycle_type_id", (System.Web.Mvc.SelectList)ViewBag.payment_cycle_type_list, "---Select---", new { @class = "form-control validinput", @required = true, @onchange = "FillPaymentCycle()" })
+                                    @Html.ValidationMessageFor(model => model.payment_cycle_type_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.payment_cycle_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("payment_cycle_id", (System.Web.Mvc.SelectList)ViewBag.payment_cycle_list, "---Select---", new { @class = "form-control validinput", @required = true })
+                                    @Html.ValidationMessageFor(model => model.payment_cycle_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.payment_terms_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("payment_terms_id", (System.Web.Mvc.SelectList)ViewBag.payment_terms_list, "---Select---", new { @class = "form-control validinput", @required = true })
+                                    @Html.ValidationMessageFor(model => model.payment_terms_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.tds_code_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("tds_code_id", (System.Web.Mvc.SelectList)ViewBag.tdslist, "---Select---", new { @class = "form-control removedisabled", @onchange = "CalculateTax();" })
+                                    @Html.ValidationMessageFor(model => model.tds_code_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionE" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.internal_remarks, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.internal_remarks, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.internal_remarks, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.remarks_on_doc, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.remarks_on_doc, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.remarks_on_doc, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.attachment, "Attachment", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <input type="file" class="form-control" id="FileUpload" name="FileUpload" accept="application/pdf, image/*" />
+                                    @Html.ValidationMessageFor(model => model.attachment, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <input type="hidden" id="productdetail" name="productdetail" />
+                <input type="hidden" id="attributedetail" name="attributedetail" />
+                <input type="hidden" id="formdetail" name="formdetail" />
+                <input type="hidden" id="deleteids" name="deleteids" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg12 col-sm-12">
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <input type="submit" value="Create" class="btn btn-success" data-controller="PurchaseReturn" id="create" onclick="TabletoJeson();" style="float:right" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 id="itemsdetail" class="modal-title">Detail</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" id="lbitem">
+                                Item <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.item_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12 removedisabled", @disabled = "disabled" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                User Description
+                            </label>
+                            <div class="col-md-7">
+                                <input type="text" class="form-control col-md-7 col-xs-12" id="user_description">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row " id="divdelivery">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                Delivery Date <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="date" class="form-control col-md-7 col-xs-12" id="dte" readonly="readonly">
+                            </div>
+                        </div>
+                    </div>
+                    <br class="" />
+                    <div class="row " id="divsloc">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                Storage Location <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                @Html.DropDownList("storage_location_id", Enumerable.Empty<SelectListItem>(), "---Select---", new { @class = "form-control col-md-7 col-xs-12", @style = "width: 100%;", @disabled = "disabled" })
+                            </div>
+                        </div>
+                    </div>
+                    <br class="" />
+                    <div class="row " id="divqty">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Quantity <span class="required">*</span>
+                            </label>
+                            <div class="col-md-4">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="quantity" onchange="calculation()">
+                            </div>
+                            <div class="col-md-3">
+                                @Html.DropDownList("uom_id", (System.Web.Mvc.SelectList)ViewBag.uom_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12", @disabled = "disabled" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name" id="uprice"></label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="unitprice" onchange="calculation()">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Discount (%) <span class="required"></span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" min="0" max="3" class="form-control col-md-7 col-xs-12" id="discount" onchange="calculation()">
+                            </div>
+                        </div>
+                    </div>
+                    <br class="" />
+                    <div class="row " id="diveffprice">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Effective Unit Price <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="effectiveprice" readonly="readonly">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Purchase Value <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control" id="salesvalue" readonly="readonly">
+                            </div>
+                        </div>
+                    </div>
+                    <br class="" />
+                    <div class="row " id="divassrate">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Assessable Rate <span class="required"></span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" id="assessablerate" readonly="readonly" onchange="asscalculation()">
+                            </div>
+                        </div>
+                    </div>
+                    <br class="" />
+                    <div class="row " id="divassvalue">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Assessable Value <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                <input type="number" class="form-control col-md-7 col-xs-12" readonly="readonly" id="assessablevalue">
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first-name">
+                                Tax Code <span class="required">*</span>
+                            </label>
+                            <div class="col-md-7">
+                                @Html.DropDownList("tax_id", (System.Web.Mvc.SelectList)ViewBag.tax_list, "---Select---", new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                Cost Center
+                            </label>
+                            <div class="col-md-7">
+                                @Html.DropDownList("cost_center_id", (System.Web.Mvc.SelectList)ViewBag.costCenterList, "---Select---", new { @class = "form-control col-md-7 col-xs-12" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <input type="hidden" id="srno" />
+                    <input type="hidden" id="detailid" />
+                    <input type="hidden" id="grn_detail_id" name="grn_detail_id" />
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                    <button type="button" class="add btn btn-primary">Add Item</button>
+                    <input type="hidden" id="balanceQuantity" />
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!----->
+    <!--Modal-->
+    <div class="modal fade" id="myModal1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content" style="align-content:center;width:900px">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Item Details</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6 hidden">
+                            <div class="form-group">
+                                <div class="col-md-5">
+                                    @Html.RadioButton("radio_detail_id", "radio_item_id ", isChecked: false) @Html.Label("   Search by Item")
+                                </div>
+                                <div class="col-md-7">
+                                    @Html.DropDownList("detail_item_id", Enumerable.Empty<SelectListItem>(), new { @class = "form-control col-xs-12" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <div class="col-md-5" align="right">
+                                    @Html.Label("Search by Purchase Invoice")
+                                </div>
+                                <div class="col-md-4">
+                                    @Html.DropDownList("invoices_id", Enumerable.Empty<SelectListItem>(), "", new { @class = "form-control col-md-8" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+                        <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                            <li class="hidden"><a data-toggle="tab" href="#sectionAA">Item Details</a></li>
+                            <li class="active"><a data-toggle="tab" href="#sectionBB">Purchase Invoice Details</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="sectionAA" class="tab-pane fade in hidden" style="margin-top:10px;">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="table-responsive" style="overflow-y:auto;max-height:400px">
+                                            <table class="table table-responsive table-bordered table-striped" id="ItemsDetails"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="nextTab" onclick="nextTabbutton();">Next</button>
+                            </div>
+                            <div id="sectionBB" class="tab-pane fade in active" style="margin-top:10px;">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <div class="table-responsive" style="overflow-y:auto;max-height:400px">
+                                            <table class="table table-responsive table-bordered table-striped" id="table_salesinvoiceitems"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary hidden" id="prevTab" onclick="prevTabbutton();">Previous</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="addSALES btn btn-primary" id="btn_add_salsiitems" disabled="disabled">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal2" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content" style="align-content:center">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">GL</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="table-responsive">
+                                <table class="table table-responsive table-bordered table-striped" id="CreditDebitGrid">
+                                    <thead>
+                                        <tr>
+                                            <th><label>GL Account</label></th>
+                                            <th align="right"><label>Debit</label></th>
+                                            <th align="right"><label>Credit</label></th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+}
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+<script src="~/Scripts/comonFunction.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#pidetail').empty();
+
+            document.getElementById('posting_date').valueAsDate = new Date();
+            var error =@Html.Raw(Json.Encode(ViewBag.error));
+            var StorageLocationList = @Html.Raw(JsonConvert.SerializeObject(ViewBag.storageLocationList));
+            var StorageLocationList = @Html.Raw(JsonConvert.SerializeObject(ViewBag.storageLocationList));
+            if(error !="")
+            {
+                sweetAlert("",error,"error");
+            }
+            $("#vendor_id").select2({
+                placeholder: "Select Vendor",
+                allowClear: true
+            });
+            $("#tax_id").select2({
+                placeholder: "Select Tax",
+                allowClear: true
+            });
+            $("#business_unit_id").select2({
+                placeholder: "Select Business Unit",
+                allowClear: true
+            });
+            $("#plant_id").select2({
+                placeholder: "Select Plant",
+                allowClear: true
+            });
+            $("#pi_id1").select2({
+                placeholder: "Select Purchase Invoice",
+                allowClear: true
+            });
+ 	    $("#invoices_id").select2({
+                placeholder: "Select Purchase Invoice",
+                allowClear: true
+            });
+            $("#detail_item_id").select2({
+                placeholder: "Select Item",
+                allowClear: true
+            });
+            $("#category_id").select2({
+                placeholder: "Select Category",
+                allowClear: true
+            });
+        });
+        var checkedarray = [];
+        var invoicedarray = [];
+        //$("#radio_detail_id").change(function(){
+        //    $("#invoices_id").prop("disabled", true);
+        //    $("#detail_item_id").prop("disabled", false);
+        //    $("#radio_invoices_id").prop('checked',false);
+        //    var t = $("#ItemsDetails").DataTable();
+        //    t.fnClearTable();
+        //    var t1 = $("#table_salesinvoiceitems").DataTable();
+        //    t1.fnClearTable();
+        //});
+        //$("#radio_invoices_id").change(function(){
+        //    $("#invoices_id").prop("disabled", false);
+        //    $("#detail_item_id").prop("disabled", true);
+        //    $("#radio_detail_id").prop('checked',false)
+        //    var t = $("#ItemsDetails").DataTable();
+        //    t.fnClearTable();
+        //    var t1 = $("#table_salesinvoiceitems").DataTable();
+        //    t1.fnClearTable();
+        //});
+
+        $(document).on('change', 'input[type="checkbox"]', function () {
+            if ($('.invoiceitemcheck').is(':checked')) {
+                $('.addSALES ').removeAttr('disabled');
+            }
+            else {
+                $('.addSALES ').attr('disabled', true);
+            }
+        });
+        //$('#salesbutton').click(function () {
+        //    $('.addSALES ').attr('disabled', true);
+        //    $('#select_all').attr('checked', false);
+        //});
+
+        $('#select_all').on('click', function () {
+            if ($(this).hasClass('allChecked')) {
+                $('input[type="checkbox"]', '#table_salesinvoiceitems').prop('checked', false);
+            } else {
+                $('input[type="checkbox"]', '#table_salesinvoiceitems').prop('checked', true);
+            }
+            $(this).toggleClass('allChecked');
+        });
+
+        function GetStorage(Id)
+        {
+            if (Id == "") {
+                Id = 0;
+            }
+            $.ajax({
+                url: "@Url.Action("getstoragelistUsingDocumentId", "StorageLocation")",
+                type: "GET",
+                dataType: "JSON",
+                data: { docId: Id },
+                cache:false,
+                success: function (StorageList) {
+                    $("#storage_location_id").html(""); // clear before appending new list
+                    if (StorageList.length > 0) {
+                        $.each(StorageList, function (i, cycle) {
+                            $("#storage_location_id").append(
+                                $('<option></option>').val(cycle.storage_location_id).html(cycle.description));
+                        });
+                    }
+                    else {
+                        $("#storage_location_id").append($('<option></option>').val('0').html("---Select---"));
+
+                    }
+
+
+                }
+            });
+        }
+
+        $('#TaxGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a" },
+                     { sname: "b","sClass": "right" },
+            ]
+
+        });
+        function GetTaxDetail(taxdetail, amount, dt, tds_code_id) {
+            var tds_amount = 0;
+            var t=$('#TaxGrid').DataTable();
+            $("#original_value").val("");
+            $("#tds_value").val("");
+            t.fnClearTable();
+            $.ajax({
+                url: "@Url.Action("GetTaxCalculation", "Generic")",
+                type: "GET",
+                dataType: "JSON",
+                async: false,
+                data: {entity:"calculatetaxforsalespurchase", st: taxdetail, amt: amount, dt: dt, tds_code_id: tds_code_id },
+                success: function (Payment_Cycle) {
+
+                    $.each(Payment_Cycle, function (i, cycle) {
+                        if(cycle.tax_name.includes("Round"))
+                        {
+                            t.fnAddData([cycle.tax_name,'<input type="number" id="round_off" name="round_off" onchange="CalculateNetTotal();" class="form-control right" />']);
+                            $("#round_off").val(parseFloat(cycle.tax_value).toFixed(2));
+                        }
+                        else
+                        {
+                            t.fnAddData([cycle.tax_name,parseFloat(cycle.tax_value).toFixed(2)]);
+                        }
+                        var n = cycle.tax_name.includes("TDS");
+                        if(n==true)
+                        {
+                            tds_amount=cycle.tax_value;
+                            $("#tds_value").val(tds_amount);
+                        }
+                        $("#gross_value").val(parseFloat(parseFloat(cycle.tax_value) + parseFloat(tds_amount)).toFixed(2));
+                    });
+                }
+            });
+            $("#original_value").val(parseFloat($("#gross_value").val()) - parseFloat($("#round_off").val()) - parseFloat(tds_amount));
+        }
+        function CalculateNetTotal()
+        {
+            var original_value=$("#original_value").val();
+            var round_off=$("#round_off").val()==""?0:$("#round_off").val();
+            $("#round_off").val(parseFloat(round_off).toFixed(2));
+            var tds_value=$("#tds_value").val()==""?0:$("#tds_value").val();
+            var total_value=parseFloat(original_value)+parseFloat(round_off);
+            var t = $('#TaxGrid').DataTable();
+            var rowCount = (t.fnGetData().length)-1;
+            t.fnUpdate(['Net Total',parseFloat(total_value).toFixed(2)],rowCount);
+            $("#gross_value").val(parseFloat(parseFloat(total_value)+parseFloat(tds_value)).toFixed(2));
+        }
+        function CalculateTax() {
+            var dt = $("#posting_date").val();
+            var t = $('#ContactGrid').dataTable();
+            var tds1 = $("#tds_code_id").val();
+            var round_off = $("#round_off").val();
+            var rowCount = t.fnGetData().length;
+            var str = "";
+            var str1 = "";
+            var tot = 0;
+            for (j = 0; j < rowCount; j++) {
+                str1 = t.fnGetData(j,16) + "~"; //tax_id
+                str1 = str1 + t.fnGetData(j,15) + "~"; //assessable_value
+                str1 = str1 + t.fnGetData(j,13); //purchase_value
+                if (j == 0) {
+                    str = str1 + ",";
+                }
+                else {
+                    str = str + str1 + ",";
+                }
+                tot = tot + parseFloat(t.fnGetData(j,15)); //assessable_value
+            }
+            var tds = 0;
+            if (tds1 != "")
+            {
+                tds = tds1;
+            }
+            GetTaxDetail(str.slice(0, -1), tot, dt, tds);
+        }
+
+
+
+        function GetVendorDetails(id)
+        {
+            $.ajax({
+                type: 'GET',
+                url: "@Url.Action("GetVendorDetails", "Generic")",
+                async:false,
+                data: { id: id },
+                success: function (soid) {
+                    $("#billing_address").val(soid.billing.BILLING_ADDRESS);
+                    $("#billing_city").val(soid.billing.BILLING_CITY);
+                    $("#country_id").val(soid.billing.BILLING_COUNTRY_ID);
+                    $("#billing_state_id").val(soid.billing.BILLING_STATE_ID);
+                    $("#email_id").val(soid.billing.EMAIL_ID_PRIMARY);
+                    $("#billing_pincode").val(soid.billing.BILLING_PINCODE);
+                    $("#payment_cycle_type_id").val(soid.billing.PAYMENT_CYCLE_TYPE_ID);
+                    $("#payment_cycle_id").val(soid.billing.PAYMENT_CYCLE_ID);
+                    $("#payment_terms_id").val(soid.billing.PAYMENT_TERMS_ID).trigger("change");
+                    $("#pan_no").val(soid.billing.pan_no);
+                    $("#gst_no").val(soid.billing.gst_no);
+                    $("#vat_tin_no").val(soid.billing.vat_tin_no);
+                    $("#ecc_no").val(soid.billing.ecc_no);
+                    $("#service_tax_no").val(soid.billing.service_tax_no);
+                    $("#cst_tin_no").val(soid.billing.cst_tin_no);
+                    if (soid.billing.tds_id == 0)
+                    {
+                        $("#tds_code_id").val("");
+                    }
+                    else
+                    {
+                        $("#tds_code_id").val(soid.billing.tds_id);
+                    }
+                },
+                error: function (emp) {
+                }
+            });
+        }
+
+        $(".addSALES").on("click", function (event) {
+            var s = $('#table_salesinvoiceitems').dataTable()
+            var t = $('#ContactGrid').dataTable()
+            var tds = 0;
+            t.fnClearTable();
+            var plant;
+
+            var i = 0;
+            var checkGreater = 0;
+            var checkEmpty = 0;
+            var checkFlagInc = 0;
+            var FlagBatch = 0;
+            var serial_no = 1;
+            var isFalse = false;
+            for (var k = 0; k < invoicedarray.length; k++) {
+                i = invoicedarray[k];
+                var txt = s.fnGetData(i,29);
+                if (txt == '') {
+                    swal("", "Quantity cannot be left blank!", "error");
+                    return isFalse;
+                }
+                if (txt == '0') {
+                    swal("", "Quantity cannot be zero!", "error");
+                    return isFalse;
+                }
+                if (txt == '0.00') {
+                    swal("", "Quantity cannot be zero!", "error");
+                    return isFalse;
+                }
+                if (parseFloat(txt) > parseFloat(s.fnGetData(i,22))) {
+                    swal("", "Purchase Return Quantity cannot be greater than Stock Quantity!", "error");
+                    return isFalse;
+                }
+                if ((txt.indexOf('-')) != -1) {
+                    swal("", "Quantity cannot be negative!", "error");
+                    return isFalse;
+                }
+                if (parseFloat(txt)>parseFloat(s.fnGetData(i,9))) {
+                    swal("", "Quantity is not avalilable for return!", "error");
+                    return isFalse;
+                }
+            }
+            for (var k = 0; k < invoicedarray.length; k++) {
+                i = invoicedarray[k];
+                t.fnAddData(s.fnGetData(i));
+                var rowCount = t.fnGetData().length;
+                for (j = 0; j < rowCount; j++) {
+                    var purchase_val=parseFloat(t.fnGetData(j,7))*parseFloat(t.fnGetData(j,12));
+                    t.fnUpdate(purchase_val,j,13);//for purhase value
+                    t.fnUpdate(parseFloat(t.fnGetData(j,7))*parseFloat(t.fnGetData(j,14)),j,15);//for assessable value
+                }
+                isFalse =true;
+            }
+
+            if(isFalse==true){
+                getnetTotal();
+                CalculateTax();
+                $('#myModal1').modal('hide');
+                checkedarray.length = 0;
+                invoicedarray.length = 0;
+            }
+        });
+        function getnetTotal() {
+            var t = $('#ContactGrid').dataTable();
+            var rowCount = t.fnGetData().length;
+            var total = 0;
+            for (i = 0; i < rowCount; i++) {
+                total = total + parseFloat(t.fnGetData(i,15));
+            }
+            $("#net_value").val(parseFloat(total).toFixed(2));
+            $("#gross_value").val(parseFloat(total).toFixed(2));
+        }
+        function calculation() {
+            var unit_price = 0;
+            var discount = 0;
+            var tot = 0;
+            if($("#unitprice").val()!="")
+            {
+                unit_price = $("#unitprice").val();
+            }
+            if ($("#discount").val() != "") {
+                discount = $("#discount").val();
+            }
+            tot = parseFloat(unit_price) - (parseFloat(unit_price) * parseFloat(discount)/100)
+            $("#salesvalue").val(parseFloat(tot).toFixed(2));
+        }
+        $('#CreditDebitGrid').dataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a" },
+                     { sname: "b" ,sClass:"right"},
+                     { sname: "c",sClass:"right" }
+            ]
+        });
+
+        function GetCreditDebit(item_sales_gl, posting_date) {
+            var c = $('#CreditDebitGrid').dataTable();
+            var tds = $('#tds_code_id').val();
+            var tds_code_id = 0;
+            if (tds != "") {
+                tds_code_id = tds;
+            }
+            $.ajax({
+                url: "@Url.Action("GetCreditDebit", "Generic")",
+                type: "GET",
+                dataType: "JSON",
+                async:false,
+                data: { entity: 'calcultetaxforpi', customer_id: $("#vendor_id").val(), total_value: 0, basic_value: 0, item_sales_gl: item_sales_gl, tds_code_id: tds_code_id, posting_date: posting_date },
+                success: function (value) {
+                    c.fnClearTable();
+                    $.each(value, function (i, cycle) {
+                        c.fnAddData([cycle.gl_ledger_name, parseFloat(cycle.debit).toFixed(2), parseFloat(cycle.credit).toFixed(2)]);
+                    });
+                }
+            });
+        }
+        function TabletoJeson() {
+            var t = $('#ContactGrid').dataTable()
+            var rowCount = t.fnGetData().length;
+            $('#pidetail').empty();
+            for (i = 0; i < rowCount; i++) {
+                $("#pidetail").append('<input type="hidden" id="pi_return_detail_id1' + i + '" name="pi_return_detail_id1" value='+0+'>');
+                $("#pidetail").append('<input type="hidden" id="pi_id1' + i + '" name="pi_id1" value=' + t.fnGetData(i,1) + '>');
+                $("#pidetail").append('<input type="hidden" id="pi_detail_id1' + i + '" name="pi_detail_id1" value=' + t.fnGetData(i,2) + '>');
+                $("#pidetail").append('<input type="hidden" id="item_id1' + i + '" name="item_id1" value=' + t.fnGetData(i,3) + '>');
+                $("#pidetail").append('<input type="hidden" id="sloc_id1' + i + '" name="sloc_id1" value=' + t.fnGetData(i,5) + '>');
+                $("#pidetail").append('<input type="hidden" id="quantity1' + i + '" name="quantity1" value=' + t.fnGetData(i,7) + '>');
+                $("#pidetail").append('<input type="hidden" id="uom_id1' + i + '" name="uom_id1" value=' + t.fnGetData(i,8) + '>');
+                $("#pidetail").append('<input type="hidden" id="unit_price1' + i + '" name="unit_price1" value=' + t.fnGetData(i,10) + '>');
+                $("#pidetail").append('<input type="hidden" id="discount1' + i + '" name="discount1" value=' + t.fnGetData(i,11) + '>');
+                $("#pidetail").append('<input type="hidden" id="eff_unit_price1' + i + '" name="eff_unit_price1" value=' + t.fnGetData(i,12) + '>');
+                $("#pidetail").append('<input type="hidden" id="purchase_value1' + i + '" name="purchase_value1" value=' + t.fnGetData(i,13) + '>');
+                $("#pidetail").append('<input type="hidden" id="assessable_rate1' + i + '" name="assessable_rate1" value=' + t.fnGetData(i,14) + '>');
+                $("#pidetail").append('<input type="hidden" id="assessable_value1' + i + '" name="assessable_value1" value=' + t.fnGetData(i,15) + '>');
+                $("#pidetail").append('<input type="hidden" id="tax_id1' + i + '" name="tax_id1" value=' + t.fnGetData(i,16) + '>');
+                $("#pidetail").append('<input type="hidden" id="grir_value1' + i + '" name="grir_value1" value=' + t.fnGetData(i,18) + '>');
+                $("#pidetail").append('<input type="hidden" id="basic_value1' + i + '" name="basic_value1" value=' + t.fnGetData(i,19) + '>');
+                $("#pidetail").append('<input type="hidden" id="batch_id1' + i + '" name="batch_id1" value=' + t.fnGetData(i,20) + '>');
+                $("#pidetail").append('<input type="hidden" id="bucket_id1' + i + '" name="bucket_id1" value=' + t.fnGetData(i,22) + '>');
+
+            }
+        }
+        //function GetVendordetails(vendor_id) {
+        //    if (vendor_id == "") {
+        //        $("#billing_address").val("");
+        //        $("#billing_city").val("");
+        //        $("#country_id").val("");
+        //        $("#billing_state_id").val("");
+        //        $("#email_id").val("");
+        //        $("#billing_pincode").val("");
+        //        $("#payment_cycle_type_id").val("");
+        //        $("#payment_cycle_id").val("");
+        //        $("#payment_terms_id").val("").trigger("change");
+        //        $("#pan_no").val("");
+        //        $("#gst_no").val("");
+        //        $("#vat_tin_no").val("");
+        //        $("#ecc_no").val("");
+        //        $("#cst_tin_no").val("");
+        //        $("#tds_code_id").val("");
+        //        getnetTotal();
+        //        CalculateTax();
+        //    }
+        //}
+
+        $(document).on('click', '.check_all', function () {
+            invoicedarray.length = 0;
+            var t = $('#table_salesinvoiceitems').dataTable();
+            var trlen = t.fnGetData().length;
+            if ($(this).is(':checked')) {
+                $('input[type="checkbox"]', '#table_salesinvoiceitems').prop('checked', true);
+                if (trlen > 0) {
+                    for (var j = 0; j <= trlen - 1; j++) {
+                        invoicedarray.push(j);
+                    }
+                }
+            }
+            else {
+                invoicedarray.length = 0;
+                $('input[type="checkbox"]', '#table_salesinvoiceitems').prop('checked', false);
+            }
+        });
+        $(document).on('click', '.check', function () {
+            var index = parseInt($(this).attr('data-index'));
+            var t = $('#ItemsDetails').dataTable();
+            if ($(this).is(':checked')) {
+                checkedarray.push(index);
+            }
+            else {
+                var checkedIndex = checkedarray.indexOf(parseInt(index));
+                checkedarray.splice(checkedIndex, 1);
+            }
+        });
+        $(document).on('click', '.invoiceitemcheck', function () {
+            var index = parseInt($(this).attr('data-index'))-1;
+            var t = $('#ItemsDetails').dataTable();
+            if ($(this).is(':checked')) {
+                invoicedarray.push(index);
+            }
+            else {
+                var checkedIndex = invoicedarray.indexOf(parseInt(index));
+                invoicedarray.splice(checkedIndex, 1);
+            }
+        });
+
+        $(document).on('change', '.quantity', function () {
+            var index = parseInt($(this).attr('data-index'))-1;
+            var _quantity = $(this).val();
+            if(_quantity!=''){
+                _quantity= parseFloat(_quantity).toFixed(2);
+                $(this).val(parseFloat(_quantity).toFixed(2));
+            }
+            var t = $('#table_salesinvoiceitems').dataTable();
+            t.fnUpdate(_quantity, index, 29);
+        });
+
+
+        $("#btn_add_sal").on("click", function (event) {
+            try{
+                if($("#category_id").val()==""){
+                    swal("", "Please Category!", "error");
+                    return false;
+                }
+
+                else if($("#buyer_id").val()==""){
+                    swal("", "Please Bill to Party!", "error");
+                    return false;
+                }
+                else{
+                    $("#detail_item_id").val(null).trigger('change.select2');
+                    $("#item_invoice_id").val(null).trigger('change.select2');
+                    $("#invoices_id").val(null).trigger('change.select2');
+                    $('#radio_detail_id').prop('checked',true);
+                    $('#radio_invoice_item_id').prop('checked',false);
+                    $('#radio_invoices_id').prop('checked',false);
+                    getItems();
+                    $('#myModal1').modal('show')
+                    $('#select_all').attr('checked', false);
+                    var t = $("#ItemsDetails").DataTable();
+                    t.fnClearTable();
+                    var t1 = $("#table_salesinvoiceitems").DataTable();
+                    t1.fnClearTable();
+                }
+            }catch(msg){console.log(msg.message)}
+        });
+
+        $('#myModal1').on('shown.bs.modal', function (e) {
+            let table = $('#table_salesinvoiceitems').DataTable();
+            //table.clear().draw();
+        })
+        $('#ContactGrid').dataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            "columns": [
+                 { name:"rowIndex","data": "rowIndex",bVisible:true,"title":"Sr No" },
+                 { name:"pi_id","data": "pi_id",bVisible:false,"title":"Pi Id" },
+                 { name:"pi_detail_id","data": "pi_detail_id",bVisible:false,"title":"Pi Detail Id" },
+                 { name:"item_id","data": "item_id",bVisible:false,"title":"Item Id" },
+                 { name:"item_name","data": "item_name",bVisible:true,"title":"Item" },
+                 { name:"storage_location_id","data": "storage_location_id",bVisible:false,"title":"Sloc Id" },
+                 { name:"storage_location_name","data": "storage_location_name",bVisible:true,"title":"Sloc" },
+                 { name:"purchase_quantity","data": "purchase_quantity",bVisible:true,"title":"Purchase Quantity",sClass:"right" },
+                 { name:"uom_id","data": "uom_id",bVisible:false,"title":"UoM Id" },
+                 { name:"uom_name","data": "uom_name",bVisible:true,"title":"UoM" },
+                 { name:"unit_price","data": "unit_price",bVisible:true,sClass:"right","title":"Unit Price", render: function ( data, type, row ) {
+                     return parseFloat(data).toFixed(2);
+                 }},
+                 { name:"discount","data": "discount",bVisible:true,"title":"Discount" },
+                 { name:"eff_unit_price","data": "eff_unit_price",bVisible:true,sClass:"right","title":"Eff. Price" ,render: function ( data, type, row ) {
+                     return parseFloat(data).toFixed(2);
+                 }},
+                 { name:"purchase_value","data": "purchase_value",bVisible:true,sClass:"right","title":"Purchase Value",render: function ( data, type, row ) {
+                     return parseFloat(data).toFixed(2);
+                 }},
+                 { name:"assessable_rate","data": "assessable_rate",bVisible:true,sClass:"right","title":"Assessable Rate" ,render: function ( data, type, row ) {
+                     return parseFloat(data).toFixed(2);
+                 }},
+                 { name:"assessable_value","data": "assessable_value",bVisible:true,sClass:"right","title":"Assessable Value" ,render: function ( data, type, row ) {
+                     return parseFloat(data).toFixed(2);
+                 }},
+                 { name:"tax_id","data": "tax_id",bVisible:false,"title":"Tax Id" },
+                 { name:"tax_name","data": "tax_name",bVisible:true,"title":"Tax Code" },
+                { name: "grir_value", "data": "grir_value", bVisible: false,"title":"Grir" },
+                { name: "basic_value", "data": "basic_value", bVisible: false,"title":"Basic Value" },
+                 { name:"batch_id","data": "batch_id" ,bVisible:false,"bSortable": false,"defaultContent":"","title":"Batch ID" },
+                 { name:"batch_number","data": "batch_number" ,bVisible:true,"bSortable": false,"defaultContent":"","title":"Batch" },
+                 { name:"bucket_id","data": "bucket_id" ,bVisible:false,"bSortable": false,"defaultContent":"","title":"Bucket ID" },
+                 { name:"bucket_name","data": "bucket_name" ,bVisible:true,"bSortable": false,"defaultContent":"","title":"Bucket" },
+                 { "data": "rowIndex",bVisible:true,"title":"Details",'render' : function(data, type,full)  { return '<img class="details" data-index='+data+' src="../images/Detail.png" height="20px" width="25px" alt="Detail"  />'} },
+            ],
+
+
+            "fnRowCallback" : function(nRow, aData, iDisplayIndex){
+                $("td:first", nRow).html(iDisplayIndex +1);
+                return nRow;
+            },
+
+        });
+
+        $('#table_salesinvoiceitems').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bSortable":false,
+            "bOrderable":false,
+            "columns": [
+                  { name:"sr_no","data": "rowIndex",bVisible:true,"bSortable": false,"title":"Sr No." },
+                  { name:"pi_id","data": "pi_id",bVisible:false,"bSortable": false,"title":"ID" },
+                  { name:"document_no","data": "document_no" ,bVisible:true,"bSortable": false,"title":"Document No"},
+                  { name:"pi_detail_id","data": "pi_detail_id" ,"bSortable": false,"title":"PI Detail ID",bVisible:false,},
+                  { name:"item_id","data": "item_id" ,"bSortable": false,"title":"Item Id",bVisible:false},
+                  { name:"item_name","data": "item_name" ,"bSortable": false,"title":"Item",bVisible:true},
+                  { name:"uom_id","data": "uom_id" ,"bSortable": false,"defaultContent":"" ,"title":"UoM ID",bVisible:false},
+                  { name:"uom_name","data": "uom_name" ,"bSortable": false,"defaultContent":"" ,"title":"UoM",bVisible:true},
+                  { name:"quantity","data": "quantity" ,"bSortable": false,"title":"Original Quantity",bVisible:true,sClass:"right" ,"render":
+                      function(data,type,full,meta){
+                          if(data!=""){data=parseFloat(data).toFixed(2)}
+                          return data;
+                      }
+                  },
+                   { name:"balance_quantity","data": "balance_quantity" ,"bSortable": false,"title":"Balance Quantity",bVisible:true,sClass:"right" ,"render":
+                      function(data,type,full,meta){
+                          if(data!=""){data=parseFloat(data).toFixed(2)}
+                          return data;
+                      }
+                   },
+                  { name:"unit_price","data": "unit_price" ,"bSortable": false,"title":"Unit Price",bVisible:true,sClass:"right" ,"render":
+                      function(data,type,full,meta){
+                          if(data!=""){data=parseFloat(data).toFixed(2)}
+                          return data;
+                      }
+                  },
+                  { name:"discount","data": "discount" ,"bSortable": false,"title":"Discount",bVisible:false,sClass:"right" ,"render":
+                      function(data,type,full,meta){
+                          if(data!=""){data=parseFloat(data).toFixed(2)}
+                          return data;
+                      }
+                  },
+                  { name:"eff_unit_price","data": "eff_unit_price" ,bVisible:true,"bSortable": false,"title":"Effect Unit Price",sClass:"right" ,"render":
+                      function(data,type,full,meta){
+                          if(data!=""){data=parseFloat(data).toFixed(2)}
+                          return data;
+                      }
+                  },
+                  { name:"assessable_rate","data": "assessable_rate" ,bVisible:true,"bSortable": false,"title":"Assessable Rate",sClass:"right" ,"render":
+                      function(data,type,full,meta){
+                          if(data!=""){data=parseFloat(data).toFixed(2)}
+                          return data;
+                      }
+                  },
+                  { name:"tax_id","data": "tax_id" ,bVisible:false,"bSortable": false,"defaultContent":"","title":"Tax id"},
+                  { name:"tax_name","data": "tax_name" ,bVisible:true,"bSortable": false,"defaultContent":"","title":"Tax Code"},
+                  { name:"storage_location_id","data": "storage_location_id" ,bVisible:false,"defaultContent":"","bSortable": false,"title":"Sloc Id"},
+                  { name:"storage_location_name","data": "storage_location_name",bVisible:false ,"defaultContent":"","bSortable": false,"title":"Sloc Name"},
+                { name: "grir_value", "data": "grir_value", bVisible: true, "bSortable": false, "defaultContent": "", "title": "GRIR Value", sClass: "right" },
+                { name: "basic_value", "data": "basic_value", bVisible: true, "bSortable": false, "defaultContent": "", "title": "Basic Value" },
+                  { name:"sac_hsn_id","data": "sac_hsn_id" ,bVisible:false,"bSortable": false,"defaultContent":"","title":"sac_hsn_id" },
+                  { name:"hsn_code","data": "hsn_code" ,bVisible:false,"bSortable": false,"defaultContent":"","title":"SAC/HSN" },
+                  { name:"stock_quantity","data": "stock_quantity" ,bVisible:true,"bSortable": false,"defaultContent":"","title":"Stock Quantity" },
+                  { name:"batch_id","data": "batch_id" ,bVisible:false,"bSortable": false,"defaultContent":"","title":"Batch ID" },
+                  { name:"batch_number","data": "batch_number" ,bVisible:false,"bSortable": false,"defaultContent":"","title":"Batch" },
+                  { name:"bucket_id","data": "bucket_id" ,bVisible:false,"bSortable": false,"defaultContent":"","title":"Bucket ID" },
+                  { name:"bucket_name","data": "bucket_name" ,bVisible:false,"bSortable": false,"defaultContent":"","title":"Bucket" },
+                  { name:"txt_qty","data": "rowIndex" ,"bSortable": false,sClass:"QTY","title":"Purchase Return Quantity",'render' : function(data, type,full,meta ) {return '<input type="number"  data-index="'+data+'"  id="txt'+data+'" class="form-control right quantity"/>'}},
+                  { name:"check_box","data": "rowIndex",sClass:"CHECKBOXS",sWidth:"2%" ,"bSortable": false,"title":'<input type="checkbox" class="check_all" name="select_all" value="1" id="check_all">','render' : function(data, type,full,meta ) {return '<input type="checkbox" data-index="'+data+'"  class="invoiceitemcheck" name="id[]"  id="chk'+data+'">'}},
+                  { name:"purchase_quantity","data": "purchase_quantity" ,bVisible:false,"bSortable": false,"defaultContent":"","title":"Purchase Quantity"},
+            ]
+        });
+
+
+        $("#detail_item_id").change(function(){
+            try{
+                //var t = $('#ItemsDetails').DataTable();
+                //var t1 = $('#table_salesinvoiceitems').DataTable();
+                //t.fnClearTable();
+                //t1.fnClearTable();
+                //var plant_id = $("#plant_id").val();
+                //var item_id = $("#detail_item_id").val();
+                //var buyer_id = $("#vendor_id").val();
+                //if(plant_id!=""&&buyer_id!=""){
+                //    getPurchasereturnDetails("getitemdetailswithsloc",buyer_id, plant_id, item_id, 0, 0, 0, "ItemsDetails", "datatable");
+                //}
+            }
+            catch(msg){console.log(msg.message)}
+        });
+        $("#invoices_id").change(function(){
+            try {
+
+                var buyer_id = $("#vendor_id").val();
+                var plant_id = $("#plant_id").val();
+                var pi_id = $("#invoices_id").val();
+                var sloc_id = $("#storage_location_id").val();
+                var item_id = 0;
+                var bucket_id = 2;
+
+                getPurchasereturnDetails("getpireturndetailbyitemid", buyer_id, plant_id, item_id, sloc_id, bucket_id, pi_id, "table_salesinvoiceitems", "datatable");
+                $('.bar_tabs a[href="#sectionBB"]').tab('show');
+
+            }
+            catch(msg){console.log(msg.message)}
+        });
+        function getItems(){
+            try{
+                var plant_id = $("#plant_id").val();
+                var buyer_id = $("#vendor_id").val();
+                var pi_id = $("#pi_id").val();
+                if(plant_id!=""&&buyer_id!=""){
+                    //getPurchasereturnDetails("getItem",buyer_id, plant_id, 0, 0, 0, 0, "detail_item_id", "list");
+                    getPurchasereturnDetails("getPurchaseInvoice",buyer_id, plant_id, 0, 0, 0, 0, "invoices_id", "list");
+                }
+            }catch(msg){console.log(msg.message)}
+        }
+
+        $('#ItemsDetails').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            "columns": [
+                  { name :"rowIndex", "data": "rowIndex", sWidth: "5%","title": "Sr No.", "defaultContent": "", "bSortable": false },
+                  { name :"item_id","data": "item_id", "title": "Item ID","bSortable": false, bVisible: false },
+                  { name :"item_name","data": "item_name", "title": "Item Name","bSortable": false },
+                  { name :"uom_id","data": "uom_id", bVisible: false, "title": "UoM ID",sClass:"right","bSortable": false},
+                  { name :"uom_name","data": "uom_name", bVisible: true, "title": "UoM",sClass:"right","bSortable": false},
+                  { name :"storage_location_id","data": "storage_location_id", bVisible: false, "defaultContent": "","title": "SLoc ID", "bSortable": false },
+                  { name :"storage_location_name","data": "storage_location_name", bVisible: true, "defaultContent": "", "title": "SLoc Name","bSortable": false, "defaultContent": ""},
+                  { name :"bucket_id","data": "bucket_id", bVisible: false, "defaultContent": "","title": "Bucket ID","bSortable": false},
+                  { name :"bucket_name","data": "bucket_name", bVisible: true, "defaultContent": "","title": "Bucket", "bSortable": false },
+                  { name :"stock_quantity","data": "stock_quantity", bVisible: true, "title": "Stock Quantity",sClass:"right","bSortable": false},
+                  {
+                      name :"rowIndex","data": "rowIndex", sWidth: "2%",
+                      mRender: function (data, type, full) {
+                          return '<input type="checkbox" data-index=' + ((full.rowIndex) - 1 ) + ' class="check" name="id[]" value="' + $('<div/>').text(data).html() + '">';
+                      }
+                  },
+            ]
+        });
+        function prevTabbutton(){
+            $('.bar_tabs a[href="#sectionAA"]').tab('show');
+        }
+        function nextTabbutton(){
+            //e.preventDefault();
+            var t = $("#ItemsDetails").DataTable();
+            var buyer_id = $("#vendor_id").val();
+            var plant_id = $("#plant_id").val();
+	        var pi_id = $("#invoices_id").val();
+            var item_id = 0, sloc_id = 0, bucket_id = 0 ;
+            for (var k = 0; k < checkedarray.length; k++) {
+                i = checkedarray[k];
+                item_id = item_id+ "," +t.fnGetData(i,1);
+                sloc_id = sloc_id+ "," +t.fnGetData(i,5);
+                bucket_id = bucket_id+ "," +t.fnGetData(i,7);
+            }
+            getPurchasereturnDetails("getpireturndetailbyitemid",buyer_id, plant_id, item_id, sloc_id, bucket_id, pi_id , "table_salesinvoiceitems", "datatable");
+            //getPurchasereturnDetails("getpireturndetailbyitemid",buyer_id, plant_id, item_id, sloc_id, bucket_id, 0, "table_salesinvoiceitems", "datatable")
+            $('.bar_tabs a[href="#sectionBB"]').tab('show');
+        }
+        function getPurchasereturnDetails(entity,buyer_id, plant_id, item_id, sloc_id, bucket_id, pi_id, datatble, list_details){
+
+            $.ajax({
+                url: '@Url.Action("PurchaseReturnDetails", "PurchaseReturn")',
+                type: "GET",
+                data: {entity : entity, buyer_id: buyer_id, plant_id: plant_id, item_id :item_id, sloc_id:sloc_id,bucket_id:bucket_id,pi_id:pi_id },
+                success: function (item) {
+                    if(list_details== "list"){
+                        $("#"+datatble).html("");
+                        $("#"+datatble).append($('<option></option>').val('0').html("---Select---"));
+                        $.each(item, function (i, cycle) {
+                            $("#"+datatble).append(
+                            $('<option></option>').val(cycle.item_id).html(cycle.item_name));
+                        });
+                    }else{
+                        var t = $('#'+datatble).DataTable();
+                        t.fnClearTable();
+                        t.fnAddData(item);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log( xhr.responseText +'message' +error.message);
+                }
+            });
+        }
+    </script>
+
+}
+
+<style>
+    #table_salesinvoiceitems tr th {
+        font-weight: normal !important;
+    }
+
+    #ContactGrid tr th {
+        font-weight: normal !important;
+    }
+</style>

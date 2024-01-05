@@ -1,0 +1,113 @@
+﻿@using Newtonsoft.Json
+@model Sciffer.Erp.Domain.ViewModel.ref_vendor_balance_VM
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        <div class="modal-body">
+            @Html.HiddenFor(a => a.gl_ledger_code)
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.category_id, "Category *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-4 col-sm-4 col-xs-12">
+                                @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.category_list, new { @class = "form-control validinput", @required = true, @onchange = "GetDocumentNumber(this.value);", @disabled = "disabled" })
+                                @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-xs-12">
+                                @Html.EditorFor(model => model.doc_number, new { htmlAttributes = new { @class = "form-control  num validinput removedisabled", @disabled = "disabled", @required = true } })
+                                @Html.ValidationMessageFor(model => model.doc_number, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.offset_account_id, "Offset Account  *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.DropDownList("offset_account_id", (System.Web.Mvc.SelectList)ViewBag.GeneralLedger, htmlAttributes: new { @class = "form-control validinput removedisabled", @disabled = "disaabled" })
+                                @Html.ValidationMessageFor(model => model.offset_account_id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label class="control-label col-md-4">
+                            Header Remarks
+                        </label>
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.header_remark, new { htmlAttributes = new { @class = "form-control  num validinput", @required = true, @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.header_remark, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="control-label col-md-4">
+                            Posting Date<span class="required"> *</span>
+                        </label>
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control  num validinput ", @required = true, @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<style>
+    table.dataTable {
+        clear: both;
+        margin-bottom: -1px !important;
+    }
+</style>
+<div>
+   @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var detail = @Html.Raw(JsonConvert.SerializeObject(this.Model.vendor_balance_detail));
+            $('#ContactGrid').DataTable({
+                bFilter: false, bInfo: false,
+                "bPaginate": false,
+                "ordering": false,
+                "bfooter": false,
+                bSortable: false,
+                "info": false,
+                "bAutoWidth": false,
+                "sScrollY": "550px",
+                "aaData": detail,
+                "columns": [
+                      { "data": "", sWidth: "5%", "title": "Sr No.", "defaultContent": "", "bSortable": false },
+                      { "data": "vendor", "title": "Vendor", "bSortable": false },
+                      { "data": "ref1", "title": "Ref 1", "bSortable": false },
+                      { "data": "ref2", bVisible: true, "title": "Ref 2","bSortable": false },
+                      { "data": "ref3", bVisible: true, "title": "Ref 3","bSortable": false },
+                      { "data": "doc_date", "title": "Doc Date", "bSortable": false },
+                      { "data": "due_date", "title": "Due Date", "bSortable": false },
+                      { "data": "amount", "title": "Amount", "bSortable": false ,sClass:"right"},
+                      { "data": "amount_type", "title": "Dr./Cr.", "bSortable": false },
+                      { "data": "line_remark", "title": "Line Remarks", "bSortable": false },
+                ],
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    $("td:first", nRow).html(iDisplayIndex + 1);
+                    return nRow;
+                },
+
+            });
+        });
+    </script>
+}
+
+

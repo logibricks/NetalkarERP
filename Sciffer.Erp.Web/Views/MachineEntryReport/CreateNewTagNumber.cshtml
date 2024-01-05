@@ -1,0 +1,112 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+<style>
+    .item_label {
+        font-size: 14px !important;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".loading").hide();
+        $('.mickey').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            maxHeight: '200',
+            enableCaseInsensitiveFiltering: true,
+            allowClear: true,
+            maximumResultsForSearch: 1,
+            numberDisplayed: 0,
+        });
+    });
+</script>
+
+<div class="loading">Loading &#8230;</div>
+<div class="form-horizontal">
+    <div class=row>
+
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Tag number *</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <input type="text" id="tag_number" class="form-control radius" required="required" />
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Item List *</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("ITEM_ID", (System.Web.Mvc.SelectList)ViewBag.item_list, "--Select--", htmlAttributes: new { @class = "form-control radius" })
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Machine *</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.machine_list, "--Select--", htmlAttributes: new { @class = "form-control radius" })
+            </div>
+        </div>
+
+    </div><br />
+    <div class="row">
+        <div class="col-md-4 col-lg-4 col-xs-12" style="float:right">
+            <button class="searchbutton searchButton" id="create" style="float:right"> Create </button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#ITEM_ID").select2({
+            placeholder: "Select Item",
+            allowClear: true
+        });
+
+        $("#machine_id").select2({
+            placeholder: "Select Machine",
+            allowClear: true
+        });
+
+    });
+
+
+    $("#create").click(function () {
+        CreateNewTagNumber();
+    });
+
+    function CreateNewTagNumber() {
+        var item_id = $("#ITEM_ID").val();
+        var tag_number = $("#tag_number").val();
+        var machine_id = $("#machine_id").val();
+        $(".loading").show();
+        $.ajax({
+            url: "@Url.Action("GenerateNewTagNumber", "MachineEntryReport")",
+            method: "Post",
+            cache: false,
+            data: { tag_number: tag_number, item_id: item_id, machine_list: machine_id },
+            success: function (data) {
+                if (data == "Saved") {
+                    swal("", "Tag Number Created", "success");
+                }
+                else if (data == "wrongsequence") {
+                    swal("", "Selected machine is not in item sequence", "error");
+                }
+                else {
+                    swal("", "Tag Number already exist", "error");
+                }
+                $(".loading").hide();
+            },
+            error: function (http) {
+                $(".loading").hide();
+                $("", "Something went wrong", "error");
+                console.log(XMLHttpRequest);
+            }
+        });
+
+    }
+
+
+
+</script>

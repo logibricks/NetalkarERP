@@ -1,0 +1,50 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.mfg_qc_qc_parameter_VM
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>mfg_qc_qc_parameter_VM</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.machine_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.machine_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.item_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.item_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_numeric)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_numeric)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.srno)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.srno)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.mfg_qc_qc_parameter_id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

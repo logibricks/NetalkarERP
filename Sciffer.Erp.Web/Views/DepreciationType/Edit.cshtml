@@ -1,0 +1,434 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.ref_dep_type_vm
+@using Sciffer.Erp.Domain.Model;
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Edit";
+}
+<div class="loading">Loading &#8230;</div>
+@using (Html.BeginForm("Edit", "DepreciationType", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <!-----------Start Header-------------><br /><br /><br />
+        <div id="additional_depreciation_detail" hidden></div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.dep_type_code, htmlAttributes: new { @class = "control-label col-md-4"  })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.dep_type_code, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.dep_type_code, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.dep_type_description, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.dep_type_description, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.dep_type_description, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.method_type_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-lg-8 col-md-8 col-xs-12">
+                        @Html.DropDownList("method_type_id", new List<SelectListItem>
+                                        {
+                                        new SelectListItem { Text = "SLM", Value = "1" },
+                                        new SelectListItem { Text = "WDV", Value = "2" },
+                                        new SelectListItem { Text = "BLOCK", Value = "3" }
+                                        }, "--Select--", new { @class = "form-control selectedbycategory dropdownClass", @onchange = "GetDepFre(this.value);", @disabled = "disabled" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    <label for="dep_type_frquency_id" class="control-label col-md-4 col-sm-4 col-xs-12">Frequency *</label>
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("dep_type_frquency_id", (System.Web.Mvc.SelectList)ViewBag.frequencylist, "---Select---", new { @class = "form-control removedisabled ",@disabled = "disabled" })
+                        @Html.ValidationMessageFor(model => model.dep_type_frquency_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.dep_area_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownList("dep_area_id", (System.Web.Mvc.SelectList)ViewBag.depareaList, "---Select---", new { @class = "form-control validinput removedisabled", @required = true, @disabled = "disabled" })
+                        @Html.ValidationMessageFor(model => model.dep_area_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-----------End Header------------->
+        <!------------Start-Tab-Panel------------------->
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">GENERAL</a></li>
+                <li><a data-toggle="tab" href="#sectionB">ADDITIONAL DEPRECIATION </a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.cal_based_on_id, htmlAttributes: new { @class = "control-label col-md-6" })
+                                <div class="col-lg-6 col-md-6 col-xs-12">
+                                    @Html.DropDownList("cal_based_on_id", new List<SelectListItem>
+                                        {
+                                        new SelectListItem { Text = "USEFUL LIFE", Value = "1" },
+                                        new SelectListItem { Text = "RATE  ", Value = "2" }
+                                        }, "--Select--", new { @class = "form-control selectedbycategory dropdownClass", @onchange = "GetMonPer(this.value);", @disabled = "disabled" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col--sm-4">
+                            <label class="control-label col-md-6" id="cal_ba_val" hidden>MONTHS</label>
+                            <label class="control-label col-md-6" id="cal_ba_per" hidden>PER . (%)</label>
+                            <div class="col-md-6 col-sm-6 col-xs-12" id="c_b_v" hidden>
+                                @Html.EditorFor(model => model.cal_based_value, new { htmlAttributes = new { @class = "form-control", @type = "number", @onchange = "GetBasVal(this.value);", @disabled = "disabled" } })
+                                @Html.ValidationMessageFor(model => model.cal_based_value, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-sm-4">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.scrap_value_percentage, htmlAttributes: new { @class = "control-label col-md-6" })
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    @Html.EditorFor(model => model.scrap_value_percentage, new { htmlAttributes = new { @class = "form-control", @type = "number", @onchange = "CheckPer(this.value);", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.scrap_value_percentage, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <h4>DEPRECIATION CALCULATION</h4><br />
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.dep_cal_acquistion_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-lg-8 col-md-8 col-xs-12">
+                                    @Html.DropDownList("dep_cal_acquistion_id", new List<SelectListItem>
+                                        {
+                                        new SelectListItem { Text = "PRORATA TO DAYS", Value = "1" },
+                                        new SelectListItem { Text = "ANNUALLY", Value = "2" },
+                                        new SelectListItem { Text = "HALF YEARLY", Value = "3" },
+                                        new SelectListItem { Text = "NO DEPRECIATION", Value = "4" }
+                                        }, "--Select--", new { @class = "form-control selectedbycategory dropdownClass", @disabled = "disabled" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.dep_cal_retirement_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-lg-8 col-md-8 col-xs-12">
+                                    @Html.DropDownList("dep_cal_retirement_id", new List<SelectListItem>
+                                        {
+                                        new SelectListItem { Text = "PRORATA TO DAYS", Value = "1" },
+                                        new SelectListItem { Text = "ANNUALLY", Value = "2" },
+                                        new SelectListItem { Text = "HALF YEARLY", Value = "3" },
+                                        new SelectListItem { Text = "NO DEPRECIATION", Value = "4" }
+                                        }, "--Select--", new { @class = "form-control selectedbycategory dropdownClass", @disabled = "disabled" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionB" class="tab-pane fade " style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @*<div class="col-md-12 col-sm-12 col-xs-12">
+                                    <button type="button" class="btn btn-primary" style="float:left" onclick="showmodal();" hidden><span class="glyphicon glyphicon-plus" hidden>Add Additional Depreciation</span></button>
+                                </div>*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive col-sm-6 col-lg-6 col-lg-12">
+                            <table class="table contacts table-responsive table-bordered table-striped" border="1" id="ContactGrid1">
+                                <thead>
+                                    <tr>@*<th><label hidden>id</label></th>
+                                        <th><label hidden>abc</label></th>*@
+                                        <th><label>Year</label></th>
+                                        <th><label>ADDITIONAL DEPRECIATION %</label></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--------------End-Tab-Panel---------------->
+        <!--------------Start Save data Button---------------->
+        <div class="row">
+            <div class="col-lg-11 col-sm-11"></div>
+            <div class="form-group">
+                @*<div class="col-lg-1 col-sm-1">
+                    <input type="submit" value="Create" id="create" data-controller="DepreciationType" class="btn btn-success" onclick="TabletoJeson();" style="float:right" hidden/>
+                </div>*@
+            </div>
+        </div>
+        <!--------------End Save data Button---------------->
+    </div>
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Item Details</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3" for="first-name">
+                                            Additional Depreciation <span class="required">*</span>
+                                        </label>
+                                        <div class="col-md-7">
+                                            <input type="number" class="form-control col-md-7 col-xs-12" id="add_dep_percentage" onchange="GetAddVal(this.value);">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="modal-footer">
+                                <input type="hidden" id="srno" />
+                                <input type="hidden" id="quotationdetailid" />
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                                <button type="button" class="add btn btn-primary">Add</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+}
+<!--------------Start Back to List---------------->
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+<!--------------End Back to List---------------->
+@section Scripts {
+   
+
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        var id =$('#cal_based_on_id').val();
+            GetMonPer(id);
+            $("#dep_area_id").select2({
+                placeholder: "Select Depreciation Area",
+                allowClear: true
+            });
+            $("#method_type_id").select2({
+                placeholder: "Select Method",
+                allowClear: true
+            });
+            $("#dep_type_frquency_id").select2({
+                placeholder: "Select Depreciation Freqency",
+                allowClear: true
+            });
+            $("#cal_based_on_id").select2({
+                placeholder: "Select CALCUALTION",
+                allowClear: true
+            });
+            $("#dep_cal_acquistion_id").select2({
+                placeholder: "Select ACQUISTION",
+                allowClear: true
+            });
+            $("#dep_cal_retirement_id").select2({
+                placeholder: "Select RETIREMENT",
+                allowClear: true
+            });
+            var role=@Html.Raw(Json.Encode(ViewBag.role));
+
+            //if(role =="Operator")
+            //{
+            //    $("#sidebar-menu").css("display", "none");
+            //    $("#menu_toggle").trigger("click");
+            //    $("#menu_toggle").css("display", "none");
+            //    $(".site_title").click(function () { return false; });
+            //}
+            //*************Start Date Validation******************
+            function showmodal()
+            {
+                    $('#myModal').modal('show');
+                    clearmodel();
+            }
+            $(".add").on("click", function (event) {
+                var t = $('#ContactGrid1').DataTable()
+                var rowCount = t.fnGetData().length;
+                var add_dep_percentage = $("#add_dep_percentage").val();
+                if ($("#srno").val() == "")
+                {
+                    t.fnAddData(['', rowCount + 1, add_dep_percentage,'']);
+                }
+                else
+                {
+                    var cc =parseInt($("#srno").val());
+                    t.fnUpdate(['', cc + 1, add_dep_percentage,''], cc)
+                }
+                TDSChange();
+                clearmodel();
+                return true;
+            });
+            $('#ContactGrid1').DataTable({
+                "bPaginate": false,
+                "ordering": false,
+                "bfooter": false,
+                "info": false,
+                "bLengthChange": false,
+                "bAutoWidth": false,
+                "bFilter": false,
+                "bSort": false,
+                aoColumns: [
+                            { sname: "a", bVisible:true},
+                             { sname: "b", bVisible: true },]
+
+            });
+            $('#ContactGrid1').on('click', '.delete', function () {
+                var t = $('#ContactGrid1').DataTable();
+                var id = $(this).parent('td').parent('tr').index();
+                var deleteids = t.fnGetData(id)[1];
+                var del = $("#deleteids").val();
+                swal({
+                    title: "Are you sure?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: true
+                },
+         function (isConfirm) {
+             if (isConfirm) {
+                 if (del != '') {
+                     $("#deleteids").val(del + "" + deleteids + "~");
+                 }
+                 else {
+                     $("#deleteids").val(deleteids + "~");
+                 }
+
+                 t.fnDeleteRow(id);
+                 TDSChange();
+                 var len = t.fnGetData().length;
+                 var i = 1;
+                 var row = 0;
+                 if (len > 0) {
+                     $('#ContactGrid1 tbody tr').each(function () {
+                         t.fnUpdate(i, row, 1);
+                         i++;
+                         row++;
+                     });
+                 }
+             }
+         });
+            });
+            $('#ContactGrid1').on('click', '.edit', function () {
+                var t = $('#ContactGrid1').DataTable();
+                var id = $(this).parent('td').parent('tr').index();
+                $('#myModal').modal('show');
+                $("#srno").val(id);
+                $("#add_dep_percentage").val(t.fnGetData(id)[2]).trigger('change');
+            });
+
+            //function TabletoJeson()
+            //{
+            //    var t = $('#ContactGrid1').DataTable()
+            //    var rowCount = t.fnGetData().length;
+            //    var str;
+            //    var str1;
+
+            //    var str2;
+            //    var str3;
+            //    $( "#additional_depreciation_detail" ).empty();
+            //    for (i = 0; i < rowCount; i++)
+            //    {
+            //        $("#additional_depreciation_detail").append('<input type="hidden" id="add_dep_type_id' + i + '" name="add_dep_type_id" value=' + t.fnGetData(i)[0] + ' >');
+            //        $("#additional_depreciation_detail").append('<input type="hidden" id="year_id' + i + '" name="year_id" value=' + t.fnGetData(i)[1] + ' >');
+            //        $("#additional_depreciation_detail").append('<input type="hidden" id="add_dep_percentage' + i + '" name="add_dep_percentage" value=' + t.fnGetData(i)[2] + ' >');
+            //    }
+            //}
+            function GetMonPer(id) {
+                if (id == 1) {
+                    $("#cal_ba_val").show();
+                    $("#cal_ba_per").hide();
+                    $("#c_b_v").show();
+                }
+                else if (id == 2)
+                {
+                    $("#cal_ba_per").show();
+                    $("#cal_ba_val").hide();
+                    $("#c_b_v").show();
+                }
+                else{
+                    $("#cal_ba_val").hide();
+                    $("#c_b_v").hide();
+                    $("#cal_ba_per").hide();
+                }
+            }
+            function GetDepFre(id){
+                if(id ==3){
+                    $('#dep_type_frquency_id').val(2).trigger('change');
+                    document.getElementById("dep_type_frquency_id").disabled = true;
+                }
+                else{
+                    $('#dep_type_frquency_id').val(0).trigger('change');
+                    document.getElementById("dep_type_frquency_id").disabled = false;
+                }
+            }
+            function CheckPer(id){
+                if(id>100){
+                    sweetAlert("","SCRAP VALUE IS GREATER THEN 100%","error");
+                    $('#scrap_value_percentage').val('');
+                    return false;
+                }
+                else if(id < 0){
+                    sweetAlert("","SCRAP VALUE IS NEGATIVE","error");
+                    $('#scrap_value_percentage').val('');
+                    return false;
+                }
+            }
+            function GetBasVal(id){
+                if(id<0){
+                    sweetAlert("","Calculation Based Value can not be negative","error");
+                    $('#cal_based_value').val('');
+                    return false;
+                }
+            }
+            function GetAddVal(id){
+                if(id<0){
+                    sweetAlert("","Additional Depreciation can not be negative","error");
+                    $('#add_dep_percentage').val('');
+                    return false;
+                }
+                else if(id>100){
+                    sweetAlert("","Additional Depreciation can not be greater than 100%","error");
+                    $('#add_dep_percentage').val('');
+                    return false;
+                }
+            }
+            function clearmodel()
+            {
+                $("#add_dep_percentage").val('');
+            }
+            var t = $('#ContactGrid1').DataTable();
+            var add_dep=@Html.Raw(JsonConvert.SerializeObject(this.Model));
+            var i=1;          
+            $.each(add_dep.ref_additional_dep_type,function(key,value){
+
+                t.fnAddData([value.year_id,value.add_dep_percentage,]);
+                i=i+1;
+            });
+    </script>
+    <style>
+
+    </style>
+}

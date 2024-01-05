@@ -1,0 +1,127 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.ref_user_role_mapping_VM
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Edit";
+}
+<h2>User-Role Mapping</h2>
+<link href="~/Content/bootstrap-multiselect-master/bootstrap-multiselect.css" rel="stylesheet">
+<script src="~/Content/bootstrap-multiselect-master/bootstrap-multiselect.js"></script>
+@using (Html.BeginForm("Edit", "UserRoleMapping", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        <div class="x_panel panel">
+            <div class="form-group">
+
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.user_id, "User", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.DropDownList("user_id", (System.Web.Mvc.SelectList)ViewBag.userlist, "---Select---", htmlAttributes: new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.user_id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.role_id, "Role", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.DropDownList("role_id", (System.Web.Mvc.SelectList)ViewBag.rolelist, htmlAttributes: new { @class = "form-control  multiselect", multiple = "multiple", })
+                                @Html.ValidationMessageFor(model => model.role_id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.is_block, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.is_block, new { @class = "validation" })
+                                @Html.ValidationMessageFor(model => model.is_block, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+
+                    </div>
+                </div>
+                @*<div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.is_block, "Blocked", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.is_block, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.is_block, "", new { @class = "text-danger" })
+                                </div>
+                        </div>
+                    </div>
+                </div>*@
+
+            </div>
+        </div>
+        <input type="hidden" id="role_ids" name="role_ids" />
+        <input type="hidden" id="srno" />
+        <input type="hidden" id="deleteids" name="deleteids" />
+
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Update" data-controller="UserRoleMapping" class="btn btn-success" onclick="TableToJson();" id="Edit" name="Edit" style="float:right" />
+        </div>
+    </div>
+
+}
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+
+    <script type="text/javascript">
+        $("#user_id").select2({
+            maximumSelectionLength: 4,
+            placeholder: "Select User",
+            allowClear: true
+
+        });
+        $(document).ready(function () {
+
+            $("#is_block").checkboxpicker();
+            $('.multiselect').multiselect();
+        });
+
+        function TableToJson() {
+            var role = [];
+            $("#role_id :selected").each(function (i, selected) {
+                role.push($(selected).val());
+            });
+            $("#role_ids").val(role);
+            console.log($("#role_ids").val());
+        }
+
+        var role = [];
+        $(window).ready(function(){
+            var t = $('#role_id');
+            var data =@Html.Raw(JsonConvert.SerializeObject(this.Model));
+            
+            var r = data.role_id.split(',');
+            console.log(r);
+            for(var i = 0; i < r.length; i++)
+            {
+                role.push(r[i]);
+            }
+            console.log(role);
+            $("#role_id").val(role);
+            $('#role_id').multiselect('refresh');
+
+        });
+
+    </script>
+}

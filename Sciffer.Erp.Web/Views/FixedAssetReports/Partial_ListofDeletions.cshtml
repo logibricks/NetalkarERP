@@ -1,0 +1,42 @@
+﻿
+
+
+@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+@{(Html.EJ().Grid<fixed_asset_report_vm>("Editing")
+        .Datasource(ds => ds.URL(Url.Action("FixedAssetReport", "FixedAssetReports") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&depreciation_type=" + ViewBag.depreciation_type + "&asset_code_id=" + ViewBag.asset_code_id + "&depreciation_area_id=" + ViewBag.depreciation_area_id + "&asset_class_id=" + ViewBag.asset_class_id + "&asset_group_id=" + ViewBag.asset_group_id).Adaptor(AdaptorType.UrlAdaptor))
+                          .AllowPaging().PageSettings(a => a.PageSize(20))
+                              .AllowFiltering()
+                                  .FilterSettings(X => X.FilterType(FilterType.Excel))
+                              .ShowColumnChooser()
+                              .AllowSorting()
+                              .AllowScrolling()
+                              .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "InventoryReport", new { ctrlname = "InventoryledgerDetailedReport" })))
+                              .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                          .ToolbarSettings(toolbar =>
+                          {
+                              toolbar.ShowToolbar().ToolbarItems(items =>
+                              {
+                                  items.AddTool(ToolBarItems.Search);
+                                  items.AddTool(ToolBarItems.ExcelExport);
+                                  items.AddTool(ToolBarItems.PrintGrid);
+                              });
+                          })
+                  .Columns(col =>
+
+                  {
+                      col.Field("asset_code").Width("15%").HeaderText("Asset Code").Add();
+                      col.Field("asset_class").Width("15%").HeaderText("Asset Class").Add();
+                      col.Field("asset_group").Width("15%").HeaderText("Asset Group").Add();
+                      col.Field("original_cost").Width("15%").HeaderText("Original Cost").Add();
+                      col.Field("accu_depr_at_sale").Width("15%").HeaderText("Accumulated Depreciation at the time of sale").Add();
+                      col.Field("net_wdv").Width("15%").HeaderText("Net WDV").Add();
+                      col.Field("sale_value").Width("15%").HeaderText("Sale value").Add();
+                      col.Field("sale_date").Width("15%").HeaderText("Sale Date").Format("{0:dd/MM/yyyy}").Add();
+                      col.Field("profit_loss").Width("15%").HeaderText("Profit Loss").Add();
+                  })
+                      .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicki"); })
+                                                          ).Render();}
+@Html.EJ().ScriptManager()

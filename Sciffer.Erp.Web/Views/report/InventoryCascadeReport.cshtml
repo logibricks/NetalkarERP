@@ -1,0 +1,130 @@
+﻿
+
+@using Sciffer.Erp.Domain.ViewModel
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")"></script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.mickey').multiselect({
+            includeSelectAllOption: true,
+            enableFiltering: true,
+            maxHeight: '200',
+            enableCaseInsensitiveFiltering: true,
+            allowClear: true,
+            maximumResultsForSearch: 1,
+            numberDisplayed: 0,
+            checkAllText:true
+        });
+     
+    });
+</script>
+
+
+
+<div class="form-horizontal">
+    <div class=row>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">As of Date</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <input type="date" id="as_of_date" class="form-control radius" required="required">
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+
+            <div class="col-md-7 col-lg-7 col-xs-12">
+
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                <label></label>
+            </div>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                <button class="searchbutton searchButton" id="search"> &nbsp; Run Report </button>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class=row>
+
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Sloc</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("sloc_id", (System.Web.Mvc.SelectList)ViewBag.sloc_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Bucket</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("bucket_id", (System.Web.Mvc.SelectList)ViewBag.bucket_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-4 col-xs-12">
+            <label class="control-label col-md-5 col-lg-5 col-xs-12">Item Code</label>
+            <div class="col-md-7 col-lg-7 col-xs-12">
+                @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.item_list, htmlAttributes: new { @class = "form-control mickey", multiple = "multiple" })
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="searchresult">
+    @Html.Partial("Partial_InventoryCascade", (object)ViewBag)
+</div>
+
+
+
+<script type="text/javascript">
+    $("input:checkbox").prop('checked', $(this).prop("checked"));
+    $("#search").click(function () {
+        AdvanceSearch();
+    });
+    document.getElementById('as_of_date').valueAsDate = new Date();
+    function AdvanceSearch() {
+        var as_of_date = $("#as_of_date").val();
+        if ($('#item_id :selected').length > 0) {
+            var selectedItem = [];
+            $('#item_id :selected').each(function (i, selected) {
+                selectedItem[i] = $(selected).val();
+            });
+            var Item = selectedItem + "";
+        }
+
+        if ($('#sloc_id :selected').length > 0) {
+            var selectedSloc = [];
+            $('#sloc_id :selected').each(function (i, selected) {
+                selectedSloc[i] = $(selected).val();
+            });
+            var Sloc = selectedSloc + "";
+        }
+
+        if ($('#bucket_id :selected').length > 0) {
+            var selectedBucket = [];
+            $('#bucket_id :selected').each(function (i, selected) {
+                selectedBucket[i] = $(selected).val();
+            });
+            var Bucket = selectedBucket + "";
+        }
+
+
+        $.ajax({
+            url: '@Url.Action("GetInventoryCascadeReport", "report")',
+            method: "Post",
+            cache: false,
+            data: { asofdate: as_of_date, bucket: Bucket, sloc: Sloc, item: Item },
+            success: function (data) {
+                $(".loading").hide();
+                $('#searchresult').empty().append(data);
+                //console.log(data);
+            },
+            error: function (http) {
+                console.log(XMLHttpRequest);
+            }
+        });
+    }
+</script>
+<div class="modal"><!-- Place at bottom of page --></div>

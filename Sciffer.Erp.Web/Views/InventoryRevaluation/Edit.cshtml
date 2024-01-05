@@ -1,0 +1,185 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.inv_revaluation_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+
+
+@using (Html.BeginForm("Edit", "InventoryRevaluation", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.HiddenFor(model => model.inventory_revaluation_id)
+        <input type="hidden" id="REVALUATION_IS_ACTIVE" name="REVALUATION_IS_ACTIVE" value="true" />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, new { @class = "control-label col-md-4" })
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <input type="hidden" id="is_active" name="is_active" value="true" />
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.categorylist, new { @class = "form-control validinput", @required = true, @readonly = "readonly" })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.EditorFor(model => model.inventory_revaluation_number, new { htmlAttributes = new { @class = "form-control validinput removedisabled", @required = true, @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.inventory_revaluation_number, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.inventory_revaluation_date, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.inventory_revaluation_date, new { htmlAttributes = new { @class = "form-control validation", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.inventory_revaluation_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.inventory_revaluation_document_date, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.inventory_revaluation_document_date, new { htmlAttributes = new { @class = "form-control validation", @readonly = "readonly" } })
+                            @Html.ValidationMessageFor(model => model.inventory_revaluation_document_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>                
+            </div>
+        </div>
+        
+        
+          <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">Item Details</a></li>
+                <li><a data-toggle="tab" href="#sectionB">Information</a></li>
+
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade  in active" style="margin-top:10px;"> 
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                                <thead>
+                                    <tr>
+                                        <th><label>ID</label></th>
+                                        <th><label>Sr. No.</label></th>                                     
+                                        <th><label>Item ID</label></th>
+                                        <th><label>Item</label></th>
+                                        <th><label>Quantity</label></th>
+                                        <th><label>UOM ID</label></th>
+                                        <th><label>UoM</label></th>
+                                        <th><label>Old Rate</label></th>
+                                        <th><label>New Rate</label></th>
+                                        <th><label>Diff Rate</label></th>
+                                        <th><label>Diff Value</label></th>
+                                        <th><label>GL ID</label></th>
+                                        <th><label>GL Account</label></th>                                       
+                                        <th><label>Action</label></th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionB" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <label class="col-md-4">Additional Information</label>
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.inventory_revaluation_remark, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                    @Html.ValidationMessageFor(model => model.inventory_revaluation_remark, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <label class="col-md-4">Attachment</label>
+                                <div class="col-md-8">
+                                    <input type="file" class="form-control" id="FileUpload" name="FileUpload" />
+                                    @Html.ValidationMessageFor(model => model.attachement, "", new { @class = "text-danger" })
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}
+<div>
+
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+<script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {           
+            var t = $('#ContactGrid').DataTable();
+            var sr_no = t.fnGetData().length+1;
+            var pl_detail = @Html.Raw(JsonConvert.SerializeObject(this.Model.inventory_revaluation_detail));
+            var i=1;
+            $.each(pl_detail, function(key, value) {
+                t.fnAddData([value.inv_revaluation_detail_id,sr_no,value.REF_ITEM.ITEM_ID,value.REF_ITEM.ITEM_CODE+"-"+value.REF_ITEM.ITEM_NAME,parseFloat(value.quantity).toFixed(2),value.REF_UOM.UOM_ID,value.REF_UOM.UOM_NAME,parseFloat(value.old_rate).toFixed(2),parseFloat(value.new_rate).toFixed(2),parseFloat(value.differential_rate).toFixed(2),parseFloat(value.differential_value).toFixed(2),value.REF_GENERAL_LEDGER.gl_ledger_id,value.REF_GENERAL_LEDGER.gl_ledger_code+"-"+value.REF_GENERAL_LEDGER.gl_ledger_name,value.is_active,''
+                ]);
+                i=i+1;
+                sr_no++;
+            });
+        });
+
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a",bVisible:false},
+                     { sname: "b",  },                   
+                     { sname: "d",bVisible: false },
+                     { sname: "e", sWidth: "20%"},
+                     { sname: "f",sClass:"right" },
+                     { sname: "g", bVisible: false },
+                     { sname: "h", sWidth: "8%"},
+                     { sname: "i",sClass:"right" },
+                     { sname: "j",sClass:"right" },
+                     { sname: "k",sClass:"right" },
+                     { sname: "l",sClass:"right" },
+                     { sname: "m", bVisible: false },
+                     { sname: "n", },
+                    // { sname: "o", bVisible: true },
+
+
+                     {
+                         sname: "p", sWidth: "8%", bVisible: false,
+                         bSortable: false,
+                         mRender: function (data, type, full) {
+                             return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" onclick="editRow(' + full[1] + ');" /><img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete" onclick="deleteRow(' + full[1] + ');" />';
+                         }
+                     }]
+        });       
+
+    </script>
+}
+
+
+

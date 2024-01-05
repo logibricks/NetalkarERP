@@ -1,0 +1,282 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.pla_transferVM
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Edit";
+}
+<div class="loading">Loading &#8230;</div>
+@using (Html.BeginForm("Edit", "WithinPlantTransfer", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div id="pla_transfer_detail"></div>
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.HiddenFor(x => x.pla_transfer_id)
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, new { @class = "control-label col-md-4" })
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            <input type="hidden" id="pla_transfer_is_active" name="pla_transfer_is_active" value="true" />
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.category_list, new { @class = "form-control category validinput", @required = true, @onchange = "GetDocumentNumber(this.value);" })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                        </div>
+                        @Html.LabelFor(model => model.pla_transfer_number, new { @class = "control-label col-md-4 hidden" })
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.EditorFor(model => model.pla_transfer_number, new { htmlAttributes = new { @class = "form-control num validinput removedisabled", @required = true, @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.pla_transfer_number, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.pla_posting_date, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.pla_posting_date, new { htmlAttributes = new { @class = "form-control postingdocumentdate validinput", @required = true } })
+                            @Html.ValidationMessageFor(model => model.pla_posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.pla_document_date, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.pla_document_date, new { htmlAttributes = new { @class = "form-control validinput", @required = true } })
+                            @Html.ValidationMessageFor(model => model.pla_document_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.plant_id, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+
+                            @Html.ValidationMessageFor(model => model.plant_id, "", new { @class = "text-danger" })
+                            @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plant_list, "--Select--", htmlAttributes: new { @class = "form-control validinput", @required = true, @onchange = "GetStorageLocation(this.value)" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.pla_send_sloc, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("pla_send_sloc", (System.Web.Mvc.SelectList)ViewBag.receive_loc, "---Select---", new { @class = "form-control validinput", @required = true })
+                            @Html.ValidationMessageFor(model => model.pla_send_sloc, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.pla_send_bucket, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.ValidationMessageFor(model => model.pla_send_bucket, "", new { @class = "text-danger" })
+                            @Html.DropDownList("pla_send_bucket", (System.Web.Mvc.SelectList)ViewBag.bucket_list, "--Select--", htmlAttributes: new { @class = "form-control validinput", @required = true })
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.pla_receive_sloc, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("pla_receive_sloc", (System.Web.Mvc.SelectList)ViewBag.receive_loc, "---Select---", new { @class = "form-control validinput", @required = true })
+                            @Html.ValidationMessageFor(model => model.pla_receive_sloc, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.pla_receive_bucket, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.ValidationMessageFor(model => model.pla_receive_bucket, "", new { @class = "text-danger" })
+                            @Html.DropDownList("pla_receive_bucket", (System.Web.Mvc.SelectList)ViewBag.bucket_list, "--Select--", htmlAttributes: new { @class = "form-control validinput", @required = true })
+
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="productdetail" name="productdetail" />
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.remarks_on_document, new { @class = "control-label col-md-4" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.remarks_on_document, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.remarks_on_document, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">Tag Items</a></li>
+                <li><a data-toggle="tab" href="#sectionB">Non Tag Items</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                                <thead>
+                                    <tr>
+                                        <th><label>ID</label></th>
+                                        <th><label>Sr.No</label></th>
+                                        <th><label>ITEM ID</label></th>
+                                        <th><label>ITEM</label></th>
+                                        <th><label>TAG ID</label></th>
+                                        <th><label>TAG No.</label></th>
+                                        <th><label>Quantity</label></th>
+                                        <th><label>UOM ID</label></th>
+                                        <th><label>UOM</label></th>
+                                        <th><label>Action</label></th>
+
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionB" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid1"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <link href="~/Content/select2.min.css" rel="stylesheet" />
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var t = $('#ContactGrid').DataTable();
+            var t1 = $('#ContactGrid1').DataTable();
+            var pla_transfer_detail_tag=@Html.Raw(JsonConvert.SerializeObject(this.Model));
+            console.log(pla_transfer_detail_tag);
+            t.fnAddData(pla_transfer_detail_tag.pla_transfer_detail_tag);
+            t1.fnAddData(pla_transfer_detail_tag.pla_transfer_detail);
+            });
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            "columns": [
+                { "data": "tsr_no",bVisible:true,"title":"Sr. No." },
+                { "data": "pla_transfer_detail_tag_id",bVisible:false,"title":"Detail Id" },
+
+                { "data": "item_id",bVisible:false,"title":"Item Id" },
+                { "data": "REF_ITEM.ITEM_CODE",bVisible:true,"title":"Item Code" },
+                { "data": "REF_ITEM.ITEM_NAME",bVisible:true,"title":"Item Name" },
+                { "data": "tag_id",bVisible:false,"title":"Tag ID" },
+                { "data": "tag_no",bVisible:true,"title":"Tag Number" },
+                { "data": "quantity",bVisible:true,"title":"Quanity" ,sClass:"right" ,render: function ( data, type, row ) {
+                    return parseFloat(data).toFixed(2);
+                }},
+                { "data": "uom_id",bVisible:false,"title":"UOM ID" },
+                { "data": "REF_UOM.UOM_NAME",bVisible:true,"title":"UoM" },
+
+
+            ],
+            "fnRowCallback" : function(nRow, aData, iDisplayIndex){
+                $("td:first", nRow).html(iDisplayIndex +1);
+                return nRow;}
+
+        });
+        $('#ContactGrid1').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            "columns": [
+               { "data": "sr_no",bVisible:true,"title":"Sr. No." },
+               { "data": "pla_transfer_detail_id",bVisible:false,"title":"Detail Id" },
+
+               { "data": "item_id",bVisible:false,"title":"Item Id" },
+               { "data": "REF_ITEM.ITEM_CODE",bVisible:true,"title":"Item Code" },
+               { "data": "REF_ITEM.ITEM_NAME",bVisible:true,"title":"Item Name" },
+               { "data": "batch_id",bVisible:false,"title":"Batch ID" },
+               { "data": "inv_item_batch.batch_number",bVisible:true,"title":"Batch Number" },
+               { "data": "pla_qty",bVisible:true,"title":"Quanity" ,sClass:"right" ,render: function ( data, type, row ) {
+                   return parseFloat(data).toFixed(2);
+               }},
+               { "data": "uom_id",bVisible:false,"title":"UOM ID" },
+               { "data": "REF_UOM.UOM_NAME",bVisible:true,"title":"UoM" },
+
+
+            ],
+            "fnRowCallback" : function(nRow, aData, iDisplayIndex){
+                $("td:first", nRow).html(iDisplayIndex +1);
+                return nRow;}
+        });
+        $("#form0 :input").prop("disabled", true);
+    </script>
+<style>
+    #ContactGrid tr th {
+        font-weight: normal !important;
+    }
+      #ContactGrid1 tr th {
+        font-weight: normal !important;
+    }
+</style>
+}
+
+

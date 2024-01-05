@@ -1,0 +1,204 @@
+﻿<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+@using Sciffer.Erp.Domain.Model
+@{
+    ViewBag.Title = "Index";
+}
+<br/><br/><br/>
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<ref_budget_mastervm>("Searching")
+          .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.Datasource).RemoveURL(Url.Action("InlineDelete", "Budget")).InsertURL(Url.Action("InlineInsert", "Budget")).UpdateURL(Url.Action("InlineInsert", "Budget"))
+                       .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template"); })
+        .EnableAltRow()
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.Update);
+            items.AddTool(ToolBarItems.Cancel);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "Budget" })))
+
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("budget_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("financial_year_name").Width("15%").HeaderText("Financial Year").Add();
+            col.Field("financial_year_id").Width("15%").HeaderText("Fanancial Year").Visible(false).ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("general_ledger_id").Width("15%").HeaderText("GL Account ID").Visible(false).ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("general_ledger_name").Width("15%").HeaderText("GL Account").Add();
+            col.Field("instruction_name").Width("15%").HeaderText("Instruction Type").Add();
+            col.Field("amount").Width("15%").HeaderText("Amount").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("instruction_type_id").Width("15%").HeaderText("Instruction Type").Visible(false).ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("is_blocked").Width("15%").HeaderText("Is Blocked").Visible(false).Add();
+        }).ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+</div>
+<script id="template" type="text/tempalte">
+
+    <div class="row">
+        <input type="hidden" id="budget_id" name="budget_id" value="{{:budget_id}}">
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="financial_year_id">Financial Year *</label>
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    @Html.DropDownList("financial_year_id",(System.Web.Mvc.SelectList)ViewBag.fylist, "---Select---", new { @class = "form-control" })
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="general_ledger_id">GL Account *</label>
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    @Html.DropDownList("general_ledger_id", (System.Web.Mvc.SelectList)ViewBag.Genledger, "---Select---", new { @class = "form-control" })
+
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="instruction_type_id">Instruction Type *</label>
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                     @Html.DropDownList("instruction_type_id", (System.Web.Mvc.SelectList)ViewBag.insttype, "---Select---", new { @class = "form-control" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="bank_id">Amount *</label>
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    <input type="number" id="amount" class="form-control text-box single-line" name="amount" value="{{:amount}}">
+                </div>
+            </div>
+        </div>
+        
+    </div><br>
+    <div class="row">
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="bank_id">Blocked</label>
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    <input type="checkbox" id="is_blocked" class="form-control text-box single-line " name="is_blocked" value="{{:is_blocked}}">
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script src="~/Scripts/jquery.filedrop.js"></script>
+<script>
+    $(function () {
+
+        $('#dropZone').filedrop({
+
+            url: '@Url.Action("UploadFiles", "Budget")',
+            paramname: 'files',
+            maxFiles: 5,
+
+            dragOver: function () {
+                $('#dropZone').css('background', 'blue');
+            },
+            dragLeave: function () {
+                $('#dropZone').css('background', 'gray');
+            },
+            drop: function () {
+                $('#dropZone').css('background', 'gray');
+            },
+            afterAll: function () {
+                $('#dropZone').html('');
+
+            },
+            uploadFinished: function (i, file, response, time) {
+
+                if (response.Status == "Failed") {
+                    sweetAlert("File cannot be uploaded", "Error found " + response.text, "error");
+                }
+                else if (response.Status == "Success") {
+                    $('#uploadResult').append('<li>' + file.name + '</li>');
+                    //sweetAlert("File Upload Sucessfully","","error");
+                    swal({
+                        title: "File Upload Sucessfully",
+                        confirmButtonClass: "btn-danger",
+                        confirmButtonText: "Okay",
+                        closeOnConfirm: false
+                        },
+                        function () {
+                            location.reload();
+                        });
+                 }
+                else {
+                    sweetAlert('Financial Year is Different');
+                }
+            }
+
+        });
+        
+    });
+    
+    var flag = true;
+    function complete(args) {
+       
+        if (args.requestType == "save") {
+            if (args.data.text == 'duplicate') {
+                sweetAlert("", "Budget already exists!", "error");
+                if (args.model.dataSource.dataSource.json[0].budget_id == null) {
+                    args.model.dataSource.dataSource.json = args.model.dataSource.dataSource.json.splice(1, args.model.dataSource.dataSource.json.length);
+                }
+            }
+            var gridObj = $("#Searching").ejGrid("instance");
+            gridObj.refreshContent();
+        }
+        if (args.requestType == "add")
+        {
+            $('#is_blocked').checkboxpicker();
+            $("#general_ledger_id").select2({
+                maximumSelectionLength: 4,
+                placeholder: "Select GL Account",
+                allowClear: true
+            });
+        }
+        if (args.requestType == "beginedit") {
+            if ($("#is_blocked").val() === 'true') {
+
+                $('#is_blocked').prop('checked', true);
+
+            } else {
+                $("#is_blocked").prop('checked', false);
+            }
+            $('#is_blocked').checkboxpicker();
+            $("#financial_year_id").prop('value', args.rowData.financial_year_id);
+            $("#general_ledger_id").prop('value', args.rowData.general_ledger_id);
+            $("#instruction_type_id").prop('value', args.rowData.instruction_type_id);      
+            document.getElementById('financial_year_id').setAttribute('disabled', 'disabled');
+            document.getElementById('general_ledger_id').setAttribute('disabled', 'disabled');
+            $("#general_ledger_id").select2({
+                maximumSelectionLength: 4,
+                placeholder: "Select GL Parent Code",
+                allowClear: true
+            });
+          }
+    }
+    function EndProcess() {
+        var gridObj = $("#Searching").ejGrid("instance");
+        gridObj.refreshContent();
+    }
+
+    </script>

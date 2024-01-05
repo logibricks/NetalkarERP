@@ -1,0 +1,89 @@
+﻿<div class="loading">Loading &#8230;</div>
+@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>
+<br /><br /><br />
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<ref_permit_issue_VM>("Searching")
+         .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "IssuePermit" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+         .PageSettings(p => { p.PageSize(10); })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "IssuePermit" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("permit_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Add();
+            col.Field("permit_no").Width("15%").HeaderText("Permit No").Visible(true).Add();
+            col.Field("category_name").Width("15%").HeaderText("Permit category").Visible(true).Add();
+            col.Field("permit_date").Width("15%").HeaderText("Permit Date").Format("{0:dd/MM/yyyy}").Visible(true).Add();
+           
+            //col.Field("permit_category").Width("15%").HeaderText("Permit category Id").Visible(true).Add();
+            col.Field("valid_from").Width("15%").HeaderText("Valid Date").Format("{0:dd/MM/yyyy}").Visible(true).Add();
+            col.Field("valid_to").Width("15%").HeaderText("Valid to Date").Format("{0:dd/MM/yyyy}").Visible(true).Add();
+            col.Field("no_of_workers").Width("15%").HeaderText("No of workers").Add();
+            col.Field("work_description").Width("15%").HeaderText("Work Description").Visible(true).Add();
+            col.Field("work_location").Width("15%").HeaderText("Work Location").Add();
+            col.Field("vender_id").Width("15%").HeaderText("Vender").Add();
+            col.Field("plant_id").Width("15%").HeaderText("Plant").Visible(true).Add();
+
+
+        }).ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+<script>
+    var flag = true;
+    function complete(args) {
+
+        if (args.requestType == "beginedit")
+        {
+            location.href = "@Url.Action("Edit", "IssuePermit")?id=" + args.rowData.permit_id;
+        }
+        if (args.requestType == "add") {
+            location.href = "@Url.Action("Create", "IssuePermit")";
+        }
+    }
+    function EndProcess() {
+        var gridObj = $("#Searching").ejGrid("instance");
+        //console.log(gridObj);
+        gridObj.refreshContent();
+    }
+    $(document).ready(function () {
+        var num = '@Html.ViewBag.num';
+        if (num != '') {
+            if (num != undefined) {
+                sweetAlert("", num+" Saved successfully","success");
+            }
+        }
+    });
+</script>

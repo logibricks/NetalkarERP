@@ -1,0 +1,80 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_tax_element
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>ref_tax_element</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ref_tax_type.tax_type_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ref_tax_type.tax_type_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tax_element_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tax_element_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.tax_element_description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.tax_element_description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.purchase_gl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.purchase_gl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.sales_gl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.sales_gl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_active)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_blocked)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_blocked)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

@@ -1,0 +1,728 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_pm_notification
+@using Newtonsoft.Json;
+@{
+    ViewBag.Title = "Create";
+}
+<div class="loading">Loading &#8230;</div>
+<script type="text/javascript">
+
+        $(function () {
+            $('[id*=attended_by_id]').multiselect({
+                includeSelectAllOption: false,
+                enableFiltering: true,
+                maxHeight: '200',
+                enableCaseInsensitiveFiltering: true,
+                allowClear: true,
+                maximumResultsForSearch: 1,
+                numberDisplayed: 0,
+            });
+        });
+</script> 
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.notification_id) 
+    @Html.HiddenFor(model => model.status_id)
+
+    <!-----------Start Header-------------><br /><br /><br />
+    <div class="row">
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.category_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.categorylist, new { disabled = "false", @class = "form-control category validinput setPlant", @required = true, })
+                    @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    @Html.EditorFor(model => model.doc_number, new { htmlAttributes = new { disabled = "false", @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.doc_number, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-sm-6">
+            @Html.LabelFor(model => model.notification_date, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8 col-sm-8 col-xs-12">
+                @Html.EditorFor(model => model.notification_date, new { htmlAttributes = new { disabled = "false", @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.notification_date, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.notification_description, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    @Html.EditorFor(model => model.notification_description, new { htmlAttributes = new { disabled = "false", @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.notification_description, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+        @*<div class="col-lg-6 col-sm-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.status_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8 col-sm-8 col-xs-12">
+                    @Html.DropDownList("status_id", (System.Web.Mvc.SelectList)ViewBag.statuslist, new { disabled = "false", @class = "form-control validinput removed", @required = true })
+                    @Html.ValidationMessageFor(model => model.status_id, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>*@
+    </div>
+    <!-----------End Header------------->
+    <!------------Start-Tab-Panel------------------->
+    <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+        <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+            <li class="active"><a data-toggle="tab" href="#sectionA">General</a></li>
+            <li ><a data-toggle="tab" href="#sectionB">Under Service </a></li>
+            <li><a data-toggle="tab" href="#sectionC">Malfunction Closure </a></li>
+            <li ><a data-toggle="tab" href="#sectionD">Detailed problem & Solutions</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.plant_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plantlist, "---Select---", new { disabled = "false", @class = "form-control validinput selectedbycategory removedisabled", @required = true })
+                                @Html.ValidationMessageFor(model => model.plant_id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.machine_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.machinelist, "---Select---", new { disabled = "false", @class = "form-control validinput selectedbycategory removedisabled", @required = true })
+                                @Html.ValidationMessageFor(model => model.machine_id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.employee_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.DropDownList("employee_id", (System.Web.Mvc.SelectList)ViewBag.employeelist, "---Select---", new { disabled = "false", @class = "form-control validinput removedisabled", @required = true })
+                                @Html.ValidationMessageFor(model => model.employee_id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.start_date, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.start_date, new { htmlAttributes = new { disabled = "false", @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.start_date, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.end_date, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.end_date, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.end_date, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>*@
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.start_time, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.start_time, new { htmlAttributes = new { disabled = "false", @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.start_time, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="col-lg-6 col-sm-6">
+                            @Html.LabelFor(model => model.end_time, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.end_time, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.end_time, "", new { @class = "text-danger" })
+                            </div>
+                        </div>*@
+                </div>
+            </div>
+            <div id="sectionB" class="tab-pane fade " style="margin-top:10px;">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.under_taken_by_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.DropDownList("under_taken_by_id", (System.Web.Mvc.SelectList)ViewBag.userlist1, new { disabled = "false", @class = "form-control validinput removedisabled  ", @required = true })
+                                @Html.ValidationMessageFor(model => model.under_taken_by_id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.notification_type, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.DropDownList("notification_type", (System.Web.Mvc.SelectList)ViewBag.notificationtypelist, "---Select---", new {  @class = "form-control validinput removed", @required = true })
+                                @Html.ValidationMessageFor(model => model.notification_type, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.machine_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.machinelist, "---Select---", new { disabled = "false", @class = "form-control validinput selectedbycategory removedisabled", @required = true })
+                                    @Html.ValidationMessageFor(model => model.machine_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>*@
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.attending_date, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.attending_date, new { htmlAttributes = new { disabled = "false", @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.attending_date, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.end_date, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.end_date, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.end_date, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>*@
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.attending_time, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.attending_time, new { htmlAttributes = new { disabled = "false", @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.attending_time, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    @*<div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.employee_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("employee_id", (System.Web.Mvc.SelectList)ViewBag.employeelist, "---Select---", new { disabled = "false", @class = "form-control validinput removedisabled", @required = true })
+                                    @Html.ValidationMessageFor(model => model.employee_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>*@
+                    <div class="col-lg-6 col-sm-6">
+
+                    </div>
+                </div>
+
+            </div>
+            <div id="sectionC" class="tab-pane fade " style="margin-top:10px;">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.attended_by, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12" id="atte_by_id" hidden>
+                                @Html.EditorFor(model => model.attended_by, new { htmlAttributes = new { @class = "form-control ", } })
+                                @Html.ValidationMessageFor(model => model.attended_by, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-8 col-lg-8 col-xs-12" id="atte_id">
+                          @Html.DropDownList("attended_by_id", (System.Web.Mvc.SelectList)ViewBag.userlist, htmlAttributes: new { @class = "form-control attended_by_id", @Multiple = "Multiple", @OnChange = "getlist(this.value);" }) </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.operator_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.DropDownList("operator_id", (System.Web.Mvc.SelectList)ViewBag.opertorlist, new { @class = "form-control removedisabled" })
+                                @Html.ValidationMessageFor(model => model.operator_id, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.machine_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.machinelist, "---Select---", new { disabled = "false", @class = "form-control validinput selectedbycategory removedisabled", @required = true })
+                                    @Html.ValidationMessageFor(model => model.machine_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>*@
+                </div>
+                <div class="row">
+                    @*<div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.employee_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("employee_id", (System.Web.Mvc.SelectList)ViewBag.employeelist, "---Select---", new { disabled = "false", @class = "form-control validinput removedisabled", @required = true })
+                                    @Html.ValidationMessageFor(model => model.employee_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>*@
+                    <div class="col-lg-6 col-sm-6">
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.malfunction_closure_date, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.malfunction_closure_date, new { htmlAttributes = new { disabled = "false", @class = "form-control removedisabled" } })
+                                @Html.ValidationMessageFor(model => model.malfunction_closure_date, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.malfunction_closure_time, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.malfunction_closure_time, new { htmlAttributes = new { disabled = "false", @class = "form-control removedisabled" } })
+                                @Html.ValidationMessageFor(model => model.malfunction_closure_time, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="sectionD" class="tab-pane fade " style="margin-top:10px;">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.detail_problem, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.detail_problem, new { htmlAttributes = new { @class = "form-control validinput" } })
+                                @Html.ValidationMessageFor(model => model.detail_problem, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.problem_attachment, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <input type="file" class="form-control" id="FileUpload" name="FileUpload"  accept="application/pdf, image/*" />
+                                @Html.ValidationMessageFor(model => model.problem_attachment, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.detail_solution, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.detail_solution, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.detail_solution, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            <div class="col-lg-6 col-sm-6 col-md-offset-4">
+                                @Html.ActionLink("Attachment", "Download", "Generic", new { controller_name = "Notification", id = Model.notification_id }, new { @class = "btn-link" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.reviewed_by, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12" id="revi_id" hidden>
+                                @Html.EditorFor(model => model.reviewed_by, new { htmlAttributes = new { @class = "form-control validinput", } })
+                                @Html.ValidationMessageFor(model => model.reviewed_by, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-8 col-sm-8 col-xs-12" id="revi_by_id">
+                                @Html.DropDownList("reviewed_by_id", (System.Web.Mvc.SelectList)ViewBag.userlist, "---Select---", new { @class = "form-control  removedisabled", })
+                                @Html.ValidationMessageFor(model => model.reviewed_by_id, "", new { @class = "text-danger" })
+                            </div>
+
+                        </div>
+                    </div>
+                    @*<div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.attended_by, htmlAttributes: new { @class = "control-label col-md-4" })
+                                <div class="col-md-8 col-sm-8 col-xs-12" id="atte_by_id" hidden>
+                                    @Html.EditorFor(model => model.attended_by, new { htmlAttributes = new { @class = "form-control ", } })
+                                    @Html.ValidationMessageFor(model => model.attended_by, "", new { @class = "text-danger" })
+                                </div>
+                                <div class="col-md-8 col-lg-8 col-xs-12" id="atte_id">
+                                    @Html.DropDownList("attended_by_id", (System.Web.Mvc.SelectList)ViewBag.userlist, htmlAttributes: new { @class = "form-control attended_by_id", @Multiple = "Multiple", @OnChange = "getlist(this.value);" })
+                                </div>
+                            </div>
+                        </div>*@
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        @Html.LabelFor(model => model.is_breakdown, htmlAttributes: new { @class = "control-label col-md-4" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <div class="checkbox" OnChange="javascript:enableTextBox();">
+                                @Html.EditorFor(model => model.is_breakdown)
+                                @Html.ValidationMessageFor(model => model.is_breakdown, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div><br />
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.breakdown_start_date, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.breakdown_start_date, new { htmlAttributes = new { disabled = "false", @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.breakdown_start_date, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.breakdown_end_date, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.breakdown_end_date, new { htmlAttributes = new { disabled = "false", @class = "form-control " } })
+                                @Html.ValidationMessageFor(model => model.breakdown_end_date, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.breakdown_start_time, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.breakdown_start_time, new { htmlAttributes = new { disabled = "false", @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.breakdown_start_time, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-sm-6">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.breakdown_end_time, htmlAttributes: new { @class = "control-label col-md-4" })
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.EditorFor(model => model.breakdown_end_time, new { htmlAttributes = new { disabled = "false", @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.breakdown_end_time, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <!--------------End-Tab-Panel---------------->
+    <!--------------Start Save data Button---------------->
+    <div class="row">
+        <div class="col-lg-11 col-sm-11"></div>
+        <div class="form-group">
+            <div class="col-lg-1 col-sm-1">
+                <input type="submit" value="Update" class="btn btn-success update" data-controller="Notification" data-id="@Model.notification_id" />
+            </div>
+        </div>
+    </div>
+    <!--------------End Save data Button---------------->
+</div>
+}
+<!--------------Start Back to List---------------->
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+<!--------------End Back to List---------------->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+
+        $("#operator_id").select2({
+            placeholder: "Select Operator",
+            allowClear: false
+        });
+        var details = @Html.Raw(JsonConvert.SerializeObject(ViewBag.currentstatuslist));
+        var _status_list = @Html.Raw(JsonConvert.SerializeObject(ViewBag.statuslist));
+        var _statusname = _status_list.map(x => x.Text)[0];
+        var currentstatusname = details.map(x => x.Text)[0];
+        if (currentstatusname == "Close") {
+            $('.update').hide();
+        }
+        else {
+            $('.update').show();
+        }
+        if (_statusname == "Open")
+        {
+            $("#sectionC").hide();
+            $("#sectionD").hide();
+            $('#sectionB a[href="#sectionB"]').tab('show');
+
+        }
+
+      else  if (_statusname == "Under Service")
+        {
+            $('#sectionB a[href="#sectionB"]').tab('show');
+            $("#sectionC").hide();
+            $("#sectionD").hide();
+
+            date = new Date();
+            year = date.getFullYear();
+            month = date.getMonth() + 1;
+            dt = date.getDate();
+
+            if (dt < 10) {
+                dt = '0' + dt;
+            }
+            if (month < 10) {
+                month = '0' + month;
+            }
+
+            $("#attending_date").val(year + '-' + month + '-' + dt);
+            //document.getElementById('attending_date').valueAsDate = new Date();
+            //For Date
+            $(function () {
+                var d = new Date(),
+                    h = d.getHours(),
+                    m = d.getMinutes();
+                if (h < 10) h = '0' + h;
+                if (m < 10) m = '0' + m;
+                //$('input[type="time"][value="now"]').each(function(){
+                //    $(this).attr({'value': h + ':' + m});
+                //});
+                $('#attending_time').val(h + ':' + m);
+                document.getElementById('attending_time').setAttribute('disabled', 'disabled');
+            });
+        }
+        else if (_statusname == "Malfunction Close")
+        {
+            $('#sectionC a[href="#sectionC"]').tab('show');
+            $("#notification_type").prop('disabled', true);
+            //$("#attending_date").prop('disabled', true);
+            //$("#attending_time").prop('disabled', true);
+
+            $("#sectionD").hide();
+
+            //document.getElementById('malfunction_closure_date').valueAsDate = new Date();
+            
+
+            @*var dt1 = new Date();
+            dt1.setHours(0, 0, 0, 0);
+            $("#malfunction_closure_date").val(dt1);*@
+
+            date = new Date();
+            year = date.getFullYear();
+            month = date.getMonth() + 1;
+            dt = date.getDate();
+
+            if (dt < 10) {
+                dt = '0' + dt;
+            }
+            if (month < 10) {
+                month = '0' + month;
+            }
+
+            $("#malfunction_closure_date").val(year + '-' + month + '-' + dt);
+
+            $(function () {
+                var d = new Date(),
+                    h = d.getHours(),
+                    m = d.getMinutes();
+                if (h < 10) h = '0' + h;
+                if (m < 10) m = '0' + m;
+                //$('input[type="time"][value="now"]').each(function(){
+                //    $(this).attr({'value': h + ':' + m});
+                //});
+                $('#malfunction_closure_time').val(h + ':' + m);
+                document.getElementById('malfunction_closure_time').setAttribute('disabled', 'disabled');
+            });
+        }
+        else if (_statusname == "Close")
+        {
+            $('#sectionD a[href="#sectionD"]').tab('show');
+            $("#operator_id").prop('disabled', true);
+            $("#attended_by_id").prop('disabled', true);
+            $("#notification_type").prop('disabled', true);
+
+        }
+
+
+        //End Code for Whether Breakdown Checkbox
+        var role =@Html.Raw(Json.Encode(ViewBag.role));
+
+            //$(function () {
+        //    $('[id*=attended_by_id]').multiselect({
+        //        includeSelectAllOption: false
+        //    });
+        //});
+        function getlist(){
+            if ($('#attended_by_id :selected').length > 0) {
+            var selectedCustomeCategory = [];
+            $('#attended_by_id :selected').each(function (i, selected) {
+                selectedCustomeCategory[i] = $(selected).val();
+            });
+            var cus_category = selectedCustomeCategory + "";
+            $('#attended_by').val(cus_category);
+        }
+        }
+
+        var array1 = "";
+        var customer = @Html.Raw(JsonConvert.SerializeObject(this.Model.attended_by_id));
+        var names1 = [];
+        var custlist = "";
+        if(customer != null){
+            @*var cust_list = @Html.Raw(JsonConvert.SerializeObject(ViewBag.customer_list));
+            names1 = cust_list.map(function(item) {
+                return item['Value'];
+            });
+            custlist = names.join();
+            array1 = custlist.split(',');*@
+            array1 = customer.split(',');
+            $("#attended_by_id").val(array1).trigger('change');
+            // $("#attended_by_id").multiselect('refresh');
+            $('[id*=attended_by_id]').multiselect({
+                includeSelectAllOption: false,
+                enableFiltering: true,
+                maxHeight: '200',
+                enableCaseInsensitiveFiltering: true,
+                allowClear: true,
+                maximumResultsForSearch: 1,
+                numberDisplayed: 0,
+            });
+        }
+
+        if(role =="Operator")
+        {
+            $("#sidebar-menu").css("display", "none");
+            $("#menu_toggle").trigger("click");
+            $("#menu_toggle").css("display", "none");
+            $(".site_title").click(function () { return false; });
+        }
+        $("#reviewed_by_id").select2({
+            placeholder: "Select Reviewed By",
+            allowClear: true
+        });
+        //$("#attended_by_id").select2({
+        //    placeholder: "Select Attended By",
+        //    allowClear: true
+        //});
+        //if($("#reviewed_by").val()==""){
+        //    $("#revi_id").hide();
+        //}
+        //else{
+        //    $("#revi_by_id").hide();
+        //}
+        //if($("#attended_by").val()==""){
+        //    $("#atte_by_id").hide();
+        //}
+        //else{
+        //    $("#atte_id").hide();
+        //}
+        //*****************************************************************************************
+        //$(function () {
+        //    var dtToday = new Date();
+        //    var month = dtToday.getMonth() + 1;
+        //    var day = dtToday.getDate();
+        //    var year = dtToday.getFullYear();
+        //    if (month < 10)
+        //        month = '0' + month.toString();
+        //    if (day < 10)
+        //        day = '0' + day.toString();
+
+        //    var minDate = year + '-' + month + '-' + day;
+
+        //    $('#breakdown_end_date').attr('min', minDate);
+        //});
+        //*****************************************************************************************
+        //$(function () {
+        //    var dtToday = new Date();
+        //    var month = dtToday.getMonth() + 1;
+        //    var day = dtToday.getDate();
+        //    var year = dtToday.getFullYear();
+        //    if (month < 10)
+        //        month = '0' + month.toString();
+        //    if (day < 10)
+        //        day = '0' + day.toString();
+
+        //    var minDate = year + '-' + month + '-' + day;
+
+        //    $('#breakdown_start_date').attr('max', minDate);
+        //});
+        //*****************************************************************************************
+        //$(function () {
+        //    var dtToday = new Date();
+        //    var month = dtToday.getMonth() + 1;
+        //    var day = dtToday.getDate();
+        //    var year = dtToday.getFullYear();
+        //    if (month < 10)
+        //        month = '0' + month.toString();
+        //    if (day < 10)
+        //        day = '0' + day.toString();
+
+        //    var minDate = year + '-' + month + '-' + day;
+
+        //    $('#end_date').attr('min', minDate);
+        //});
+        //*****************************************************************************************
+
+        //document.getElementById('end_date').valueAsDate = new Date();
+        //document.getElementById('breakdown_start_date').valueAsDate = new Date();
+        //document.getElementById('breakdown_end_date').valueAsDate = new Date();
+     $("#is_breakdown").checkboxpicker();
+     function enableTextBox() {
+         if (document.getElementById("is_breakdown").checked == true)
+             document.getElementById("breakdown_start_date").disabled = false,
+             document.getElementById("breakdown_end_date").disabled = false,
+             document.getElementById("breakdown_start_time").disabled = false,
+             document.getElementById("breakdown_end_time").disabled = false;
+         else
+             document.getElementById("breakdown_start_date").disabled = true,
+             document.getElementById("breakdown_end_date").disabled = true,
+             document.getElementById("breakdown_start_time").disabled = true,
+             document.getElementById("breakdown_end_time").disabled = true;
+     }
+     $(".update").click(function () {
+         $("#doc_number").prop('disabled', false);
+         $("#category_id").prop('disabled', false);
+         $("#notification_type").prop('disabled', false);
+         $("#notification_date").prop('disabled', false);
+         $("#plant_id").prop('disabled', false);
+         $("#machine_id").prop('disabled', false);
+         $("#employee_id").prop('disabled', false);
+         $("#start_date").prop('disabled', false);
+         $("#start_time").prop('disabled', false);
+         $("#breakdown_start_date").prop('disabled', false);
+         $("#breakdown_end_date").prop('disabled', false);
+         $("#breakdown_start_time").prop('disabled', false);
+         $("#breakdown_end_time").prop('disabled', false);
+
+
+         $("#attending_date").prop('disabled', false);
+         $("#attending_time").prop('disabled', false);
+         $("#malfunction_closure_date").prop('disabled', false);
+         $("#malfunction_closure_time").prop('disabled', false);
+         $("#reviewed_by_id").prop('disabled', false);
+         $("#operator_id").prop('disabled', false);
+         $("#under_taken_by_id").prop('disabled', false);
+         $("#attended_by_id").prop('disabled', false);
+
+
+
+
+     })
+
+     $(".update").click(function () {
+         $("#notification_description").prop('disabled', false);
+     })
+
+
+
+    </script>
+}   

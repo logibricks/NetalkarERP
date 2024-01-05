@@ -1,0 +1,43 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<report_plant_maintenanace>("Editing")
+                                                .Datasource(ds => ds.URL(Url.Action("GetMaintenancePlanCycleandFrequencyReport", "PlantMaintenanceReport") + "?entity=" + ViewBag.entity + "&plant_id=" + ViewBag.plant_id + "&machine_id=" + ViewBag.machine_id + "&maintenance_type_id=" + ViewBag.maintenance_type_id + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&frequency_id=" + ViewBag.frequency_id + "&status_id=" + ViewBag.status_id).Adaptor(AdaptorType.UrlAdaptor))
+                                                .AllowPaging().PageSettings(a => a.PageSize(20))
+                                                .AllowFiltering()
+                                                    .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                .ShowColumnChooser()
+                                                .AllowSorting()
+                                                .AllowScrolling()
+                                                .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "PlantMaintenanceReport", new { ctrlname = "MaintenancePlanScheduleReport" })))
+                                                .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                            .ToolbarSettings(toolbar =>
+                                            {
+                                                toolbar.ShowToolbar().ToolbarItems(items =>
+                                                {
+                                                    items.AddTool(ToolBarItems.Search);
+                                                    items.AddTool(ToolBarItems.ExcelExport);
+                                                    items.AddTool(ToolBarItems.PrintGrid);
+                                                });
+                                            })
+                                    .Columns(col =>
+                                    {
+                                        col.Field("doc_number").Width("15%").HeaderText("Document Number").Visible(false).Add();
+                                        col.Field("posting_date").Width("15%").HeaderText("Date").Format("{0:dd/MMM/yyyy}").Visible(false).Add();
+                                        col.Field("maintenance_name").Width("15%").HeaderText("Maintenance Type").Add();
+                                        col.Field("Machine").Width("15%").HeaderText("Machine").Add();
+                                        col.Field("Plant").Width("15%").HeaderText("Plant").Add();
+                                        col.Field("order_no").Width("15%").HeaderText("Order Number").Add();
+                                        col.Field("order_date").Width("15%").HeaderText("Order Date").Format("{0:dd/MMM/yyyy}").Add();
+                                        col.Field("completion_date").Width("15%").HeaderText("Schedule Date").Format("{0:dd/MMM/yyyy}").Add();
+                                        col.Field("completion_date").Width("15%").HeaderText("Completion Date").Format("{0:dd/MMM/yyyy}").Add();
+
+                                        col.Field("status").Width("15%").HeaderText("Status").Add();
+
+
+
+                                    })
+                                    .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickplan"); })
+                                    ).Render();}
+@Html.EJ().ScriptManager()
+
+

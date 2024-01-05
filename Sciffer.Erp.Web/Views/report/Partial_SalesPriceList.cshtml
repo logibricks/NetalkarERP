@@ -1,0 +1,68 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+
+
+
+@{(Html.EJ().Grid<Report_Sales_Price_List_vm>("Editing")
+                                    .Datasource((IEnumerable<object>)ViewBag.datasource)
+                                      .AllowPaging().PageSettings(a=>a.PageSize(20))
+                                      .AllowFiltering()
+                                          .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                      .ShowColumnChooser()
+                                      .AllowSorting()
+                                      .AllowScrolling()
+                                      .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelForReport", "Generic", new { ctrlname = "SalesSummaryReport" }))
+                                      .ExportToPdfAction(Url.Action("ExportToPdfForReport", "Generic", new { ctrlname = "SalesSummaryReport" })))
+                                      .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                  .ToolbarSettings(toolbar =>
+                                  {
+                                      toolbar.ShowToolbar().ToolbarItems(items =>
+                                      {
+                                          items.AddTool(ToolBarItems.Search);
+                                          items.AddTool(ToolBarItems.ExcelExport);
+                                          items.AddTool(ToolBarItems.PrintGrid);
+                                      });
+                                  })
+                          .Columns(col =>
+                          {
+                              col.Field("Customer_code").Width("10%").HeaderText("Customer code").Add();
+                              col.Field("Customer_description").Width("10%").HeaderText("Customer description").Add();
+                              col.Field("Item_Code").Width("10%").HeaderText("Item Code").Add();
+                              col.Field("Item_Description").Width("10%").HeaderText("Item Description").Visible(false).Add();
+                              col.Field("UOm").Width("10%").HeaderText("UOm").Visible(false).Add();
+                              col.Field("Original_Price").Width("10%").HeaderText("Original Price").Visible(false).Add();
+                              col.Field("Discount_value").Width("10%").HeaderText("Discount value").Visible(false).Add();
+                              col.Field("AMt_/_%").Width("10%").HeaderText("AMt / %").Visible(false).Add();
+                              col.Field("Price_After_doscount").Width("10%").HeaderText("Price After doscount").Visible(false).Add();
+                          })
+                          .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+                          ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+    @*$(function () {
+        var obj = @Html.Raw(Json.Encode(ViewBag.datasource));
+        console.log(obj);
+        $("#Editing").ejGrid({
+            dataSource: obj,
+            allowPaging: true,
+            //columns: [
+
+            //],
+            //dataBound : function(args){
+            //	for (var fld =0; fld < list.length; fld++ ) {
+            //	var column = { field: list[fld].value, headerText: list[fld].header, column: "", textAlign: "left", type: "string", visible: true, width: 75 };
+            //	this.model.columns.push(column); //add dynamic columns
+            //	}
+            //	this.columns(this.model.columns);
+            //}
+        });
+    });*@
+
+
+</script>
+

@@ -1,0 +1,451 @@
+﻿
+@model Sciffer.Erp.Domain.ViewModel.GOODS_ISSUE_VM
+@using Newtonsoft.Json
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <div id="IssueDetail"></div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.document_numbring_id, "Category *", htmlAttributes: new { Class = "control-label col-md-4 " })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="hidden" id="is_active" name="is_active" value="true" />
+                            @Html.DropDownList("document_numbring_id", (System.Web.Mvc.SelectList)ViewBag.categorylist, htmlAttributes: new { Class = "form-control removedisabled" })
+                            @Html.ValidationMessageFor(model => model.document_numbring_id, "", new { Class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.posting_date, "Posting Date *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control validinput" } })
+                            @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.plant_id, "Plant *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plantlist, "--Select--", htmlAttributes: new { @class = "form-control validinput removedisabled", @onchange = "GetStorageLocation(this.value)", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.plant_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.document_date, "Document Date *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.document_date, new { htmlAttributes = new { @class = "form-control validinput" } })
+                            @Html.ValidationMessageFor(model => model.document_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.document_code, "Issue Type", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("document_code", new List<SelectListItem>
+                                 {
+                                    new SelectListItem{ Text="Goods Issue", Value = "GI" },
+                                    new SelectListItem{ Text="Material Requisition Note", Value = "MRN" },
+                                    new SelectListItem{ Text="Plan Maintenance Order", Value = "PMO" },
+                                    new SelectListItem{ Text="Break Down Order", Value = "BRKO" }
+                                 }, new { @class = "form-control validinput"/*, @onchange = "GetDocumentList(this.value)"*/ })
+                            @Html.ValidationMessageFor(model => model.document_code, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.document_id, "Document", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("document_id", Enumerable.Empty<SelectListItem>(), "---Select---", new { @class = "form-control removedisabled", @required = true })
+                            @Html.ValidationMessageFor(model => model.document_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ref1, "Header Remarks", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.ref1, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ref1, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <input type="button" value="Select List" name="ItemList" id="ItemList" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <button type="button" id="additem" class="additem btn btn-primary" style="float:right" data-toggle="modal"><span class="glyphicon glyphicon-plus"></span>Add Item</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionB">Items Details</a></li>
+                <li><a data-toggle="tab" href="#sectionC">Information</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionB" class="tab-pane fade in active">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped modal-body" id="ContactGrid2"></table>
+                        </div>
+                    </div>
+                    <div class="row" hidden>
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="SelectedBatch">
+                                <thead>
+                                    <tr>
+                                        <th><label>Sr. No.</label></th>
+                                        <th><label>Item ID</label></th>
+                                        <th><label>Batch ID</label></th>
+                                        <th><label>Batch Name</label></th>
+                                        <th><label>Prod Issue Detail ID</label></th>
+                                        <th><label>Quantity</label></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="sectionC" class="tab-pane fade " style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.remarks, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.remarks, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                    @Html.ValidationMessageFor(model => model.remarks, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.attachment, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <input type="file" class="form-control" id="FileUpload" name="FileUpload" accept="application/pdf, image/*" />
+                                    @* @Html.EditorFor(model => model.Attachment, new { htmlAttributes = new { @class = "form-control" } })*@
+                                    @Html.ValidationMessageFor(model => model.attachment, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+<div class="modal fade" id="myModal2" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content" style="align-content:center;width:900px">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Batch Details</h4>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Item
+                        </label>
+                        <div class="col-md-8">
+                            @Html.DropDownList("batch_item_id", (System.Web.Mvc.SelectList)ViewBag.itemlist, "---Select---", new
+                           {
+                               @class = "form-control col-md-8 col-xs-12",
+                               @disabled = "disabled"
+                           })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <label class="col-sm-3">
+                        Quantity
+                    </label>
+                    <div class="col-md-8">
+                        <input type="text" id="batch_quantity" class="form-control" readonly="readonly" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="batch_grid">
+                                <thead>
+                                    <tr>
+                                        <th><label>Sr. No.</label></th>
+                                        <th hidden><label>Item ID</label></th>
+                                        <th hidden><label>Batch ID</label></th>
+                                        <th><label>Batch</label></th>
+                                        <th hidden><label>Prod Issue Detail ID</label></th>
+                                        <th><label>Quantity</label></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="text" id="batchTotalQty" readonly="readonly" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="AddBatchGridModal btn btn-primary" disabled="disabled">Add</button>
+                <input type="hidden" id="data-index-hidden" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+    table.dataTable {
+        clear: both;
+        margin-bottom: -1px !important;
+    }
+</style>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        var documentCode = $("#document_code").val();
+        var plant_id = $("#plant_id").val();
+        var document_id = @Html.Raw(JsonConvert.SerializeObject(this.Model.document_id));
+        console.log(document_id);
+        if(document_id==''){
+            document_id = 0 ;
+        }
+        
+        if(documentCode!="0"){
+            $.ajax({
+                type: 'GET',
+                url: '@Url.Action("GetDocumentListinGI", "Generic")',
+                data: { document_code : documentCode , plant_id : plant_id},
+                success: function (ITEM) {
+                    console.log(ITEM);
+                    $("#document_id").html(""); // clear before appending new list
+                    $("#document_id").append($('<option></option>').val('0').html("---Select---"));
+                    $.each(ITEM, function (i, cycle) {
+                        $("#document_id").append(
+                        $('<option></option>').val(cycle.document_id).html(cycle.document_list));                            
+                    });
+                    $("#document_id").val(document_id);
+                }
+            });
+        }
+
+        $('#SelectedBatch').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                    { sname: "sr_no", bVisible: true },
+                    { sname: "item_id", bVisible: true },
+                    { sname: "batch_id", bVisible: true },
+                    { sname: "batch_no", bVisible: true },
+                    { sname: "issue_detail_id" },
+                    { sname: "quantity", bVisible: true },
+
+            ],
+            "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                $("td:first", nRow).html(iDisplayIndex + 1);
+                return nRow;
+            },
+        });
+
+        $('#batch_grid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                    { sname: "sr_no", bVisible: true },
+                    { sname: "item_id", bVisible: false },
+                    { sname: "batch_id", bVisible: false },
+                    { sname: "batch_no", bVisible: true },
+                    { sname: "issue_detail_id", bVisible: false  },
+                    { sname: "quantity", bVisible: true },
+
+            ],
+            "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                $("td:first", nRow).html(iDisplayIndex + 1);
+                return nRow;
+            },
+        });
+
+        $(document).ready(function(){
+
+            var nontag_details = @Html.Raw(JsonConvert.SerializeObject(this.Model));
+            var prod_issue_detail = nontag_details.goods_issue_detail;
+
+            //var prod_issue_batch_quantity = prod_issue_detail.prod_issue_batch_quantity;
+            var s1 = $("#SelectedBatch").DataTable();
+
+            $.each(prod_issue_detail, function (i, cycle1) {
+                $.each(cycle1.goods_issue_batch, function (j, cycle) {
+                    console.log(cycle1.goods_issue_batch);
+                    s1.fnAddData([j+1, cycle.item_id, cycle.batch_id, cycle.inv_item_batch.batch_number,cycle.goods_issue_detail_id,cycle.quantity]);
+                })
+            })
+
+            $('#ContactGrid2').DataTable({
+                bFilter: false, bInfo: false,
+                "bPaginate": false,
+                "ordering": false,
+                "bfooter": false,
+                bSortable: false,
+                "info": false,
+                "sScrollY": "200px",
+                "aaData": prod_issue_detail,
+                "bAutoWidth": false,
+                "columns": [
+                         { "data": "", sWidth: "5%", "title": "Sr No.", "defaultContent": "", "bSortable": true, "bVisible":true },
+                         { "data": "goods_issue_detail_id", sWidth: "5%", "title": "Prod Issue Detail ID", "defaultContent": "", "bSortable": true,"bVisible":false },
+                         { "data": "item_id", sWidth: "5%", "title": "Item ID", "defaultContent": "", "bSortable": true,"bVisible":false },
+                         { "data": "REF_ITEM.ITEM_CODE", sWidth: "5%", "title": "Item Name", "defaultContent": "", "bSortable": true },
+                         { "data": "uom_id", sWidth: "5%", "title": "UoM ID", "defaultContent": "", "bSortable": true,"bVisible":false  },
+                         { "data": "REF_UOM.UOM_NAME", sWidth: "5%", "title": "UoM", "defaultContent": "", "bSortable": true },
+                         { "data": "sloc_id", sWidth: "5%", "title": "SLoc ID", "defaultContent": "", "bSortable": true,"bVisible":false  },
+                         { "data": "REF_STORAGE_LOCATION.storage_location_name", sWidth: "5%", "title": "SLoc", "defaultContent": "", "bSortable": true },
+                         { "data": "bucket_id", sWidth: "5%", "title": "Bucket ID", "defaultContent": "", "bSortable": true,"bVisible":false  },
+                         { "data": "ref_bucket.bucket_name", sWidth: "5%", "title": "Bucket", "defaultContent": "", "bSortable": true },
+                         { "data": "rate", sWidth: "5%", "title": "Rate", "defaultContent": "", "bSortable": true , sClass:"right"},
+                         { "data": "document_detail_id", sWidth: "5%", "title": "Sub Prod Order ID", "defaultContent": "", "bSortable": true,"bVisible":false  },
+                         { "data": "quantity", sWidth: "5%", "title": "Quantity", "defaultContent": "", "bSortable": true, sClass:"right" },
+                         { "data": "value", sWidth: "5%", "title": "Value", "defaultContent": "", "bSortable": true , sClass:"right"},
+                         {sname: "y", sWidth: "8%","defaultContent": "","title": "Action" }
+                ],
+
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    $("td:first", nRow).html(iDisplayIndex + 1);
+                    $("td:last", nRow).html('<img class="batchgrid" value='+iDisplayIndex+' onclick="batchgrid('+iDisplayIndex+');" src="../images/writing_file.png" id="batch'+iDisplayIndex+'" data-index='+iDisplayIndex+' height="20px" width="25px" alt="Batch" />');
+                    return nRow;
+                },
+            });
+        });
+
+        function batchgrid(index){
+            var t = $('#ContactGrid2').DataTable()
+            var rowCount1 = t.fnGetData().length;
+
+            var s1 = $('#SelectedBatch').DataTable();
+            var batchRowCount = s1.fnGetData().length;
+            var t1 = $('#batch_grid').DataTable();
+            t1.fnClearTable();
+            clearModel();
+            $('#myModal2').modal('show');
+
+            var sloc_id = t.fnGetData(index,6);
+            var item_id  = t.fnGetData(index,2);
+            $("#batch_quantity").val(t.fnGetData(index,12));
+            $("#sloc_1").val(sloc_id);
+            $("#batch_item_id").val(item_id);
+
+
+            id1 = t.fnGetData(index,1);
+
+            for(var i = 0; i < batchRowCount; i++)
+            {
+                id = s1.fnGetData(i)[4];
+                if(id == id1)
+                {
+                    t1.fnAddData([i + 1,s1.fnGetData(i)[1],s1.fnGetData(i)[2],s1.fnGetData(i)[3] ,s1.fnGetData(i)[4],s1.fnGetData(i)[5]]);
+
+                    qty = s1.fnGetData(i, 5);
+
+                    var z = $("#batchTotalQty").val();
+                    if(z == ""){
+                        z = 0;
+                    }
+                    $("#batchTotalQty").val(parseFloat(z) + parseFloat(qty));
+                }
+            }
+
+        }
+        function clearModel()
+        {
+            $("#batchTotalQty").val('');
+            $("#data-index-hidden").val('');
+            $("#batch_quantity").val('');
+        }
+
+        $('#ContactGrid').on('click', '.delete', function () {
+            var t = $('#ContactGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            var deleteids = t.fnGetData(id)[1];
+            swal({
+                title: "Are you sure?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            },
+             function (isConfirm) {
+                 if (isConfirm) {
+                     t.fnDeleteRow(id);
+                     var len = t.fnGetData().length;
+                     var i = 1;
+                     var row = 0;
+                     if (len > 0) {
+                         $('#ContactGrid tbody tr').each(function () {
+                             t.fnUpdate(i, row, 1);
+                             i++;
+                             row++;
+                         });
+                     }
+                 }
+             });
+        });
+        
+        $("#form0 :input").prop("disabled", true);
+    </script>
+}

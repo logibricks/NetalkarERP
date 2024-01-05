@@ -1,0 +1,280 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_incoming_excise
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>ref_incoming_excise</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_BUSINESS_UNIT.BUSINESS_UNIT_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_BUSINESS_UNIT.BUSINESS_UNIT_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_CATEGORY.CATEGORY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_CATEGORY.CATEGORY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_CURRENCY_gross.CURRENCY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_CURRENCY_gross.CURRENCY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_CURRENCY_net.CURRENCY_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_CURRENCY_net.CURRENCY_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_FREIGHT_TERMS.FREIGHT_TERMS_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_FREIGHT_TERMS.FREIGHT_TERMS_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_PAYMENT_CYCLE.PAYMENT_CYCLE_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_PAYMENT_CYCLE.PAYMENT_CYCLE_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_PAYMENT_TERMS.payment_terms_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_PAYMENT_TERMS.payment_terms_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_PLANT.PLANT_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_PLANT.PLANT_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_STATE.STATE_NAME)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_STATE.STATE_NAME)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.REF_VENDOR.VENDOR_CODE)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.REF_VENDOR.VENDOR_CODE)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.incoming_excise_number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.incoming_excise_number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.incoming_excise_posting_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.incoming_excise_posting_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.excise_ref_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.excise_ref_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.excise_ref_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.excise_ref_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.delivery_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.delivery_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.vendor_doc_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.vendor_doc_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.vendor_doc_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.vendor_doc_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.gate_entry_number)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.gate_entry_number)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.gate_entry_date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.gate_entry_date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.created_by)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.created_by)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.billing_address)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.billing_address)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.billing_city)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.billing_city)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.billing_pin_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.billing_pin_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_active)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.grn_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.grn_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.incoming_excise_net_value)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.incoming_excise_net_value)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.incoming_excise_gross_value)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.incoming_excise_gross_value)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.pan_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.pan_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ecc_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ecc_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.vat_tin_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.vat_tin_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.cst_tin_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.cst_tin_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.service_tax_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.service_tax_no)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

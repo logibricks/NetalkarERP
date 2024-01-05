@@ -1,0 +1,36 @@
+﻿
+@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<accounts_report_vm>("Editing")
+                          .Datasource((IEnumerable<object>)ViewBag.datasource)
+                         .Datasource(ds => ds.URL(Url.Action("GetAccountsData", "AccountsReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date
+                         ).Adaptor(AdaptorType.UrlAdaptor))
+                         .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "AccountsReport", new { ctrlname = "BalanceSheet" })))
+                        .AllowPaging()
+                          .AllowFiltering()
+                          .FilterSettings(X => X.FilterType(FilterType.Excel))
+                          .ShowColumnChooser()
+                          .AllowSorting()
+                          .AllowScrolling()
+
+                                  .ToolbarSettings(toolbar =>
+                                  {
+                                      toolbar.ShowToolbar().ToolbarItems(items =>
+                                      {
+                                          items.AddTool(ToolBarItems.Search);
+                                          items.AddTool(ToolBarItems.ExcelExport);
+                                          items.AddTool(ToolBarItems.PrintGrid);
+                                      });
+                                  })
+                          .Columns(col =>
+                          {
+                              col.Field("description").Width("15%").HeaderText("Particulars").Add();
+                              col.Field("gl_ledger_code").Width("15%").HeaderText("GL Code").Add();
+                              col.Field("gl_ledger_name").Width("15%").HeaderText("GL Description").Add();
+                              col.Field("total").Width("15%").HeaderText("Amount Rs").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                          })
+                          .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicka"); })
+                                                                              ).Render();}
+@Html.EJ().ScriptManager()
+
+

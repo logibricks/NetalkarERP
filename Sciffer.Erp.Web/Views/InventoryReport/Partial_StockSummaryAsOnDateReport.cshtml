@@ -1,0 +1,40 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+@{(Html.EJ().Grid<report_inventory_vm>("Editing")
+
+                    .Datasource(ds => ds.URL(Url.Action("GetInventoryReport", "InventoryReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&item_id=" + ViewBag.item_id + "&plant_id=" + ViewBag.plant_id + "&reason_code_id=" + ViewBag.reason_code_id).Adaptor(AdaptorType.UrlAdaptor))
+                    .AllowPaging().PageSettings(a => a.PageSize(20))
+                    .AllowFiltering()
+                        .FilterSettings(X => X.FilterType(FilterType.Excel))
+                    .ShowColumnChooser()
+                    .AllowSorting()
+                    .AllowScrolling()
+                    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "InventoryReport", new { ctrlname = "StockSummaryAsOnDateReport" })))
+                    .ToolbarSettings(toolbar =>
+                    {
+                        toolbar.ShowToolbar().ToolbarItems(items =>
+                        {
+                            items.AddTool(ToolBarItems.Search);
+                            items.AddTool(ToolBarItems.ExcelExport);
+                            items.AddTool(ToolBarItems.PrintGrid);
+                        });
+                    })
+        .Columns(col =>
+        {
+            col.Field("item_code").Width("15%").HeaderText("Item Code").Add();
+            col.Field("item_name").Width("15%").HeaderText("Item Name").Add();
+            col.Field("item_category_name").Width("15%").HeaderText("Item Category").Add();
+            col.Field("plant_name").Width("15%").HeaderText("Plant Name").Add();
+            col.Field("storage_location_name").Width("15%").HeaderText("Sloc").Visible(ViewBag.reason_code_id == "2" ? false : true).Add();
+            col.Field("bucket_name").Width("15%").HeaderText("Bucket").Visible(ViewBag.reason_code_id == "2" ? false : true).Add();
+            col.Field("quantity").Width("15%").HeaderText("Balance Quantity").TextAlign(TextAlign.Right).Add();
+            col.Field("item_value").Width("15%").HeaderText("Rate").TextAlign(TextAlign.Right).Add();
+            col.Field("itm_value").Width("15%").HeaderText("Value").TextAlign(TextAlign.Right).Add();
+            col.Field("rack_no").Width("15%").HeaderText("Rack No").TextAlign(TextAlign.Right).Add();
+
+        })
+        .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicki"); })).Render();}
+@Html.EJ().ScriptManager()
+
+

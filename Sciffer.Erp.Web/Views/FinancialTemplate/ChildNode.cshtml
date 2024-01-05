@@ -1,0 +1,16 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.ViewModel.TreeView_Node_VM>
+
+@foreach (var treeNode in Model)
+{
+    <ul class="list-group-item">
+        <li class="" id="@treeNode.template_detail_id" >
+            <div id="@treeNode.template_detail_id">@treeNode.NodeName</div>
+        </li>
+        @if (treeNode.ChildNode.Count > 0)
+        {
+        @*<ul class="list-group-item">*@
+            @Html.Partial("ChildNode", treeNode.ChildNode)
+        @*</ul>*@
+        }
+    </ul>
+}

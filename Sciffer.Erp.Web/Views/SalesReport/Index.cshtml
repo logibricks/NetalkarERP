@@ -1,0 +1,426 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<input type="search" class="search form-control" placeholder="Search Sales Report" id="s" style="width:340px;">
+<br />
+<div id="hide">
+    <div class="row display-flex">
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;">
+                    Sales Summary Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides summary of sales grouped at customer level</p>
+                </div>
+                <a href="@Url.Action("salessummaryreport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;">
+                    Sales Header Level Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides header level details of Invoices alongwith SO Number</p>
+                </div>
+                <a href="@Url.Action("salesheaderlevelreport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;">
+                    Sales Item Detailed Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides line item level details of Invoices along with tax details</p>
+                </div>
+                <a href="@Url.Action("salesdetaillevelreport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color: #337ab7;color: #fff;">
+                    Sales Order Summary Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides summary of Sales Orders created along with taxes</p>
+                </div>
+                <a href="@Url.Action("salesordersummaryreport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;">
+                    Sales Order Header Level Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides header level data for Sales Order including details of Quotation, Payment Terms, Freight Terms, Net Value, taxes, etc.</p>
+                </div>
+                <a href="@Url.Action("salesorderheaderlevelreport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;">
+                    Sales Order detail Level Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides item level details of Sales Order including item details, quantity, rates, taxes etc.</p>
+                </div>
+                <a href="@Url.Action("salesorderdetaillevelreport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;">
+                    Sales Quotation Summary Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides summary of Sales Quotations grouped at customer level</p>
+                </div>
+                <a href="@Url.Action("salesquotationsummaryreport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color: #337ab7; color: #fff;">
+                    Sales Quotation Header Level Report
+                </div>
+                <div class="panel-body"> 
+                    <p>Provides header level details of Quotation alongwith RFQ Number</p>
+                </div>
+                <a href="@Url.Action("salesquotationheaderlevelreport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;">
+                    Sales Quotation Detailed Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides line item level details of Quotation along with taxes</p>
+                </div>
+                <a href="@Url.Action("salesquotationdetaillevelreport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;">
+                    Collections Expected Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides details of Receipts expected from customers</p>
+                </div>
+                <a href="@Url.Action("collectionsexpectedreport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;">
+                    Open Sales Order Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides list of Open Sales Orders pending for Sales Invoices</p>
+                </div>
+                <a href="@Url.Action("opensalesorderreport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color: #337ab7;color: #fff;">
+                    Customer Contact Details Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides contact details of customer</p>
+                </div>
+                <a href="@Url.Action("CustomerContactDetailsReport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;">
+                    Customer Payment Master List Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides details of Payment Terms and Payment Cycle for customers</p>
+                </div>
+                <a href="@Url.Action("CustomerPaymentMasterListReport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;">
+                    Customer Master Discount Details Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides details of overall discount and item group wise discount defined in Customer Masters</p>
+                </div>
+                <a href="@Url.Action("customermasterdiscountdetailsreport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;">
+                    Sales Price List Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides sales price list alongwith discount value/ percentage </p>
+                </div>
+                <a href="@Url.Action("SalesPriceListReport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color: #337ab7;color: #fff;">
+                    Sales Order Item wise Plan Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides Invoice quantity, balance quantity and current stock for Sales Order</p>
+                </div>
+                <a href="@Url.Action("salesorderitemwiseplanreport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;">
+                    Item Wise Sales Summary Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides item wise sales summary per plant along with weighted average rate</p>
+                </div>
+                <a href="@Url.Action("ItemWiseSalesSummaryReport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;">
+                    Item Wise Sales Detail Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides item wise sales along with Invoice Number </p>
+                </div>
+                <a href="@Url.Action("ItemWiseSalesDetailReport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;">
+                    Sales Order Qty Tracker Report
+                </div>
+                <div class="panel-body">
+                    <p>Provide track details from Sales Quotation to Sales Order to Sales invoice</p>
+                </div>
+                <a href="@Url.Action("salesorderqtytrackerreport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color: #337ab7;color: #fff;">
+                    Forex Sales
+                </div>
+                <div class="panel-body">
+                    <p>Provides details of Invoices in foreign currency ( exlcudes Invoices to foreign customers in local currency)</p>
+                </div>
+                <a href="@Url.Action("ForexSales", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;">
+                    Sales Return Summary Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides summary of sales grouped at customer level</p>
+                </div>
+                <a href="@Url.Action("salesreturnsummaryreport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;">
+                    Sales Return Header Level Report
+                </div>
+                <div class="panel-body">
+                    <p>Provides header level details of Invoices alongwith SO Number</p>
+                </div>
+                <a href="@Url.Action("salesreturnheaderlevelreport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;">
+                    Sales Return Detail Report
+                </div>
+                <div class="panel-body">
+                    <p>Provide track details from Sales Quotation to Sales Order to Sales invoice</p>
+                </div>
+                <a href="@Url.Action("salesreturndetaillevelreport", "salesreport")" target="_blank">
+                    <div class="panel-footer">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3" style="display: flex;">
+            <div class="panel panel-green" style="border-color:#337ab7 ;">
+                <div class="name panel-heading" style="background-color: #337ab7;color: #fff;">
+                    Challan Wise Sales Report
+                </div>
+                <div class="panel-body">
+                    <p>Challan Wise Sales Report</p>
+                </div>
+                <a href="@Url.Action("ChallanWiseSalesReport", "salesreport")" target="_blank">
+                        <div class="panel-footer">
+                            Run Report
+                        </div>
+                    </a>
+</div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/requirevalidation.js"></script>
+<script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+            $(document).ready(function () {
+                $("#s").on("keyup click input", function () {
+                    if (this.value.length > 0) {
+                        $(".col-lg-3").show().filter(function () {
+                            return $(this).find('.name').text().toLowerCase().indexOf($("#s").val().toLowerCase()) == -1;
+                        }).hide();
+                    }
+                    else {
+                        $(".col-lg-3").show();
+                    }
+                });
+
+            });
+    </script>
+    <style>
+        .row.display-flex {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+            .row.display-flex > [class*='col-'] {
+                display: flex;
+                flex-direction: column;
+            }
+
+        .panel {
+            height: 100%;
+            width: 100%;
+        }
+
+        .name {
+            font-size: 15px;
+            background-color: #5cb85c;
+            color: #fff;
+        }
+
+        .panel-body {
+            height: 70px;
+        }
+
+        p {
+            font-size: 13px;
+        }
+
+        .panel-footer {
+            font-size: 15px;
+            color: #000;
+            height: 40px;
+        }
+    </style>
+}

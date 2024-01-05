@@ -1,0 +1,33 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<accounts_report_vm>("Editing")
+
+               .Datasource(ds => ds.URL(Url.Action("GetAccountsData", "AccountsReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&entity_type_id=" + ViewBag.entity_type_id + "&entity_id=" + ViewBag.entity_id+ "&priority_id=" + ViewBag.priority_id).Adaptor(AdaptorType.UrlAdaptor))
+               .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "AccountsReport", new { ctrlname = "AccountsReport" })))
+
+                .AllowPaging().PageSettings(a => a.PageSize(30))
+                .AllowFiltering()
+                .FilterSettings(X => X.FilterType(FilterType.Excel))
+                .ShowColumnChooser()
+                .AllowSorting()
+                .AllowScrolling()
+
+                        .ToolbarSettings(toolbar =>
+                        {
+                            toolbar.ShowToolbar().ToolbarItems(items =>
+                            {
+                                items.AddTool(ToolBarItems.Search);
+                                items.AddTool(ToolBarItems.ExcelExport);
+                                items.AddTool(ToolBarItems.PrintGrid);
+                            });
+                        })
+                .Columns(col =>
+                {
+
+                    col.Field("description").Width("15%").HeaderText("Particulars").Add();
+                    col.Field("gl_ledger_code").Width("15%").HeaderText("GL Code").Add();
+                    col.Field("gl_ledger_name").Width("15%").HeaderText("GL Description").Add();
+                    col.Field("total").Width("15%").HeaderText("Amount Rs").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                })
+               .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicka"); })).Render();}
+@Html.EJ().ScriptManager()

@@ -1,0 +1,48 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+
+
+
+@{(Html.EJ().Grid<Report_InventoryCostingReport_vm>("Editing")
+                    .Datasource((IEnumerable<object>)ViewBag.datasource)
+                    .AllowFiltering()
+                        .FilterSettings(X => X.FilterType(FilterType.Excel))
+                    .ShowColumnChooser()
+                    .AllowSorting()
+                    .AllowScrolling()
+                    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelForReport", "Generic", new { ctrlname = "InventoryCosting" }))
+                    .ExportToPdfAction(Url.Action("ExportToPdfForReport", "Generic", new { ctrlname = "InventoryCosting" })))
+                   .ScrollSettings(scroll => { scroll.Width("100%").Height("50%"); })
+
+                .ToolbarSettings(toolbar =>
+                {
+                    toolbar.ShowToolbar().ToolbarItems(items =>
+                    {
+                        items.AddTool(ToolBarItems.Search);
+                        items.AddTool(ToolBarItems.ExcelExport);
+                        items.AddTool(ToolBarItems.PrintGrid);
+                    });
+                })
+        .Columns(col =>
+        {
+            col.Field("item_code").Width("10%").HeaderText("Item Code").Add();
+            col.Field("ITEM_NAME").Width("10%").HeaderText("Item Description").Add();
+            col.Field("PLANT_CODE").Width("10%").HeaderText("Plant Code").Add();
+            col.Field("PLANT_NAME").Width("10%").HeaderText("Plant Description").Add();
+            col.Field("UOM_NAME").Width("10%").HeaderText("UoM").Add();
+            col.Field("costing_method").Width("10%").HeaderText("Costing Method").Add();
+            col.Field("rate").Width("10%").HeaderText("Rate").Format("{0:n2}").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+
+        })
+        .ClientSideEvents(eve => { eve.ActionComplete("complete").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess"); })
+        ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+
+</script>
+
+
+

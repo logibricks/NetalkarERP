@@ -1,0 +1,333 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<input type="search" class="search form-control" placeholder="Search Sales Report" id="s" style="width:350px;">
+<br />
+<div id="hide">
+    <div class="row display-flex">
+
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;">
+                    AR Ageing Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provides Ageing details for customer with pre-defined intervals of 0-30,31-60,61-90 and so on</p>
+                </div>
+                <a href="@Url.Action("ARAgeingReport", "AccountsReport")" target="_blank">
+                    <div class="panel-footer" style="color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;">
+                    AP Ageing Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provides Ageing details for vendor with pre-defined intervals of 0-30,31-60,61-90 and so on</p>
+                </div>
+                <a href="@Url.Action("APAgeingReport", "AccountsReport")" target="_blank">
+                    <div class="panel-footer" style="color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;">
+                    Sales Contribution Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provides contribution earned per sale item as per cost defined in the item master</p>
+                </div>
+                <a href="@Url.Action("salescontributionreport", "AccountsReport")" target="_blank">
+                    <div class="panel-footer" style="color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color: #337ab7;color: #fff;">
+                    Trial Balance Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;"> Provides General Ledger Trial Balance for a particluar period</p>
+                </div>
+                <a href="@Url.Action("trialbalancereport", "AccountsReport")" target="_blank">
+                    <div class="panel-footer" style="color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+
+
+        @*<div class="col-lg-3">
+                <div class="panel panel-green" style="border-color: #5cb85c;">
+                    <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;font-size:18px;">
+                        General Ledger Report
+                    </div>
+                    <div class="panel-body">
+                        <p style="font-size:15px;">General Ledger Report</p>
+                    </div>
+                    <a href="@Url.Action("generalledgerreport", "report")" target="_blank">
+                        <div class="panel-footer" style="font-size:20px; color:#000;">
+                            Run Report
+                        </div>
+                    </a>
+                </div>
+            </div>*@
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;">
+                    Employee Ledger Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provides details of ledger entries of a particular employee for a selected period</p>
+                </div>
+                <a href="@Url.Action("EmployeeLedgerReport", "AccountsReport")" target="_blank">
+                    <div class="panel-footer" style="color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;">
+                    General Ledger Details Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provides details of ledger of entries of a particular General Ledger for a selected period</p>
+                </div>
+                <a href="@Url.Action("generalledgerdetailsreport", "AccountsReport")" target="_blank">
+                    <div class="panel-footer" style="color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f; color: #fff;">
+                    Customer Ledger Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provides details of ledger entries of a particular customer for a selected period</p>
+                </div>
+                <a href="@Url.Action("CustomerLedgerReport", "AccountsReport")" target="_blank">
+                    <div class="panel-footer" style="color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color: #337ab7;color: #fff;">
+                    Vendor Ledger Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provides details of ledger entries of a particular vendor for a selected period</p>
+                </div>
+                <a href="@Url.Action("VendorLedgerReport", "AccountsReport")" target="_blank">
+                    <div class="panel-footer" style="color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;">
+                    Vendor Trial alance Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provides Vendor wise Trial Balance for a particluar period </p>
+                </div>
+                <a href="@Url.Action("VendorTrialBalanceReport", "AccountsReport")" target="_blank">
+                    <div class="panel-footer" style="color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;">
+                    TDS Payable Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provided details of entries where TDS has been dedcucted for vendors</p>
+                </div>
+                <a href="@Url.Action("TDSPayableReport", "AccountsReport")" target="_blank">
+                    <div class="panel-footer" style="color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f; color: #fff;">
+                    Profit & Loss Account
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provides Profit & Loss Account for a particluar period </p>
+                </div>
+                <a href="@Url.Action("PNLReport", "AccountsReport")" target="_blank">
+                    <div class="panel-footer" style="color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #337ab7;">
+                <div class="name panel-heading" style="background-color: #337ab7;color: #fff;">
+                    Customer Trial Balance Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provides Customer wise Trial Balance for a particluar period </p>
+                </div>
+                <a href="@Url.Action("CustomerTrialBalanceReport", "AccountsReport")" target="_blank">
+                    <div class="panel-footer" style="color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;">
+                    Balance Sheet
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provides Balance Sheet as on a particular date </p>
+                </div>
+                <a href="@Url.Action("Balancesheet", "AccountsReport")" target="_blank">
+                    <div class="panel-footer" style="color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;">
+                    Employee Trial Balance Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provides Employee wise trial balance for aparticluar period </p>
+                </div>
+                <a href="@Url.Action("EmployeeTrialBalanceReport", "AccountsReport")" target="_blank">
+                    <div class="panel-footer" style=" color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #d9534f; color: #fff;">
+                    TDS Receivable Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provided details of entries where TDS has been dedcucted by customers </p>
+                </div>
+                <a href="@Url.Action("TDSReceivableReport", "AccountsReport")" target="_blank">
+                    <div class="panel-footer" style="color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #337ab7;color: #fff;">
+                    Template GL Mapping
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provided details of Template GL Mapping </p>
+                </div>
+                <a href="@Url.Action("TemplateGlMapping", "AccountsReport")" target="_blank">
+                    <div class="panel-footer" style="color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/requirevalidation.js"></script>
+<script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+            $(document).ready(function () {
+                $("#s").on("keyup click input", function () {
+                    if (this.value.length > 0) {
+                        $(".col-lg-3").show().filter(function () {
+                            return $(this).find('.name').text().toLowerCase().indexOf($("#s").val().toLowerCase()) == -1;
+                        }).hide();
+                    }
+                    else {
+                        $(".col-lg-3").show();
+                    }
+                });
+
+            });
+    </script>
+    <style>
+        .row.display-flex {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+            .row.display-flex > [class*='col-'] {
+                display: flex;
+                flex-direction: column;
+            }
+
+        .panel {
+            height: 100%;
+            width: 100%;
+        }
+
+        .name {
+            font-size: 15px;
+            background-color: #5cb85c;
+            color: #fff;
+        }
+
+        .panel-heading {
+            height: 38px;
+        }
+
+        .panel-body {
+            height: 90px;
+        }
+
+        p {
+            font-size: 13px;
+        }
+
+        .panel-footer {
+            font-size: 15px;
+            color: #000;
+            height: 40px;
+        }
+    </style>
+
+
+}

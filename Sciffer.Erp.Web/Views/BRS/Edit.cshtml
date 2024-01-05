@@ -1,0 +1,431 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.fin_bank_reco_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div id="brs_detail" hidden></div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.document_list, new { @class = "form-control validinput", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.EditorFor(model => model.document_no, new { htmlAttributes = new { @class = "form-control  validinput", @required = true, @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.document_no, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.posting_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control  validinput", @required = true, @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.bank_account_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("bank_account_id", (System.Web.Mvc.SelectList)ViewBag.bank_list, "---Select---", htmlAttributes: new { @class = "form-control validinput", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.bank_account_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.reco_start_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.reco_start_date, new { htmlAttributes = new { @class = "form-control  validinput", @required = true, @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.reco_start_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.reco_end_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.reco_end_date, new { htmlAttributes = new { @class = "form-control  validinput", @required = true, @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.reco_end_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.user_closing_bal, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-5 col-sm-5 col-xs-12">
+                            @Html.EditorFor(model => model.user_closing_bal, new { htmlAttributes = new { @class = "form-control right validinput", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.user_closing_bal, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            @Html.DropDownList("currency_id", (System.Web.Mvc.SelectList)ViewBag.currency_list, htmlAttributes: new { @class = "form-control", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.currency_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>             
+            </div>
+        </div>
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">Payments</a></li>
+                <li><a data-toggle="tab" href="#sectionB">Receipts</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                                <thead>
+                                    <tr>
+                                        <th><label>ID</label></th>
+                                        <th><input type="checkbox" name="select_all" value="1" id="example-select-all"></th>
+                                        <th><label>Sr.No.</label></th>
+                                        <th><label>Doc Category ID</label></th>
+                                        <th><label>Doc Category</label></th>
+                                        <th><label>Doc No</label></th>
+                                        <th><label>Posting Date</label></th>
+                                        <th><label>Entity Type ID</label></th>
+                                        <th><label>Entity Type</label></th>
+                                        <th><label>Entity ID</label></th>
+                                        <th><label>Entity Code</label></th>
+                                        <th><label>Entity Name</label></th>
+                                        <th><label>Bank Date</label></th>
+                                        <th><label>Amount</label></th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th><label>Total</label></th>
+                                        <th><label class="pay_total"></label></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionB" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid1">
+                                <thead>
+                                    <tr>
+                                        <th><label>ID</label></th>
+                                        <th><input type="checkbox" name="select_all1" value="1" id="example-select-all1"></th>
+                                        <th><label>Sr.No.</label></th>
+                                        <th><label>Doc Category ID</label></th>
+                                        <th><label>Doc Category</label></th>
+                                        <th><label>Doc No</label></th>
+                                        <th><label>Posting Date</label></th>
+                                        <th><label>Entity Type ID</label></th>
+                                        <th><label>Entity Type</label></th>
+                                        <th><label>Entity ID</label></th>
+                                        <th><label>Entity Code</label></th>
+                                        <th><label>Entity Name</label></th>
+                                        <th><label>Bank Date</label></th>
+                                        <th><label>Amount</label></th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th><label>Total</label></th>
+                                        <th><label class="rec_total"></label></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" hidden>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.payment_total, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.payment_total, new { htmlAttributes = new { @class = "form-control right  validinput  removedisabled", @required = true, @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.payment_total, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.receipt_total, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.receipt_total, new { htmlAttributes = new { @class = "form-control right validinput  removedisabled", @required = true, @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.receipt_total, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ledger_closing_bal, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.ledger_closing_bal, new { htmlAttributes = new { @class = "form-control right  removedisabled", @required = true, @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.ledger_closing_bal, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.payment_not_sel_total, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.payment_not_sel_total, new { htmlAttributes = new { @class = "form-control right  removedisabled", @required = true, @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.payment_not_sel_total, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.receipt_not_sel_total, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.receipt_not_sel_total, new { htmlAttributes = new { @class = "form-control right  removedisabled", @required = true, @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.receipt_not_sel_total, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    <label for="" class="control-label col-md-4 col-sm-4 col-xs-12">Derived Bank Statment Balance </label>
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        <input type="text" id="derived_bank_statement_balance" name="derived_bank_statement_balance" class="form-control right removedisabled" disabled />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.derived_closing_bal, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.derived_closing_bal, new { htmlAttributes = new { @class = "form-control right  removedisabled", @required = true, @disabled = "disabled" } })
+                        @Html.ValidationMessageFor(model => model.derived_closing_bal, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-sm-6">
+
+            </div>
+            <div class="col-lg-6 col-sm-6">
+                <div class="form-group">
+                    <label for="" class="control-label col-md-4 col-sm-4 col-xs-12">Difference</label>
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        <input type="text" id="difference_amount" name="difference_amount" class="form-control right difference_amount removedisabled" disabled />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var brs_detail = @Html.Raw(JsonConvert.SerializeObject(this.Model));  
+            $("#derived_bank_statement_balance").val(brs_detail.user_closing_bal);
+            var a = $("#ledger_closing_bal").val();
+            var b = $("#payment_not_sel_total").val();
+            var c = $("#receipt_not_sel_total").val();
+            $("#derived_bank_statement_balance").val(parseFloat(parseFloat(a == "" ? 0 : a) + parseFloat(b == "" ? 0 : b) - parseFloat(c == "" ? 0 : c)).toFixed(2));
+            var d = $("#derived_bank_statement_balance").val();
+            var e = $("#derived_closing_bal").val();
+            $("#difference_amount").val(parseFloat(parseFloat(d == "" ? 0 : d) - parseFloat(e == "" ? 0 : e)).toFixed(2));
+
+            var t1 = $('#ContactGrid').DataTable();
+            var t2 = $('#ContactGrid1').DataTable();
+            t1.fnClearTable();
+            t2.fnClearTable();
+            var i = 1;
+            var j = 1;
+            var tot=0;
+            var tot1=0;
+
+            $.each(brs_detail.fin_bank_payment_receipt_reco_vm, function(key, cycle) {
+                var input = cycle.payment_date;
+                var output = input.substring(0, 10);
+                var input1 = cycle.bank_tran_date;
+                var output1 = input1.substring(0, 10);
+                if(cycle.in_out==2)
+                {
+                    t1.fnAddData([cycle.fin_ledger_payment_detail_id, '', i, cycle.category_id, cycle.category, cycle.document_no, output,
+                                    cycle.entity_type_id, cycle.entity_type_name, cycle.entity_id, cycle.entity_code, cycle.entity_description,output1 , parseFloat(cycle.amount).toFixed(2)]);
+                    i = i + 1;
+                    tot=tot+parseFloat(cycle.amount);
+                }
+                else
+                {
+                    t2.fnAddData([cycle.fin_ledger_payment_detail_id, '', j, cycle.category_id, cycle.category, cycle.document_no, output,
+                                                        cycle.entity_type_id, cycle.entity_type_name, cycle.entity_id, cycle.entity_code, cycle.entity_description,output1 , parseFloat(cycle.amount).toFixed(2)]);
+                    j = j + 1;
+                    tot1=tot1+parseFloat(cycle.amount);
+                }
+                
+            });
+            $(".pay_total").text(parseFloat(tot).toFixed(2));
+            $(".rec_total").text(parseFloat(tot1).toFixed(2));
+        });
+            $('#ContactGrid').DataTable({
+                "bPaginate": false,
+                "ordering": false,
+                "bfooter": false,
+                "info": false,
+                "bLengthChange": false,
+                "bAutoWidth": false,
+                "bFilter": false,
+                "bSort": false,
+                aoColumns: [
+                        { sname: "a", bVisible: false },
+                         {
+                             sname: "b", bVisible: false,
+                             mRender: function (data, type, row) {
+                                 return '<input type="checkbox" data-index=' + ((row[2]) - 1) + ' class="pcheck" name="id[]" value="' + $('<div/>').text(data).html() + '" id=pchk' + ((row[2]) - 1) + '>';
+                             }
+                         },
+                         { sname: "c" },
+                         { sname: "d", bVisible: false },
+                         { sname: "e" },
+                         { sname: "f" },
+                         { sname: "g" },
+                         { sname: "h", bVisible: false },
+                         { sname: "i"},
+                         { sname: "j", bVisible: false  },
+                         { sname: "k" },
+                         { sname: "l" },
+                         { sname: "m" },
+                         { sname: "n", sClass: "right" },
+                ]
+
+            });
+            $('#ContactGrid1').DataTable({
+                "bPaginate": false,
+                "ordering": false,
+                "bfooter": false,
+                "info": false,
+                "bLengthChange": false,
+                "bAutoWidth": false,
+                "bFilter": false,
+                "bSort": false,
+                aoColumns: [
+                        { sname: "a", bVisible: false },
+                         {
+                             sname: "b", bVisible: false,
+                             mRender: function (data, type, row) {
+                                 return '<input type="checkbox" data-index=' + ((row[2]) - 1) + ' class="pcheck" name="id[]" value="' + $('<div/>').text(data).html() + '" id=pchk' + ((row[2]) - 1) + '>';
+                             }
+                         },
+                         { sname: "c" },
+                         { sname: "d", bVisible: false },
+                         { sname: "e" },
+                         { sname: "f" },
+                         { sname: "g" },
+                         { sname: "h", bVisible: false },
+                         { sname: "i"},
+                         { sname: "j", bVisible: false  },
+                         { sname: "k" },
+                         { sname: "l" },
+                         { sname: "m" },
+                         { sname: "n", sClass: "right" },
+                ]
+
+            });
+
+        function ConvertJsonDateString(jsonDate) {
+            var shortDate = null;
+            if (jsonDate) {
+                var regex = /-?\d+/;
+                var matches = regex.exec(jsonDate);
+                var dt = new Date(parseInt(matches[0]));
+                var month = dt.getMonth() + 1;
+                var monthString = month > 9 ? month : '0' + month;
+                var day = dt.getDate();
+                var dayString = day > 9 ? day : '0' + day;
+                var year = dt.getFullYear();
+                shortDate = day + '-' + monthString + '-' + year;
+            }
+            return shortDate;
+        }
+        function CalculateDerivedBalance()
+        {
+            var a = $("#ledger_closing_bal").val();
+            var b = $("#payment_not_sel_total").val();
+            var c = $("#receipt_not_sel_total").val();
+            $("#derived_bank_statement_balance").val(parseFloat(parseFloat(a == "" ? 0 : a) + parseFloat(b == "" ? 0 : b) - parseFloat(c == "" ? 0 : c)).toFixed(2));
+            var d = $("#derived_bank_statement_balance").val();
+            var e = $("#derived_closing_bal").val();
+            $("#difference_amount").val(parseFloat(parseFloat(d == "" ? 0 : d) - parseFloat(e == "" ? 0 : e)).toFixed(2));
+
+        }
+
+    </script>
+}

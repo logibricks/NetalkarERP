@@ -1,0 +1,96 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_general_ledger
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>ref_general_ledger</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ref_gl_acount_type.gl_account_type_description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ref_gl_acount_type.gl_account_type_description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.gl_ledger_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.gl_ledger_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.gl_ledger_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.gl_ledger_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.gl_head_account)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.gl_head_account)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.gl_parent_ledger_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.gl_parent_ledger_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.gl_level)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.gl_level)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.allow_manual_entry)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.allow_manual_entry)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_blocked)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_blocked)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_acitve)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_acitve)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

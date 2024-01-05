@@ -1,0 +1,40 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+@{(Html.EJ().Grid<sales_order_report_vm>("Editing")
+
+                                                        .Datasource(ds => ds.URL(Url.Action("GetSalesOrderData", "SalesReport") + "?entity=" + ViewBag.entity + "&customer_category_id=" + ViewBag.customer_category_id + "&customer_priority_id=" + ViewBag.customer_priority_id + "&item_priority_id" + ViewBag.item_priority_id + "&item_group_id" + ViewBag.item_group_id).Adaptor(AdaptorType.UrlAdaptor))
+                                                         .AllowPaging().PageSettings(a => a.PageSize(20))
+                                                          .AllowFiltering()
+                                                              .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                                          .ShowColumnChooser()
+                                                          .AllowSorting()
+                                                          .AllowScrolling()
+                                                         .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "SalesReport", new { ctrlname = "SalesPriceList" })))
+                                                                                                                                                        .ScrollSettings(scroll => { scroll.Width("100%"); })
+                                                      .ToolbarSettings(toolbar =>
+                                                      {
+                                                          toolbar.ShowToolbar().ToolbarItems(items =>
+                                                          {
+                                                              items.AddTool(ToolBarItems.Search);
+                                                              items.AddTool(ToolBarItems.ExcelExport);
+                                                              items.AddTool(ToolBarItems.PrintGrid);
+                                                          });
+                                                      })
+                                              .Columns(col =>
+                                              {
+                                                  col.Field("customer_code").Width("10%").HeaderText("Customer Code").Add();
+                                                  col.Field("customer_name").Width("10%").HeaderText("Customer Description").Add();
+                                                  col.Field("item_code").Width("10%").HeaderText("Item Code").Add();
+                                                  col.Field("item_name").Width("10%").HeaderText("Item Description").Add();
+                                                  col.Field("uom_name").Width("10%").HeaderText("UoM").Add();
+                                                  col.Field("original_price").Width("10%").HeaderText("Original Price").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                                  col.Field("discount_value").Width("10%").HeaderText("Discount value").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                                  col.Field("discount_type_id").Template("{{if discount_type_id == 1 }} % {{else}} Amt {{/if}}")
+    .Width("10%").HeaderText("AMt / %").Add();
+                                                  col.Field("price_after_discount").Width("10%").HeaderText("Price after discount").Format("{0:n2}").TextAlign(TextAlign.Right).Add();
+                                              })
+                                              .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick1"); })
+                                                                                                                                                          ).Render();}
+@Html.EJ().ScriptManager()
+
+

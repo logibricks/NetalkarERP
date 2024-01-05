@@ -1,0 +1,131 @@
+﻿@using Newtonsoft.Json
+@model Sciffer.Erp.Domain.ViewModel.prod_receipt_VM
+@{
+    ViewBag.Title = "Details";
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div id="ProdReceiptDetails"></div>
+    <div class="form-horizontal">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, "Category *", htmlAttributes: new { Class = "control-label col-md-4 " })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="hidden" id="is_active" name="is_active" value="true" />
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.categorylist, htmlAttributes: new { Class = "form-control", @onchange = "GetDocumentNumber(this.value)", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { Class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.posting_date, "Posting Date *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control validinput", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.plant_id, "Plant *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plantlist, "--Select--", htmlAttributes: new { @class = "form-control validinput removedisabled", @required = true, @disabled = "disabled", @onchange = "GetStorageLocation(this.value)" })
+                            @Html.ValidationMessageFor(model => model.plant_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.document_date, "Document Date *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.document_date, new { htmlAttributes = new { @class = "form-control validinput", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.document_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.storage_location_id, "Parent SLoc", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("storage_location_id", (System.Web.Mvc.SelectList)ViewBag.StorageList, "---Select---", new { @class = "form-control validinput removedisabled", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.storage_location_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.header_remarks, "Remarks", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.header_remarks, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.header_remarks, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+         
+            <br />
+            <div class="row">
+                <div class="table-responsive" style="max-height: calc(100vh - 250px); overflow-y: auto;">
+                    <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<style>
+    table.dataTable {
+        clear: both;
+        margin-bottom: -1px !important;
+    }
+</style>
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var pl_detail = @Html.Raw(JsonConvert.SerializeObject(this.Model.prod_receipt_details));
+            $('#ContactGrid').DataTable({
+                bFilter: false, bInfo: false,
+                "bPaginate": false,
+                "ordering": false,
+                "bfooter": false,
+                bSortable: false,
+                "info": false,
+                "bAutoWidth": true,
+                "sScrollY": "550px",
+                "scrollCollapse": true,
+                "aaData": pl_detail,
+                "columns": [
+                      { "data": "", sWidth: "5%", "title": "Sr No.", "defaultContent": "", "bSortable": false },
+                      { "data": "item_code", "title": "Item Code", "bSortable": false },
+                      { "data": "item_desc", "title": "Item Description", "bSortable": false },
+                      { "data": "uom_code", bVisible: true, "title": "UoM Code","bSortable": false },
+                      { "data": "uom_name", bVisible: true, "title": "UoM Name","bSortable": false },
+                      { "data": "sloc_code", "title": "Sloc Code", "bSortable": false },
+                      { "data": "sloc_desc", "title": "Sloc Description", "bSortable": false },
+                      { "data": "batch_no", "title": "Batch No", "bSortable": false },
+                      { "data": "tag_no", "title": "Tag No", "bSortable": false },
+                      { "data": "quantity", "title": "Quantity", "bSortable": false,sClass:"right" }
+                ],
+                "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                    $("td:first", nRow).html(iDisplayIndex + 1);
+                    return nRow;
+                },
+
+            });
+        });
+
+      
+    </script>
+}

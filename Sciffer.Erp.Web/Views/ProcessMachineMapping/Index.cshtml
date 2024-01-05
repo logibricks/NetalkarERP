@@ -1,0 +1,213 @@
+﻿
+@{
+    ViewBag.Title = "Process Machine Mapping";
+}
+<br /><br />
+<div id="ProcessMachineDetails"></div>
+
+<div class="row form-group">
+    <div class="col-md-5">
+        <div class="col-md-3">
+            <label class="control-label">Select Process</label>
+        </div>
+        <div class="col-md-9">
+            @Html.DropDownList("process_id", (System.Web.Mvc.SelectList)ViewBag.processlist, "---Select---", new { @class = "form-control", onchange= "GetAllMachinesForProcess()" })
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="col-md-3">
+            Select machine
+        </div>
+        <div class="col-md-9" style="margin-top:-10px;" id="MACHINE">
+            @Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.machinelist, new { @class = "form-control multiselect", multiple = "multiple" })
+        </div>
+    </div>
+    <div class="col-lg-2 col-sm-2" style="float:right">
+        <div class="form-group">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <button type="button" class="btn btn-primary" id="add_sequence">Update</button>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" id="srno3" />
+</div>
+
+<hr />
+
+<div class="row">
+    <div class="table-responsive">
+        <table class="table table-responsive table-bordered table-striped" id="ProcessMachineGrid" style="font-size:15px;">
+            <thead>
+                <tr>
+                    <th><label>Process Id</label></th>
+                    <th><label>Sr. No.</label></th>
+                    <th><label>Process Code</label></th>
+                    <th><label>Machine Id</label></th>
+                    <th><label>Machine Code</label></th>
+                    <th><label>Action</label></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function ()
+        {
+            window.onload = MachineProcess;
+
+            $(".multiselect").multiselect({
+                includeSelectAllOption: true,
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: false,
+                numberDisplayed: 1,
+                maxHeight: 300,
+                maxWidth: 200,
+            });
+
+            $("#process_id").select2({
+                placeholder: "Select Process",
+                allowClear: true
+            });
+
+        });
+
+        function MachineProcess()
+        {
+            var t = $("#ProcessMachineGrid").DataTable();
+            t.fnClearTable();
+            var sr_no = t.fnGetData().length+1;
+            var data = @Html.Raw(Json.Encode(ViewBag.GetProcessDetails));
+
+            var i=1;
+
+            $.each(data, function(key, value)
+            {
+                t.fnAddData([
+                    value.process_id,
+                    sr_no,
+                    value.process_code,
+                    value.machine_id,
+                    value.machine_name,
+                   '',
+                ]);
+
+                i=i+1;
+                sr_no++;
+            });
+        }
+
+        function editRow()
+        {
+            var t = $('#ProcessMachineGrid').DataTable()
+            var cc = parseInt(arguments[0]) - 1;
+            $("#process_id").val(t.fnGetData(cc)[0]);
+            $("#srno3").val(t.fnGetData(cc)[1]);
+
+            GetAllMachinesForProcess();
+
+            $("#process_id").select2({
+                placeholder: "Select Process",
+                allowClear: true
+            });
+            //GetAllMachinesForProcess(); old function for single operation for machines
+        }
+
+        $('#add_sequence').click(function () {
+            
+            if ($('#machine_id :selected').length > 0) {
+                var selectedMachines = [];
+                $('#machine_id :selected').each(function (i, selected) {
+                    selectedMachines[i] = $(selected).val();
+                });
+                var machine_id = selectedMachines + "";
+            }
+
+            var process_id = $("#process_id").val();
+
+            $.ajax({
+                url: '@Url.Action("UpdateMachines", "ProcessMachineMapping")',
+                type: 'POST',
+                data: { process_id : process_id, machine_ids : machine_id },
+                success: function (data){
+                    if(data == "Saved"){
+                        swal("","Data Updated","success");
+                    }
+                    else{
+                        swal("",data,"warning");
+                    }
+                },
+                error: function () {
+
+                },
+            });
+
+            MachineProcess();
+        });
+
+        function GetAllMachinesForProcess()
+        {
+            var processid=$("#process_id").val();
+            var machinearray = [];
+            var t = $("#ProcessMachineGrid").DataTable();
+            var rowCount = t.fnGetData().length;
+
+            if (processid != '') {
+                for(var i = 0; i < rowCount; i++)
+                {
+                    if(t.fnGetData(i)[0] == $("#process_id").val())
+                    {
+                        machinearray = (t.fnGetData(i)[3]).split(",");
+                        if(machinearray.length>0)
+                        {
+                            $("#machine_id").val(machinearray);
+                        }
+                        $("#machine_id").multiselect("refresh");
+                    }
+                }
+            }
+            else {
+                $('#machine_id').val('');
+            }
+        }
+
+        $('#ProcessMachineGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "q", bVisible: false },
+                     { sname: "a", bVisible: true },
+                     { sname: "b", bVisible: true },
+                     { sname: "c", bVisible: false },
+                     { sname: "d", bVisible: true },
+                      {
+                          sname: "j", sWidth: "8%",
+                          bSortable: false,
+                          mRender: function (data, type, full) {
+                              return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" onclick="editRow(' + full[1] + ');" />';
+                          }
+                      }
+            ]
+
+
+        });
+
+    </script>
+}
+
+
+
+
+

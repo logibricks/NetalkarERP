@@ -1,0 +1,56 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.mfg_qc_qc_parameter_VM
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>mfg_qc_qc_parameter_VM</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.machine_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.machine_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.item_id)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.item_id)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_numeric)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_numeric)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.srno)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.srno)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

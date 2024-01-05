@@ -1,0 +1,326 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.fin_contra_entry_vm
+@{
+    ViewBag.Title = "Create";
+}
+<div class="loading">Loading &#8230;</div>
+@using (Html.BeginForm("Create", "ContraEntry", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div id="PoHidden"></div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.document_list, new { @class = "form-control validinput category", @required = true })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.posting_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control validinput postingdate postingdocumentdate", @required = true, @onchange = "ChangeDate();" } })
+                            @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ref_doc_no, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.ref_doc_no, new { htmlAttributes = new { @class = "form-control", } })
+                            @Html.ValidationMessageFor(model => model.ref_doc_no, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.document_date, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.document_date, new { htmlAttributes = new { @class = "form-control", } })
+                            @Html.ValidationMessageFor(model => model.document_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.transfer_funds_from, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            @Html.DropDownList("from_cash_bank", new List<SelectListItem>
+                                 {
+                                    new SelectListItem{ Text="Bank", Value = "2" },
+                                    new SelectListItem{ Text="Cash", Value = "1" }
+                                 }, new { @class = "form-control validinput", @onchange = "GetBankAccountByBank(this.value,this.name);" })
+                            @Html.ValidationMessageFor(model => model.from_cash_bank, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-5 col-sm-5 col-xs-12">
+                            @Html.DropDownList("transfer_funds_from", (System.Web.Mvc.SelectList)ViewBag.bank_list, "", new { @class = "form-control", @onchange = "GetfromCurrentBalance()" })
+                            @Html.ValidationMessageFor(model => model.transfer_funds_from, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.current_balance_from, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.current_balance_from, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.current_balance_from, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.transfer_funds_to, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            @Html.DropDownList("to_cash_bank", new List<SelectListItem>
+                                 {
+                               new SelectListItem{ Text="Cash", Value = "1" },
+                               new SelectListItem{ Text="Bank", Value = "2" }
+                                 }, new { @class = "form-control validinput", @onchange = "GetBankAccountByBank(this.value,this.name);" })
+                            @Html.ValidationMessageFor(model => model.to_cash_bank, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-5 col-sm-5 col-xs-12">
+                            @Html.DropDownList("transfer_funds_to", (System.Web.Mvc.SelectList)ViewBag.cash_list, "", new { @class = "form-control", @onchange = "GettoCurrentBalance()" })
+                            @Html.ValidationMessageFor(model => model.transfer_funds_to, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.current_balance_to, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.current_balance_to, new { htmlAttributes = new { @class = "form-control removedisabled", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.current_balance_to, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.transfer_amount, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-5 col-sm-5 col-xs-12">
+                            @Html.EditorFor(model => model.transfer_amount, new { htmlAttributes = new { @class = "form-control validinput", @required = true, @type = "number" } })
+                            @Html.ValidationMessageFor(model => model.transfer_amount, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            @Html.DropDownList("curreny_id", (System.Web.Mvc.SelectList)ViewBag.currency_list, new { @class = "form-control removedisabled", @disabled = "disabled" })
+                            @Html.ValidationMessageFor(model => model.curreny_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.reamrks, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.reamrks, new { htmlAttributes = new { @class = "form-control", } })
+                            @Html.ValidationMessageFor(model => model.reamrks, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.attachment, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <input type="file" class="form-control" id="FileUpload" name="FileUpload" accept="application/pdf, image/*" />
+                            @Html.ValidationMessageFor(model => model.attachment, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg12 col-sm-12">
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <input type="submit" value="Create" id="create" data-controller="ContraEntry" class="btn btn-success" style="float:right" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+    </div>
+
+}
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            document.getElementById('posting_date').valueAsDate = new Date();
+            document.getElementById('document_date').valueAsDate = new Date();
+            $("#transfer_funds_from").select2({
+                placeholder: "Select Bank Account",
+                allowClear: true
+            });
+            $("#transfer_funds_to").select2({
+                placeholder: "Select Cash Account",
+                allowClear: true
+            });
+
+        });
+        function GetBankAccountByBank(id, nme) {
+            if (id == "") {
+                id = 2;
+            }
+            $.ajax({
+                url: '@Url.Action("GetGLOrBankAccount", "Generic")',
+                type: "GET",
+                dataType: "JSON",
+                data: { id: id },
+                success: function (result)
+                {
+                    //console.log(result);
+                    if (nme == "from_cash_bank")
+                    {
+                        $("#transfer_funds_from").val("").trigger("change");
+                        $("#transfer_funds_from").html(""); // clear before appending new list
+                        $("#transfer_funds_from").append($('<option></option>').val("").html(""));
+                        if (id == 2) {
+                            $("#transfer_funds_from").select2({
+                                placeholder: "Select Bank Account",
+                                allowClear: true
+                            });
+                            $.each(result, function (i, cycle) {
+                                $("#transfer_funds_from").append(
+                                    $('<option></option>').val(cycle.bank_account_id).html(cycle.bank_account_code));
+                            });
+                        }
+                        else
+                        {
+                            $("#transfer_funds_from").select2({
+                                placeholder: "Select Cash Account",
+                                allowClear: true
+                            });
+                            $.each(result, function (i, cycle) {
+                                $("#transfer_funds_from").append(
+                                    $('<option></option>').val(cycle.cash_account_id).html(cycle.cash_account_desc));
+                            });
+                        }
+                    }
+                    else
+                    {
+                        $("#transfer_funds_to").val("").trigger("change");
+                        $("#transfer_funds_to").html(""); // clear before appending new list
+                        $("#transfer_funds_to").append($('<option></option>').val("").html(""));
+                        if (id == 2) {
+                            $("#transfer_funds_to").select2({
+                                placeholder: "Select Bank Account",
+                                allowClear: true
+                            });
+                            $.each(result, function (i, cycle) {
+                                $("#transfer_funds_to").append(
+                                    $('<option></option>').val(cycle.bank_account_id).html(cycle.bank_account_code));
+                            });
+                        }
+                        else {
+                            $("#transfer_funds_to").select2({
+                                placeholder: "Select Cash Account",
+                                allowClear: true
+                            });
+                            $.each(result, function (i, cycle) {
+                                $("#transfer_funds_to").append(
+                                    $('<option></option>').val(cycle.cash_account_id).html(cycle.cash_account_desc));
+                            });
+                        }
+                    }
+                }
+            });
+        }
+
+        function GettoCurrentBalance()
+        {
+            var entity_id = $("#transfer_funds_to").val();
+            var to_cash_bank = $("#to_cash_bank").val();
+            var start_date = $("#posting_date").val();
+            var entity_type_id = 0;
+            $("#transfer_amount").val("");
+            $("#current_balance_to").val("")
+            if (to_cash_bank == 1) {
+                entity_type_id = 10;
+            }
+            else {
+                entity_type_id = 8;
+            }
+            if (entity_id != "") {
+                $.ajax({
+                    url: '@Url.Action("GetCurrenctBalance", "Generic")',
+                    type: "GET",
+                    dataType: "JSON",
+                    async: false,
+                    data: { entity:"getcurrentbalanceasofdate", entity_type_id: entity_type_id, entity_id: entity_id, start_date: start_date },
+                    success: function (level) {
+                        $("#current_balance_to").val(level);
+                    }
+                });
+            }
+        }
+        function GetfromCurrentBalance()
+        {
+            var entity_id = $("#transfer_funds_from").val();
+            var from_cash_bank = $("#from_cash_bank").val();
+            var start_date = $("#posting_date").val();
+            var entity_type_id = 0;
+                $("#transfer_amount").val("");
+                $("#current_balance_from").val("")
+                if (from_cash_bank == 1)
+                {
+                    entity_type_id = 10;
+                }
+                else
+                {
+                    entity_type_id = 8;
+                }
+                if (entity_id != "")
+                {
+                    $.ajax({
+                        url: '@Url.Action("GetCurrenctBalance", "Generic")',
+                        type: "GET",
+                        dataType: "JSON",
+                        async: false,
+                        data: { entity: "getcurrentbalanceasofdate", entity_type_id: entity_type_id, entity_id: entity_id, start_date: start_date },
+                        success: function (level) {
+                            $("#current_balance_from").val(level);
+                        }
+                    });
+                }
+        }
+        function CheckAmount()
+        {
+            var cu_balance = $("#current_balance_from").val();
+            var amount = $("#transfer_amount").val();
+            if(parseFloat(amount)>parseFloat(cu_balance))
+            {
+                $("#transfer_amount").val("");
+                sweetAlert("", "Transfer amount can not greater than the transfer current amount!", "error");
+                return false;
+            }
+        }
+        function ChangeDate()
+        {
+            GetfromCurrentBalance();
+            GettoCurrentBalance();
+            $("#document_date").val($("#posting_date").val());
+        }
+    </script>
+}

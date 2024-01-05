@@ -1,0 +1,138 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+<input type="search" class="search form-control" placeholder="Search Sales Report" id="s" style="width:350px;">
+<br />
+<div id="hide">
+    <div class="row display-flex">
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;font-size:20px;">
+                    GSTR1 Summary Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provides Summary for filing GSTR1</p>
+                </div>
+                <a href="@Url.Action("GSTR1Report", "GSTRReport")" target="_blank">
+                    <div class="panel-footer" style="font-size:20px; color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;font-size:20px;">
+                    GSTR1 Detail Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provides Detail for filing GSTR1</p>
+                </div>
+                <a href="@Url.Action("GSTR1ReportDetail", "GSTRReport")" target="_blank">
+                    <div class="panel-footer" style="font-size:20px; color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #d9534f;color: #fff;font-size:20px;">
+                    GSTR2 Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provides details for filing GSTR2</p>
+                </div>
+                <a href="@Url.Action("GSTR2Report", "GSTRReport")" target="_blank">
+                    <div class="panel-footer" style="font-size:20px; color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #d9534f;">
+                <div class="name panel-heading" style="background-color: #42d7f4;color: #fff;font-size:20px;">
+                    GST RCM Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provides details for filing GSTR1 RCM</p>
+                </div>
+                <a href="@Url.Action("GSTR1RCMReport", "GSTRReport")" target="_blank">
+                    <div class="panel-footer" style="font-size:20px; color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #5cb85c;">
+                <div class="name panel-heading" style="background-color: #5cb85c;color: #fff;font-size:20px;">
+                    GSTR3 Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provides Summary for filing GSTR3</p>
+                </div>
+                <a href="@Url.Action("GSTR3BReport", "GSTRReport")" target="_blank">
+                    <div class="panel-footer" style="font-size:20px; color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel panel-green" style="border-color: #f0ad4e;">
+                <div class="name panel-heading" style="background-color: #f0ad4e;color: #fff;font-size:20px;">
+                    TCS Report
+                </div>
+                <div class="panel-body">
+                    <p style="font-size:15px;">Provides Detail for filing GSTR1</p>
+                </div>
+                <a href="@Url.Action("TCSReport", "AccountsReport")" target="_blank">
+                    <div class="panel-footer" style="font-size:20px; color:#000;">
+                        Run Report
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/requirevalidation.js"></script>
+<script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+            $(document).ready(function () {
+                $("#s").on("keyup click input", function () {
+                    if (this.value.length > 0) {
+                        $(".col-lg-3").show().filter(function () {
+                            return $(this).find('.name').text().toLowerCase().indexOf($("#s").val().toLowerCase()) == -1;
+                        }).hide();
+                    }
+                    else {
+                        $(".col-lg-3").show();
+                    }
+                });
+
+            });
+    </script>
+    <style>
+        .row.display-flex {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+            .row.display-flex > [class*='col-'] {
+                display: flex;
+                flex-direction: column;
+            }
+
+        .panel {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+
+
+}

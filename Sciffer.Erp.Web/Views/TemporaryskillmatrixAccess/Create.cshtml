@@ -1,0 +1,133 @@
+﻿@model Sciffer.Erp.Domain.Model.ref_temp_operator_level_mapping
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.operator_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.DropDownList("operator_id", (System.Web.Mvc.SelectList)ViewBag.operator_list, "---Select---", htmlAttributes: new { @class = "form-control validinput", @required = true, })
+                        @Html.ValidationMessageFor(model => model.operator_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.level_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.DropDownList("level_id", (System.Web.Mvc.SelectList)ViewBag.level_list, "---Select---", htmlAttributes: new { @class = "form-control validinput", @required = true, })
+                        @Html.ValidationMessageFor(model => model.level_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br /><br />
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.machine_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.machine_list, "---Select---", htmlAttributes: new { @class = "form-control validinput", @required = true, })
+                        @Html.ValidationMessageFor(model => model.machine_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.shift_id, htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.DropDownList("shift_id", (System.Web.Mvc.SelectList)ViewBag.GetShiftlist, "---Select---", htmlAttributes: new { @class = "form-control validinput", @required = true, })
+                        @Html.ValidationMessageFor(model => model.shift_id, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />  <br />
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.effective_date, "Effective Date *", htmlAttributes: new { @class = "control-label col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.effective_date, new { htmlAttributes = new { @class = "form-control validinput" } })
+                        @Html.ValidationMessageFor(model => model.effective_date, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.is_blocked, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        @Html.EditorFor(model => model.is_blocked, new { htmlAttribute = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.is_blocked, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" id="Create" name="Create" class="btn btn-success" style="float:right" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#is_blocked').checkboxpicker();
+            $(".multiselect").multiselect({
+                includeSelectAllOption: true,
+                enableFiltering: true,
+                enableCaseInsensitiveFiltering: false,
+                numberDisplayed: 1,
+                maxHeight: 300,
+                maxWidth: 200,
+            });
+
+            $("#operator_id").select2({
+                placeholder: "Select Opration",
+                allowClear: true
+            });
+            $("#shift_id").select2({
+                placeholder: "Select Opration",
+                allowClear: true
+            });
+            $("#machine_id").select2({
+                placeholder: "Select Opration",
+                allowClear: true
+            });
+            $("#level_id").select2({
+                placeholder: "Select Opration",
+                allowClear: true
+            });
+        })
+
+    </script>
+}

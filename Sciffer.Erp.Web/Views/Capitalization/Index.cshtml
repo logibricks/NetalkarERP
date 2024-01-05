@@ -1,0 +1,91 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<fin_ledger_capitalization_vm>("Searching")
+        .Datasource((IEnumerable<object>)ViewBag.DataSource)
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "Capitalization" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("fin_ledger_capitalization_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Add();
+            col.Field("category").Width("15%").HeaderText("Category").Add();
+            col.Field("document_no").Width("15%").HeaderText("Document No.").Add();
+            col.Field("posting_date").Width("15%").HeaderText("Posting Date").TextAlign(TextAlign.Right).Visible().Format("{0:dd/MMM/yyyy}").Add();
+            col.Field("asset_code").Width("15%").HeaderText("Asset Code").Add();
+            col.Field("capitalization_date").Width("15%").HeaderText("Capitalization Date").TextAlign(TextAlign.Right).Visible().Format("{0:dd/MMM/yyyy}").Add();
+            col.Field("gl_ledger_code").Width("15%").HeaderText("GL").Add();
+
+
+
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var doc_no = '@ViewBag.num';
+        console.log(doc_no);
+        if (doc_no != '') {
+            if (doc_no != 0) {
+                sweetAlert("", doc_no + " Saved successfully!", "success");
+            }
+        }
+    });
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = "@Url.Action("Edit", "Capitalization")?id=" + args.rowData.fin_ledger_capitalization_id;
+        }
+        if (args.requestType == "add") {
+            location.href = '@Url.Action("Create", "Capitalization")';
+        }
+    }
+    function rightClick(args) {
+        location.href = "@Url.Action("Details", "Capitalization")?id=" + args.data.fin_ledger_capitalization_id;
+    }
+    function Click(args) {
+        $('a').css('color','red');
+    }
+
+
+</script>
+
+
+
+
+
+
+
+

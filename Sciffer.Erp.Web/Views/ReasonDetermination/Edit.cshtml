@@ -1,0 +1,85 @@
+﻿@model Sciffer.Erp.Domain.Model.REF_REASON_DETERMINATION
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.REASON_DETERMINATION_ID)
+        <div class="form-group">
+            @Html.LabelFor(model => model.REASON_DETERMINATION_NAME, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.REASON_DETERMINATION_NAME, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.REASON_DETERMINATION_NAME, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.REASON_DETERMINATION_TYPE, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("REASON_DETERMINATION_TYPE", new List<SelectListItem>
+                 {
+                    new SelectListItem{ Text="---Select---", Value = "0" },
+                    new SelectListItem{ Text="Goods Issue", Value = "1" },
+                    new SelectListItem{ Text="Goods Receipt", Value = "2" }
+                 }, new { @class = "form-control" })
+
+
+                @Html.ValidationMessageFor(model => model.REASON_DETERMINATION_NAME, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-success" id="create" name="create" style="float:right" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+                $("#create").click(function (e) {
+                    e.preventDefault();
+                    var reason = $('#REASON_DETERMINATION_NAME').val();
+                    var reasontype = $('#REASON_DETERMINATION_TYPE').val();
+                    if (reason == "") {
+                        sweetAlert("", "Reason is required!", "error");
+                    }
+                    else if (reasontype == "0") {
+                        sweetAlert("", "Reason Type is required!", "error");
+                    }
+                    else {
+                        $.ajax({
+                            url: '@Url.Action("CheckDuplicate", "ReasonDetermination")',
+                            type: "GET",
+                            dataType: "JSON",
+                            asynch: true,
+                            data: { st: reason, st1: reasontype, id: $('#REASON_DETERMINATION_ID').val() },
+                            success: function (output) {
+                                if (output != 0) {
+                                    sweetAlert("", reason + " is already present in databse!", "error");
+                                }
+                                else {
+                                    document.forms[0].submit();
+                                }
+                            }
+                        });
+                    }
+                });
+    </script>
+}

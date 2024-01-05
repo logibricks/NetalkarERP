@@ -1,0 +1,363 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.ref_tax_vm
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.HiddenFor(x=>x.tax_id)
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.tax_code, new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.tax_code, new { htmlAttributes = new { @class = "form-control removedisabled validinput num", @required = true, @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.tax_code, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.tax_name, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.tax_name, new { htmlAttributes = new { @class = "form-control removedisabled validinput num1", @required = true, @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.tax_name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.is_blocked, new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.is_blocked, new { htmlAttributes = new { @class = "form-control", @required = true } })
+                            @Html.ValidationMessageFor(model => model.is_blocked, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active">
+                    <a data-toggle="tab" href="#sectionA">Tax Details</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade  in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <button type="button" class="btn btn-primary" id="open_modal" style="float:right" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span>Add Item</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                                <thead>
+                                    <tr>
+                                        <th><label>Sr. No.</label></th>
+                                        <th><label>Tax Element Code</label></th>
+                                        <th><label>Tax Element Description </label></th>
+                                        <th><label>Tax Charged On</label></th>                                     
+                                        <th><label>ID</label></th>
+                                        <th hidden><label>Delete</label></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="hidden" id="taxdetail" name="taxdetail" />
+                <input type="hidden" id="deleteids" name="deleteids" />
+                <input type="submit" value="Update" class="btn btn-success" id="create" data-id="@Model.tax_id" name="create" data-controller="TaxCode" style="float:right" onclick="TabletoJeson();" />
+            </div>
+        </div>
+    </div>
+}
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Tax Details</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3">
+                            Tax Element
+                        </label>
+                        <div class="col-md-7">
+                            @{
+                                Html.EJ()
+                                    .Autocomplete("tax_element")
+                                    .Width("100%")
+                                    .ClientSideEvents(e => e.Select("onSelect"))
+                                    .WatermarkText("Select tax element")
+                                    .Datasource((IEnumerable<object>)ViewBag.taxelementlist)
+                                    .HighlightSearch(true)
+                                    .ShowPopupButton(true)
+                                    .MultiColumnSettings(obj => obj.Enable(true).Columns(obj1 =>
+                                    {
+                                        obj1.Field("tax_element_description").HeaderText("Tax Element Name").Add();
+                                        obj1.Field("tax_element_code").HeaderText("Tax Element Code").Add();
+                                    }).ShowHeader(true).StringFormat("{1}-{0}"))
+                                    .Render();
+                            }
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="first-name">
+                            Tax Charge Based On
+                        </label>
+                        <div class="col-md-7">
+                            <textarea id="tax_charged_on" name="tax_charged_on" rows="6" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <input type="hidden" id="srno" />
+                    <input type="hidden" id="taxdetailid" />
+                   
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearmodel();">Close</button>
+                    <button type="button" class="add btn btn-primary">Add Item</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+<script src="~/Scripts/requirevalidation.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        var suggests = ["basic", "assessable"];
+        $(document).ready(function () {           
+            document.getElementById('tax_code').setAttribute('disabled', 'disabled');
+            document.getElementById('tax_name').setAttribute('disabled', 'disabled');          
+            var t = $('#ContactGrid').DataTable();
+            var sr_no = t.fnGetData().length+1;
+            var arr = "";
+            var pl_detail = @Html.Raw(JsonConvert.SerializeObject(this.Model.ref_tax_detail));          
+            $.each(pl_detail, function(key, value) {
+                t.fnAddData([sr_no,value.ref_tax_element.tax_element_code, value.ref_tax_element.tax_element_description, value.tax_charged_on,value.tax_detail_id, ''
+                ]);
+                arr = arr + value.ref_tax_element.tax_element_code.trim() + ",";
+                sr_no++;
+            });
+            arr = arr.substring(0, arr.length - 1);          
+            var x = new Array();
+            x = arr.split(","); 
+            if(arr!="")
+            {
+                suggests.extend(x);  
+            }           
+           // console.log(suggests);
+        });
+      
+         
+        Array.prototype.extend = function (other_array) {
+            /* you should include a test to check whether other_array really is an array */
+            other_array.forEach(function (v) { this.push(v) }, this);
+        }
+       
+        $('#is_blocked').checkboxpicker();
+        $('#open_modal').click(function () {
+            clearmodel();
+        });
+        $(".add").on("click", function (event) {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var sr_no = t.fnGetData().length + 1;
+            var cc = parseInt(arguments[0]) - 1;
+            var tax_element = $("#tax_element").val();
+            var tax_charged_on = $("#tax_charged_on").val();          
+            var myarray = tax_element.split('-');
+            var taxdetailid=$("#taxdetailid").val();
+            var y = tax_charged_on.match(/[a-zA-z]+[0-9]*([.][0-9]+)?/g);
+            var diff = _.difference(y, suggests);
+            var arr = "";
+            if (tax_element == '') {
+                swal("", "Please select tax element!", "error");
+                return false;
+            }
+
+            if (tax_charged_on == '') {
+                swal("", "Please enter Tax Base!", "error");
+                return false;
+            }
+            if (diff.length > 0)
+            {
+                swal("", "Tax Base does not exists!", "error");
+                return false;
+            }
+            if ($("#srno").val() == "") {
+                t.fnAddData([sr_no, myarray[0], myarray[1], tax_charged_on,taxdetailid, ''
+                ]);
+                sr_no + 1;
+            }
+            else {
+                var cc = $("#srno").val();
+                cc = parseInt(cc) - 1;
+                t.fnUpdate([cc + 1, myarray[0], myarray[1], tax_charged_on,taxdetailid, ''], cc)
+            }
+            var rowCount1 = t.fnGetData().length;
+            for (i = 0; i < rowCount1; i++) {
+                arr = arr + t.fnGetData(i)[1].trim() + ",";
+            }
+            arr = arr.substring(0, arr.length - 1);          
+            var x = new Array();
+            x = arr.split(",");        
+            suggests.extend(x);  
+          //  console.log(suggests);
+            clearmodel();
+            return true;
+        });
+        function clearmodel() {
+            $("#tax_element").val('');
+            $("#tax_charged_on").val('');
+            $("#srno").val("");
+        }
+
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a"},
+                     { sname: "b" },
+                     { sname: "c" },
+                     { sname: "d" },
+                     { sname: "e",bVisible: false},
+                     {
+                         sname: "f", sWidth: "8%",
+                         bSortable: false,
+                         bVisible: false,
+                         mRender: function (data, type, full) {
+                             return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" onclick="editRow(' + full[1] + ');" /><img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete" onclick="deleteRow(' + full[1] + ');" />';
+                         }
+                     }]
+
+        });
+
+        function editRow() {
+
+        };
+        $('#ContactGrid').on('click', '.edit', function () {
+            var t = $('#ContactGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            $('#myModal').modal('show');
+            var dm = t.fnGetData(id)[0];
+            $("#srno").val(t.fnGetData(id)[0]);
+            $("#tax_charged_on").val(t.fnGetData(id)[3]);
+            $('#tax_element').val(t.fnGetData(id)[1] + "-" + t.fnGetData(id)[2]);
+            $("#taxdetailid").val(t.fnGetData(id)[4]);
+        });
+
+        $('#ContactGrid').on('click', '.delete', function () {
+            var t = $('#ContactGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            var deleteids = t.fnGetData(id)[1];
+            var del = $("#deleteids").val();
+            swal({
+                title: "Are you sure?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            },
+     function (isConfirm) {
+         if (isConfirm) {
+             if (del != '') {
+                 $("#deleteids").val(del + "" + deleteids + "~");
+             }
+             else {
+                 $("#deleteids").val(deleteids + "~");
+             }
+
+             t.fnDeleteRow(id);
+             var len = t.fnGetData().length;
+             var i = 1;
+             var row = 0;
+             if (len > 0) {
+                 $('#ContactGrid tbody tr').each(function () {
+                     t.fnUpdate(i, row, 1);
+                     i++;
+                     row++;
+                 });
+             }
+         }
+     });
+        });
+        function TabletoJeson() {
+            var t = $('#ContactGrid').DataTable()
+            var rowCount = t.fnGetData().length;
+            var str;
+            var str1;
+            for (i = 0; i < rowCount; i++) {
+                str1 = t.fnGetData(i)[0] + ",";
+                str1 = str1 + t.fnGetData(i)[1] + ",";
+                str1 = str1 + t.fnGetData(i)[2] + ",";
+                str1 = str1 + t.fnGetData(i)[3] + ",";
+                str1 = str1 + t.fnGetData(i)[4] + ",";              
+                if (i == 0) {
+                    str = str1 + "~"
+                }
+                else {
+                    str = str + str1 + "~";
+                }
+            }
+
+            document.getElementById('tax_code').removeAttribute('disabled');
+            document.getElementById('tax_name').removeAttribute('disabled');
+            document.getElementsByName("taxdetail")[0].value = str;
+        }
+        $("#tax_charged_on").asuggest(suggests, {
+            'stopSuggestionKeys': [$.asuggestKeys.RETURN],
+            'minChunkSize': 1,
+            'delimiters': ', \n'
+        });
+    </script>
+}
+
+

@@ -1,0 +1,418 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.ref_mfg_bom_VM
+@using Newtonsoft.Json
+@{
+    ViewBag.Title = "Edit";
+}
+@using (Html.BeginForm("Edit", "BOM", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(x => x.mfg_bom_id)
+        <div id="ProcessSequenceDetails"></div>
+        <div class="form-group">
+
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.CategoryList, new { @class = "form-control validinput", @disabled = "disabled", })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                        </div>
+                        @*@Html.LabelFor(model => model.mfg_bom_no, htmlAttributes: new { @class = "hidden" })
+                            <div class="col-md-4 col-sm-4 col-xs-12">
+                                @Html.EditorFor(model => model.mfg_bom_no, new { htmlAttributes = new { @class = "form-control  validinput removedisabled", @disabled = "disabled" } })
+                                @Html.ValidationMessageFor(model => model.mfg_bom_no, "", new { @class = "text-danger" })
+                                @*<input type="text" id="mfg_bom_no" name="mfg_bom_no" value="" class="form-control removedisabled" readonly="readonly" />
+                            </div>*@
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.create_ts, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.create_ts, new { htmlAttributes = new { @class = "form-control  num validinput", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.create_ts, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.mfg_bom_name, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.mfg_bom_name, new { htmlAttributes = new { @class = "form-control num ", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.mfg_bom_name, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.out_item_id, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("out_item_id", (System.Web.Mvc.SelectList)ViewBag.ItemList, "---Select---", new { @class = "form-control", @required = true, @onchange = "GetUnit(this.value)", @disabled = "disabled" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.mfg_bom_qty, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.mfg_bom_qty, new { htmlAttributes = new { @class = "form-control num validinput", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.mfg_bom_qty, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.drawing_no, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12 " })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.drawing_no, new { htmlAttributes = new { @class = "form-control pull-right validinput", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.drawing_no, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.version, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12 " })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.version, new { htmlAttributes = new { @class = "form-control pull-right validinput", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.version, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.remarks, htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12 " })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.remarks, new { htmlAttributes = new { @class = "form-control pull-right validinput", @disabled = "disabled" } })
+                            @Html.ValidationMessageFor(model => model.remarks, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <hr />
+
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel-heading"></div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="table-responsive">
+                                <table class="table table-responsive table-bordered table-striped" id="ProcessSequenceGrid">
+                                    <thead>
+                                        <tr>
+                                            <th hidden><label>ID</label></th>
+                                            <th><label>Sr NO</label></th>
+                                            <th hidden><label>Item ID</label></th>
+                                            <th><label>Item Code</label></th>
+                                            <th><label>Item Description</label></th>
+                                            <th><label>Qty</label></th>
+                                            <th hidden><label>UOMID</label></th>
+                                            <th><label>UOM</label></th>
+                                            <th hidden><label>Item Category ID</label></th>
+                                            <th><label>Item Category Name</label></th>
+                                            @*<th><label>Action</label></th>*@
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        <label class="col-sm-4"> Blocked </label>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.CheckBoxFor(model => model.is_blocked)
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-lg12 col-sm-12">
+                    <div class="form-group">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <input type="submit" value="Create" data-controller="BOM" id="create" class="btn btn-success" onclick="TabletoJeson();" style="float:right" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/RemoveUnexpectedFile.js"></script>
+    <script src="~/Scripts/requirevalidation.js"></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            document.getElementById('create_ts').valueAsDate = new Date();
+            $("#is_blocked").checkboxpicker();
+            console.log($("#is_blocked").val());
+        });
+
+        window.onload = codeAddress;
+
+        function codeAddress() {
+            var t = $('#ProcessSequenceGrid').DataTable();
+            var sr_no = t.fnGetData().length+1;
+            var pl_detail = @Html.Raw(JsonConvert.SerializeObject(this.Model.ref_mfg_bom_detail));
+            console.log(pl_detail);
+            var i=1;
+            $.each(pl_detail, function(key, value) {
+
+                t.fnAddData([value.mfg_bom_detail_id, sr_no,
+                    value.in_item_id,
+                    value.REF_ITEM.ITEM_CODE,
+                    value.REF_ITEM.ITEM_NAME,
+                    value.in_item_qty,
+                    value.REF_UOM.UOM_ID,
+                    value.REF_UOM.UOM_NAME,
+                    value.REF_ITEM_CATEGORY.ITEM_CATEGORY_ID,
+                    value.REF_ITEM_CATEGORY.ITEM_CATEGORY_NAME, '']);
+
+                    i=i+1;
+                    sr_no++;
+            });
+        }
+        function GetDocumentNumber(id) {
+            if (id != '') {
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetDocumentNumbering", "Generic")',
+                    data: { id: id },
+                    success: function (ITEM) {
+                        $('#mfg_bom_no').val(ITEM);
+                    },
+                    error: function (emp) {
+                        $('#mfg_bom_no').val('');
+                    }
+                });
+            }
+            else {
+                $('#mfg_bom_no').val('');
+            }
+        }
+
+        function GetUnit(id) {
+
+            if (id != '') {
+                $.ajax({
+                    type: 'GET',
+                    url: "@Url.Action("GetUnitofItem", "Generic")",
+                    data: { id: id },
+                    success: function (ITEM) {
+                        console.log(ITEM);
+                        $('#UOM_ID').val(ITEM.item);
+                    },
+                    error: function (emp) {
+                        $('#UOM_ID').val('');
+                    }
+                });
+            }
+            else {
+                $('#uom_id').val('');
+            }
+
+        }
+
+        $('#add_sequence').click(function () {
+            var t3 = $('#ProcessSequenceGrid').DataTable()
+            var rowCount = t3.fnGetData().length;
+            var item_id = $("#in_item").val();
+            var item_name = $("#in_item :selected").text();
+            var qty = $("#in_qty").val();
+            var uom_id = $("#UOM_ID").val();
+            var uom_name = $("#UOM_ID :selected").text();
+            var ITEM_GROUP_ID = $("#in_item_group").val();
+            var ITEM_GROUP_NAME = $("#in_item_group :selected").text();
+
+            if (item_id == 0) {
+                swal("", "Please select item", "error");
+                return false;
+            }
+
+            if (qty == '') {
+                swal("", "Please Enter item quantity", "error");
+                return false;
+            }
+
+            if (uom_id == 0) {
+                swal("", "Please select uom", "error");
+                return false;
+            }
+            if (ITEM_GROUP_ID == 0) {
+                swal("", "Please select uom", "error");
+                return false;
+            }
+
+            if (in_item_group == 0) {
+                swal("", "Please select item group", "error");
+                return false;
+            }
+            if (in_item == 0) {
+                swal("", "Please select item", "error");
+                return false;
+            }
+            if (in_qty == 0) {
+                swal("", "Please enter quantity", "error");
+                return false;
+            }
+
+
+            if ($("#srno3").val() == "") {
+                t3.fnAddData([0, rowCount + 1, item_id, item_name, item_name, qty, uom_id, uom_name, ITEM_GROUP_ID, ITEM_GROUP_NAME, '']);
+            }
+            else {
+                var cc = $("#srno3").val();
+                cc = parseInt(cc) - 1;
+                t3.fnUpdate([0, cc + 1, item_id, item_name, item_name, qty, uom_id, uom_name, ITEM_GROUP_ID, ITEM_GROUP_NAME, ''], cc)
+            }
+
+            clearmodel();
+        });
+
+        function clearmodel() {
+            $("#in_item_id").val('');
+            $("#in_item_qty").val('');
+            $("#UOM_ID").val('');
+            $("#in_item_group_id").val('');
+            $('#srno3').val('');
+        }
+
+        $('#ProcessSequenceGrid').on('click', '.delete', function () {
+
+            var t = $('#ProcessSequenceGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+
+
+            var deleteids = t.fnGetData(id)[1];
+            swal({
+                title: "Are you sure?",
+
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            },
+        function (isConfirm) {
+            if (isConfirm) {
+
+                $("#deleteids").val(deleteids + "~");
+                t.fnDeleteRow(id);
+            }
+        });
+        });
+
+        function editRow() {
+
+            var t = $('#ProcessSequenceGrid').DataTable()
+            var cc = parseInt(arguments[0]) - 1;
+            $("#srno3").val(t.fnGetData(cc)[1]);
+            $("#in_item_id").val(t.fnGetData(cc)[2]);
+            $('#in_item_qty').val(t.fnGetData(cc)[5]);
+            $("#UOM_ID").val(t.fnGetData(cc)[6]);
+            $("#in_item_group_id").val(t.fnGetData(cc)[8]);
+        }
+
+        $('#ProcessSequenceGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "q", bVisible: false },
+                     { sname: "a", bVisible: true },
+                     { sname: "b", bVisible: false },
+                     { sname: "c", bVisible: true },
+                     { sname: "d", bVisible: true },
+                     { sname: "e", bVisible: true },
+                     { sname: "f", bVisible: false },
+                     { sname: "g", bVisible: true },
+                     { sname: "h", bVisible: false },
+                     { sname: "i", bVisible: true },
+                     //{
+                     //    sname: "j", sWidth: "8%",
+                     //    bSortable: false,
+                     //    mRender: function (data, type, full) {
+                     //        return '<img class="edit" src="../images/writing_file.png" height="20px" width="25px" alt="Edit" onclick="editRow(' + full[1] + ');" /><img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete" onclick="deleteRow(' + full[1] + ');" />';
+                     //    }
+                     //}
+            ]
+
+        });
+
+        function TabletoJeson() {
+
+            var t = $('#ProcessSequenceGrid').dataTable();
+
+            var rowCount = t.fnGetData().length;
+            console.log(rowCount);
+            for (i = 0; i < rowCount; i++) {
+
+
+                $("#ProcessSequenceDetails").append('<input type="hidden" id="in_item_group_id' + i + '" name="in_item_group_id">');
+                $("#ProcessSequenceDetails").append('<input type="hidden" id="in_item_id' + i + '" name="in_item_id">');
+                $("#ProcessSequenceDetails").append('<input type="hidden" id="in_item_qty' + i + '" name="in_item_qty">');
+                $("#ProcessSequenceDetails").append('<input type="hidden" id="in_uom_id' + i + '" name="in_uom_id">');
+
+                $("#in_item_id" + i).val(t.fnGetData(i)[2]);
+                $("#in_item_qty" + i).val(t.fnGetData(i)[5]);
+                $("#in_uom_id" + i).val(t.fnGetData(i)[6]);
+                $("#in_item_group_id" + i).val(t.fnGetData(i)[8]);
+
+
+            }
+        }
+
+    </script>
+}
+
+

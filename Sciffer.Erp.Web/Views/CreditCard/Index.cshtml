@@ -1,0 +1,74 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<br /><br /><br />
+<div>
+    @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+    @(Html.EJ().Grid<credit_card_vm>("Searching")
+      .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "CreditCard" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic",new {ctrlname= "CreditCard" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "CreditCard" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "CreditCard" })))
+       .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("credit_card_id").Width("15%").HeaderText("ID").Visible(false).IsPrimaryKey(true).Width(80).Add();
+            col.Field("credit_card_code").Width("15%").HeaderText("Credit Card Code").Add();
+            col.Field("credit_card_number").Width("15%").HeaderText("Credit Card Number").Add();
+            col.Field("bank_name").Width("15%").HeaderText("Bank Name").Add();
+            col.Field("gl_ledger_code").Width("15%").HeaderText("GL Account").Visible(false).Add();
+            col.Field("country_name").Width("15%").HeaderText("Country").Visible(false).Add();
+            col.Field("Currency").Width("15%").HeaderText("Currency").Visible(false).Add();
+            col.Field("is_blocked").Width("15%").HeaderText("Blocked").Visible(false).Add();
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {           
+            location.href = '@Url.Action("Edit", "CreditCard")?id=' + args.rowData.credit_card_id;
+        }
+        if (args.requestType == "add") {
+            
+            location.href = '@Url.Action("Create", "CreditCard")';
+        }
+    }
+   
+</script>

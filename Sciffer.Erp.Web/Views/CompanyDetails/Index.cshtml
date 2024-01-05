@@ -1,0 +1,103 @@
+﻿@using Newtonsoft.Json 
+@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<comapnyvm>("Searching")
+         .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "CompanyDetails" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "CompanyDetails" }))
+        .ExportToPdfAction(Url.Action("ExportToPdf", "Generic", new { ctrlname = "CompanyDetails" })).ExportToWordAction(Url.Action("ExportToWord", "Generic", new { ctrlname = "CompanyDetails" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+         .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("company_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Visible(false).Width(80).Add();
+            col.Field("company_name").Width("15%").HeaderText("Company Name").Add();
+            col.Field("company_display_name").Width("15%").HeaderText("Display Name").Add();
+            col.Field("registered_address").Width("15%").HeaderText("Reg. Address").Add();
+            col.Field("registered_city").Width("15%").HeaderText("Reg. City").Add();
+            col.Field("registered_state").Width("15%").HeaderText("Reg. State").Add();
+            col.Field("registered_pincode").Width("15%").HeaderText("Reg. Pincode").Visible(false).Add();
+            col.Field("registered_country").Width("15%").HeaderText("Reg. Country").Add();
+            col.Field("registered_mobile").Width("15%").HeaderText("Reg. Mobile").Visible(false).Add();
+            col.Field("registered_telephone_code").Width("15%").HeaderText("Reg. Tel Code").Visible(false).Add();
+            col.Field("registered_telephone").Width("15%").HeaderText("Reg. Telephone").Visible(ViewBag.hid).Add();
+            col.Field("registered_email").Width("15%").HeaderText("Reg. Email").Visible(false).Add();
+            col.Field("corporate_address").Width("15%").HeaderText("Corr. Address").Visible(false).Add();
+            col.Field("corporate_city").Width("15%").HeaderText("Corr. City").Visible(false).Add();
+            col.Field("corporate_state").Width("15%").HeaderText("Corr. State").Visible(false).Add();
+            col.Field("corporate_pincode").Width("15%").HeaderText("Corr. Pincode").Visible(false).Add();
+            col.Field("corporate_country").Width("15%").HeaderText("Corr. Country").Visible(false).Add();
+            col.Field("corporate_mobile").Width("15%").HeaderText("Corr. Mobile").Visible(false).Add();
+            col.Field("corporate_telephone_code").Width("15%").HeaderText("Corr. Tel Code").Visible(false).Add();
+            col.Field("corporate_telephone").Width("15%").HeaderText("Corr. Telephone").Visible(false).Add();
+            col.Field("website").Width("15%").HeaderText("Website").Visible(false).Add();
+            col.Field("PAN_NO").Width("15%").HeaderText("PAN").Visible(false).Add();
+            col.Field("CIN_NO").Width("15%").HeaderText("CIN").Visible(false).Add();
+            col.Field("TAN_NO").Width("15%").HeaderText("TAN").Visible(false).Add();
+            col.Field("currency").Width("15%").HeaderText("Currency").Visible(false).Add();
+            col.Field("ALLOW_NEGATIVE_CASH").Width("15%").HeaderText("Allow Negative Cash").Visible(false).Add();
+            col.Field("ALLOW_NEGATIVE_INVENTORY").Width("15%").HeaderText("Aloow Negative Inventory").Visible(false).Add();
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+       .e-editcell {
+        display:none
+    }
+</style>
+
+<script type="text/javascript">
+
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = "@Url.Action("Edit", "CompanyDetails")?id=" + args.rowData.company_id;            
+        }
+        if (args.requestType == "add") {
+            if (args.model.dataSource[0] == undefined)
+            {              
+                location.href = "@Url.Action("Create", "CompanyDetails")";
+            }
+            else
+            {
+                sweetAlert("", "CompanyDetails can be created once!", "error");
+                args.cancel = true;
+            }
+        }
+    }
+    function rightClick(args) {
+        location.href = "@Url.Action("Details", "CompanyDetails")?id=" + args.data.company_id;
+    }
+
+</script>

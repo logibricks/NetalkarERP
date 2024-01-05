@@ -1,0 +1,885 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.ref_fin_template_vm
+@{
+    ViewBag.Title = "Index";
+}
+
+<style type="text/css">
+    .tab-content {
+        width: 100%;
+        font-size: 14px;
+    }
+
+        .tab-content ul {
+            list-style-type: none;
+        }
+
+        .tab-content li {
+            margin: 0px;
+        }
+
+    /*.tab-content li:hover {
+        border: 1pt solid red;
+    }*/
+    .list-group-item {
+        padding: 0px 15px;
+    }
+
+    .panel-body {
+        padding: 0px !important;
+    }
+
+    .padding {
+        padding: 8px 15px 4px 8px; /* Add some padding */
+    }
+
+    .panel-default > .panel-heading {
+        background-color: #fcfcfc;
+    }
+
+    .picked {
+        background: #dcd4d4;
+    }
+</style>
+<br />
+@using (Html.BeginForm("Create", "FinancialTemplate"))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <div id="template_id"></div>
+        <div class="container get">
+            <div class="row">
+                <input type="hidden" id="t_format2" name="t_format2" />
+                <div class="col-lg-8 col-sm-8">
+                    <br />
+                    <div class="form-group">
+                        <div class="col-lg-2 col-sm-2">
+                            <label for="template_name">Template Name *</label>
+                        </div>
+                        <div class="col-md-10 col-sm-10 col-xs-12">
+                            <input type="text" name="template_name" id="template_name" class="form-control" required oninvalid="this.setCustomValidity('Enter Template Name Here')" oninput="setCustomValidity('')" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-sm-8">
+                    <br />
+                    <div class="col-lg-2 col-sm-2">
+                        <label for="t_format">T Format</label>
+                    </div>
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        <div class="checkbox" id="t_format" name="t_format" style="float:left;">
+                        </div>
+                    </div>
+                </div>
+            </div><br />
+
+            <br />
+        </div>
+    </div>
+}
+<div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+    <ul id="bs_pl" class="nav nav-tabs bar_tabs" role="tablist" name="bs_pl">
+        <li class="active"><a data-toggle="tab" href="#sectionA" id="balance_sheet" value="1">Balance Sheet</a></li>
+        <li><a data-toggle="tab" href="#sectionB" id="profit_loss" value="2">Profit & Loss</a></li>
+    </ul>
+    <div class="tab-content" id="tab-content">
+        <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" style="height:50px;">
+                            <div style="float:left; display:inline-block;">
+                                <div class="glyphicon glyphicon-plus padding" id="create1"></div>
+                                <div class="glyphicon glyphicon-pencil edit padding" id="edit" onclick="javascript: EditCall($(this).attr('value'));"></div>
+                                @*<div class="fa fa-child padding" id="child" onclick="javascript: ChildCall($(this).attr('value'));"></div>*@
+
+                            </div>
+                            <div style="float:right">
+                                <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." class="padding">
+                            </div>
+                        </div>
+                        <div class="panel-body scrollit">
+                            <div class="table-responsive">
+                                <table class="table table-responsive table-bordered table-striped hidden" id="ContactGrid1">
+                                    <thead>
+                                        <tr>
+                                            <th><label>bs_pl_side</label></th> <!--0-->
+                                            <th><label>group ID</label></th>
+                                            <th><label>group_name</label></th> <!--1-->
+                                            <th><label>main_heading</label></th> <!--2-->
+                                            <th><label>parent_id</label></th> <!--3-->
+                                            <th><label>bs_pl</label></th> <!--4-->
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <div class="row" style="max-height: calc(100vh - 250px); overflow-y: auto;">
+                                    <div class="col-sm-6" id="Bleft">
+                                        <label class="control-label">LEFT SIDE</label>
+                                        <ul class="list-group-item" id="bleft0"></ul>
+                                    </div>
+                                    <div class="col-sm-6" id="Bright">
+                                        <label class="control-label">RIGHT SIDE</label>
+                                        <ul class="list-group-item" id="bright0"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="panel panel-default" id="balancesheet" hidden>
+                        <div class="panel-body">
+                            <br />
+                            <div class="form-horizontal">
+                                <input type="hidden" id="group_id" />
+                                <div class="col-sm-1"></div>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <label class="control-label col-md-4 col-lg-4 col-xs-12">
+                                            Side *
+                                        </label>
+                                        <div class="col-md-8 col-lg-8 col-xs-12">
+                                            @Html.DropDownList("bs_pl_side", new List<SelectListItem>
+                                                {
+                                                new SelectListItem { Text = "--Select--", Value = "0" },
+                                                new SelectListItem { Text = "Left", Value = "1" },
+                                                new SelectListItem { Text = "Right", Value = "2" }
+                                                }, new { @class = "form-control"/*, @onchnage="balaceparentlist()" */})
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <label for="gl_ledger_code" class="col-sm-4 control-label">Group Name *</label>
+                                        <div class="col-md-8 col-sm-8 col-xs-12">
+                                            <input type="text" name="group_name" id="group_name" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <label for="is_blocked" class="col-sm-4 control-label">Main Heading</label>
+                                        <div class="col-md-8 col-sm-8 col-xs-12">
+                                            <div class="checkbox" OnChange="javascript:enableTextBox();">
+                                                <input type="checkbox" name="main_heading" id="main_heading" checked />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row bparent">
+                                        <label for="gl_parent_ledger_code" class="col-sm-4 control-label">Parent Name *</label>
+                                        <div class="col-md-8 col-sm-8 col-xs-12">
+                                            @Html.DropDownList("parent_id", Enumerable.Empty<SelectListItem>(), "---select---", new { @class = "form-control " })
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="form-group">
+                                        <div class="col-md-offset-2 col-md-10">
+                                            <button type="button" id="add" class="add btn btn-success" style="float:right">Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="srno" />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /********************************* Profit & Loss****************************************/ -->
+        <div id="sectionB" class="tab-pane fade " style="margin-top:10px;">
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" style="height:50px;">
+                            <div style="float:left; display:inline-block;">
+                                <div class="glyphicon glyphicon-plus padding" id="create2"></div>
+                                <div class="glyphicon glyphicon-pencil edit padding" id="edit1" onclick="javascript: EditCall1($(this).attr('value'));"></div>
+                                @*<div class="fa fa-child padding" id="child1" onclick="javascript: ChildCall($(this).attr('value'));"></div>*@
+
+                            </div>
+                            <div style="float:right">
+                                <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." class="padding">
+                            </div>
+                        </div>
+                        <div class="panel-body scrollit">
+                            <div class="table-responsive">
+                                <table class="table table-responsive table-bordered table-striped hidden" id="ContactGrid2">
+                                    <thead>
+                                        <tr>
+                                            <th><label>bs_pl_side</label></th> <!--0-->
+                                            <th><label>group ID</label></th>
+                                            <th><label>group_name</label></th> <!--1-->
+                                            <th><label>main_heading</label></th> <!--2-->
+                                            <th><label>parent_id</label></th> <!--3-->
+                                            <th><label>bs_pl</label></th> <!--4-->
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6" id="Pleft">
+                                    <label class="control-label">LEFT SIDE</label>
+                                    <ul class="list-group-item" id=""></ul>
+                                </div>
+                                <div class="col-sm-6" id="Pright">
+                                    <label class="control-label">RIGHT SIDE</label>
+                                    <ul class="list-group-item" id=""></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="panel panel-default" id="balancesheet1" hidden>
+                        <div class="panel-body">
+                            <br />
+                            <div class="form-horizontal">
+                                <input type="hidden" id="group_id1" />
+                                <div class="col-sm-1"></div>
+                                <div class="col-sm-10">
+                                    <div class="row">
+                                        <label class="control-label col-md-4 col-lg-4 col-xs-12">
+                                            Side *
+                                        </label>
+                                        <div class="col-md-8 col-lg-8 col-xs-12">
+                                            @Html.DropDownList("bs_pl_side1", new List<SelectListItem>
+                                                {
+                                                new SelectListItem { Text = "--Select--", Value = "0" },
+                                                new SelectListItem { Text = "Left", Value = "1" },
+                                                new SelectListItem { Text = "Right", Value = "2" }
+                                                }, new { @class = "form-control" })
+                                        </div>
+
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <label for="gl_ledger_code" class="col-sm-4 control-label">Group Name *</label>
+                                        <div class="col-md-8 col-sm-8 col-xs-12">
+                                            <input type="text" name="group_name1" id="group_name1" class="form-control" />
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <label for="is_blocked" class="col-sm-4 control-label">Main Heading</label>
+                                        <div class="col-md-8 col-sm-8 col-xs-12">
+                                            <div class="checkbox" OnChange="javascript:enableTextBox1();">
+                                                <input type="checkbox" class="main_h" name="main_heading1" id="main_heading1" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row pparent">
+                                        <label for="gl_parent_ledger_code" class="col-sm-4 control-label">Parent Name *</label>
+                                        <div class="col-md-8 col-sm-8 col-xs-12">
+                                            @Html.DropDownList("parent_id1", Enumerable.Empty<SelectListItem>(), "---select---", new { @class = "form-control p" })
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div class="form-group">
+                                        <div class="col-md-offset-2 col-md-10">
+                                            <button type="button" id="add1" class="add1 btn btn-success" style="float:right">Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="srno1" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" id="create" data-controller="FinancialTemplate" class="btn btn-success" style="float:right" onclick="TabletoJeson()" />
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="loading">Loading&#8230;</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script src="~/Scripts/jquery.treetable.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('.main_h').checkboxpicker();
+            $("#create1").click(function () {
+                $("#balancesheet").show();
+                clearmodel();
+                var t = $('#ContactGrid1').DataTable();
+                var rowCount = t.fnGetData().length;
+                if (rowCount == 0) {
+                    $(".bparent").hide();
+                    $('#main_heading').prop('checked', true);
+                }
+                else {
+                    $(".bparent").show();
+                    $('#main_heading').prop('checked', false);
+                }
+            });
+            $("#create2").click(function () {
+                $("#balancesheet1").show();
+                clearmodel1();
+                var t = $('#ContactGrid1').DataTable();
+                var rowCount = t.fnGetData().length;
+                if (rowCount == 0) {
+                    $(".pparent").hide();
+                    $('#main_heading1').prop('checked', true);
+                }
+                else {
+                    $(".pparent").show();
+                    $('#main_heading1').prop('checked', false);
+                }
+            });
+            $("#bs_pl_side option[value=2]").hide();
+            $("#bs_pl_side1 option[value=2]").hide();
+            $("#Bright").hide();
+            $("#Pright").hide();
+        })
+        $("#t_format").checkboxpicker();
+        $('#t_format').checkboxpicker().on('change', function () {
+            if ($(this).prop('checked')) {
+                $('#t_format2').val("true");
+                $("#bs_pl_side option[value=2]").show();
+                $("#bs_pl_side1 option[value=2]").show();
+                $("#Bright").show();
+                $("#Pright").show();
+            }
+            else {
+                $('#t_format2').val("false");
+                $("#bs_pl_side option[value=2]").hide();
+                $("#bs_pl_side1 option[value=2]").hide();
+                $("#Bright").hide();
+                $("#Pright").hide();
+            }
+        });
+        $('#main_heading').checkboxpicker();
+        function enableTextBox() {
+            if (document.getElementById("main_heading").checked == true)
+                $(".bparent").hide();
+            else
+                $(".bparent").show();
+        }
+        function enableTextBox1() {
+            if (document.getElementById("main_heading1").checked == true)
+                $(".pparent").hide();
+            else
+                $(".pparent").show();
+        }
+
+        /************* for Balance Sheet ****************/
+
+        $("#bs_pl_side").on("change", function (event) {
+            var bs_pl_side = $("#bs_pl_side :selected").text();
+            var t = $('#ContactGrid1').DataTable();
+            var rowCount = t.fnGetData().length;
+            $("#parent_id").empty();
+            $("#parent_id").append($('<option></option>').val("").html("---Select---"));
+            if (bs_pl_side == "Left") {
+                for (var i = 0; i < rowCount; i++) {
+                    if (t.fnGetData(i, 0) == "1" && t.fnGetData(i, 5) == 1) {
+                        $("#parent_id").append(
+                           $('<option></option>').val(t.fnGetData(i, 1)).html(t.fnGetData(i, 2)));
+                    }
+                }
+            }
+            else {
+                for (var i = 0; i < rowCount; i++) {
+                    if (t.fnGetData(i, 0) == "2" && t.fnGetData(i, 5) == 1) {
+                        $("#parent_id").append(
+                           $('<option></option>').val(t.fnGetData(i, 1)).html(t.fnGetData(i, 2)));
+                    }
+                }
+            }
+        });
+
+        $(".add").on("click", function (event) {
+            var t = $('#ContactGrid1').DataTable();
+            var rowCount = t.fnGetData().length;
+            var bs_pl_side = $("#bs_pl_side").val();
+            var group_id = $("#group_id").val();
+            var group_name = $('#group_name').val();
+            var main_heading = '';
+            var parent_id = $("#parent_id").val();
+            var bs_pl = '';
+            var chkbdata = 0;
+
+
+            if ($("#bs_pl").click('selected')) {
+                bs_pl = 1;
+            }
+            else {
+                bs_pl = 2;
+            }
+            if ($('#main_heading').is(':checked')) {
+                main_heading = 1;
+                parent_id = 0;
+            }
+            else {
+                main_heading = 0;
+            }
+            if (main_heading == 0 && parent_id == '') {
+                swal("", "Select parent of group name !", "error");
+                return false;
+            }
+            if ($("#srno").val() == "") {
+                if (rowCount == 0) {
+                    var ulid;
+                    if (bs_pl_side == 1) {
+                        ulid = "Bleft";
+                    }
+                    else {
+                        ulid = "Bright";
+                    }
+                    $("#" + ulid + " ul").append('<li id=' + "b" + rowCount + "-" + 1 + "-" + bs_pl + '><a href="#">' + group_name + '</a><ul class = "list-group-item" id=' + "bleft" + rowCount + 1 + '></ul></li>')
+                    chkbdata = 1;
+                }
+                else {
+                    var filter, ul, li, ulid;
+                    var flag = 1;
+                    filter = parent_id;
+                    if (bs_pl_side == 1) {
+                        ulid = "Bleft";
+                    }
+                    else {
+                        ulid = "Bright";
+                    }
+                    ul = document.getElementById(ulid);
+                    li = ul.getElementsByTagName('li');
+                    if (li.length == 0) {
+                        $("#" + ulid + " ul").append('<li id=' + "b" + rowCount + "-" + 1 + "-" + bs_pl + '><a href="#">' + group_name + '</a><ul class = "list-group-item" id=' + "bleft" + rowCount + 1 + '></ul></li>')
+                        chkbdata = 1;
+                    }
+                    else {
+                        for (i = 0; i < li.length; i++) {
+                            a = li[i];
+                            ultag = a.getElementsByTagName('ul')
+                            if (a.id == filter) {
+                                $(ultag[0]).append('<li id=' + "b" + rowCount + "-" + 1 + "-" + bs_pl + '><a href="#">' + group_name + '</a><ul class = "list-group-item" id=' + "bleft" + rowCount + 1 + '></ul></li>')
+                                flag = 0;
+                                chkbdata = 1;
+                            }
+                        }
+                        if (flag == 1) {
+                            if (bs_pl_side == 1) {
+                                ulid = "Bleft";
+                            }
+                            else {
+                                ulid = "Bright";
+                            }
+                            ulfirst = $("#" + ulid).find('ul');
+                            $(ulfirst[0]).append('<li id=' + "b" + rowCount + "-" + 1 + "-" + bs_pl + '><a href="#">' + group_name + '</a><ul class = "list-group-item" id=' + "bleft" + rowCount + 1 + '></ul></li>')
+                            chkbdata = 1;
+                        }
+                    }
+                }
+            }
+            else {
+                var index = $("#srno").val();
+                if (parent_id != t.fnGetData(parseFloat(index) - 1, 4)) {
+                    var x = $("#" + group_id + " a")[0];
+                    $(x).remove();
+                    var filter, ul, li, ulid;
+                    var flag = 1;
+                    filter = parent_id;
+                    if (bs_pl_side == 1) {
+                        ulid = "Bleft";
+                    }
+                    else {
+                        ulid = "Bright";
+                    }
+                    ul = document.getElementById(ulid);
+                    li = ul.getElementsByTagName('li');
+                    for (var i = 0; i < li.length; i++) {
+                        a = li[i];
+                        ultag = a.getElementsByTagName('ul')
+                        if (a.id == filter) {
+                            $(ultag[0]).append('<li id=' + group_id + '><a href="#">' + group_name + '</a><ul class = "list-group-item" id=' + "bleft" + rowCount + 1 + '></ul></li>')
+                            flag = 0;
+                        }
+                        chkbdata = 1;
+                    }
+
+                }
+                else {
+                    chkbdata = 1;
+                    var x = $("#" + group_id + " a")[0];
+                    $(x).text(group_name);
+                }
+            }
+
+            if (chkbdata == 1) {
+                if ($("#srno").val() == "") {
+                    t.fnAddData([bs_pl_side, "b" + rowCount + "-" + 1 + "-" + bs_pl, group_name, main_heading, parent_id, bs_pl]);
+                }
+                else {
+                    var cc = $("#srno").val();
+                    cc = parseInt(cc) - 1;
+                    t.fnUpdate([bs_pl_side, group_id, group_name, main_heading, parent_id, bs_pl], cc)
+                }
+            }
+            else {
+                swal("", "check side !", "error");
+                return false;
+            }
+            clearmodel();
+            start();
+            return true;
+
+        });
+        function clearmodel() {
+            $("#srno").val("");
+            $("#bs_pl_side").val('0').trigger('change');
+            $("#group_name").val('');
+            $("#main_heading").prop('checked', false);
+            $("#parent_id").val('').trigger('change');
+            $(".bparent").show();
+        }
+        $('#ContactGrid1').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "b", bVisible: true },
+                     { sname: "c", bVisible: true },
+                     { sname: "c", bVisible: true },
+                     { sname: "e", bVisible: true },
+                     { sname: "l", bVisible: true },
+                     { sname: "j", bVisible: true }
+            ]
+
+        });
+
+        /***************** For Profit & Loss *****************/
+
+        $("#bs_pl_side1").on("change", function (event) {
+            var bs_pl_side = $("#bs_pl_side1 :selected").text();
+            var t = $('#ContactGrid2').DataTable();
+            var rowCount = t.fnGetData().length;
+            $("#parent_id1").empty();
+            $("#parent_id1").append($('<option></option>').val("").html("---Select---"));
+            if (bs_pl_side == "Left") {
+                for (var i = 0; i < rowCount; i++) {
+                    if (t.fnGetData(i, 0) == "1" && t.fnGetData(i, 5) == 2) {
+                        $("#parent_id1").append(
+                           $('<option></option>').val(t.fnGetData(i, 1)).html(t.fnGetData(i, 2)));
+                    }
+                }
+            }
+            else {
+                for (var i = 0; i < rowCount; i++) {
+                    if (t.fnGetData(i, 0) == "2" && t.fnGetData(i, 5) == 2) {
+                        $("#parent_id1").append(
+                           $('<option></option>').val(t.fnGetData(i, 1)).html(t.fnGetData(i, 2)));
+                    }
+                }
+            }
+        });
+
+
+        $(".add1").on("click", function (event) {
+            var t = $('#ContactGrid2').DataTable();
+            var rowCount = t.fnGetData().length;
+            var bs_pl_side = $("#bs_pl_side1").val();
+            var group_id = $("#group_id1").val();
+            var group_name = $('#group_name1').val();
+            var main_heading = '';
+            var parent_id = $("#parent_id1").val();
+            var bs_pl = '';
+            var chkdata = 0;
+            if ($("#bs_pl").click('selected')) {
+                bs_pl = 2;
+            }
+            else {
+                bs_pl = 1;
+            }
+            if ($('#main_heading1').is(':checked')) {
+                main_heading = 1;
+                parent_id = 0;
+            }
+            else {
+                main_heading = 0;
+            }
+            if (main_heading == 0 && parent_id == '') {
+                swal("", "Select parent of group name !", "error");
+                return false;
+            }
+            if ($("#srno1").val() == "") {
+                if (rowCount == 0) {
+                    var ulid;
+                    if (bs_pl_side == 1) {
+                        ulid = "Pleft";
+                    }
+                    else {
+                        ulid = "Pright";
+                    }
+                    $("#" + ulid + " ul").append('<li id=' + "p" + rowCount + "-" + 1 + "-" + bs_pl + '><a href="#">' + group_name + '</a><ul class = "list-group-item" id=' + "bleft" + rowCount + 1 + '></ul></li>')
+                    chkdata = 1;
+                }
+                else {
+                    var filter, ul, li, ulid;
+                    var flag = 1;
+                    filter = parent_id;
+                    if (bs_pl_side == 1) {
+                        ulid = "Pleft";
+                    }
+                    else {
+                        ulid = "Pright";
+                    }
+                    ul = document.getElementById(ulid);
+                    li = ul.getElementsByTagName('li');
+                    if (li.length == 0) {
+                        $("#" + ulid + " ul").append('<li id=' + "p" + rowCount + "-" + 1 + "-" + bs_pl + '><a href="#">' + group_name + '</a><ul class = "list-group-item" id=' + "bleft" + rowCount + 1 + '></ul></li>')
+                        chkdata = 1;
+                    }
+                    else {
+                        for (i = 0; i < li.length; i++) {
+                            a = li[i];
+                            ultag = a.getElementsByTagName('ul')
+                            if (a.id == filter) {
+                                $(ultag[0]).append('<li id=' + "p" + rowCount + "-" + 1 + "-" + bs_pl + '><a href="#">' + group_name + '</a><ul class = "list-group-item" id=' + "bleft" + rowCount + 1 + '></ul></li>')
+                                flag = 0;
+                                chkdata = 1;
+                            }
+                        }
+                        if (flag == 1) {
+                            if (bs_pl_side == 1) {
+                                ulid = "Pleft";
+                            }
+                            else {
+                                ulid = "Pright";
+                            }
+                            ulfirst = $("#" + ulid).find('ul');
+                            $(ulfirst[0]).append('<li id=' + "p" + rowCount + "-" + 1 + "-" + bs_pl + '><a href="#">' + group_name + '</a><ul class = "list-group-item" id=' + "bleft" + rowCount + 1 + '></ul></li>')
+                            chkdata = 1;
+                        }
+                    }
+
+                }
+            }
+            else {
+                var index = $("#srno1").val();
+                if (parent_id != t.fnGetData(parseFloat(index) - 1, 4)) {
+                    var x = $("#" + group_id + " a")[0];
+                    $(x).remove();
+                    var filter, ul, li, ulid;
+                    var flag = 1;
+                    filter = parent_id;
+                    if (bs_pl_side == 1) {
+                        ulid = "Pleft";
+                    }
+                    else {
+                        ulid = "Pright";
+                    }
+                    ul = document.getElementById(ulid);
+                    li = ul.getElementsByTagName('li');
+                    for (var i = 0; i < li.length; i++) {
+                        a = li[i];
+                        ultag = a.getElementsByTagName('ul')
+                        if (a.id == filter) {
+                            $(ultag[0]).append('<li id=' + group_id + '><a href="#">' + group_name + '</a><ul class = "list-group-item" id=' + "bleft" + rowCount + 1 + '></ul></li>')
+                            flag = 0;
+
+                        }
+                        chkbdata = 1;
+                    }
+
+                }
+                else {
+                    var x = $("#" + group_id + " a")[0];
+                    $(x).text(group_name);
+                }
+                //chkdata = 1;
+                //var x = $("#" + group_id + " a")[0];
+                //$(x).text(group_name);
+            }
+            if (chkdata == 1) {
+                if ($("#srno1").val() == "") {
+                    t.fnAddData([bs_pl_side, "p" + rowCount + "-" + 1 + "-" + bs_pl, group_name, main_heading, parent_id, bs_pl]);
+                }
+                else {
+                    var cc = $("#srno1").val();
+                    cc = parseInt(cc) - 1;
+                    t.fnUpdate([bs_pl_side, group_id, group_name, main_heading, parent_id, bs_pl], cc)
+                }
+            }
+            else {
+                swal("", "check side !", "error");
+                return false;
+            }
+            clearmodel1();
+            start();
+            return true;
+        });
+        function clearmodel1() {
+            $("#srno1").val('')
+            $("#bs_pl_side1").val('0').trigger('change');
+            $("#group_name1").val('');
+            $("#main_heading1").prop('checked', false);
+            $("#parent_id1").val('').trigger('change');
+            $(".pparent").show();
+        }
+        $('#ContactGrid2').DataTable({
+
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "b", bVisible: true },
+                     { sname: "c", bVisible: true },
+                     { sname: "c", bVisible: true },
+                     { sname: "e", bVisible: true },
+                     { sname: "l", bVisible: true },
+                     { sname: "j", bVisible: true }
+            ]
+        });
+
+        /**************Table to jeson***************/
+        function TabletoJeson() {
+            var t = $('#ContactGrid2').DataTable()
+            var rowCount = t.fnGetData().length;
+            var str;
+            $('#template_id').empty();
+            for (i = 0; i < rowCount; i++) {
+                $("#template_id").append('<input type="hidden" id="bs_pl_side1' + i + '" name="bs_pl_side1" >');
+                $("#template_id").append('<input type="hidden" id="group_id1' + i + '" name="group_id1" >');
+                $("#template_id").append('<input type="hidden" id="group_name1' + i + '" name="group_name1" >');
+                $("#template_id").append('<input type="hidden" id="main_heading1' + i + '" name="main_heading1" >');
+                $("#template_id").append('<input type="hidden" id="parent_id1' + i + '" name="parent_id1" >');
+                $("#template_id").append('<input type="hidden" id="bs_pl1' + i + '" name="bs_pl1" >');
+
+                $("#bs_pl_side1" + i).val(t.fnGetData(i, 0));
+                $("#group_id1" + i).val(t.fnGetData(i, 1));
+                $("#group_name1" + i).val(t.fnGetData(i, 2));
+                $("#main_heading1" + i).val(t.fnGetData(i, 3));
+                $("#parent_id1" + i).val(t.fnGetData(i, 4));
+                $("#bs_pl1" + i).val(t.fnGetData(i, 5));
+            }
+            var t = $('#ContactGrid1').DataTable()
+            var rowCount = t.fnGetData().length;
+            var str;
+            for (i = 0; i < rowCount; i++) {
+                $("#template_id").append('<input type="hidden" id="bs_pl_side2' + i + '" name="bs_pl_side1"  >');
+                $("#template_id").append('<input type="hidden" id="group_id2' + i + '" name="group_id1" >');
+                $("#template_id").append('<input type="hidden" id="group_name2' + i + '" name="group_name1" >');
+                $("#template_id").append('<input type="hidden" id="main_heading2' + i + '" name="main_heading1" >');
+                $("#template_id").append('<input type="hidden" id="parent_id2' + i + '" name="parent_id1" >');
+                $("#template_id").append('<input type="hidden" id="bs_pl2' + i + '" name="bs_pl1" >');
+
+                $("#bs_pl_side2" + i).val(t.fnGetData(i, 0));
+                $("#group_id2" + i).val(t.fnGetData(i, 1));
+                $("#group_name2" + i).val(t.fnGetData(i, 2));
+                $("#main_heading2" + i).val(t.fnGetData(i, 3));
+                $("#parent_id2" + i).val(t.fnGetData(i, 4));
+                $("#bs_pl2" + i).val(t.fnGetData(i, 5));
+            }
+        }
+        function EditCall1(id) {
+            if (id == undefined) {
+                sweetAlert("", "Select row to edit!", "error");
+            }
+            else {
+                var t = $('#ContactGrid2').DataTable();
+                var rowCount = t.fnGetData().length;
+
+                for (var i = 0; i < rowCount; i++) {
+                    if (t.fnGetData(i, 1) == id) {
+                        $("#bs_pl_side1").val(t.fnGetData(i, 0)).trigger('change');
+                        $("#group_id1").val(t.fnGetData(i, 1))
+                        $("#group_name1").val(t.fnGetData(i, 2));
+                        $("#srno1").val(i + 1);
+                        $("#parent_id1").empty();
+                        if (t.fnGetData(i, 3) == 1) {
+                            $("#main_heading1").prop("checked", true);
+                        }
+                        else {
+                            $("#main_heading1").prop("checked", false);
+                            $("#parent_id1").append(
+                              $('<option></option>').val(t.fnGetData(i - 1, 1)).html(t.fnGetData(i - 1, 2)));
+                        }
+                        $('#main_heading1').checkboxpicker();
+                        $("#parent_id1").val(t.fnGetData(i, 4));
+                        var p = i;
+                    }
+                }
+
+                for (var j = 0; j < p - 1; j++) {
+                    $("#parent_id1").append(
+                              $('<option></option>').val(t.fnGetData(j, 1)).html(t.fnGetData(j, 2)));
+                }
+            }
+        }
+
+        function EditCall(id) {
+            if (id == undefined) {
+                sweetAlert("", "Select row to edit!", "error");
+            }
+            else {
+                var t = $('#ContactGrid1').DataTable();
+                var rowCount = t.fnGetData().length;
+
+                for (var i = 0; i < rowCount; i++) {
+                    if (t.fnGetData(i, 1) == id) {
+                        $("#bs_pl_side").val(t.fnGetData(i, 0)).trigger('change');
+                        $("#group_id").val(t.fnGetData(i, 1))
+                        $("#group_name").val(t.fnGetData(i, 2));
+                        $("#srno").val(i + 1);
+                        $("#parent_id").empty();
+                        if (t.fnGetData(i, 3) == 1) {
+                            $("#main_heading").prop("checked", true);
+                        }
+                        else {
+                            $("#main_heading").prop("checked", false);
+                            $("#parent_id").append(
+                              $('<option></option>').val(t.fnGetData(i - 1, 1)).html(t.fnGetData(i - 1, 2)));
+                        }
+                        $('#main_heading').checkboxpicker();
+                        $("#parent_id").val(t.fnGetData(i, 4));
+                        var p = i;
+                    }
+                }
+
+                for (var j = 0; j < p - 1; j++) {
+                    $("#parent_id").append(
+                              $('<option></option>').val(t.fnGetData(j, 1)).html(t.fnGetData(j, 2)));
+                }
+            }
+        }
+        function mouseHandler(e) {
+            // Add Picked Class
+            if ($(this).hasClass('picked')) {
+                $(this).removeClass('picked');
+                return true;
+            } else {
+                $(".picked").removeClass('picked');
+                var x = $(this).parents('li')[0];
+                var id = $(x).attr('id');
+                $(x).addClass('picked');
+                $("#edit").attr('value', id);
+                $("#child").attr('value', id);
+                $("#edit1").attr('value', id);
+                $("#child1").attr('value', id);
+            }
+        }
+
+        function start() {
+            // Bind all li
+            $('#tab-content li a').bind('click', mouseHandler);
+        }
+    </script>
+}
+
+

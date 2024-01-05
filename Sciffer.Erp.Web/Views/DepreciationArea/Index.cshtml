@@ -1,0 +1,89 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<br /><br /><br />
+<div>
+    @(Html.EJ().Grid<ref_dep_area_vm>("Searching")
+        .Datasource((IEnumerable<object>)ViewBag.DataSource)
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+            items.AddTool(ToolBarItems.PrintGrid);
+        }))
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "DepreciationArea" })))
+        .AllowSorting()
+        .AllowPaging()
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("dep_area_id").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+            col.Field("dep_area_code").HeaderText("Dep Code.").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("dep_area_description").HeaderText("Dep Description").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("dep_type").HeaderText("Type").Width(80).Add();
+            col.Field("dep_posting").HeaderText("Posting").Width(80).Add();
+            col.Field("dep_area_frequency").HeaderText("Frequency").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("no_of_periods").HeaderText("No. of Periods").ValidationRules(val => val.AddRule("required", true)).Add();
+            col.Field("is_blocked").HeaderText("Blocked").Visible(false).Add();
+        }).ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+        })
+    )
+</div>
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var doc_no = '@ViewBag.num';
+        console.log(doc_no);
+        if (doc_no != '') {
+            if (doc_no != 0) {
+                sweetAlert("", " Saved successfully!", "success");
+            }
+        }
+    });
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = "@Url.Action("Edit", "DepreciationArea")?id=" + args.rowData.dep_area_id;
+        }
+        if (args.requestType == "add") {
+            location.href = '@Url.Action("Create", "DepreciationArea")';
+        }
+    }
+    function rightClick(args) {
+        location.href = "@Url.Action("Details", "DepreciationArea")?id=" + args.data.dep_area_id;
+    }
+    function Click(args) {
+        $('a').css('color','red');
+    }
+
+
+</script>
+
+
+
+
+
+
+
+

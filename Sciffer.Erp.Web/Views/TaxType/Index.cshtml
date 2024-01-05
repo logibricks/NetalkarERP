@@ -1,0 +1,147 @@
+﻿
+@using Sciffer.Erp.Domain.Model
+
+@{
+    ViewBag.Title = "Index";
+}
+<script src="~/Scripts/jquery.validate.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<br /><br /><br />
+    <div>
+      @Html.EJ().Dialog("ErrorList").Title("ErrorList").ShowOnInit(false)
+         @(Html.EJ().Grid<ref_tax_type>("Grid")
+       .Datasource(ds => ds.Json((IEnumerable<object>)ViewBag.DataSource).RemoveURL(Url.Action("InlineDelete", "TaxType")).InsertURL(Url.Action("InlineInsert", "TaxType")).UpdateURL(Url.Action("InlineInsert", "TaxType"))
+                      .Adaptor(AdaptorType.RemoteSaveAdaptor).Offline(false))
+       .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate).InlineFormTemplateID("#template").ShowDeleteConfirmDialog(true).ShowConfirmDialog(true); })
+       .EnableAltRow().AllowPaging()
+       .PageSettings(p => { p.PageSize(10); })
+       .EnableAltRow()
+       .ToolbarSettings(toolbar =>
+       {
+           toolbar.ShowToolbar().ToolbarItems(items =>
+           {
+               items.AddTool(ToolBarItems.Add);
+               items.AddTool(ToolBarItems.Edit);
+               items.AddTool(ToolBarItems.Update);
+               items.AddTool(ToolBarItems.Cancel);
+               items.AddTool(ToolBarItems.ExcelExport);
+               items.AddTool(ToolBarItems.PrintGrid);
+           });
+       })
+       .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "TaxType" })))
+       .AllowSorting()
+       .AllowPaging()
+       .IsResponsive()
+       .AllowFiltering()
+       .ShowColumnChooser()
+       .AllowReordering()
+        .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+       .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+       .Columns(col =>
+       {
+           col.Field("tax_type_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(80).Visible(false).Add();
+           col.Field("tax_type_name").Width("15%").HeaderText("Tax Type").ValidationRules(a => a.AddRule("required", true)).Add();
+           col.Field("income_excise").Width("15%").HeaderText("Income Excise").Visible(false).Add();
+           col.Field("is_blocked").Width("15%").HeaderText("Blocked").Visible(false).Add();
+
+       })
+        .ClientSideEvents(eve => { eve.ActionComplete("complete").Load("Load").EndAdd("EndProcess").EndDelete("EndProcess").EndEdit("EndProcess").Create("Context"); })
+    )
+        
+    </div>
+<script id="template" type="text/template">
+
+    <div>
+        <div class="row">
+
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="hidden" id="tax_type_id" name="tax_type_id" value="{{: tax_type_id}}" class="form-control" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+               <label>Tax Type *</label>
+            </div>
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="text" id="tax_type_name" name="tax_type_name" value="{{: tax_type_name}}" class="form-control" />
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                <label class="control-label">Incoming Excise</label>
+            </div>
+
+            <div class="col-lg-6 col-md-6 col-xs-12">
+                <input type="checkbox" id="income_excise" name="income_excise" />
+            </div>
+
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-xs-12" style="text-align: right;">
+                <label class="control-label">Blocked</label>
+            </div>
+
+                <div class="col-lg-6 col-md-6 col-xs-12">
+                    <input type="checkbox" id="is_blocked" name="is_blocked" />
+                </div>
+           
+        </div>
+        
+    </div>
+</script>
+
+
+
+<script type="text/javascript">
+    var flag = true;
+   
+    function complete(args) {
+        if (args.requestType == "add") {            
+            $('#income_excise').checkboxpicker();
+            $('#is_blocked').checkboxpicker();
+        }
+        if (args.requestType == "beginedit") {
+            document.getElementById('tax_type_name').setAttribute('disabled', 'disabled');
+            if (args.rowData.is_blocked == true) {
+                //Check
+                document.getElementById('is_blocked').setAttribute('checked', 'checked');
+            }
+            else {
+                //UnCheck
+                document.getElementById('is_blocked').removeAttribute('checked');
+            }
+            $('#is_blocked').checkboxpicker();
+            if (args.rowData.income_excise == true) {
+                //Check
+                document.getElementById('income_excise').setAttribute('checked', 'checked');
+            }
+            else {
+                //UnCheck
+                document.getElementById('income_excise').removeAttribute('checked');
+            }
+            $('#income_excise').checkboxpicker();
+        }
+        if (args.requestType == "save") {
+            if (args.data.text == 'duplicate') {
+                sweetAlert("", "Tax Type already exists!", "error");
+                if (args.model.dataSource.dataSource.json[0].tax_type_id == null) {
+                    args.model.dataSource.dataSource.json = args.model.dataSource.dataSource.json.splice(1, args.model.dataSource.dataSource.json.length);
+                }
+            }
+            var gridObj = $("#Grid").ejGrid("instance");
+            gridObj.refreshContent();
+        }
+   
+        if (flag == false)
+            flag = true;
+    }
+
+    function EndProcess() {
+        var gridObj = $("#Grid").ejGrid("instance");
+        gridObj.refreshContent();
+    }
+</script>
+

@@ -1,0 +1,95 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+<div class="row">
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="form-horizontal">
+        <div class=row>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">From Date</label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    <input type="date" id="fromDate" class="form-control radius" required="required">
+                    <input type="hidden" id="entity" value="getmaintenanceorderheaderlevelreport" />
+                    <input type="hidden" id="partial_v" value="Partial_Maintenance_order_Header_Level_Report" />
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">To Date</label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    <input type="date" id="toDate" class="form-control radius" required="required">
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <div class="control-label col-md-5 col-lg-5 col-xs-12">
+                    <label></label>
+                </div>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    <button class="searchbutton searchButton" id="search" onclick="DateCheckplan()"> &nbsp; Run Report </button>
+                </div>
+            </div>
+        </div>
+        <div class=row>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">Plant</label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plant_list, htmlAttributes: new { @class = "form-control mickey plant_id", multiple = "multiple" })
+
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">Machine Code</label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    @Html.DropDownList("machine_id", (System.Web.Mvc.SelectList)ViewBag.mplist, htmlAttributes: new { @class = "form-control mickey machine_id", multiple = "multiple" })
+
+                </div>
+            </div>
+
+        </div>
+        <br />
+        <div class=row>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">Maintenance Type </label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    @Html.DropDownList("maintenance_type_id", (System.Web.Mvc.SelectList)ViewBag.mtypelist, htmlAttributes: new { @class = "form-control mickey maintenance_type_id", multiple = "multiple" })
+
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">Auto / Manual </label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    @Html.DropDownList("auto_manual", new List<SelectListItem>
+                                {
+                                   new SelectListItem { Text = "Auto", Value = "PMO" },
+                                    new SelectListItem { Text = "Manual", Value = "BRKO" }
+                                 }, new { @class = "form-control auto_manual" })
+
+                </div>
+            </div>
+        </div>
+        @*<div class=row>
+            <div class="col-md-4 col-lg-4 col-xs-12">
+                <label class="control-label col-md-5 col-lg-5 col-xs-12">Status </label>
+                <div class="col-md-7 col-lg-7 col-xs-12">
+                    @Html.DropDownList("status_id", new List<SelectListItem>
+                                {
+                                   new SelectListItem { Text = "Open", Value = "2" },
+                                    new SelectListItem { Text = "Close", Value = "1" }
+
+
+
+                                 }, new { @class = "form-control" })
+
+                </div>
+            </div>
+        </div>*@
+    </div>
+</div>
+    </div>
+<br />
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div id="searchresult">
+            @Html.Partial("Partial_Maintenance_order_Header_Level_Report", (object)ViewBag)
+        </div>
+    </div>
+</div>
+
+

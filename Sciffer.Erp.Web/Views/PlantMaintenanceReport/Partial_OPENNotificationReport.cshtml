@@ -1,0 +1,46 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@using Syncfusion.JavaScript.Models
+
+@{(Html.EJ().Grid<report_plant_maintenanace>("Editing")
+                            .Datasource(ds => ds.URL(Url.Action("GetMaintenancePlanCycleandFrequencyReport", "PlantMaintenanceReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&plant_id=" + ViewBag.plant_id + "&machine_id=" + ViewBag.machine_id + "&notification_type=" + ViewBag.notification_type + "&employee_id=" + ViewBag.employee_id).Adaptor(AdaptorType.UrlAdaptor))
+                           
+                            .AllowPaging().PageSettings(a => a.PageSize(20))
+                            .AllowFiltering()
+                                .FilterSettings(X => X.FilterType(FilterType.Excel))
+                            .ShowColumnChooser()
+                            .AllowSorting()
+                            .AllowScrolling()
+                                    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "PlantMaintenanceReport", new { ctrlname = "OPENNotificationReport" })))
+                                .ScrollSettings(scroll => { scroll.Width("100%"); })
+                        .ToolbarSettings(toolbar =>
+                        {
+                            toolbar.ShowToolbar().ToolbarItems(items =>
+                            {
+                                items.AddTool(ToolBarItems.Search);
+                                items.AddTool(ToolBarItems.ExcelExport);
+                                items.AddTool(ToolBarItems.PrintGrid);
+                            });
+                        })
+                        .Columns(col =>
+                        {
+
+                            col.Field("doc_number").Width("15%").HeaderText("Document Number").Add();
+                            col.Field("notification_date").Width("15%").HeaderText("Notification Date").Format("{0:dd/MM/yyyy}").Visible(true).Add();
+                            col.Field("Plant").Width("15%").HeaderText("Plant").Add();
+                            col.Field("Notification").Width("15%").HeaderText("Notification Type").Add();
+                            col.Field("notification_description").Width("15%").HeaderText("Notification Description").Add();
+                            col.Field("Machine").Width("15%").HeaderText("Machine").Add();
+                            col.Field("Notified_By").Width("15%").HeaderText("Notified By").Visible(false).Add();
+                            col.Field("start_date").Width("15%").HeaderText("Malfunction Start Date").Format("{0:dd/MM/yyyy}").Visible(true).Add();
+                            col.Field("start_time").Width("15%").HeaderText("Malfunction Start Time").Visible(true).Add();
+                        // col.Field("end_date").Width("15%").HeaderText("Malfunction End Date").Format("{0:dd/MM/yyyy}").Visible(true).Add();
+                        //col.Field("end_time").Width("15%").HeaderText("Malfunction End Time").Format("{0:MM-dd-yyyy hh:mm tt}").Visible(true).Add();
+                        col.Field("Ageing_Days").Width("15%").HeaderText("Ageing Days").Add();
+
+                        })
+                    .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClickplan"); })
+                    ).Render();}
+@Html.EJ().ScriptManager()
+
+
+

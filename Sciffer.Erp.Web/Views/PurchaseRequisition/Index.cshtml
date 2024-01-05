@@ -1,0 +1,120 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.Model.pur_requisition>
+@using Sciffer.Erp.Domain.ViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<br /><br /><br /><br /><br />
+<div>
+    @(Html.EJ().Grid<pur_requisition_vm>("FlatGrid")
+         .Datasource(ds => ds.URL(Url.Action("GetIndexData", "Generic", new { @ctrl_name = "PurchaseRequisition" }))
+         .EnableCaching()
+        .CachingPageSize(4)
+        .TimeTillExpiration(120000)
+        .Adaptor(AdaptorType.UrlAdaptor))
+        .EditSettings(edit => { edit.AllowAdding().AllowDeleting().AllowEditing().EditMode(EditMode.InlineFormTemplate); })
+        .ToolbarSettings(toolBar => toolBar.ShowToolbar().ToolbarItems(items =>
+        {
+            items.AddTool(ToolBarItems.Add);
+            items.AddTool(ToolBarItems.Edit);
+            items.AddTool(ToolBarItems.ExcelExport);
+
+            items.AddTool(ToolBarItems.PrintGrid);
+        })).ContextMenuSettings(contextMenu =>
+        {
+            contextMenu.EnableContextMenu();
+            contextMenu.DisableDefaultItems();
+            contextMenu.CustomContextMenuItems(new List<Syncfusion.JavaScript.Models.CustomContexMenuItems>() { new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu", Text = "Print A4" }, new Syncfusion.JavaScript.Models.CustomContexMenuItems() { Id = "MyMenu1", Text = "Print A5" } });
+        })
+        .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel", "Generic", new { ctrlname = "PurchaseRequisition" })))
+        .AllowSorting()
+       .AllowPaging().PageSettings(a => a.PageSize(20))
+        .IsResponsive()
+        .AllowFiltering()
+        .ShowColumnChooser()
+        .AllowReordering()
+         .AllowScrolling()
+        .ScrollSettings(col => { col.Width("100%"); })
+        .FilterSettings(filter => { filter.FilterType(FilterType.Excel); })
+        .Columns(col =>
+        {
+            col.Field("pur_requisition_id").Width("15%").HeaderText("ID").IsPrimaryKey(true).Width(55).Visible(false).Add();
+            col.Field("category").Width("15%").HeaderText("Category").Visible(true).Add();
+            col.Field("pur_requisition_number").Width("15%").HeaderText("Requisition Number").Add();
+            col.Field("pur_requisition_date").Width("15%").HeaderText("Requisition Date").Format("{0:dd/MM/yyyy}").Add();
+            col.Field("vendor_name").Width("15%").HeaderText("Vendor").Visible(true).Add();
+            col.Field("item_name").Width("15%").HeaderText("Item").Visible(true).Add();
+            col.Field("delivery_date").Width("15%").HeaderText("Delivery Date").Visible(false).Add();
+            col.Field("business_unit_name").Width("15%").HeaderText("Business Unit").Visible(false).Add();
+            col.Field("plant_name").Width("15%").HeaderText("Plant").Visible(true).Add();
+            col.Field("source_name").Width("15%").HeaderText("Source").Visible(false).Add();
+           // col.Field("status").Width("15%").HeaderText("Status").Visible(true).Add();
+            col.Field("vendor_quotation_details").Width("15%").HeaderText("Vendor Quotation Detail").Visible(false).Add();
+            col.Field("approval_status_name").Width("15%").HeaderText("Approval Status").Visible(true).Add();
+            col.Field("responsibility").Width("15%").HeaderText("Responsibility").Visible(true).Add();
+            col.Field("closed_remarks").Width("15%").HeaderText("Closed Remarks").Visible(true).Add();
+            col.Field("closed_user").Width("15%").HeaderText("Closed By").Visible(true).Add();
+            col.Field("approval_comments").Width("15%").HeaderText("Approval Comments").Visible(true).Add();
+            col.Field("approved_user").Width("15%").HeaderText("Approval By").Visible(true).Add();
+            col.Field("approved_ts").Width("15%").HeaderText("Approval Date").Visible(true).Add();
+            col.Field("status_name").Width("15%").HeaderText("Requisition Status").Visible(true).Add();
+        })
+        .ClientSideEvents(eve =>
+        {
+            eve.ActionBegin("actionBegin");
+            eve.RightClick("rightClick");
+            eve.ContextClick("contextclick");
+        })
+    )
+</div>
+
+<style>
+    .e-editedrow {
+        display: none;
+    }
+
+    .e-editcell {
+        display: none;
+    }
+</style>
+
+<script type="text/javascript">
+    function contextclick(args) {
+        //if (this.getSelectedRecords()[0].approval_status_name == "Approved")
+           // {
+            if (args.text == "Print A4") {
+                // alert(this.getSelectedRecords()[0].pur_requisition_id);
+                var url = '@Url.Action("Pdf", "PurchaseRequisition")?id=' + this.getSelectedRecords()[0].pur_requisition_id + '&type=' + 1;
+                window.open(url);
+            }
+            else {
+                var url = '@Url.Action("Pdf", "PurchaseRequisition")?id=' + this.getSelectedRecords()[0].pur_requisition_id + '&type=' + 2;
+                window.open(url);
+            }
+         // }
+        //else {
+
+        //    sweetAlert("", "This PO is not approved !", "info");
+        //}
+    };
+    function actionBegin(args) {
+        if (args.requestType == "beginedit")
+        {
+            location.href = '@Url.Action("Edit", "PurchaseRequisition")?id=' +args.rowData.pur_requisition_id;
+        }
+        if (args.requestType == "add") {
+            location.href = '@Url.Action("Create", "PurchaseRequisition")';
+        }
+    }
+    function rightClick(args) {
+        location.href = '@Url.Action("Details", "PurchaseRequisition")?id=' +args.data.pur_requisition_id;
+    }
+   $(document).ready(function(){
+        var doc_no= '@ViewBag.doc';
+        if (doc_no != '') {
+            if (doc_no != 0) {
+                sweetAlert("", doc_no + " Saved successfully!", "success");
+            }
+        }
+    });
+</script>
+

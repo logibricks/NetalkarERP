@@ -1,0 +1,118 @@
+﻿@using Sciffer.Erp.Domain.ViewModel
+@{(Html.EJ().Grid<Report_OEE_vm>("Editing")
+                                          .Datasource(ds => ds.URL(Url.Action("OverallEquipmentEffectivenessReport", "ProductionReport") + "?entity=" + ViewBag.entity + "&from_date=" + ViewBag.from_date + "&to_date=" + ViewBag.to_date + "&shift_id=" + ViewBag.shift_id + "&item_id=" + ViewBag.item_id + "&machine_id=" + ViewBag.machine_id + "&supervisor_id=" + ViewBag.supervisor_id + "&plant_id=" + ViewBag.plant_id).Adaptor(AdaptorType.UrlAdaptor))
+                                          .AllowPaging().PageSettings(a => a.PageSize(20))
+                                              .AllowFiltering()
+                                                  .FilterSettings(X => X.FilterType(FilterType.Excel))
+                                              .ShowColumnChooser()
+                                              .AllowSorting()
+                                              .AllowScrolling()
+                                              .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcelOEE", "ProductionReport", new { ctrlname = "OverallEquipmentEffectivenessReport" })))
+                                              .ScrollSettings(scroll => { scroll.Width("100%"); })
+
+                                          .ToolbarSettings(toolbar =>
+                                          {
+                                              toolbar.ShowToolbar().ToolbarItems(items =>
+                                              {
+                                                  items.AddTool(ToolBarItems.Search);
+                                                  items.AddTool(ToolBarItems.ExcelExport);
+                                                  items.AddTool(ToolBarItems.PrintGrid);
+                                              });
+                                          })
+                                  .Columns(col =>
+                                  {
+                                    // col.Field("machine_id").Width("15%").HeaderText("Machine Id").Add();
+
+                                    col.Field("prod_date").Width("15%").HeaderText("DATE").Format("{0:dd/MMM/yyyy}").Add();
+                                      col.Field("machine_code").Width("15%").HeaderText("MACHINE NAME").Add();
+                                      col.Field("cycle_time").Width("15%").HeaderText("CYCLE TIME").TextAlign(TextAlign.Right).Visible(true).Add();
+                                      col.Field("user_code").Width("15%").HeaderText("SUPERVISOR").Add();
+                                      col.Field("item_code").Width("15%").HeaderText("MODEL").Visible(true).Add();
+                                      col.Field("shift_code").Width("15%").HeaderText("SHIFT").Visible(true).Add();
+                                      col.Field("avl_time").Width("15%").HeaderText("AVL TIME").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                      col.Field("production").Width("15%").HeaderText("ORIGINAL PRODUCTION TARGET").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                      col.Field("net_prod_target").Width("15%").HeaderText("NET PRODUCTION TARGET").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                      col.Field("actual_production").Width("15%").HeaderText("ACTUAL PRODUCTION").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                      col.Field("mac_breakdown").Width("15%").HeaderText("M/C BREAKDOWN").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                      col.Field("pm").Width("15%").HeaderText("PM").Visible(true).TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                                      col.Field("no_power").Width("15%").HeaderText("NO POWER").Visible(true).TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                                      col.Field("no_operator").Width("15%").HeaderText("NO OPERATOR").Visible(true).TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                                      col.Field("no_load").Width("15%").HeaderText("NO LOAD").Visible(true).TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                                      col.Field("setup").Width("15%").HeaderText("SETUP").Format("{0:n2}").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                      col.Field("restart").Width("15%").HeaderText("RESTART").Format("{0:n2}").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                      col.Field("tool_change").Width("15%").HeaderText("TOOL CHANGE").Format("{0:n2}").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                      col.Field("quality_check").Width("15%").HeaderText("QUALITY CHECK").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                      col.Field("no_plan").Width("15%").HeaderText("CORRECTION").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                      col.Field("training").Width("15%").HeaderText("TRAINING").TextAlign(TextAlign.Right).Format("{0:n2}").Add();
+                                      col.Field("jh").Width("15%").HeaderText("JH").Format("{0:n2}").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                      col.Field("remarks").Width("15%").HeaderText("REMARKS").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                      col.Field("total_loss_time").Width("15%").HeaderText("TOTAL LOSS TIME").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                      col.Field("net_avl_time").Width("15%").HeaderText("NET AVL TIME (MIN)").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                    //col.Field("remarks_on_document").Width("15%").HeaderText("REJ/REWORK").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                    col.Field("opp_efficiency").Width("15%").HeaderText("OPERATOR EFFICIENCY (%)").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                      col.Field("mac_utilization").Width("15%").HeaderText("M/C Utilization").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+                                    //col.Field("oee").Width("15%").HeaderText("OEE%").TextAlign(TextAlign.Right).Format("{0:n2}").Visible(true).Add();
+
+
+                                })
+                                  .ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClick"); })
+                                      ).Render();}
+@Html.EJ().ScriptManager()
+<br />
+
+<script type="text/javascript">
+    function OnToolbarClick(args) {
+        if (args.itemName.indexOf("Export") > -1) {
+            if ($('#shift_id :selected').length > 0) {
+                var selectedplantid = [];
+                $('#shift_id :selected').each(function (i, selected) {
+                    selectedplantid[i] = $(selected).val();
+                });
+                var shiftid = selectedplantid + "";
+            }
+            if ($('#item_id :selected').length > 0) {
+                var selecteditemid = [];
+                $('#item_id :selected').each(function (i, selected) {
+                    selecteditemid[i] = $(selected).val();
+                });
+                var itemid = selecteditemid + "";
+            }
+
+            if ($('#machine_id :selected').length > 0) {
+                var selectedmachineid = [];
+                $('#machine_id :selected').each(function (i, selected) {
+                    selectedmachineid[i] = $(selected).val();
+                });
+                var machineid = selectedmachineid + "";
+            }
+
+            if ($('#supervisor_id :selected').length > 0) {
+                var selectedsupid = [];
+                $('#supervisor_id :selected').each(function (i, selected) {
+                    selectedsupid[i] = $(selected).val();
+                });
+                var supervisorid = selectedsupid + "";
+            }
+
+            if ($('#plant_id :selected').length > 0) {
+                var selectedplid = [];
+                $('#plant_id :selected').each(function (i, selected) {
+                    selectedplid[i] = $(selected).val();
+                });
+                var plantid = selectedplid + "";
+            }
+
+            this.model["shift_id"] = shiftid;
+            this.model["item_id"] = itemid;
+            this.model["machine_id"] = machineid;
+            this.model["supervisor_id"] = supervisorid;
+            this.model["plant_id"] = plantid;
+            this.model["from_date"] = $("#fromDate").val();
+            this.model["to_date"] = $("#toDate").val();
+
+        }
+
+    }
+</script>
+
+

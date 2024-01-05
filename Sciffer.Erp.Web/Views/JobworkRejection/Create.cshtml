@@ -1,0 +1,944 @@
+﻿@model Sciffer.Erp.Domain.ViewModel.jobwork_rejection_VM
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm("Create", "JobworkRejection", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div id="batchHidden" hidden></div>
+    <div id="tagHidden" hidden></div>
+    <div id="nontagHidden" hidden></div>
+    <div class="form-horizontal" style="margin-top:10px;">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.category_id, "Category *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("category_id", (System.Web.Mvc.SelectList)ViewBag.categorylist, null, new { @class = "form-control category validinput setPlant", @required = true })
+                            @Html.ValidationMessageFor(model => model.category_id, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.posting_date, "Posting Date *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.EditorFor(model => model.posting_date, new { htmlAttributes = new { @class = "form-control postingdate salesdate validinput postingdocumentdate" } })
+                            @Html.ValidationMessageFor(model => model.posting_date, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.bill_to_party, "Bill to party *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("bill_to_party", (System.Web.Mvc.SelectList)ViewBag.customerlist, "", new { @class = "form-control validinput", @required = true })
+                            @Html.ValidationMessageFor(model => model.bill_to_party, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ship_to_party, "Ship to Party *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("ship_to_party", (System.Web.Mvc.SelectList)ViewBag.customerlist, "", new { @class = "form-control validinput", @required = true })
+                            @Html.ValidationMessageFor(model => model.ship_to_party, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.place_of_supply, "Place To Supply *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("place_of_supply", (System.Web.Mvc.SelectList)ViewBag.billingstatelist, "", new { @class = "form-control validinput", @required = true })
+                            @Html.ValidationMessageFor(model => model.place_of_supply, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.place_of_delivery, "Place To Delivery *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("place_of_delivery", (System.Web.Mvc.SelectList)ViewBag.billingstatelist, "", new { @class = "form-control validinput", @required = true })
+                            @Html.ValidationMessageFor(model => model.place_of_delivery, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-sm-6">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.reason_id, "Reason *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownList("reason_id", (System.Web.Mvc.SelectList)ViewBag.reasonlist, "---Select---", new { @class = "form-control col-md-9 col-xs-12", @onchange = "onSelect11(this.value)" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                <li class="active"><a data-toggle="tab" href="#sectionA">Sales</a></li>
+                <li><a data-toggle="tab" href="#sectionB">Batch Item</a></li>
+                <li><a data-toggle="tab" href="#sectionH">Tag Items</a></li>
+                <li><a data-toggle="tab" href="#sectionS">Sales</a></li>
+                <li><a data-toggle="tab" href="#sectionE">Information</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="sectionA" class="tab-pane fade in active" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.business_unit_id, "Business Unit *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("business_unit_id", (System.Web.Mvc.SelectList)ViewBag.businesslist, "---Select---", new { @class = "form-control validinput", @required = true })
+                                    @Html.ValidationMessageFor(model => model.business_unit_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.plant_id, "Plant *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("plant_id", (System.Web.Mvc.SelectList)ViewBag.plantlist, "---Select---", new { @class = "form-control validinput removedisabled selectedbycategory", @disabled = "disabled", @required = true, @onchange = "GetStorageLocation(this.value)" })
+                                    @Html.ValidationMessageFor(model => model.plant_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" hidden>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.freight_term_id, "Freight Terms *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("freight_term_id", (System.Web.Mvc.SelectList)ViewBag.freightlist, "---Select---", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.freight_term_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.territory_id, "Territory *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("territory_id", (System.Web.Mvc.SelectList)ViewBag.territorylist, "---Select---", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.territory_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" hidden>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.sales_rm_id, "Sales RM *", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("sales_rm_id", (System.Web.Mvc.SelectList)ViewBag.salesexlist, "---Select---", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.sales_rm_id, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.sales_against_order, "Sales Against Form ", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.DropDownList("sales_against_order", (System.Web.Mvc.SelectList)ViewBag.formlist, "---Select---", new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.sales_against_order, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.customer_po_date, "Customer PO Date", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.customer_po_date, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.customer_po_date, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.customer_po_number, "Customer PO Number", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.customer_po_number, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.customer_po_number, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.removal_date, "Removal Date", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.removal_date, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.removal_date, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.removal_time, "Removal Time", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.removal_time, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.removal_time, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionB" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <button type="button" id="additem" class="additem btn btn-primary" style="float:right" data-toggle="modal"><span class="glyphicon glyphicon-plus"></span>Add Item</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="ContactGrid">
+                                <thead>
+                                    <tr>
+                                        <th><label>Sr. No.</label></th>
+                                        <th><label>ID</label></th>
+                                        <th><label>Jobwork Detail ID</label></th>
+                                        <th><label>Item ID</label></th>
+                                        <th><label>Item</label></th>
+                                        <th><label>UoM ID</label></th>
+                                        <th><label>UoM</label></th>
+                                        <th><label>Batch ID</label></th>
+                                        <th><label>Batch</label></th>
+                                        <th><label>Batch Bal Quantity</label></th>
+                                        <th><label>Quantity</label></th>
+                                        <th><label>Sloc Id</label></th>
+                                        <th><label>Sloc</label></th>
+                                        <th><label>Bucket ID</label></th>
+                                        <th><label>Bucket</label></th>
+                                        <th><label>Rate</label></th>
+                                        <th><label>Value</label></th>
+                                        <th><label>Action</label></th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionH" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="table-responsive">
+                            <table class="table table-responsive table-bordered table-striped" id="SelectedTagGrid">
+                                <thead>
+                                    <tr>
+                                        <th><label>Sr. No.</label></th>
+                                        <th><label>ID</label></th>
+                                        <th><label>Item ID</label></th>
+                                        <th><label>Item</label></th>
+                                        <th><label>Tag ID</label></th>
+                                        <th><label>Tag</label></th>
+                                        <th><label>Qty</label></th>
+                                        <th><label>Action</label></th>
+                                    </tr>
+                                </thead>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="sectionE" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.internal_remarks, "Internal Remarks", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.internal_remarks, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.internal_remarks, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.remarks_on_doc, "Remarks On Document", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.remarks_on_doc, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.remarks_on_doc, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="deleteids" name="deleteids" />
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.attachment, "Attachment", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <input type="file" class="form-control" id="FileUpload" name="FileUpload" accept="application/pdf, image/*" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div id="sectionS" class="tab-pane fade" style="margin-top:10px;">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.mode_of_transport, "Mode of Transport ", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.mode_of_transport, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.mode_of_transport, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-sm-6">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.vehicle_no, "Vehicle No", htmlAttributes: new { @class = "control-label col-md-4 col-sm-4 col-xs-12" })
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    @Html.EditorFor(model => model.vehicle_no, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.vehicle_no, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg12 col-sm-12">
+                <div class="form-group">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <input type="submit" value="Create" data-controller="JobworkRejection" id="create" class="btn btn-success" style="float:right" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="modal fade" id="myModal1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="align-content:center;width:900px;">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Item Details</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-4 item_hide">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                Item *
+                            </label>
+                            <div class="col-md-9">
+                                @Html.DropDownList("item_id", (System.Web.Mvc.SelectList)ViewBag.itemlist, "---Select---", new { @class = "form-control col-md-9 col-xs-12", @onchange = "onSelect11(this.value)" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 item_hide">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                SLoc *
+                            </label>
+                            <div class="col-md-9">
+                                @Html.DropDownList("sloc_id", Enumerable.Empty<SelectListItem>(), "---Select---", new { @class = "form-control col-md-9 col-xs-12", @onchange = "onSelect11(this.value)" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 item_hide">
+                        <div class="form-group">
+                            <label class="control-label col-md-3">
+                                Reason
+                            </label>
+                            <div class="col-md-9">
+                                @Html.DropDownList("reason", (System.Web.Mvc.SelectList)ViewBag.reasonlist, "---Select---", new { @class = "form-control col-md-9 col-xs-12", @onchange = "onSelect11(this.value)" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-body" role="tabpanel" data-example-id="togglable-tabs">
+                    <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                        <li class="active"><a data-toggle="tab" href="#sectionDD">Batch</a></li>
+                        <li><a data-toggle="tab" href="#sectionBB">Tag Items</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="sectionDD" class="tab-pane fade in active" style="margin-top:10px;">
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="table-responsive" style="max-height: calc(100vh - 200px); overflow-y: auto;">
+                                        <table class="table table-responsive table-bordered table-striped" id="JobBatchGrid"></table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="sectionBB" class="tab-pane fade" style="margin-top:10px;">
+                            <div class="row">
+                                <div class="form-group">
+                                    <label class="control-label col-md-2">
+                                        Range From Number
+                                    </label>
+                                    <div class="col-md-3">
+                                        <input type="number" id="fromnumber" class="form-control" />
+                                    </div>
+                                    <label class="control-label col-md-2">
+                                        To Number
+                                    </label>
+                                    <div class="col-md-3">
+                                        <input type="number" id="tonumber" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="table-responsive" style="max-height: calc(100vh - 200px); overflow-y: auto;">
+                                        <table class="table table-responsive table-bordered table-striped" id="TagGrid"></table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="addSALES btn btn-primary" disabled="disabled">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-primary" })
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/requirevalidation.js"></script>
+    <script type="text/javascript">
+        var batcharray = [];
+        var tagarray = [];
+        var jobworkarray = [];
+        var checkedarray = [];
+        $(".loading").hide();
+
+        $("#plant_id").select2({
+            placeholder: "Select Plant",
+            allowClear: true
+        });
+        $("#item_id").select2({
+            placeholder: "Select Item",
+            allowClear: true
+        });
+        $("#bill_to_party").select2({
+            placeholder: "Select bill to party",
+            allowClear: true
+        });
+        $("#ship_to_party").select2({
+            placeholder: "Select ship to party",
+            allowClear: true
+        });
+        $("#place_of_supply").select2({
+            placeholder: "Select place to supply",
+            allowClear: true
+        });
+        $("#place_of_delivery").select2({
+            placeholder: "Select place of delivery",
+            allowClear: true
+        });
+        $("#freight_term_id").select2({
+            placeholder: "Select freight term",
+            allowClear: true
+        });
+        $("#territory_id").select2({
+            placeholder: "Select territory",
+            allowClear: true
+        });
+        $("#sales_rm_id").select2({
+            placeholder: "Select sales RM",
+            allowClear: true
+        });
+        $("#category_id").select2({
+            placeholder: "Select category",
+            allowClear: true
+        });
+        document.getElementById('posting_date').valueAsDate = new Date();
+        //document.getElementById('customer_po_date').valueAsDate = new Date();
+        //document.getElementById('removal_date').valueAsDate = new Date();
+
+        $("#additem").on("click", function (event) {
+            $('.addSALES ').attr('disabled', true);
+            $("#item_id").val('').trigger("change");
+            $('#myModal1').modal('show');
+            $('#example-select-all').attr('checked', false);
+            checkedarray.length = 0;
+            tagarray.length = 0;
+            batcharray.length = 0;
+            jobworkarray.length = 0;
+            $("#sloc_id").val('');
+            var t3 = $('#JobBatchGrid').DataTable();
+            t3.fnClearTable();
+            var t4 = $('#TagGrid').DataTable();
+            t4.fnClearTable();
+        });
+        $('#ContactGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a" },
+                     { sname: "b", bVisible: false },
+                     { sname: "c", bVisible: false },
+                     { sname: "d", bVisible: false },
+                     { sname: "e", bVisible: true },
+                     { sname: "f", bVisible: false },
+                     { sname: "g" },
+                     { sname: "h", bVisible: false },
+                     { sname: "i", bVisible: true },
+                     { sname: "j", },
+                     { sname: "k", bVisible: true },
+                     { sname: "l", bVisible: false },
+                     { sname: "m", bVisible: true },
+                     { sname: "n", bVisible: false },
+                     { sname: "o", },
+                     { sname: "p", },
+                     { sname: "q", },
+                     {
+                         sname: "y",
+                         bSortable: false,
+                         mRender: function (data, type, full) {
+                             return '<img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete" />';
+                         }
+                     }]
+
+        });
+        $(document).on('change', 'input[type="checkbox"]', function () {
+            if ($('.jobworkclass').is(':checked')) {
+                $('.addSALES').removeAttr('disabled');
+            }
+            else {
+                $('.addSALES').attr('disabled', true);
+            }
+        });
+
+        var flag = 1;
+        function onSelect11(args) {
+            var plant_id = $("#plant_id").val();
+            var item_id = $("#item_id").val();
+            var sloc_id = $("#sloc_id").val();
+            var reason_id = $("#reason :selected").val();
+            //Check item is RM or not
+            $.ajax({
+                url: '@Url.Action("GetItemCategoryByItem", "JobworkRejection")',
+                type: "POST",
+                cache: false,
+                data: { item_id: item_id },
+                success: function (data) {
+                    console.log(data);
+                    if (data != 'RM') {
+                        flag = 0;
+                    }
+                }
+            });
+
+
+            //$("#reason_id").val(reason_id);
+            ItemBatchList(plant_id, item_id, sloc_id, reason_id);
+        }
+
+        $("#bill_to_party").change(function () {
+            var id = $("#bill_to_party").val()
+            $.ajax({
+                url: '@Url.Action("GetState", "JobworkRejection")',
+                type: "POST",
+                dataType: "JSON",
+                sync: false,
+                data: { id:id },
+                success: function (data) {
+                    $("#place_of_supply").val(data).trigger('change');
+                    //$("#place_of_supply").val(data);
+                }
+            });
+        })
+
+        $("#ship_to_party").change(function () {
+            var id = $("#ship_to_party").val()
+            $.ajax({
+                url: '@Url.Action("GetPlacetodelivaryState", "JobworkRejection")',
+                type: "POST",
+                dataType: "JSON",
+                sync: false,
+                data: { id: id },
+                success: function (data) {
+                    $("#place_of_delivery").val(data).trigger('change');
+                    //$("#place_of_supply").val(data);
+                }
+            });
+        })
+
+
+        $("#reason_id").change(function () {
+
+        })
+        function ItemBatchList(plant_id, item_id, sloc_id, reason_id) {
+            //var t2 = $('#BatchGrid').DataTable();
+            //var rowCount2 = t2.fnGetData().length;
+            var t3 = $('#JobBatchGrid').DataTable();
+            var rowCount3 = t3.fnGetData().length;
+            console.log(plant_id, item_id, sloc_id);
+            t3.fnClearTable();
+            if (sloc_id != 0 && plant_id != 0 && item_id != 0) {
+                $.ajax({
+                    url: '@Url.Action("ClumpsumBatchQuantity", "ProductionOrderIssue")',
+                    type: "GET",
+                    dataType: "JSON",
+                    sync: false,
+                    data: { sloc_id: sloc_id, plant_id: plant_id, item_id: item_id, bucket_id: 3, entity_id: 'getbatchforjobworkrejection',reason_id : 0 },
+                    success: function (batch) {
+                        console.log(batch);
+                        t3.fnAddData(batch.SubProd);
+                        getbatchforjobworkrejection(item_id, plant_id, sloc_id, reason_id)
+                    }
+                });
+            }
+        }
+        function getbatchforjobworkrejection(item_id, plant_id, sloc_id, reason_id) {
+            var t1 = $('#TagGrid').DataTable();
+            var rowCount1 = t1.fnGetData().length;
+            t1.fnClearTable();
+            $.ajax({
+                url: '@Url.Action("ClumpsumBatchQuantity", "ProductionOrderIssue")',
+                type: "GET",
+                dataType: "JSON",
+                sync: false,
+                data: { sloc_id: sloc_id, plant_id: plant_id, item_id: item_id, bucket_id: 3, entity_id: 'tagjobworkrejectionitem', reason_id: reason_id },
+                success: function (tag) {
+                    console.log(tag);
+                    t1.fnAddData(tag.SubProd);
+                }
+            });
+
+        }
+
+        $('#JobBatchGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": true,
+            "bSort": false,
+            "columns": [
+                  { "data": "rowIndex", bVisible: true, "title": "Sr.No." },
+                  { "data": "document_detail_id", bVisible: false, "title": "Document Detail ID" },
+                  { "data": "item_id", bVisible: false, "title": "item_id" },
+                  { "data": "item_name", bVisible: true, "title": "Item" },
+                  { "data": "uom_id", bVisible: false, "title": "uom id" },
+                  { "data": "uom_name", bVisible: true, "title": "UoM" },
+                  { "data": "batch_id", bVisible: false, "title": "Batch id" },
+                  { "data": "batch_number", bVisible: true, "title": "Batch" },
+                  {
+                      "data": "batch_quantityStr", bVisible: true, "title": "Batch Qty", sClass: "right", render: function (data, type, row) {
+                          return parseFloat(data).toFixed(2);
+                      }
+                  },
+                  { "data": "rowIndex", sWidth: "10%", "title": "Rate", 'render': function (data, type, full) { return '<input type="number" data-index="' + data + '" id="actjobrate' + data + '" class="actjobrate form-control right"/>' } },
+                  { "data": "rowIndex", sWidth: "10%", "title": "Quantity", 'render': function (data, type, full) { return '<input type="number" data-index="' + data + '" id="actjobqty' + data + '" class="actjobqty form-control right"/>' } },
+                  { "data": "rowIndex", sWidth: "4%", "title": 'Select', 'render': function (data, type, full) { return '<input type="checkbox" data-index="' + data + '" id="jobbatchselect' + data + '" class="jobworkclass"/>' } },
+                  { "data": "qty", "defaultContent": "", "title": "Quantity", bVisible: false },
+                  { "data": "rate", "defaultContent": "", "title": "Rate", bVisible: false },
+
+            ],
+            "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                $("td:first", nRow).html(iDisplayIndex + 1);
+                return nRow;
+            },
+        });
+        $(document).on('change', '.actjobqty', function () {
+            var t = $('#JobBatchGrid').DataTable();
+            var index = $(this).attr('data-index');
+            var _requ_quantity = $(this).val();
+            if (_requ_quantity != '') {
+                _requ_quantity = parseFloat(_requ_quantity).toFixed(2);
+            }
+            var parsedIndex = parseInt(index);
+            t.fnUpdate(_requ_quantity, (parsedIndex-1), 12);
+        });
+        $(document).on('change', '.actjobrate', function () {
+            var t = $('#JobBatchGrid').DataTable();
+            var index = $(this).attr('data-index');
+            var _rate = $(this).val();
+            if (_rate != '') {
+                _rate = parseFloat(_rate).toFixed(2);
+            }
+            var parsedIndex = parseInt(index);
+            t.fnUpdate(_rate, (parsedIndex - 1), 13);
+        });
+
+        $('#TagGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": true,
+            "bSort": false,
+            "columns": [
+                  { "data": "rowIndex", bVisible: true, "title": "Sr No" },
+                  { "data": "item_id", bVisible: false, "title": "Item ID" },
+                  { "data": "item_name", bVisible: true, "title": "Item Name" },
+                  { "data": "tag_id", bVisible: false, "title": "Tag id" },
+                  {
+                      "data": "tag_no", bVisible: true, "title": "TAG NO", render: function (data, type, row) {
+                          return data == null ? "No Tag" : data;
+                      }
+                  },
+                  {
+                      "data": "batch_quantityStr", bVisible: true, "title": "Qty", sClass: "right", render: function (data, type, row) {
+                          return parseFloat(data).toFixed(2);
+                      }
+                  },
+                  { "data": "rowIndex", sWidth: "4%", "title": "Select", 'render': function (data, type, full) { return '<input type="checkbox" data-index="' + data + '"  id="tagselect' + data + '" class="tagclass"/>' } },
+
+            ],
+            "fnRowCallback": function (nRow, aData, iDisplayIndex) {
+                $("td:first", nRow).html(iDisplayIndex + 1);
+                return nRow;
+            },
+        });
+        $('#SelectedTagGrid').DataTable({
+            "bPaginate": false,
+            "ordering": false,
+            "bfooter": false,
+            "info": false,
+            "bLengthChange": false,
+            "bAutoWidth": false,
+            "bFilter": false,
+            "bSort": false,
+            aoColumns: [
+                     { sname: "a" },
+                     { sname: "b", bVisible: false },
+                     { sname: "c", bVisible: false },
+                     { sname: "d" },
+                     { sname: "e", bVisible: false },
+                     { sname: "f" },
+                     { sname: "g" },
+                     {
+                         sname: "y",
+                         bSortable: false,
+                         mRender: function (data, type, full) {
+                             return '<img class="delete" src="../images/remove.png" height="20px" width="25px" alt="Delete" />';
+                         }
+                     }]
+
+        });
+
+        function GetStorageLocation(id) {
+            if (id == "") {
+                id = 0;
+            }
+            $.ajax({
+                url: '@Url.Action("GetStorageLocation", "Generic")',
+                type: "GET",
+                dataType: "JSON",
+                data: { id: id },
+                success: function (id) {
+                    $("#sloc_id").html(""); // clear before appending new list
+                    $("#sloc_id").append($('<option></option>').val("").html("---Select---"));
+                    $.each(id, function (i, cycle) {
+                        $("#sloc_id").append(
+                            $('<option></option>').val(cycle.storage_location_id).html(cycle.storage_location_name));
+                    });
+                }
+            });
+        }
+        $(document).on('change', '#tonumber', function () {
+            var t = $('#TagGrid').dataTable();
+            var rowCount = t.fnGetData().length;
+            for (i = 0; i < rowCount; i++) {
+                var k = i + 1;
+                if ($("#tagselect" + k).is(':checked')) {
+                    $("#tagselect" + k).prop('checked', false);
+                }
+            }
+            var fromnumber = parseFloat($("#fromnumber").val());
+            var tonumber = parseFloat($("#tonumber").val());
+
+            if (fromnumber <= tonumber) {
+
+                tagarray.length = 0;
+                while (fromnumber <= tonumber) {
+                    var index = fromnumber;
+                    $("#tagselect" + index).prop('checked', true);
+                    tagarray.push((index-1));
+                    fromnumber = fromnumber + 1;
+                }
+            }
+            else {
+                swal("", "From number should be lesser than To Number", "error")
+            }
+        });
+        $(document).on('click', '.tagclass', function () {
+            var index = parseInt($(this).attr('data-index')) - 1;
+            var t = $('#TagGrid').dataTable();
+            if ($(this).is(':checked')) {
+                tagarray.push(index);
+            }
+            else {
+                var checkedIndex = checkedarray.indexOf(parseInt(index));
+                tagarray.splice(checkedIndex, 1);
+            }
+        });
+        $(document).on('click', '.jobworkclass', function () {
+            var index = parseInt($(this).attr('data-index')) - 1;
+            var t = $('#JobBatchGrid').dataTable();
+            if ($(this).is(':checked')) {
+                jobworkarray.push(index);
+            }
+            else {
+                var checkedIndex = checkedarray.indexOf(parseInt(index));
+                jobworkarray.splice(checkedIndex, 1);
+            }
+        });
+        var checkedarray = [];
+        $(".addSALES").on("click", function (event) {
+            var t = $('#ContactGrid').DataTable()
+            var t2 = $('#SelectedTagGrid').DataTable()
+            var s2 = $('#TagGrid').DataTable()
+            var s1 = $("#JobBatchGrid").DataTable()
+            $("#reason_id").val($("#reason :selected").val());
+            t.fnClearTable();
+            t.fnFilterClear();
+            t2.fnClearTable();
+            t2.fnFilterClear();
+            var isFalse = false;
+            var i = 0;
+            var SumQuantity = 0;
+            for (var k = 0; k <= jobworkarray.length - 1; k++) {
+                var i = jobworkarray[k];
+                var txt = s1.fnGetData(i, 12);
+                SumQuantity = SumQuantity + parseFloat(txt);
+                if (txt == '') {
+                    swal("", "Quantity cannot be left blank!", "error");
+                    return isFalse;
+                }
+                if (txt == '0') {
+                    swal("", "Quantity cannot be zero!", "error");
+                    return isFalse;
+                }
+                if (txt == '0.00') {
+                    swal("", "Quantity cannot be zero!", "error");
+                    return isFalse;
+                }
+            }
+            console.log(SumQuantity, tagarray.length);
+
+            if (flag == 1) {
+                if (SumQuantity != tagarray.length) {
+                    swal("", "Invoice Quantity should be equal to total of tag quantity", "error");
+                    return isFalse;
+                }
+            }
+
+            var sloc_id = $("#sloc_id").val();
+            var sloc_name = $("#sloc_id :selected").text();
+            for (var k = 0; k <= jobworkarray.length-1; k++) {
+                var i = jobworkarray[k];
+
+                try {
+                    console.log(s1.fnGetData(i, 13) ,s1.fnGetData(i, 12));
+
+                    t.fnAddData([k + 1, 0,s1.fnGetData(i, 1), s1.fnGetData(i, 2), s1.fnGetData(i, 3), s1.fnGetData(i, 4),
+                        s1.fnGetData(i, 5), s1.fnGetData(i, 6), s1.fnGetData(i, 7), s1.fnGetData(i, 8), s1.fnGetData(i, 12), sloc_id,
+                        sloc_name, 3, 'Blocked', s1.fnGetData(i).rate, s1.fnGetData(i).rate * parseFloat(s1.fnGetData(i, 12)), '']);
+
+                    $("#batchHidden").append('<input type="hidden" id="detail_id1' + i + '" name="detail_id1" value=' + t.fnGetData(k)[1] + '>');
+                    $("#batchHidden").append('<input type="hidden" id="job_work_detail_id' + i + '" name="job_work_detail_id" value=' + t.fnGetData(k)[2] + '>');
+                    $("#batchHidden").append('<input type="hidden" id="item_id1' + i + '" name="item_id1" value=' + t.fnGetData(k)[3] + '>');
+                    $("#batchHidden").append('<input type="hidden" id="uom_id1' + i + '" name="uom_id1" value=' + t.fnGetData(k)[5] + '>');
+                    $("#batchHidden").append('<input type="hidden" id="batch_id1' + i + '" name="batch_id1" value=' + t.fnGetData(k)[7] + '>');
+                    $("#batchHidden").append('<input type="hidden" id="batch_bal_quantity' + i + '" name="batch_bal_quantity" value=' + t.fnGetData(k)[9] + '>');
+                    $("#batchHidden").append('<input type="hidden" id="quantity1' + i + '" name="quantity1" value=' + t.fnGetData(k)[10] + '>');
+                    $("#batchHidden").append('<input type="hidden" id="sloc_id1' + i + '" name="sloc_id1" value=' + t.fnGetData(k)[11] + '>');
+                    $("#batchHidden").append('<input type="hidden" id="bucket_id1' + i + '" name="bucket_id1" value=' + t.fnGetData(k)[13] + '>');
+                    $("#batchHidden").append('<input type="hidden" id="rate' + i + '" name="rate" value=' + t.fnGetData(k)[15] + '>')
+                    $("#batchHidden").append('<input type="hidden" id="value' + i + '" name="value" value=' + t.fnGetData(k)[16] + '>')
+                }
+                catch (exception) {
+                    jobworkarray.length = 0;
+                    console.log(exception.message);
+                }
+                isFalse = true;
+            }
+            for (var m = 0; m <= tagarray.length-1; m++) {
+                var j = tagarray[m];
+                try {
+                    t2.fnAddData([m + 1, 0, s2.fnGetData(j, 1), s2.fnGetData(j, 2), s2.fnGetData(j, 3), s2.fnGetData(j, 4), s2.fnGetData(j, 5), '']);
+                    $("#tagHidden").append('<input type="hidden" id="detail_id2' + j + '" name="detail_id2" value=' + t2.fnGetData(m)[1] + '>');
+                    $("#tagHidden").append('<input type="hidden" id="item_id2' + j + '" name="item_id2" value=' + t2.fnGetData(m)[2] + '>');
+                    $("#tagHidden").append('<input type="hidden" id="tag_id2' + j + '" name="tag_id2" value=' + t2.fnGetData(m)[4] + '>');
+                    $("#tagHidden").append('<input type="hidden" id="quantity2' + j + '" name="quantity2" value=' + t2.fnGetData(m)[6] + '>');
+                }
+                catch (exception) {
+                    tagarray.length = 0;
+                    console.log(exception.message);
+                }
+                isFalse = true;
+            }
+            if (isFalse == true) {
+                $('#myModal1').modal('hide');
+                jobworkarray.length = 0;
+                tagarray.length = 0;
+            }
+        });
+        $('#ContactGrid').on('click', '.delete', function () {
+
+            var t = $('#ContactGrid').DataTable();
+            var t1 = $('#SelectedTagGrid').DataTable();
+            var id = $(this).parent('td').parent('tr').index();
+            var deleteids = t.fnGetData(id)[1];
+            swal({
+                title: "Are you sure?",
+
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: true
+            },
+             function (isConfirm) {
+                 if (isConfirm) {
+                     $("#deleteids").val(deleteids + "~");
+                     var quantity = t.fnGetData(id)[10];
+                     console.log(quantity);
+                     t.fnDeleteRow(id);
+                     for (var i = 0 ; i <= quantity; i++) {
+                         t1.fnDeleteRow(i);
+                     }
+                 }
+             });
+        });
+    </script>
+}

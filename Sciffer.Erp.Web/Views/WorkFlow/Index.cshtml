@@ -1,0 +1,69 @@
+﻿@model IEnumerable<Sciffer.Erp.Domain.Model.ref_workflow>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.REF_CATEGORY.CATEGORY_NAME)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ref_document_type.document_type_name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.has_value)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.value_from)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.value_to)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.no_of_approval)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.is_active)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.REF_CATEGORY.CATEGORY_NAME)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ref_document_type.document_type_name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.has_value)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.value_from)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.value_to)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.no_of_approval)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.is_active)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.workflow_id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.workflow_id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.workflow_id })
+        </td>
+    </tr>
+}
+
+</table>

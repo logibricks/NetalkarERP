@@ -1,0 +1,42 @@
+﻿
+
+@using Sciffer.Erp.Domain.ViewModel;
+@{(Html.EJ().Grid<Report_Quality_Control_vm>
+    ("Editing")
+    .Datasource(ds => ds.URL(Url.Action("GetInventory1", "InventoryReport") + "?entity=" + ViewBag.entity + "&opt=" + ViewBag.item_category_id + "&item_id=" + ViewBag.item_id).Adaptor(AdaptorType.UrlAdaptor))
+
+    .AllowPaging().PageSettings(a => a.PageSize(20))
+    .AllowFiltering()
+    .FilterSettings(X => X.FilterType(FilterType.Excel))
+    .ShowColumnChooser()
+    .AllowSorting()
+    .AllowScrolling()
+    .Mappers(map => map.ExportToExcelAction(Url.Action("ExportToExcel3", "InventoryReport", new { ctrlname = "Quality" })))
+    .ScrollSettings(scroll => { scroll.Width("100%").Height("50%"); })
+
+    .ToolbarSettings(toolbar =>
+    {
+    toolbar.ShowToolbar().ToolbarItems(items =>
+    {
+    items.AddTool(ToolBarItems.Search);
+    items.AddTool(ToolBarItems.ExcelExport);
+    items.AddTool(ToolBarItems.PrintGrid);
+    });
+    })
+    .Columns(col =>
+    {
+
+   col.Field("Operation").Width("15%").HeaderText("Operation").Add();
+                                          col.Field("Machine").Width("15%").HeaderText("Machine").Add();
+                                          col.Field("Item").Width("15%").HeaderText("Item").Add();
+                                          col.Field("UOM").Width("15%").HeaderText("Parameter UOM").Add();
+                                          col.Field("Name").Width("15%").HeaderText("Parameter Name").Add();
+                                          col.Field("From_Range").Width("15%").HeaderText("From Range").Add();
+                                          col.Field("To_Range").Width("15%").HeaderText("To Range").Add();
+
+    }).ClientSideEvents(eve => { eve.ToolbarClick("OnToolbarClicki"); })).Render();}
+@Html.EJ().ScriptManager()
+
+
+
+
